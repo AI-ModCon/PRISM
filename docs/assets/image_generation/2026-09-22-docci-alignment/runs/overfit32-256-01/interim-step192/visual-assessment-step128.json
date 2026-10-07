@@ -1,0 +1,16 @@
+{
+  "stage": "interim",
+  "reviewed_gallery_step": 128,
+  "report_snapshot_step": 192,
+  "generation_cases_reviewed": 4,
+  "principal_subjects_present_in_prism_cases": 0,
+  "cases": {
+    "train_02098": "Requested digital wall clock; generated unrelated suspended round object outdoors.",
+    "train_01677": "Requested small pine tree with firewood and tools; generated pale sculpture or pot on paving.",
+    "qual_dev_00000": "Requested dog and penguin with blue helmets; generated empty furniture/display interior.",
+    "qual_dev_00001": "Requested two airplanes; generated interior table and television."
+  },
+  "native_cfg1_controls": "Both heldout examples retain recognizable requested subjects.",
+  "interpretation": "Some outputs become more structured but these four cases do not demonstrate caption fidelity. Await terminal checkpoint and audited paired controls.",
+  "images_unmodified": true
+}

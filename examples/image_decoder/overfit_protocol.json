@@ -1,0 +1,47 @@
+{
+  "asset_policy": "Images and original caption sidecars remain run outputs; do not add raw dataset assets to source commits.",
+  "auxiliary_manifest_sha256": {
+    "parent-cases.jsonl": "48c30080f5a0c5af27ea7a2049c4c67e1d1998421e8349b76692472d83500529",
+    "train.jsonl": "e60043f3077d5c0201973959815855368e83b0107f42a4e069a3c6b060d0e5c6",
+    "validation.jsonl": "546a8c522340b76a1f27858bad6113518526adbc0346cd615e42be7a4ce720a3"
+  },
+  "caption_max_words": 80,
+  "caption_policy": "original UTF-8 text bytes preserved; no rewriting or truncation",
+  "held_out_scope": "connector training only; parent pretraining overlap unknown",
+  "limitations": [
+    "Validation is held out only from connector training; overlap with the PRISM parent pretraining or OmniGen2 pretraining is unknown.",
+    "Original captions are retained byte-for-byte. Breed, fine counts, material, exact text, and inferred object use are not independently verified.",
+    "Two validation cases contain mathematical text or a navigation screenshot, so these eight examples are diverse diagnostics rather than a natural-image benchmark.",
+    "Shoe caption wall placement is uncertain; puppy breed is unverified; mold caption contains additional remediation advice that is not a visual label.",
+    "Shirt 00002870 and rug 00003701 source images are RGBA. Current RGB conversion drops transparency and produces a black background; the rug caption describes white background.",
+    "Exact pixel and URL/video grouping plus perceptual duplicate screening do not establish absence of all semantic duplicates."
+  ],
+  "limits": {
+    "image_bytes": 104857600,
+    "metadata_bytes": 33554432,
+    "train_examples": 16,
+    "training_shards": 8,
+    "validation_examples": 8
+  },
+  "manifest_sha256": "1a0b6e2cdc1545f901ffae604f4334c9d15198549a7ece161ba42a230905fcfb",
+  "purpose": "Original-caption 16-pair connector overfit plus eight disjoint connector-validation diagnostics",
+  "quality_review_exclusions": {
+    "00000104": "Diagnostic selection: original caption is uncertain between feces and chocolate; prefer unambiguous recognizable object supervision for the first controlled overfit.",
+    "00000642": "Diagnostic selection: text-dominated Twitter screenshot with long exact OCR content; defer to larger mixed-task evaluation.",
+    "00000939": "Visual review: the image shows a lizard/reptile; the original caption identifies it as an amphibian.",
+    "00001376": "Diagnostic selection: text-dominated permit login screenshot with uncertain verbatim text transcription; defer to larger mixed-task evaluation.",
+    "00001969": "Visual review: the image is blank black; the original caption is a white-image loading-failure narrative rather than grounded scene supervision.",
+    "00002426": "Visual review: the pictured coin is a Jefferson nickel, while the original caption identifies it as a quarter."
+  },
+  "recommended_measurements": [
+    "Use all 16 train and eight validation examples for separate fixed-noise flow-loss probes before and after training; preserve seed and sampled timestep/noise per example.",
+    "Report fixed-prompt image samples at a normal denoising schedule for native OmniGen2, untrained connector and trained connector with matched resolution, seed and prompt.",
+    "Use correct versus shuffled captions with fixed target/noise for conditioning sensitivity; lower train loss alone does not establish prompt following or held-out quality.",
+    "Parent diagnostics use a generic image-description question without original captions in the model input; report main-object descriptions with qualitative visual review, not exact caption string accuracy."
+  ],
+  "schema_version": 1,
+  "semantic_identity_limit": "unrecorded subjects and semantic duplicates cannot be proven absent",
+  "source_dataset": "Existing Aurora PixMo-Cap WebDataset",
+  "source_manifest_sha256": "b26f0537cf5882ce9756d63a141cf631bbe1b0574c9de31d0adbbf9e015db7cb",
+  "visual_review_scope": "Main object/content match by assistant visual inspection before connector training; not full fine-grained caption verification."
+}

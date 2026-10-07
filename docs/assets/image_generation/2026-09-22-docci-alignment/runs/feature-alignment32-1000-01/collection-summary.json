@@ -1,0 +1,15 @@
+{
+  "checkpoint_or_cache_bytes_included": false,
+  "collected_at_utc": "2026-09-22T02:52:37.822613+00:00",
+  "completed_steps": 1000,
+  "evidence_kind": "real_checkpoint_connector_native_feature_alignment",
+  "final_acceptance_passed": true,
+  "heldout_ids": 8,
+  "observed_exposures": 4000,
+  "report_sha256": "c44e90683a33e6bc5a49ec5af93e79eea4188b437f69eabde74dc52b65ac3bad",
+  "report_status": "completed",
+  "run_name": "feature-alignment32-1000-01",
+  "selected_training_ids": 32,
+  "skipped_oversize_files": [],
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-feature-alignment"
+}

@@ -1,0 +1,31 @@
+{
+  "status": "downloaded",
+  "dataset": "google/docci",
+  "dataset_revision": "a0a43eaf34676ffd008fb6565dd8c2ba00d09100",
+  "license": "CC-BY-4.0",
+  "source": "https://google.github.io/docci/",
+  "objects": [
+    {
+      "file": "docci_descriptions.jsonlines",
+      "url": "https://storage.googleapis.com/docci/data/docci_descriptions.jsonlines?generation=1714384012999810",
+      "generation": "1714384012999810",
+      "bytes": 11000214,
+      "sha256": "c9df4819963883af35ddd2cf257949892fd8c6d88b33a012094352df60719800"
+    },
+    {
+      "file": "docci_metadata.jsonlines",
+      "url": "https://storage.googleapis.com/docci/data/docci_metadata.jsonlines?generation=1714384023714932",
+      "generation": "1714384023714932",
+      "bytes": 162767377,
+      "sha256": "34a88b64c46b01176e4d8f78b3ff1564dbe7125927863431caffab71f67c8695"
+    },
+    {
+      "file": "docci_images.tar.gz",
+      "url": "https://storage.googleapis.com/docci/data/docci_images.tar.gz?generation=1714249456173037",
+      "generation": "1714249456173037",
+      "bytes": 7592938768,
+      "sha256": "c1b1aee00856757d71cfe2cc6ab641089284276a791bfb82146b4742c59a0a1d"
+    }
+  ],
+  "archive_integrity": "Requires full gzip/tar and image-decode validation during conversion"
+}

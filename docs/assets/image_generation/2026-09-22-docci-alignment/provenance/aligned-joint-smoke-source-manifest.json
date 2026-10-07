@@ -1,0 +1,14 @@
+{
+  "parent_snapshot": "prism-feature-alignment-regions",
+  "source_snapshot": "prism-aligned-joint-smoke",
+  "files": {
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7",
+    "tools/align_prism_image_conditioning.py": "902f32a073f78bda054c93df4ef5fd94fef928e2901900ad7eb1305b1f3813f5",
+    "tools/prism_image_alignment_checkpoint.py": "040d20b7b2c356d8a90b692d40b3fcf7190a121f8821def68be81bd2c07bdfe3",
+    "tools/launch_aurora_image_experiment.py": "45783dbd96dc415b9b3ab389bcae0df22e912f86d7650bf509fdf224619320cc",
+    "src/training/cpu_master_adamw.py": "ad81e003fe1db35dbc69d7b9df46f47c9cd4b3a13dee58b734b9be2d68c9adaf",
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf"
+  }
+}

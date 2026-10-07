@@ -1,0 +1,50 @@
+{
+  "status": "interim_running",
+  "job_id": "8848858",
+  "evaluation_step": 400,
+  "report_completed_steps": 420,
+  "optimizer_log_last_step": 425,
+  "examples_seen": 6800,
+  "unique_examples_seen": 6800,
+  "fixed_cohort_changes": {
+    "train": {
+      "count": 32,
+      "initial_flow_mse": 0.43971599685028195,
+      "step200_flow_mse": 0.4381462689489126,
+      "step400_flow_mse": 0.4386187521740794,
+      "relative_change_from_initial_percent": -0.24953485523887542,
+      "relative_change_from_step200_percent": 0.10783687061863834
+    },
+    "validation": {
+      "count": 32,
+      "initial_flow_mse": 0.4550941502675414,
+      "step200_flow_mse": 0.45352056808769703,
+      "step400_flow_mse": 0.4528198139742017,
+      "relative_change_from_initial_percent": -0.49975072015376876,
+      "relative_change_from_step200_percent": -0.1545142961101309
+    }
+  },
+  "mean_update_seconds_excluding_first": 10.502453671147244,
+  "last100_mean_update_seconds": 10.866744881409685,
+  "new_trained_generation_images": 0,
+  "terminal_checkpoint_available": false,
+  "final_acceptance_passed": null,
+  "source_sha256": {
+    "report.json": "a142267c8b663ddc295f1c56aed18977c073b280bd1fb0eff53868091041a378",
+    "steps.jsonl": "0045034956bf66777135452f6e25a2a6b74d5e448af7ac53f4de3bab528f0f8d",
+    "evaluations.jsonl": "235e20061c5aae5c96a5a82a077e3f328870db9ac369c6eb6d0911c53d3b479e"
+  },
+  "interpretation": "At step400 held-out flow MSE is about 0.50 percent below initial and train MSE 0.25 percent below initial; changes remain small and do not establish improved generated images. Continue the authorized full-data run.",
+  "limitations": [
+    "Fixed cohorts contain 32 examples per split.",
+    "Report and optimizer log are not an atomic snapshot.",
+    "Wrong-caption gaps remain provisional without actual paired noisy-input/timestep controls.",
+    "Four saved images are initialization only; first trained gallery/checkpoint planned at600.",
+    "Terminal frozen-state and checkpoint acceptance remain pending."
+  ],
+  "independent_interim_audit": {
+    "path": "interim-independent-audit.json",
+    "sha256": "511ad2a045dc08e2a4c7a97ef096b3c89fd06ac3d1845ff8132a48d6da78db0c",
+    "final_acceptance_passed": null
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "source": "Google DOCCI",
+  "license": "CC-BY-4.0",
+  "source_url": "https://google.github.io/docci/",
+  "records": [
+    {
+      "data_offset": 88152576,
+      "group_ids": [
+        "docci:train_04996",
+        "pixels:41ecbe4205dcabe50be4c498a56914d158bf3450a5dd1b7c783584f8cf9a210f"
+      ],
+      "header_offset": 88152064,
+      "height": 1536,
+      "id": "train_04996",
+      "image_sha256": "bf41d73519185f1f5ec874c030c3af7a01f6c03b1294ae6ab103117610738fce",
+      "license": "CC-BY-4.0",
+      "member": "train_04996.jpg",
+      "pixel_sha256": "41ecbe4205dcabe50be4c498a56914d158bf3450a5dd1b7c783584f8cf9a210f",
+      "prompt": "A turquoise genie statue is on top of a brown brick building where the torso and up is visible only. The genie has its left hand raised with its elbow resting on the building, and his right arm is placed laying on the building with its hand slightly raised. The genie has a black beard and a bald head with pointed ears. The shirt is golden on the genie's body and is similar to a tank top. On the front of the building is a blue sign saying \"BLUE GENIE\" in yellow and \"ART BAZAAR\" in black with white outline.",
+      "related_group_ids": [
+        "docci-cluster:105"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/train/docci-000013.tar",
+      "size": 223012,
+      "source_archive_member": "images/train_04996.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "train_04996.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "105",
+        "entity_tags": [],
+        "image_height": 1536,
+        "image_width": 2048
+      },
+      "source_split": "train",
+      "split": "train",
+      "task": "t2i",
+      "width": 2048
+    },
+    {
+      "data_offset": 26494976,
+      "group_ids": [
+        "docci:qual_dev_00000",
+        "pixels:be771c27cc43b2770b61fc017a3287b870006dce4fd668a6057257314a8fca2e"
+      ],
+      "header_offset": 26494464,
+      "height": 2048,
+      "id": "qual_dev_00000",
+      "image_sha256": "8a4c739822dcdef19b1297b875da32b030976a2d17f1503dae8a9706909482ba",
+      "license": "CC-BY-4.0",
+      "member": "qual_dev_00000.jpg",
+      "pixel_sha256": "be771c27cc43b2770b61fc017a3287b870006dce4fd668a6057257314a8fca2e",
+      "prompt": "An indoor angled down medium close-up front view of a real sized stuffed dog with white and black colored fur wearing a blue hard hat with a light on it. A couple inches to the right of the dog is a real sized black and white penguin that is also wearing a blue hard hat with a light on it. The dog is sitting, and is facing slightly towards the right while looking to its right with its mouth slightly open, showing its pink tongue. The dog and penguin are placed on a gray and white carpet, and placed against a white drawer that has a large gray cushion on top of it. Behind the gray cushion is a transparent window showing green trees on the outside.",
+      "related_group_ids": [
+        "docci-cluster:130"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/validation/docci-000000.tar",
+      "size": 440611,
+      "source_archive_member": "images/qual_dev_00000.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "qual_dev_00000.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "130",
+        "entity_tags": [],
+        "image_height": 2048,
+        "image_width": 1536
+      },
+      "source_split": "qual_dev",
+      "split": "validation",
+      "task": "t2i",
+      "width": 1536
+    }
+  ]
+}

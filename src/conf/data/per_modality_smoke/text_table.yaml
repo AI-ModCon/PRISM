@@ -1,0 +1,12 @@
+# Per-modality smoke: text + table.
+# Skip ts_qa; enable table_reasoning (TableLLM) with explicit local override
+# so the dispatch fix picks up <data_root>/zone_a/table_reasoning
+# (fetaqa.jsonl, spider.jsonl, tatqa.jsonl, table-op.jsonl) instead of falling
+# through to the offline-fatal HF remote loader. See datasets_config.json's
+# table_reasoning.local_path for the default placeholder path.
+dataset_overrides:
+  ts_qa:
+    skip: true
+  table_reasoning:
+    skip: false
+    preferred_source: local

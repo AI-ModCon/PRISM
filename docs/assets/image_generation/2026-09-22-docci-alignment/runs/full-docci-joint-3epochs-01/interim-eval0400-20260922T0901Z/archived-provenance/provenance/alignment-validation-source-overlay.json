@@ -1,0 +1,10 @@
+{
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-alignment-validation",
+  "baseline_source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism",
+  "sha256": {
+    "tools/align_prism_image_conditioning.py": "c2b290595fd9d2893d405cf7a70f61f9b2758eb7f78e6f6e0dca13c9c030d9ca",
+    "tools/prism_image_alignment_checkpoint.py": "5c41e88fdcad739f57436d0f1b3b9edbffc2ef8b975d40fa2299195d2ba8dd46",
+    "tools/diagnose_prism_image_conditioning.py": "dfe9b0a283b30581a4bcbbf5125220731accb46865eb3595bc0f9d5b9ee67013",
+    "tools/launch_aurora_image_experiment.py": "2a1868c0c1ecc75818a26bf8df7e50ef8e50f001985e4d7e6fdc42e107f37605"
+  }
+}

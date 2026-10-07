@@ -1,0 +1,59 @@
+{
+  "status": "completed_training_caption_diagnostic_pending",
+  "job_id": "8848858",
+  "steps": 1809,
+  "training_exposures": 28944,
+  "unique_training_pairs": 9647,
+  "duration_seconds": 19522.59109109617,
+  "terminal_checkpoint": {
+    "bytes": 47674885973,
+    "independently_verified": true,
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-3epochs-01/connector-diffusion-pilot-step-001809.pt",
+    "qualification": "unqualified",
+    "sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+    "step": 1809
+  },
+  "source_report_sha256": "0da348d96788ab928ceb8d22dc51a6f9ebb84fdb84d7c7c7f04a10773af2114c",
+  "artifact_execution_acceptance": true,
+  "broad_generation_benchmark_passed": false,
+  "fixed_cohort_losses": {
+    "train": {
+      "count": 32,
+      "initial": 0.43971599685028195,
+      "final": 0.436507913749665,
+      "relative_change_percent": -0.729580712004263
+    },
+    "validation": {
+      "count": 32,
+      "initial": 0.4550941502675414,
+      "final": 0.44945628102868795,
+      "relative_change_percent": -1.2388357959642105
+    }
+  },
+  "full_validation_100": {
+    "count": 100,
+    "mean_loss": 0.45153753146529196,
+    "mean_shuffled_loss": 0.4521373435854912,
+    "mean_shuffled_minus_correct": 0.0005998121201992035,
+    "optimized_count": 0,
+    "step": 1809
+  },
+  "qualitative_cases": {
+    "train_04996": "A turquoise genie and brick sign remain recognizable, but the final image is more cartoon-like, has a blank background, different pose and worse sign text. Mixed or degraded detail fidelity.",
+    "train_08983": "Final output recovers pyramid shapes from the block-like starting image; extra pyramid/shape, colors and mosaic layout remain inaccurate.",
+    "qual_dev_00000": "Final output separates a recognizable black/white dog and penguin; the penguin is much too small, lacks its blue hard hat, and subject/background details remain inaccurate.",
+    "qual_dev_00001": "Final output recovers two recognizable aircraft on a runway, with a yellow-tailed plane on the left and a pale plane to its right. The left aircraft is not fully yellow and spatial/sky/runway details differ."
+  },
+  "limitations": [
+    "Two train and two held-out image cases at matched within-run initial noise do not establish a broad benchmark.",
+    "These targets never enter PRISM vision conditioning; images are caption-only generations rather than pixel reconstructions.",
+    "Training-run wrong-caption gaps remain provisional pending actual noisy-input/timestep controls in the separate diagnostic.",
+    "Native references use a separate diagnostic because this stage begins with an adapted DiT.",
+    "The full100 mean is a distinct cohort; fixed32 comparison is recomputed from terminal per-example entries."
+  ],
+  "independent_audit": {
+    "path": "final-independent-audit.json",
+    "sha256": "1ef536a0fc6de962192a1be602f0d4d868a35f33962d9fc9bffdc6472b962540"
+  },
+  "post_training_diagnostic_job": "8854234"
+}

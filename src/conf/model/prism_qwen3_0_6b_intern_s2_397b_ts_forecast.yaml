@@ -1,0 +1,61 @@
+# Qwen3-0.6B / Intern-S2 input model + simple PRISM forecasting output.
+# Input fields preserve the user's pinned 9a2f328 model configuration.
+# Prerequisite: integrate its intern_s2_397b input encoder and loading wiring;
+# this decoder branch does not implement that input encoder. Hydra composition
+# is available here, but this file alone does not make the full model runnable.
+# The output generator is a new linear quantile head, not Intern-S2's forecaster.
+
+backbone_id: "Qwen/Qwen3-0.6B"
+tokenizer_id: "Qwen/Qwen3-0.6B"
+d_text: 1024
+attn_implementation: "sdpa"
+modalities: [text, time_series]
+
+# These settings preserve the input model's freezing policy. For head-only
+# training, also freeze the restored input projectors explicitly before
+# creating the optimizer; freeze_encoders does not freeze those projectors.
+freeze_backbone: true
+freeze_encoders: true
+freeze_vit: true
+
+# Observed-history encoder: its 4096-wide output is input to the projector,
+# not the forecasting head. HF_HOME must point to the prepared local assets.
+is_timeseries: true
+ts_variates: 1
+ts_projector: "intern_s2_397b"
+ts_encoder_id: "${oc.env:HF_HOME}/intern-s2-preview-397b-timeseries/model.safetensors"
+ts_load_pretrained: true
+d_ts: 4096
+max_ts_length: 512
+normalize_ts_in_encoder: false
+
+# Input projection: 4096 -> 1024; prefix fusion puts observed-history tokens
+# before the text prompt. These normalization values are existing defaults.
+projector_hidden_mult: 1
+projector_num_layers: 2
+projector_norm_mode: "layernorm"
+projector_modality_embed_pos: "after_norm"
+projector_modality_embed_scale: 0.02
+is_interleaved_qa: false
+
+output_decoders: [text, time_series]
+decoder_loss_weights:
+  time_series: 1.0
+decoder_configs:
+  time_series:
+    # [B,L,1024] -> [B,1,1024], taking the last valid final-layer token.
+    readout:
+      type: pool
+      layers: final
+      pool: last
+    # Parameter-free: this head consumes the trunk width without projection.
+    bridge:
+      type: identity
+      output_dim: 1024
+    # [B,1,1024] -> [B,96,1,3]; pinball loss, median for point forecasts.
+    # Randomly initialized and trainable: no pretrained generator weights.
+    generator:
+      type: linear_quantile
+      horizon: 96
+      num_vars: 1
+      quantiles: [0.1, 0.5, 0.9]

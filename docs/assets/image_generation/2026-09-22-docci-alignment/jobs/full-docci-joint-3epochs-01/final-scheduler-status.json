@@ -1,0 +1,18 @@
+{
+  "8848858.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov": {
+    "job_state": "F",
+    "Exit_status": 0,
+    "resources_used": {
+      "cpupercent": 2,
+      "cput": "00:00:02",
+      "mem": "13360kb",
+      "ncpus": 208,
+      "vmem": "51680kb",
+      "walltime": "05:25:34"
+    },
+    "stime": "Tue Sep 22 07:39:45 2026",
+    "mtime": "Tue Sep 22 13:05:53 2026",
+    "obittime": "Tue Sep 22 13:05:53 2026",
+    "comment": "Job run at Tue Sep 22 at 07:39 on (x4500c1s5b0n0:ncpus=208) and finished"
+  }
+}

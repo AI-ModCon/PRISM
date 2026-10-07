@@ -1,0 +1,21 @@
+# Accelerate config for Aurora XPU with xccl backend
+# Based on aurora_pytorch.md documentation (Fall 2025+)
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: MULTI_XPU
+downcast_bf16: 'no'
+gpu_ids: all
+machine_rank: 0
+main_training_function: main
+mixed_precision: bf16
+num_machines: 1
+num_processes: 12
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+# Note: Accelerate auto-detects xccl for XPU when torch.xpu is available
+# The xccl backend and HSN network are configured via environment variables
+# set in launch_aurora_web.py (FI_PROVIDER=cxi, CCL_KVS_IFACE=hsn0)

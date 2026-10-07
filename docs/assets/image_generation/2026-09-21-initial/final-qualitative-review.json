@@ -1,0 +1,14 @@
+{
+  "review_kind": "qualitative_four_fixed_examples_not_benchmark",
+  "step": 500,
+  "sampling_steps": 50,
+  "training_cases": {
+    "pixmo-train-00000086": "Stylized flower-like painting; partial subject recovery, inaccurate color and shape.",
+    "pixmo-train-00000139": "Paired vertical appliance-like composition; partial composition recovery."
+  },
+  "validation_cases": {
+    "pixmo-validation-00613040": "Paired red blocks, not the requested Snoopy cartoon.",
+    "pixmo-validation-00613080": "Pale bread/tile-like square, not the requested clock."
+  },
+  "conclusion": "Partial training-set learning; sampled held-out generation fails. Generalization not established."
+}

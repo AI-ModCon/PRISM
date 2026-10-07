@@ -1,0 +1,9 @@
+# Per-modality smoke: text only.
+# Skip ts_qa (the only zone_a default-on dataset) and enable tulu_sft as the
+# text source. The TEXTONLY-1N design unfreezes the backbone so a text-only
+# dataloader has trainable params.
+dataset_overrides:
+  ts_qa:
+    skip: true
+  tulu_sft:
+    skip: false

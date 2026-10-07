@@ -1,0 +1,39 @@
+# Lockfile for PRISM on Aurora frameworks/2025.3.1+ (py3.12, torch 2.10).
+#
+# This is the *delta* between the frameworks system site-packages and what
+# PRISM needs — captured by pip-installing requirements/aurora-py3.12.in into
+# a fresh --system-site-packages venv and recording the new/upgraded entries.
+#
+# We do NOT use `uv pip compile` directly because uv resolves transitive deps
+# from PyPI metadata without consulting the local environment, so it pulls in
+# torch + cuda-bindings + nvidia-* wheels that would shadow Aurora's
+# XPU-patched torch and break the venv.
+#
+# Install with:
+#   uv pip install --no-deps -r requirements/aurora-py3.12.lock.txt
+#
+# Regenerate with:
+#   module load frameworks/2025.3.1
+#   python -m venv --system-site-packages /tmp/_lockgen
+#   source /tmp/_lockgen/bin/activate
+#   pip freeze | sort -u > /tmp/_base
+#   pip install -r requirements/aurora-py3.12.in
+#   pip freeze | sort -u | diff /tmp/_base - | grep "^>" | sed 's/^> //' \
+#     > requirements/aurora-py3.12.lock.txt
+#   (then prepend this header)
+#
+# Generated 2026-05-23 against frameworks/2025.3.1 on aurora-uan-0012.
+braceexpand==0.1.7
+fsspec==2024.10.0
+jaxtyping==0.3.9
+lightning-utilities==0.15.3
+Markdown==3.10.2
+orjson==3.11.9
+tensorboard==2.20.0
+tensorboard-data-server==0.7.2
+the_well==1.2.0
+torch-geometric==2.7.0
+torchmetrics==1.9.0
+wadler_lindig==0.1.7
+webdataset==1.0.2
+Werkzeug==3.1.3

@@ -1,0 +1,21 @@
+# @package model
+# Add a simple forecasting output to an existing PRISM language model.
+# Preserve its backbone, input encoders, input projectors and freeze settings.
+# The head's input width is inferred from the loaded trunk (Qwen3-0.6B: 1024).
+# This is a new randomly initialized PRISM head, not the Intern-S2 forecaster.
+output_decoders: [text, time_series]
+decoder_loss_weights:
+  time_series: 1.0
+decoder_configs:
+  time_series:
+    readout:
+      type: pool
+      layers: final
+      pool: last
+    bridge:
+      type: identity
+    generator:
+      type: linear_quantile
+      horizon: 96
+      num_vars: 1
+      quantiles: [0.1, 0.5, 0.9]

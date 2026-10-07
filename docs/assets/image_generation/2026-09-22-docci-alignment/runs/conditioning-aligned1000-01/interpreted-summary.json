@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "source_report_sha256": "48d72be2c097e1a7d0e9bbdaa4feb2c222ad5ccf8d383e7e516b49f96b24a06f",
+  "source_acceptance_sha256": "2a25fa7dde2ed2e11f2ae11b7e347b12e9a573caad163399430088d76d791d74",
+  "comparison": "Native pretrained conditioner versus feature-aligned PRISM chat conditioning, both using the same original pretrained frozen DiT. No adapted joint DiT is loaded in this run.",
+  "cohort": {
+    "training_target_pairs": 8,
+    "heldout_target_pairs": 8,
+    "timesteps_per_pair": 3,
+    "paired_evaluations_per_route": 48,
+    "diffusion_forward_calls": 192,
+    "note": "Repeated timestep evaluations of 16 target pairs, not 48 independent examples. Flow MSE and caption sensitivity are not image-generation accuracy."
+  },
+  "metrics": {
+    "train": {
+      "native_pretrained": {
+        "matched_loss": 0.4536604086558024,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.4785098787397146,
+        "wrong_minus_matched": 0.024849470083912212,
+        "unique_target_captions": 8,
+        "captions_with_positive_average_gap": 8,
+        "per_requested_timestep": {
+          "0.1": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.32029619812965393,
+            "mean_wrong_minus_matched": 0.054930469021201134
+          },
+          "0.5": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.45261457562446594,
+            "mean_wrong_minus_matched": 0.01844780519604683
+          },
+          "0.9": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.5880704522132874,
+            "mean_wrong_minus_matched": 0.001170136034488678
+          }
+        }
+      },
+      "prism_chat": {
+        "matched_loss": 0.6734810521205267,
+        "matched_wins": 18,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.6949658803641796,
+        "wrong_minus_matched": 0.02148482824365298,
+        "unique_target_captions": 8,
+        "captions_with_positive_average_gap": 7,
+        "per_requested_timestep": {
+          "0.1": {
+            "target_captions": 8,
+            "matched_wins": 6,
+            "mean_matched_flow_mse": 0.4774952530860901,
+            "mean_wrong_minus_matched": 0.026868652552366257
+          },
+          "0.5": {
+            "target_captions": 8,
+            "matched_wins": 7,
+            "mean_matched_flow_mse": 0.7732337191700935,
+            "mean_wrong_minus_matched": 0.03018639236688614
+          },
+          "0.9": {
+            "target_captions": 8,
+            "matched_wins": 5,
+            "mean_matched_flow_mse": 0.7697141841053963,
+            "mean_wrong_minus_matched": 0.007399439811706543
+          }
+        }
+      }
+    },
+    "validation": {
+      "native_pretrained": {
+        "matched_loss": 0.485446959733963,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.512051947414875,
+        "wrong_minus_matched": 0.026604987680912018,
+        "unique_target_captions": 8,
+        "captions_with_positive_average_gap": 8,
+        "per_requested_timestep": {
+          "0.1": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.3832806497812271,
+            "mean_wrong_minus_matched": 0.059516362845897675
+          },
+          "0.5": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.48097240179777145,
+            "mean_wrong_minus_matched": 0.01900477334856987
+          },
+          "0.9": {
+            "target_captions": 8,
+            "matched_wins": 8,
+            "mean_matched_flow_mse": 0.5920878276228905,
+            "mean_wrong_minus_matched": 0.001293826848268509
+          }
+        }
+      },
+      "prism_chat": {
+        "matched_loss": 0.7247321481506029,
+        "matched_wins": 16,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.7380136102437973,
+        "wrong_minus_matched": 0.013281462093194326,
+        "unique_target_captions": 8,
+        "captions_with_positive_average_gap": 5,
+        "per_requested_timestep": {
+          "0.1": {
+            "target_captions": 8,
+            "matched_wins": 6,
+            "mean_matched_flow_mse": 0.5828906670212746,
+            "mean_wrong_minus_matched": 0.027148529887199402
+          },
+          "0.5": {
+            "target_captions": 8,
+            "matched_wins": 5,
+            "mean_matched_flow_mse": 0.8177207037806511,
+            "mean_wrong_minus_matched": 0.007581375539302826
+          },
+          "0.9": {
+            "target_captions": 8,
+            "matched_wins": 5,
+            "mean_matched_flow_mse": 0.7735850736498833,
+            "mean_wrong_minus_matched": 0.0051144808530807495
+          }
+        }
+      }
+    }
+  },
+  "matched_mse_excess_relative_to_native": {
+    "train": 0.4845488812128298,
+    "validation": 0.49291726648730916
+  },
+  "paired_input_controls": {
+    "complete_unique_target_timestep_records": true,
+    "noisy_latent_hashes_recorded": 48,
+    "actual_bf16_timesteps": [
+      {
+        "requested": 0.1,
+        "actual": 0.10009765625
+      },
+      {
+        "requested": 0.5,
+        "actual": 0.5
+      },
+      {
+        "requested": 0.9,
+        "actual": 0.8984375
+      }
+    ],
+    "runtime_contract": "The completed runner asserted equality of actual noisy DiT inputs and timestep hashes across native/PRISM and matched/wrong forwards for every record. Each record saves the shared hashes after that assertion; this analysis does not recompute activations.",
+    "all_saved_image_hashes_verified": 8,
+    "initial_latents_identical_across_generation_routes_per_case": true
+  },
+  "restoration": {
+    "source_kind": "real_checkpoint_connector_native_feature_alignment",
+    "alignment_step": 1000,
+    "alignment_checkpoint_sha256": "431938ef0fe99e480a28a71fd8eb716d067050cdde7388dd0ed33a2af794a642",
+    "alignment_report_sha256": "c44e90683a33e6bc5a49ec5af93e79eea4188b437f69eabde74dc52b65ac3bad",
+    "restored_connector_tensors": 4,
+    "warm_start_step": 500,
+    "warm_start_sha256": "e84b3550304f4cebe56b394e1e1f65dfc333bd9c6ed8e9adbb240c6694c4387f",
+    "exact_token_and_content_audit_revalidated": true,
+    "original_generator_manifest_sha256": "46ad5c24af04baef2c5b6d365ee0ccfdc24eb626d98d56c017470b1f19f37d09",
+    "optimizer_rng_sampler_restored": false,
+    "prompt_format": "chat",
+    "negative_anchor_trained": false
+  },
+  "frozen_audit": {
+    "tensor_hashes_compared": 2220,
+    "all_before_after_equal": true,
+    "native_pretrained_baseline_state_unchanged": true,
+    "artifact_acceptance_passed": true,
+    "note": "All model tensors are held fixed during this post-restoration diagnostic, including the newly restored connector."
+  },
+  "interpretation": [
+    "The aligned PRISM route has measurable correct-caption sensitivity. Native conditioning wins all 24 repeated controls in each split; PRISM wins 18 training and 16 heldout controls.",
+    "Averaging each caption across its three timesteps, the gap is positive for 7 of 8 training captions and 5 of 8 heldout captions. The positive mean does not show consistent improvement on every caption.",
+    "Matched-caption flow MSE remains 48.5% higher on training pairs and 49.3% higher on heldout pairs than native conditioning with the same original DiT. Feature alignment alone has not recovered native denoising behavior.",
+    "The earlier raw-overfit256 diagnostic used an adapted DiT and raw prompts. Comparing its PRISM metrics to this chat/original-DiT run is not an isolated ablation of feature alignment.",
+    "Image quality must be assessed separately from these losses. This quantitative analysis does not establish successful tiny-set image overfitting or justify treating the connector as quality-qualified."
+  ]
+}

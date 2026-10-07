@@ -1,0 +1,114 @@
+# Dependabot configuration for PRISM.
+#
+# SCOPE IS DELIBERATELY NARROW. Only two things are auto-updated:
+#   1. GitHub Actions used by the workflows in .github/workflows/
+#   2. requirements/ci.txt — the CI-only toolchain (ruff, mypy, pytest)
+#
+# Everything else under requirements/ describes an HPC software stack that is
+# installed against a site-provided, ABI-patched torch (Aurora's XPU build,
+# Perlmutter's and Polaris' CUDA builds). Letting a resolver raise a version
+# there is not a routine upgrade — it silently breaks the cluster install.
+# The failure mode is documented in requirements/base.txt: PyG's C++ extension
+# wheels (pyg_lib, torch_scatter, torch_sparse, torch_cluster) built against a
+# stock torch abort at import with `undefined symbol: __kmpc_fork_call`.
+# Those files are updated by hand, together with the matching setup script and
+# a run on the actual machine.
+#
+# Dependabot discovers every manifest under the `directory` it is given, so
+# `/requirements` alone would also pick up the HPC files and the frozen
+# deepspeed lockfile — the latter pins ruff and pytest too, so an `allow` list
+# is not sufficient on its own. The pip entry below therefore uses all three
+# guards: `exclude-paths` drops the HPC manifests before they are ever fetched,
+# `allow` restricts proposals to the four CI tools, and `ignore` names the
+# ABI-sensitive packages explicitly.
+#
+# tests/platform/test_dependabot_scope.py fails if a new file appears under
+# requirements/ without being excluded here, so the list cannot rot silently.
+version: 2
+
+updates:
+  # ---- GitHub Actions -------------------------------------------------
+  # `/` is correct for this ecosystem: Dependabot reads .github/workflows/.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"
+    groups:
+      # One PR a month for routine action bumps rather than four.
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ---- CI Python toolchain -------------------------------------------
+  # requirements/ci.txt is the only Python manifest under Dependabot's care.
+  # `allow` restricts it to the four pinned dev tools; the unpinned runtime
+  # packages further down that file (torch, transformers, ...) are left alone,
+  # because CI deliberately floats them and a pin here would diverge from the
+  # HPC stacks.
+  - package-ecosystem: "pip"
+    directory: "/requirements"
+    # Patterns are relative to `directory`, so these are bare file names, not
+    # `requirements/`-prefixed paths. Every sibling manifest here is
+    # hand-maintained against a site-built torch. deepspeed.lock.txt matters
+    # most: it is a `pip freeze` snapshot of a working Aurora venv that happens
+    # to contain ruff and pytest, so without this it would be rewritten by the
+    # `allow` rules below.
+    exclude-paths:
+      - "aurora-py3.12.in"
+      - "aurora-py3.12.intern-s2.nodeps.txt"
+      - "aurora-py3.12.lock.txt"
+      - "aurora-py3.12.nodeps.txt"
+      - "base.txt"
+      - "deepspeed.lock.txt"
+      - "deepspeed.txt"
+      - "environment.yml"
+      - "materials.txt"
+      - "perlmutter.txt"
+      - "polaris.txt"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"
+    groups:
+      ci-tools:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    allow:
+      - dependency-name: "ruff"
+      - dependency-name: "mypy"
+      - dependency-name: "pytest"
+      - dependency-name: "pytest-cov"
+    ignore:
+      # Belt and braces. If Dependabot ever picks up a sibling manifest in
+      # this directory, these must never be proposed: every one of them is
+      # pinned to match a site-built torch ABI. Names are spelled out rather
+      # than wildcarded — `torch-*` would also catch torch-geometric, which is
+      # pure Python and does not need freezing at every version.
+      - dependency-name: "torch"
+      - dependency-name: "torchvision"
+      - dependency-name: "torchaudio"
+      - dependency-name: "torch-scatter"
+      - dependency-name: "torch-sparse"
+      - dependency-name: "torch-cluster"
+      - dependency-name: "torch-spline-conv"
+      - dependency-name: "pyg-lib"
+      - dependency-name: "nvidia-*"
+      - dependency-name: "intel-*"
+      - dependency-name: "oneccl-bind-pt"
+      - dependency-name: "deepspeed"
+      - dependency-name: "transformers"
+      - dependency-name: "huggingface-hub"
+      - dependency-name: "lightning"
+      - dependency-name: "pytorch-lightning"

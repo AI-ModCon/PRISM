@@ -1,0 +1,25 @@
+{
+  "base_commit": "2c0795e640e95d94cfb69a4832281ca5bafbbb2d",
+  "working_source_files": {
+    "tools/download_docci.py": "d385cd6e8041e2c9f5f65105e0a33511e8088dcd3d91f1ed3254d8ea52e40740",
+    "tools/prepare_docci_webdataset.py": "7f2ececc86202231fb8c3455898a4dfa0bf6360a8240012a9308cbb47008e93f",
+    "tools/train_prism_image_connector.py": "e67ea9f3f697a9839c8e4f300b7691e7a6a8f4809ed4956293d60888784a25f5",
+    "tools/plot_prism_image_connector.py": "ab604f46b12bf62f1c6707ce29c1e923b14b8b9f5e4d0069545a0abcab10695b",
+    "tools/launch_aurora_image_experiment.py": "652c8e19a7d4e9b1b07335c24e26cda49d0d8cd3c9621fa31ba41a2dcd8cd6b1",
+    "src/data/image_generation_webdataset.py": "50e9da2a5fa951fd56ecd78a9f77fccd7883fba1efc1dfaa6b2ffaa71188b40d",
+    "src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf",
+    "tests/test_docci_webdataset.py": "f2eac335709e5f3b3efad069c57b54796b7d8c088dda07d5a6d78d9066a0db04",
+    "tests/test_train_prism_image_connector.py": "f78270c3cf68bf7cd4963e9a9a04bab875d9d08b1b7843dd8676ee7b189ad4d2",
+    "tests/test_plot_prism_image_connector.py": "dd2ca121549939baf089ee96445344223ecbdcf8d840b96ea5e4289700a57ea5",
+    "tests/test_image_experiment_launcher.py": "dc7bf49d11facf7c130da2120807195da5d02bff70f2620e33e60d612a84d52d",
+    "docs/image_decoder.md": "5b179f67deca25d001a787b0e10c78651c4093a6deb000206c8f6f290ea252e9",
+    "docs/image_decoder/docci_data.md": "a2ec0677f195ead17235732e80400cff43e120d885f7585e2f7f1e319e5f5aa5",
+    "docs/reports/2026-09-21-docci-connector-pilot.md": "f733d4bf03e4c7c49543fdcf6969cc4181bd67b13c0b6ec3caaf96b0f52a3615"
+  },
+  "test_results": {
+    "data_runner_launcher": "51 passed",
+    "plotting": "11 passed",
+    "ruff": "passed",
+    "diff_check": "passed"
+  }
+}

@@ -1,0 +1,40 @@
+# Zone A training for timeseries (projector warmup)
+batch_size: 1
+max_steps: 20000
+finite_epoch_steps: 0
+learning_rate: 1e-4
+scheduler_type: "cosine"
+min_lr_ratio: 0.1
+wsd_decay_ratio: 0.1
+wsd_decay_steps: null
+warmup_steps: 100
+viz_every_n_steps: 500
+
+freeze_llm: true
+freeze_vit: true
+
+wandb_project: "prism-training"
+wandb_run_name: "zone_a_ts_7b"
+
+# DDP optimization (from docs/results/scaling_study.md)
+ddp:
+  bucket_cap_mb: 50
+  find_unused_parameters: false
+  static_graph: true
+  gradient_as_bucket_view: true
+
+# Logging
+log_every_n_steps: 50
+save_every_n_steps: 1000
+eval_every_n_steps: 1000
+wandb_run_id: null
+
+# Device
+device: auto
+
+data_num_workers: 1
+# IsoFLOP eval gate (default false → existing runs bit-identical)
+# Defaults to false so non-IsoFLOP runs are bit-identical to today.
+# IsoFLOP launches flip this to true to emit per-family eval-loss perf records.
+eval_enabled: false
+validation_batches: 8

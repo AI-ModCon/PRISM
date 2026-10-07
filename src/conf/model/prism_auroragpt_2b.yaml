@@ -1,0 +1,48 @@
+# Model Configuration - AuroraGPT-2B Backbone (Image+Text Only)
+#
+# AuroraGPT-2B: Llama architecture (~2B params), pretrained from scratch on
+# 7T+ tokens via Megatron-DeepSpeed (SophiaG optimizer).
+# Uses Gemma tokenizer (256K vocab), GQA (16 heads, 4 KV heads).
+#
+# NOTE: Only loads text+image modalities to avoid unused encoder/projector
+# overhead. This enables DDP static_graph=True optimization.
+#
+# NOTE: 256K vocab logits are computed in BF16 via manual F.cross_entropy
+# (no FP32 upcast). BS=8 runs at ~15GB peak with seq=1024.
+#
+# ATTENTION IMPLEMENTATION: "sdpa" (default, production recommended) or "eager" (fallback).
+# SDPA uses the fused F.scaled_dot_product_attention kernel (~10-15% faster, lower peak memory).
+# Eager uses manual matmul+softmax (~30% slower, but avoids SDPA kernel entirely).
+# SDPA verified stable for 800+ steps at BS=4 on clean nodes (2026-02-26).
+#
+# CRITICAL: ZE_AFFINITY_MASK must be set per-rank in FLAT mode so each rank
+# only sees its assigned tile. Without it, 12 ranks × 12 tiles = 144 Level Zero
+# contexts, exhausting kernel dispatch resources (UR_RESULT_ERROR_OUT_OF_RESOURCES).
+# With affinity mask, SDPA works reliably at BS<=6. BS>=7 triggers UR error
+# regardless of attention implementation (too many kernel dispatches per backward).
+#
+# For multi-modal training, copy this file and add modalities as needed.
+
+# AuroraGPT-2B is an ALCF-internal checkpoint with no public equivalent, so the
+# preset is unusable without access to it. Set PRISM_AURORAGPT_2B_CHECKPOINT to
+# the checkpoint directory; the placeholder default matches the one in
+# src/config.py's "prism-auroragpt-2b" entry and is deliberately not a real path.
+backbone_id: "${oc.env:PRISM_AURORAGPT_2B_CHECKPOINT,/lus/flare/projects/<project>/<path>/AuroraGPT-2B-checkpoint/global_stepNNNNNN}"
+freeze_backbone: true
+freeze_encoders: true
+attn_implementation: "sdpa"
+
+# Dimensions (backbone hidden_size = 2048)
+d_text: 2048
+d_img: 768    # SigLIP2-base native hidden size (avoids random frozen projection inside encoder)
+
+# Only text + image modalities - enables static_graph optimization
+modalities:
+  - "text"
+  - "image"
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

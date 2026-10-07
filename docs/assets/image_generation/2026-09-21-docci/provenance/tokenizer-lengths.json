@@ -1,0 +1,47 @@
+{
+  "tokenizer_path": "/lus/flare/projects/ModCon/sww/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "tokenizer_length": 151669,
+  "max_vocab_id": 151668,
+  "splits": {
+    "qual_dev": {
+      "count": 100,
+      "min_tokens": 66,
+      "median_tokens": 141,
+      "p95_tokens": 260,
+      "max_tokens": 313,
+      "longest_id": "qual_dev_00063",
+      "max_token_id": 99055,
+      "over_1024": 0
+    },
+    "qual_test": {
+      "count": 100,
+      "min_tokens": 69,
+      "median_tokens": 146,
+      "p95_tokens": 264,
+      "max_tokens": 298,
+      "longest_id": "qual_test_00088",
+      "max_token_id": 138496,
+      "over_1024": 0
+    },
+    "test": {
+      "count": 5000,
+      "min_tokens": 36,
+      "median_tokens": 130,
+      "p95_tokens": 237,
+      "max_tokens": 563,
+      "longest_id": "test_00904",
+      "max_token_id": 138832,
+      "over_1024": 0
+    },
+    "train": {
+      "count": 9647,
+      "min_tokens": 35,
+      "median_tokens": 130,
+      "p95_tokens": 237,
+      "max_tokens": 450,
+      "longest_id": "train_06982",
+      "max_token_id": 143492,
+      "over_1024": 0
+    }
+  }
+}

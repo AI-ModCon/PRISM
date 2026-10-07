@@ -1,0 +1,14 @@
+{
+  "base_commit": "2c0795e640e95d94cfb69a4832281ca5bafbbb2d",
+  "files": {
+    "tools/download_docci.py": "d385cd6e8041e2c9f5f65105e0a33511e8088dcd3d91f1ed3254d8ea52e40740",
+    "tools/prepare_docci_webdataset.py": "7f2ececc86202231fb8c3455898a4dfa0bf6360a8240012a9308cbb47008e93f",
+    "src/data/image_generation_webdataset.py": "50e9da2a5fa951fd56ecd78a9f77fccd7883fba1efc1dfaa6b2ffaa71188b40d",
+    "tests/test_docci_webdataset.py": "f2eac335709e5f3b3efad069c57b54796b7d8c088dda07d5a6d78d9066a0db04",
+    "tools/train_prism_image_connector.py": "e67ea9f3f697a9839c8e4f300b7691e7a6a8f4809ed4956293d60888784a25f5",
+    "tests/test_train_prism_image_connector.py": "f78270c3cf68bf7cd4963e9a9a04bab875d9d08b1b7843dd8676ee7b189ad4d2",
+    "src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf",
+    "tools/launch_aurora_image_experiment.py": "652c8e19a7d4e9b1b07335c24e26cda49d0d8cd3c9621fa31ba41a2dcd8cd6b1",
+    "tests/test_image_experiment_launcher.py": "dc7bf49d11facf7c130da2120807195da5d02bff70f2620e33e60d612a84d52d"
+  }
+}

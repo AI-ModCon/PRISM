@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -l select=1
+#PBS -l walltime=00:20:00
+#PBS -l filesystems=home:flare
+#PBS -q capacity
+#PBS -A ModCon
+#PBS -N prism-docci-alnval
+#PBS -j oe
+#PBS -k doe
+set -eo pipefail
+: "${PBS_JOBID:?Run via qsub}"
+module use /soft/modulefiles
+module load frameworks/2025.3.1
+set -u
+cd /lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-alignment-validation
+mpiexec -n 1 --ppn 1 bash /lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/jobs/conditioning-aligned1000-01/worker.sh

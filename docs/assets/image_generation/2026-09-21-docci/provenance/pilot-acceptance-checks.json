@@ -1,0 +1,18 @@
+{
+  "completed_real_run": true,
+  "500_updates": true,
+  "500_distinct_train_examples": true,
+  "finite_losses_gradients": true,
+  "connector_only": true,
+  "all_connector_tensors_received_gradients": true,
+  "frozen_unchanged": true,
+  "full_validation": true,
+  "sample_noise_replayed": true,
+  "sampling_target_free": true,
+  "sampler_progress": true,
+  "final_checkpoint_verified": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/runs/pilot-500-01/connector-pilot-step-000500.pt",
+    "bytes": 50936209,
+    "sha256": "e84b3550304f4cebe56b394e1e1f65dfc333bd9c6ed8e9adbb240c6694c4387f"
+  }
+}

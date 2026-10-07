@@ -1,0 +1,168 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+# Built distributions. Ours are published to PyPI, not committed. Scoped to
+# the build output dirs and the repo root rather than repo-wide, so a wheel
+# deliberately added under a subdirectory is still visible to `git status`
+# instead of being silently swallowed.
+/dist/*.whl
+/dist/*.tar.gz
+/build/*.whl
+/*.whl
+/*.tar.gz
+# uv is not a supported installer here: every HPC install in this repo runs
+# `--no-deps` against the platform's own accelerator-aware torch. A lockfile
+# left behind by a stray local `uv lock` would pin PyPI torch wheels that
+# shadow that build (undefined symbol: __kmpc_fork_call), so it must never
+# reach a commit.
+uv.lock
+
+# Conda
+Miniconda3-latest-MacOSX-arm64.sh
+
+# Documentation
+site/
+
+# Environment Variables
+# .env holds real, site-specific paths and secrets and must never be tracked.
+# Any .env.<site> variant is equally sensitive; only the sanitized *.template
+# and *.example files are committed.
+.env
+.env.*
+!.env*.template
+!.env*.example
+.venv/
+.venv-deepspeed/
+
+# Data
+/data/
+
+# Temporary Files
+temp_nanochat/
+PRISM_Report*
+generate_report_html.py
+outputs/
+jobs/
+globus_setup/
+tmp/
+tools/tmp/
+tools/check_*.py
+tools/debug_*.py
+tools/inspect_*.py
+tools/download_*.py
+# ...but this one is tracked. Ruff honours .gitignore even for tracked files,
+# so without the negation it is invisible to `ruff check ... tools` and its
+# findings never reach CI.
+!tools/download_docci.py
+tools/verify_*.py
+tools/repair_*.py
+tools/test_*.py
+tools/fix_*.py
+tools/audit_*.py
+# visualization/ and viz_output/ are runtime-created by tools/universal_evaluator.py;
+# ignore wherever they appear.
+visualization/
+viz_output/
+error_*.txt
+history_*.txt
+
+# DS_Store
+.DS_Store
+docs/.DS_Store
+docs/assets/.DS_Store 
+
+# Checkpoints
+checkpoints/
+
+#Wandb
+wandb/
+*.log
+# Generated logs and data
+*.o*
+debug_*.txt
+system_constraints.txt
+deepspeed_env.tar.gz
+deepspeed_env.tar.gz.bak*
+jobs/*.sh
+wandb/
+outputs/
+log/
+*.log
+
+# Local-only AI coding-agent files (do not commit upstream).
+# AGENTS.md and CLAUDE.md are planning/memory files for the local AI
+# assistant, not user-facing project docs.
+AGENTS.md
+CLAUDE.md
+
+# Generated job artifacts (PBS / mpiexec stdout/stderr land here)
+*.OU
+*.ER
+*.err
+/hold_*.sh
+/hold_*.err
+prism_hold_*
+
+# Local-only umbrella for stale caches, snapshots, and personal notes
+# (frameworks/, wheels/, viz_output/, visualization/, test_images/,
+# context/, models_cache/ all live here now). Anything here is local-only.
+_local/
+
+# Convenience symlink at repo root pointing into _local/. Exists so the
+# tracked tool docstrings that show example invocations using bare
+# `test_images/` paths still work. The symlink itself is local-only.
+/test_images
+
+# Large local caches + outputs that remain at the repo root because they
+# are hardcoded by Hydra / wandb / launchers. Kept ignored at root.
+logs/
+exported/
+
+# Local scratch areas. scaling-study/ is a local working tree for IsoFLOP runs;
+# the one tracked exception is the perf investigation report, which src/ cites.
+scaling-study/
+!scaling-study/results/
+!scaling-study/results/qwen3_e2e_perf_investigation.md
+download_model.py
+# Tracked, so the pattern above only hides it from tools that honour
+# .gitignore (ruff does) -- never from git. Negate it so the lint gate
+# can see it; see !tools/download_docci.py above for the same case.
+!scripts/download_model.py
+
+# Local-only test sanity probes (MPI / XPU / DAOS smoke runners
+# meant to be invoked manually on a compute node, not via pytest).
+# Tracked tests/test_*.py files (test_pipeline, test_vllm_plugin, etc.)
+# remain visible — these patterns target specific local-only filenames.
+tests/test_*.sh
+tests/verify_*.sh
+tests/test_alloc.py
+tests/test_backward_xpu.py
+tests/test_backward_xpu_bs2.py
+tests/test_daos_load.py
+tests/test_daos_webdataset.py
+tests/test_ddp_auroragpt.py
+tests/test_dist_init.py
+tests/test_distributed.py
+tests/test_distributed_daos.py
+tests/test_e2e_daos.py
+tests/test_ipex.py
+tests/test_load.py
+tests/test_setup_distributed.py
+tests/test_train_init.py
+
+# Local-only operational scratch under tools/ (rank wrappers, one-off
+# eval/repro launchers that aren't part of the canonical launcher fleet).
+tools/_*.sh
+tools/run_eval_job.sh
+tools/run_train_rank.sh
+
+.vscode
+
+# Coverage data written by `pytest --cov` (coverage.xml is a CI artifact, not a commit).
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/

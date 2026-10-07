@@ -1,0 +1,204 @@
+# Lustre WebDataset Configuration for Interactive Testing
+# Placeholder path — points at an example per-user Lustre data layout.
+# Set this to wherever tools/shard_calvin_vla.py (or your own prep step)
+# wrote shards, e.g. /lus/flare/projects/<project>/<user>/data/zone_a/
+
+# Mount configuration (Lustre path used directly)
+dastr:
+  mount_base: /lus/flare/projects/<project>/<user>/data/zone_a
+
+# Dataset groups with paths and weights
+groups:
+  pixmo:
+    description: "Pixmo datasets on Lustre"
+    datasets:
+      pixmo_cap:
+        path: pixmo_cap_webdataset
+        samples: 613610
+        shards: 613
+        weight: 1.0
+        description: "Image captions"
+      pixmo_points:
+        path: pixmo_points_webdataset
+        samples: 1919853
+        shards: 1920
+        weight: 1.0
+        proportion: 1.0
+        description: "Visual pointing/grounding"
+      pixmo_count:
+        path: pixmo_count_webdataset
+        samples: 33216
+        shards: 34
+        weight: 0.5
+        description: "Object counting"
+
+  s1mmalign:
+    description: "Scientific paper image-text datasets on Lustre"
+    datasets:
+      arxiv:
+        path: s1mmalign_webdatasets/arxiv_webdataset
+        samples: 13395035
+        shards: 2689
+        weight: 1.0
+        description: "ArXiv papers (2007-2025)"
+      biorxiv:
+        path: s1mmalign_webdatasets/biorxiv_webdataset
+        samples: 1142040
+        shards: 1143
+        weight: 1.0
+        description: "Biology preprints"
+      nature_comunication:
+        path: s1mmalign_webdatasets/nature_comunication_webdataset
+        samples: 549054
+        shards: 550
+        weight: 1.0
+        description: "Nature Communications papers"
+      chemrxiv:
+        path: s1mmalign_webdatasets/chemrxiv_webdataset
+        samples: 178668
+        shards: 179
+        weight: 1.0
+        description: "Chemistry preprints"
+      medrxiv:
+        path: s1mmalign_webdatasets/medrxiv_webdataset
+        samples: 171083
+        shards: 172
+        weight: 1.0
+        description: "Medical preprints"
+      engrxiv:
+        path: s1mmalign_webdatasets/engrxiv_webdataset
+        samples: 24820
+        shards: 25
+        weight: 1.0
+        description: "Engineering preprints"
+      psyarxiv:
+        path: s1mmalign_webdatasets/psyarxiv_webdataset
+        samples: 16942
+        shards: 17
+        weight: 1.0
+        description: "Psychology preprints"
+      edrxiv:
+        path: s1mmalign_webdatasets/edrxiv_webdataset
+        samples: 1375
+        shards: 2
+        weight: 1.0
+        description: "Education preprints"
+      metarxiv:
+        path: s1mmalign_webdatasets/metarxiv_webdataset
+        samples: 362
+        shards: 1
+        weight: 1.0
+        description: "Meta-research preprints"
+
+  nemotron_wiki:
+    description: "Nemotron VLM Wikipedia image-text datasets on Lustre"
+    datasets:
+      wiki_en:
+        path: nemotron_webdatasets/wiki_en_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia English"
+      wiki_de:
+        path: nemotron_webdatasets/wiki_de_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia German"
+      wiki_fr:
+        path: nemotron_webdatasets/wiki_fr_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia French"
+      wiki_es:
+        path: nemotron_webdatasets/wiki_es_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Spanish"
+      wiki_ja:
+        path: nemotron_webdatasets/wiki_ja_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Japanese"
+      wiki_zh:
+        path: nemotron_webdatasets/wiki_zh_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Chinese"
+      wiki_it:
+        path: nemotron_webdatasets/wiki_it_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Italian"
+      wiki_pt:
+        path: nemotron_webdatasets/wiki_pt_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Portuguese"
+      wiki_ko:
+        path: nemotron_webdatasets/wiki_ko_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Korean"
+      wiki_nl:
+        path: nemotron_webdatasets/wiki_nl_webdataset
+        samples: 198000
+        shards: 198
+        weight: 1.0
+        description: "Wikipedia Dutch"
+
+  # CALVIN VLA composite shards on Lustre. `path` is interpreted relative to
+  # dastr.mount_base above; point it at the directory tools/shard_calvin_vla.py
+  # wrote (must contain manifest.json + shards/).
+  calvin:
+    description: "CALVIN VLA composite shards on Lustre"
+    datasets:
+      calvin_vla:
+        path: vla_training/calvin_webdataset
+        samples: 3274          # example smoke shards (50 episodes, train split)
+        shards: 15             # 15 episode-aligned shards (4MB each)
+        weight: 1.0
+        proportion: 1.0
+        description: "CALVIN train split, episode-aligned VLA shards (Lustre)"
+
+  scits:
+    description: "SciTS time-series WebDataset shards on Lustre"
+    datasets:
+      scits_ts:
+        path: ${oc.env:PRISM_DATA_ROOT}/SciTS-processed
+        samples: 29275
+        shards: 29
+        weight: 1.0
+        proportion: 1.0
+        description: "SciTS-processed (.ts.npy/.text/.meta.json)"
+
+# Presets for quick testing
+presets:
+  pixmo_unweighted:
+    description: "All PixMo image-text shards concatenated into one unweighted shuffled stream"
+    groups:
+      - pixmo
+    mix_strategy: concat
+
+  vlm_diverse_unweighted:
+    description: "PixMo + S1MMAlign scientific papers + Nemotron wiki as one unweighted shuffled stream"
+    groups:
+      - pixmo
+      - s1mmalign
+      - nemotron_wiki
+    mix_strategy: concat
+
+  quick:
+    description: "Quick test with just pixmo_cap"
+    groups:
+      - pixmo
+    dataset_overrides:
+      pixmo_cap:
+        proportion: 0.01  # Just 1% for quick testing

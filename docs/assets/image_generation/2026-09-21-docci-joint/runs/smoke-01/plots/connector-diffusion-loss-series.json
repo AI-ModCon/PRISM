@@ -1,0 +1,114 @@
+{
+  "alternate_final_validation": [],
+  "cohorts": {
+    "train": [
+      {
+        "id": "train_04996",
+        "seed": 100042,
+        "shuffled_prompt_id": "train_04997"
+      },
+      {
+        "id": "train_08983",
+        "seed": 100043,
+        "shuffled_prompt_id": "train_08984"
+      }
+    ],
+    "validation": [
+      {
+        "id": "qual_dev_00000",
+        "seed": 101051,
+        "shuffled_prompt_id": "qual_dev_00001"
+      },
+      {
+        "id": "qual_dev_00001",
+        "seed": 101052,
+        "shuffled_prompt_id": "qual_dev_00002"
+      }
+    ]
+  },
+  "coverage": {
+    "cumulative_examples_seen": 2,
+    "first_logged_step": 1,
+    "last_logged_step": 2,
+    "logged_optimizer_steps": 2,
+    "observed_unique_train_ids": 2
+  },
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "fixed_probes": {
+    "train": [
+      {
+        "count": 2,
+        "mean_loss": 0.46747466921806335,
+        "mean_shuffled_loss": 0.4745408296585083,
+        "mean_shuffled_minus_correct": 0.007066160440444946,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 2,
+        "mean_loss": 0.466732382774353,
+        "mean_shuffled_loss": 0.47397494316101074,
+        "mean_shuffled_minus_correct": 0.007242560386657715,
+        "optimized_count": 2,
+        "step": 2
+      }
+    ],
+    "validation": [
+      {
+        "count": 2,
+        "mean_loss": 0.5487602353096008,
+        "mean_shuffled_loss": 0.4386611133813858,
+        "mean_shuffled_minus_correct": -0.11009912192821503,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 2,
+        "mean_loss": 0.5488140285015106,
+        "mean_shuffled_loss": 0.438686728477478,
+        "mean_shuffled_minus_correct": -0.11012730002403259,
+        "optimized_count": 0,
+        "step": 2
+      }
+    ]
+  },
+  "full_validation": [],
+  "interpretation": {
+    "fixed_cohort": "Each curve retains initial IDs, seeds and wrong-caption IDs; the same subset is recomputed from larger final evaluations.",
+    "full_validation": "Separate markers use every final validation example; the fixed probe curve retains its original cohort.",
+    "gap": "Wrong-caption loss minus matched-caption loss; positive values favor the matched caption. This is not a visual-quality benchmark.",
+    "optimization": "Stochastic timestep/noise losses are plotted separately from fixed-noise probe losses."
+  },
+  "missing_fixed_cohorts": [],
+  "optimizer": [
+    {
+      "examples_seen": 1,
+      "loss": 0.45938408374786377,
+      "step": 1
+    },
+    {
+      "examples_seen": 2,
+      "loss": 0.46644943952560425,
+      "step": 2
+    }
+  ],
+  "plotter_sha256": "8a8e9b606aedb159703aabe9c2066a17dde1e239eafec75a1251947006c13052",
+  "qualification": "unqualified",
+  "runs": [
+    {
+      "completed_steps": 2,
+      "evidence_kind": "real_checkpoint_connector_diffusion_webdataset_pilot",
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/smoke-01",
+      "status": "completed"
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256": {
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/smoke-01/evaluations.jsonl": "cdc6e790137e191185e8e636c26aa3dc6224a618a88b05790b80dcf3762334ed",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/smoke-01/report.json": "ab14bec9cb1c7dbb1d19877e7c34635edaed8fcf08eaa76927dff5ee8ef76710",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/smoke-01/steps.jsonl": "d5da5bcb2b9b2b1b9a4a569d8d760aceac5f49ad0dd3e6f4123ff711076916e1"
+  },
+  "train_count": 9647,
+  "training_scope": "connector_and_diffusion",
+  "validation_count": 100
+}

@@ -1,0 +1,73 @@
+# Model Configuration for Image-Only Projector Training (OLMo-1B)
+#
+# IMPORTANT: Only instantiates text+image modality stacks to avoid unused
+# projector params. This enables DDP static_graph=True optimization
+# (5-10% faster training).
+#
+# Use this config for:
+#   - pixmo dataset training (image captioning, pointing, counting)
+#   - Any image+text only training
+#
+# For multi-modal training (table, time_series, geometry, graph),
+# use prism_olmo3_7b.yaml instead.
+
+backbone_id: "allenai/OLMo-1B-0724-hf"
+freeze_backbone: true
+freeze_encoders: true
+
+# Dimensions
+d_text: 2048  # OLMo-1B hidden size
+d_img: 768    # SigLIP-base hidden size (use 1152 for SigLIP-large)
+image_encoder_id: "google/siglip2-base-patch16-224"
+image_processor_id: "google/siglip2-base-patch16-224"
+image_processor_strict: false
+image_size: 224
+
+# Only text + image modalities - enables static_graph optimization
+modalities:
+  - "text"
+  - "image"
+
+# === Projector Configuration (Ablation-Ready) ===
+# Normalization mode for ModalityProjector
+# Options: none, layernorm, rmsnorm, l2_token, l2_sequence, scale_only, match_text_stats, match_text_elemstats
+#   - none: No normalization (simple MLP output) - highest variance, may have large norms
+#   - layernorm: Standard LayerNorm (original/default) - standardizes per-element, norm ~45
+#   - rmsnorm: RMSNorm like LLaMA/OLMo - similar to layernorm but no centering
+#   - l2_token: Per-token L2 norm to target - all tokens have exact same norm (may crush variance)
+#   - l2_sequence: Sequence-level L2 norm - preserves token differences, controls mean norm
+#   - scale_only: Learned scalar multiplier - no normalization, just magnitude control
+#   - match_text_stats: Match token norm distribution to text (mean/std of norms) - preserves token variance
+#   - match_text_elemstats: Match element-wise distribution to text (like LayerNorm but scaled to text stats)
+projector_norm_mode: "layernorm"  # Default: original behavior (baseline)
+
+# Target norm for l2_token, l2_sequence, and scale_only modes
+# Text embeddings in OLMo-1B have norm ~0.25
+projector_target_norm: 0.25
+
+# Where to add the modality embedding
+# Options: before_norm, after_norm, none
+#   - before_norm: Affects direction, gets normalized
+#   - after_norm: Adds after normalization (original behavior)
+#   - none: No modality embedding
+projector_modality_embed_pos: "after_norm"  # Default: original behavior
+
+# Modality embedding initialization scale
+# 0.02 matches the original/baseline behavior (embedding norm ~0.9 at d_model=2048).
+# For text-matched embedding norms (~0.25), use target_norm / sqrt(d_model) ≈ 0.0055.
+projector_modality_embed_scale: 0.02  # Default: original behavior
+
+# === Text Statistics Matching (for match_text_stats and match_text_elemstats modes) ===
+# These values are based on observed OLMo-1B text embedding statistics
+projector_text_norm_mean: 0.25   # Target mean of token norms
+projector_text_norm_std: 0.05    # Target std of token norms
+projector_text_elem_mean: 0.0    # Target mean of elements (for elemstats)
+projector_text_elem_std: 0.006   # Target std of elements (for elemstats)
+projector_norm_clip_min: 0.1     # Min norm after matching (prevents near-zero)
+projector_norm_clip_max: 0.5     # Max norm after matching (prevents outliers)
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

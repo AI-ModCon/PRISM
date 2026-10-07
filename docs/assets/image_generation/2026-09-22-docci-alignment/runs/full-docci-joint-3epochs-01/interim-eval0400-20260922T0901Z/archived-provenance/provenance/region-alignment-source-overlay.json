@@ -1,0 +1,15 @@
+{
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-feature-alignment-regions",
+  "baseline_source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-template-swap-diagnostic",
+  "archive_sha256": "69263d5fc90711cd2d24cbbee82e67d10c01b5b3e5f57363f983a56d18bc8839",
+  "sha256": {
+    "tools/align_prism_image_conditioning.py": "902f32a073f78bda054c93df4ef5fd94fef928e2901900ad7eb1305b1f3813f5",
+    "tests/test_align_prism_image_conditioning.py": "a66c460f6ab1cc623042dac06db7829c87095c05bf893c79f0e8650b76a59555",
+    "tools/prism_image_alignment_checkpoint.py": "040d20b7b2c356d8a90b692d40b3fcf7190a121f8821def68be81bd2c07bdfe3",
+    "tests/test_prism_image_alignment_checkpoint.py": "713f004839b9beb4dfb6384f3fc13a3949a0196a84966b40d3084fda661d3d4d",
+    "tools/diagnose_prism_image_conditioning.py": "e45ee0227bcb57291cef30118f31870275986d7f2cbc85d40c0710fcc2cd27c4",
+    "tests/test_prism_image_conditioning.py": "4dee97b721f86db4e19dec0def718bdbbc88553b0c01aefa6fd9846db2460109",
+    "tools/launch_aurora_image_experiment.py": "45783dbd96dc415b9b3ab389bcae0df22e912f86d7650bf509fdf224619320cc",
+    "tests/test_image_experiment_launcher.py": "be6d92f3257a971ee9920a9ea701d95eb0e82608f4d9ccccfbee0f45c1480b49"
+  }
+}

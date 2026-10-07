@@ -1,0 +1,23 @@
+# Phase 3.4: time_series shards built by tools/shard_modality.py
+# (initial target: ts_qa / ChatTS, ~105K samples).
+#
+# Point `path` at whatever dfuse-visible directory `shard_modality.py`
+# wrote to; `samples` / `shards` are filled from shards.json. The launcher
+# stages the manifest unchanged.
+
+daos:
+  pool: AuroraGPT
+  container: prism_training_data
+  mount_base: /tmp/${USER}/AuroraGPT/prism_training_data
+
+groups:
+  time_series:
+    description: "Time-series WebDataset shards (Phase 3 tier 1)"
+    datasets:
+      ts_qa_wds:
+        path: modality/time_series/ts_qa
+        samples: 105000
+        shards: 0          # filled from shards.json at runtime
+        weight: 1.0
+        proportion: 1.0
+        description: "ChatTS align_256 (104K) — sharded by tools/shard_modality.py"

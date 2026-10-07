@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "6a16418b32d60002e9185e4bafe9233b17de2251364a4ff05bc0b5864a3601a2",
+  "archive_bytes": 4277900,
+  "members": 90,
+  "relocated_source_root": "provenance/source-snapshots/full-docci-joint-3epochs-01",
+  "preserved_provenance_conflicts": [
+    "provenance/render_conditioning.py"
+  ]
+}

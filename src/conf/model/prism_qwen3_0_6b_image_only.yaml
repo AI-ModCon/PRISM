@@ -1,0 +1,24 @@
+# Image/text projector training with dense Qwen3 0.6B.
+
+backbone_id: "Qwen/Qwen3-0.6B"
+tokenizer_id: "Qwen/Qwen3-0.6B"
+freeze_backbone: true
+freeze_encoders: true
+
+d_text: 1024
+d_img: 768
+image_encoder_id: "google/siglip2-base-patch16-224"
+image_processor_id: "google/siglip2-base-patch16-224"
+image_processor_strict: true
+image_size: 224
+attn_implementation: "sdpa"
+
+modalities:
+  - "text"
+  - "image"
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

@@ -1,0 +1,19 @@
+{
+  "report_status": "completed",
+  "cases": [
+    "validation-00",
+    "validation-01"
+  ],
+  "native_route": "native_pretrained",
+  "outputs": {
+    "raw": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/conditioning-01/conditioning-raw-comparison.png",
+      "sha256": "91d3630ac07578ffef8c40b36de920c03bbe792dccfee976be1374b93a18ea3a"
+    },
+    "chat": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/conditioning-01/conditioning-chat-comparison.png",
+      "sha256": "0191ceac87a6a9c00869cac75a787898c509bd55a01288a3e52974bce917a58f"
+    }
+  },
+  "rendering": "PIL display resizing and Matplotlib layout; original generated files are unchanged."
+}

@@ -1,0 +1,58 @@
+# Model Configuration
+backbone_id: "allenai/OLMo-1B-0724-hf"
+tokenizer_id: "tokenizers/prism-olmo-1b-interleaved"  # relative to repo root; checked into the repo at this path
+freeze_backbone: true
+freeze_encoders: true
+is_vla: false
+pose_dim: 15
+action_dim: 7
+
+# Projector normalization: "layernorm" (the ModalityProjector default) normalizes
+# to unit variance, producing an output norm of ~sqrt(d_model) (~45 for d_model=2048)
+# and silently ignoring projector_target_norm. This was ~150x larger than OLMo's
+# text token embedding norm (~0.3), corrupting the frozen backbone's input
+# distribution and producing incoherent multilingual output regardless of how much
+# SFT/LoRA training followed. "scale_only" (a single learnable scalar multiplier
+# on the raw, unnormalized MLP output) was tried next but has the same failure
+# mode one level down: run 7270819's [DEBUG] embedding-stats logging showed the
+# DNA embedding norm at ~3.0-4.0 (10-15x OLMo's real text-embedding norm of
+# ~0.25-0.33) and *growing* over 5000 steps rather than converging toward
+# target_norm, because the scalar has to fight an unconstrained MLP output
+# magnitude instead of a fixed one. "l2_token" divides out each token's actual
+# norm before applying the scalar, so the output norm is architecturally pinned
+# to target_norm regardless of what fc1/fc2 do upstream.
+projector_norm_mode: "l2_token"
+projector_target_norm: 0.25
+
+# The modality embedding (added after normalization, see projector_modality_embed_pos
+# default "after_norm") had the same scale-mismatch problem: the default scale=0.02
+# gives an embedding norm of sqrt(d_model)*0.02 ≈ 0.9 for d_model=2048, ~3.5x OLMo's
+# text token norm (~0.25-0.3). 0.0055 ≈ target_norm / sqrt(d_model) matches it.
+projector_modality_embed_scale: 0.0055
+
+# Dimensions (explicitly defined to allow overrides). Each modality's own
+# d_* is its encoder's raw output width, fed into that modality's own
+# independent ModalityProjector -> target_dim (d_model); these are not summed
+# anywhere in the architecture.
+d_text: 4096
+d_img: 768    # SigLIP2-base native hidden size (use 1152 only for SigLIP-large) 
+d_ts: 512
+d_geo: 512
+d_table: 768
+d_dna: 768
+d_graph: 0
+
+modalities:
+  - "text"
+  - "dna"
+#  - "image"
+#  - "table"
+#  - "time_series"
+#  - "geometry"
+#  - "graph"
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass) --
+# Hydra struct mode rejects overrides for keys not declared in the YAML,
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

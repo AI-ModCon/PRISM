@@ -1,0 +1,9 @@
+# Timeseries dataset configuration (Zone A)
+
+# For streaming from HuggingFace
+datasets:
+  time_series:
+    name: "ChengsenWang/TSQA"
+    hf_id: "ChengsenWang/TSQA"
+    stream: true
+    fallback_dummy: true

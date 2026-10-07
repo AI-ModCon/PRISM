@@ -1,0 +1,126 @@
+# Index of named ablation designs in experiments/prism_designs.yaml.
+#
+# Each entry: <design-id>: { ablates: <axis>, one_liner: <what makes it
+# different from the baseline>, baseline: <design-id of the reference> }.
+# This file is NOT the source of truth for the design itself — that lives
+# in prism_designs.yaml. It exists so tools/run_sweep.py and humans can
+# answer "what does this design ablate?" without reading the YAML config.
+
+# Projector normalization mode ablation
+PRISM-PROJ-ABLATION-LAYERNORM:
+  ablates: projector_norm
+  one_liner: "Baseline projector with LayerNorm."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-NONE:
+  ablates: projector_norm
+  one_liner: "No projector normalization (raw output)."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-RMSNORM:
+  ablates: projector_norm
+  one_liner: "RMSNorm instead of LayerNorm."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-L2TOKEN:
+  ablates: projector_norm
+  one_liner: "Per-token L2 normalization."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-L2SEQ:
+  ablates: projector_norm
+  one_liner: "Per-sequence L2 normalization."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-MATCH-TEXT:
+  ablates: projector_norm
+  one_liner: "Match text-embedding norm statistics."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-MATCH-ELEMSTATS:
+  ablates: projector_norm
+  one_liner: "Match text element-wise mean/std."
+  baseline: PRISM-PROJ-ABLATION
+
+# Modality embedding position ablation
+PRISM-PROJ-ABLATION-LN-EMBED-BEFORE:
+  ablates: embed_pos
+  one_liner: "Modality embedding added before LayerNorm."
+  baseline: PRISM-PROJ-ABLATION
+
+PRISM-PROJ-ABLATION-NONE-NOEMBED:
+  ablates: embed_pos
+  one_liner: "No norm AND no modality embedding."
+  baseline: PRISM-PROJ-ABLATION
+
+# Scaling: node count
+PRISM-IMAGE-ONLY-1N:
+  ablates: scaling_nodes
+  one_liner: "Image-only projector, 1 node."
+  baseline: PRISM-IMAGE-ONLY
+
+PRISM-IMAGE-ONLY-2N:
+  ablates: scaling_nodes
+  one_liner: "Image-only projector, 2 nodes."
+  baseline: PRISM-IMAGE-ONLY
+
+PRISM-IMAGE-ONLY-4N:
+  ablates: scaling_nodes
+  one_liner: "Image-only projector, 4 nodes."
+  baseline: PRISM-IMAGE-ONLY
+
+# Backbone size
+PRISM-IMAGE-ONLY-7B:
+  ablates: backbone_size
+  one_liner: "OLMo-7B (vs OLMo-1B in others)."
+  baseline: PRISM-IMAGE-ONLY
+
+# Distributed strategy
+PRISM-OLMO3-E2E-PROD:
+  ablates: dist_strategy
+  one_liner: "Production: FSDP full_shard, OLMo-3 7B, max_seq=1024, prod_mode."
+  baseline: PRISM-MOLMO-E2E
+
+PRISM-OLMO3-E2E-FSDP-BASELINE:
+  ablates: dist_strategy
+  one_liner: "FSDP baseline without production-mode optimizations."
+  baseline: PRISM-MOLMO-E2E
+
+PRISM-OLMO3-E2E-HSDP-2NODE:
+  ablates: dist_strategy
+  one_liner: "HSDP on 2 nodes (memory: see deepspeed_zero2_results memory note)."
+  baseline: PRISM-MOLMO-E2E
+
+# DeepSpeed
+PRISM-ZONE-A-DEEPSPEED-TEST:
+  ablates: dist_strategy
+  one_liner: "DeepSpeed ZeRO-2 alternative to native FSDP."
+  baseline: PRISM-ZONE-A-FSDP
+
+PRISM-ZONE-A-DEEPSPEED-ZERO3-TEST:
+  ablates: dist_strategy
+  one_liner: "DeepSpeed ZeRO-3 — sharded params for 7B+ models."
+  baseline: PRISM-ZONE-A-FSDP
+
+# Encoder-projector vs projector-only
+PRISM-ENCODER-PROJECTOR-4NODE:
+  ablates: training_stage
+  one_liner: "Trainable encoder + projector (frozen LLM)."
+  baseline: PRISM-PROJECTOR-ONLY-4NODE
+
+PRISM-PROJECTOR-ONLY-4NODE:
+  ablates: training_stage
+  one_liner: "Projector only (frozen encoder, frozen LLM)."
+  baseline: null
+
+# VLA
+PRISM-AURORA-ZONE-A-VLA-CALVIN-DEFAULT:
+  ablates: task
+  one_liner: "Vision-Language-Action on CALVIN dataset (not VLM)."
+  baseline: null
+
+# Backbone family
+PRISM-AGPT2B-PROJ:
+  ablates: backbone_family
+  one_liner: "AuroraGPT-2B backbone instead of OLMo."
+  baseline: PRISM-IMAGE-ONLY

@@ -1,0 +1,46 @@
+{
+  "status": "interim_running",
+  "job_id": "8848858",
+  "evaluation_step": 200,
+  "report_completed_steps": 210,
+  "optimizer_log_last_step": 213,
+  "examples_seen": 3408,
+  "unique_examples_seen": 3408,
+  "fixed_cohort_changes": {
+    "train": {
+      "count": 32,
+      "initial_flow_mse": 0.43971599685028195,
+      "step200_flow_mse": 0.4381462689489126,
+      "relative_change_percent": -0.3569867625042966
+    },
+    "validation": {
+      "count": 32,
+      "initial_flow_mse": 0.4550941502675414,
+      "step200_flow_mse": 0.45352056808769703,
+      "relative_change_percent": -0.3457706891902057
+    }
+  },
+  "mean_update_seconds_excluding_first": 10.486288522957727,
+  "last100_mean_update_seconds": 10.570236110012047,
+  "new_trained_generation_images": 0,
+  "terminal_checkpoint_available": false,
+  "final_acceptance_passed": null,
+  "source_sha256": {
+    "report.json": "0052bdb55af3f60e0629b88053f82806ae20e93e436ddfb8ff9e16e16ffe88d0",
+    "steps.jsonl": "04bb4d1695fa9b3991ec7565c01c7f3b0d7c10993517bace601ee85202794a7f",
+    "evaluations.jsonl": "1e0766b90cf31685c1bb6aa858eb501c4384374ca83cf66ba6a26ac41aec028f"
+  },
+  "interpretation": "Both fixed-cohort flow losses are about 0.35 percent lower after 200 updates; this small interim change does not establish generation improvement. Continue the authorized full-data run.",
+  "limitations": [
+    "Only 32 examples per fixed evaluation split; final evaluation will cover all 100 held-out pairs.",
+    "Report and optimizer logs are not an atomic snapshot.",
+    "Training caption controls do not attest actual paired noisy inputs/timesteps; retain them as provisional.",
+    "The first trained image gallery/checkpoint is planned at step 600; collected four images are initialization only.",
+    "Frozen-state and terminal-checkpoint acceptance require completed-run audits."
+  ],
+  "independent_interim_audit": {
+    "path": "interim-independent-audit.json",
+    "sha256": "9a783bb5aefc16e0fa3f480e7a4f0f08a963ae5265fceebc9f30f948b19b62b4",
+    "final_acceptance_passed": null
+  }
+}

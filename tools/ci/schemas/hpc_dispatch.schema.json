@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.ai/schemas/hpc_dispatch.schema.json",
+  "title": "HPC Dispatch Contract",
+  "type": "object",
+  "required": [
+    "platform",
+    "job_id",
+    "status",
+    "submitted_at",
+    "design_id",
+    "queue",
+    "command",
+    "job_label",
+    "max_runtime_min",
+    "ci_mode",
+    "dry_run"
+  ],
+  "properties": {
+    "platform": { "type": "string", "enum": ["aurora", "perlmutter"] },
+    "job_id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["submitted"] },
+    "submitted_at": { "type": "string" },
+    "design_id": { "type": "string", "minLength": 1 },
+    "queue": { "type": "string", "minLength": 1 },
+    "account": { "type": "string" },
+    "command": { "type": "string", "minLength": 1 },
+    "job_label": { "type": "string", "minLength": 1 },
+    "max_runtime_min": { "type": "integer", "minimum": 1 },
+    "ci_mode": { "type": "boolean" },
+    "dry_run": { "type": "boolean" },
+    "submission_mode": { "type": "string", "enum": ["dry_run", "real"] },
+    "scheduler_system": { "type": "string", "enum": ["pbs", "slurm"] },
+    "scheduler_host": { "type": "string" },
+    "scheduler_user": { "type": "string" },
+    "ssh_key": { "type": "string" },
+    "ssh_port": { "type": "integer", "minimum": 1 },
+    "artifacts_root": { "type": "string" },
+    "artifact_dir": { "type": "string" }
+  },
+  "additionalProperties": true
+}

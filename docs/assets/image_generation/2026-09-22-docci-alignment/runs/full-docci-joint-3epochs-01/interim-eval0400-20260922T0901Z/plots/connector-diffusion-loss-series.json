@@ -1,0 +1,2546 @@
+{
+  "alternate_final_validation": [],
+  "cohorts": {
+    "train": [
+      {
+        "id": "train_04996",
+        "seed": 100042,
+        "shuffled_prompt_id": "train_04997"
+      },
+      {
+        "id": "train_08983",
+        "seed": 100043,
+        "shuffled_prompt_id": "train_08984"
+      },
+      {
+        "id": "train_05538",
+        "seed": 100044,
+        "shuffled_prompt_id": "train_05539"
+      },
+      {
+        "id": "train_03445",
+        "seed": 100045,
+        "shuffled_prompt_id": "train_03446"
+      },
+      {
+        "id": "train_05049",
+        "seed": 100046,
+        "shuffled_prompt_id": "train_05050"
+      },
+      {
+        "id": "train_01677",
+        "seed": 100047,
+        "shuffled_prompt_id": "train_01678"
+      },
+      {
+        "id": "train_06344",
+        "seed": 100048,
+        "shuffled_prompt_id": "train_06345"
+      },
+      {
+        "id": "train_01062",
+        "seed": 100049,
+        "shuffled_prompt_id": "train_01063"
+      },
+      {
+        "id": "train_00191",
+        "seed": 100050,
+        "shuffled_prompt_id": "train_00192"
+      },
+      {
+        "id": "train_00198",
+        "seed": 100051,
+        "shuffled_prompt_id": "train_00199"
+      },
+      {
+        "id": "train_04809",
+        "seed": 100052,
+        "shuffled_prompt_id": "train_04810"
+      },
+      {
+        "id": "train_00530",
+        "seed": 100053,
+        "shuffled_prompt_id": "train_00531"
+      },
+      {
+        "id": "train_08304",
+        "seed": 100054,
+        "shuffled_prompt_id": "train_08305"
+      },
+      {
+        "id": "train_06979",
+        "seed": 100055,
+        "shuffled_prompt_id": "train_06980"
+      },
+      {
+        "id": "train_01044",
+        "seed": 100056,
+        "shuffled_prompt_id": "train_01045"
+      },
+      {
+        "id": "train_02443",
+        "seed": 100057,
+        "shuffled_prompt_id": "train_02444"
+      },
+      {
+        "id": "train_06900",
+        "seed": 100058,
+        "shuffled_prompt_id": "train_06901"
+      },
+      {
+        "id": "train_03496",
+        "seed": 100059,
+        "shuffled_prompt_id": "train_03497"
+      },
+      {
+        "id": "train_00019",
+        "seed": 100060,
+        "shuffled_prompt_id": "train_00020"
+      },
+      {
+        "id": "train_00640",
+        "seed": 100061,
+        "shuffled_prompt_id": "train_00641"
+      },
+      {
+        "id": "train_01736",
+        "seed": 100062,
+        "shuffled_prompt_id": "train_01737"
+      },
+      {
+        "id": "train_04382",
+        "seed": 100063,
+        "shuffled_prompt_id": "train_04383"
+      },
+      {
+        "id": "train_08767",
+        "seed": 100064,
+        "shuffled_prompt_id": "train_08768"
+      },
+      {
+        "id": "train_00896",
+        "seed": 100065,
+        "shuffled_prompt_id": "train_00897"
+      },
+      {
+        "id": "train_06800",
+        "seed": 100066,
+        "shuffled_prompt_id": "train_06801"
+      },
+      {
+        "id": "train_03042",
+        "seed": 100067,
+        "shuffled_prompt_id": "train_03043"
+      },
+      {
+        "id": "train_02098",
+        "seed": 100068,
+        "shuffled_prompt_id": "train_02099"
+      },
+      {
+        "id": "train_02054",
+        "seed": 100069,
+        "shuffled_prompt_id": "train_02055"
+      },
+      {
+        "id": "train_01459",
+        "seed": 100070,
+        "shuffled_prompt_id": "train_01460"
+      },
+      {
+        "id": "train_02193",
+        "seed": 100071,
+        "shuffled_prompt_id": "train_02194"
+      },
+      {
+        "id": "train_01072",
+        "seed": 100072,
+        "shuffled_prompt_id": "train_01073"
+      },
+      {
+        "id": "train_03350",
+        "seed": 100073,
+        "shuffled_prompt_id": "train_03351"
+      }
+    ],
+    "validation": [
+      {
+        "id": "qual_dev_00000",
+        "seed": 101051,
+        "shuffled_prompt_id": "qual_dev_00001"
+      },
+      {
+        "id": "qual_dev_00001",
+        "seed": 101052,
+        "shuffled_prompt_id": "qual_dev_00002"
+      },
+      {
+        "id": "qual_dev_00002",
+        "seed": 101053,
+        "shuffled_prompt_id": "qual_dev_00003"
+      },
+      {
+        "id": "qual_dev_00003",
+        "seed": 101054,
+        "shuffled_prompt_id": "qual_dev_00004"
+      },
+      {
+        "id": "qual_dev_00004",
+        "seed": 101055,
+        "shuffled_prompt_id": "qual_dev_00005"
+      },
+      {
+        "id": "qual_dev_00005",
+        "seed": 101056,
+        "shuffled_prompt_id": "qual_dev_00006"
+      },
+      {
+        "id": "qual_dev_00006",
+        "seed": 101057,
+        "shuffled_prompt_id": "qual_dev_00007"
+      },
+      {
+        "id": "qual_dev_00007",
+        "seed": 101058,
+        "shuffled_prompt_id": "qual_dev_00008"
+      },
+      {
+        "id": "qual_dev_00008",
+        "seed": 101059,
+        "shuffled_prompt_id": "qual_dev_00009"
+      },
+      {
+        "id": "qual_dev_00009",
+        "seed": 101060,
+        "shuffled_prompt_id": "qual_dev_00010"
+      },
+      {
+        "id": "qual_dev_00010",
+        "seed": 101061,
+        "shuffled_prompt_id": "qual_dev_00011"
+      },
+      {
+        "id": "qual_dev_00011",
+        "seed": 101062,
+        "shuffled_prompt_id": "qual_dev_00012"
+      },
+      {
+        "id": "qual_dev_00012",
+        "seed": 101063,
+        "shuffled_prompt_id": "qual_dev_00013"
+      },
+      {
+        "id": "qual_dev_00013",
+        "seed": 101064,
+        "shuffled_prompt_id": "qual_dev_00014"
+      },
+      {
+        "id": "qual_dev_00014",
+        "seed": 101065,
+        "shuffled_prompt_id": "qual_dev_00015"
+      },
+      {
+        "id": "qual_dev_00015",
+        "seed": 101066,
+        "shuffled_prompt_id": "qual_dev_00016"
+      },
+      {
+        "id": "qual_dev_00016",
+        "seed": 101067,
+        "shuffled_prompt_id": "qual_dev_00017"
+      },
+      {
+        "id": "qual_dev_00017",
+        "seed": 101068,
+        "shuffled_prompt_id": "qual_dev_00018"
+      },
+      {
+        "id": "qual_dev_00018",
+        "seed": 101069,
+        "shuffled_prompt_id": "qual_dev_00019"
+      },
+      {
+        "id": "qual_dev_00019",
+        "seed": 101070,
+        "shuffled_prompt_id": "qual_dev_00020"
+      },
+      {
+        "id": "qual_dev_00020",
+        "seed": 101071,
+        "shuffled_prompt_id": "qual_dev_00021"
+      },
+      {
+        "id": "qual_dev_00021",
+        "seed": 101072,
+        "shuffled_prompt_id": "qual_dev_00022"
+      },
+      {
+        "id": "qual_dev_00022",
+        "seed": 101073,
+        "shuffled_prompt_id": "qual_dev_00023"
+      },
+      {
+        "id": "qual_dev_00023",
+        "seed": 101074,
+        "shuffled_prompt_id": "qual_dev_00024"
+      },
+      {
+        "id": "qual_dev_00024",
+        "seed": 101075,
+        "shuffled_prompt_id": "qual_dev_00025"
+      },
+      {
+        "id": "qual_dev_00025",
+        "seed": 101076,
+        "shuffled_prompt_id": "qual_dev_00026"
+      },
+      {
+        "id": "qual_dev_00026",
+        "seed": 101077,
+        "shuffled_prompt_id": "qual_dev_00027"
+      },
+      {
+        "id": "qual_dev_00027",
+        "seed": 101078,
+        "shuffled_prompt_id": "qual_dev_00028"
+      },
+      {
+        "id": "qual_dev_00028",
+        "seed": 101079,
+        "shuffled_prompt_id": "qual_dev_00029"
+      },
+      {
+        "id": "qual_dev_00029",
+        "seed": 101080,
+        "shuffled_prompt_id": "qual_dev_00030"
+      },
+      {
+        "id": "qual_dev_00030",
+        "seed": 101081,
+        "shuffled_prompt_id": "qual_dev_00031"
+      },
+      {
+        "id": "qual_dev_00031",
+        "seed": 101082,
+        "shuffled_prompt_id": "qual_dev_00032"
+      }
+    ]
+  },
+  "coverage": {
+    "cumulative_examples_seen": 6800,
+    "first_logged_step": 1,
+    "last_logged_step": 425,
+    "logged_optimizer_steps": 425,
+    "observed_unique_train_ids": 6800
+  },
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "fixed_probes": {
+    "train": [
+      {
+        "count": 32,
+        "mean_loss": 0.43971599685028195,
+        "mean_shuffled_loss": 0.4366445280611515,
+        "mean_shuffled_minus_correct": -0.0030714687891304493,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 32,
+        "mean_loss": 0.4381462689489126,
+        "mean_shuffled_loss": 0.4383863992989063,
+        "mean_shuffled_minus_correct": 0.00024013034999370575,
+        "optimized_count": 32,
+        "step": 200
+      },
+      {
+        "count": 32,
+        "mean_loss": 0.4386187521740794,
+        "mean_shuffled_loss": 0.4390172213315964,
+        "mean_shuffled_minus_correct": 0.00039846915751695633,
+        "optimized_count": 32,
+        "step": 400
+      }
+    ],
+    "validation": [
+      {
+        "count": 32,
+        "mean_loss": 0.4550941502675414,
+        "mean_shuffled_loss": 0.4729209691286087,
+        "mean_shuffled_minus_correct": 0.017826818861067295,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 32,
+        "mean_loss": 0.45352056808769703,
+        "mean_shuffled_loss": 0.47420284803956747,
+        "mean_shuffled_minus_correct": 0.02068227995187044,
+        "optimized_count": 0,
+        "step": 200
+      },
+      {
+        "count": 32,
+        "mean_loss": 0.4528198139742017,
+        "mean_shuffled_loss": 0.47036850918084383,
+        "mean_shuffled_minus_correct": 0.01754869520664215,
+        "optimized_count": 0,
+        "step": 400
+      }
+    ]
+  },
+  "full_validation": [],
+  "interpretation": {
+    "fixed_cohort": "Each curve retains initial IDs, seeds and wrong-caption IDs; the same subset is recomputed from larger final evaluations.",
+    "full_validation": "Separate markers use every final validation example; the fixed probe curve retains its original cohort.",
+    "gap": "Wrong-caption loss minus matched-caption loss with RNG reset. Actual paired noise and timesteps are unverified by these logs; positive values nominally favor the matched caption. This is not a visual-quality benchmark.",
+    "optimization": "Stochastic timestep/noise losses are plotted separately from fixed-cohort probes with RNG reset."
+  },
+  "missing_fixed_cohorts": [],
+  "optimizer": [
+    {
+      "examples_seen": 16,
+      "loss": 0.4427865743637085,
+      "step": 1
+    },
+    {
+      "examples_seen": 32,
+      "loss": 0.4544876888394356,
+      "step": 2
+    },
+    {
+      "examples_seen": 48,
+      "loss": 0.4576422944664955,
+      "step": 3
+    },
+    {
+      "examples_seen": 64,
+      "loss": 0.4370102658867836,
+      "step": 4
+    },
+    {
+      "examples_seen": 80,
+      "loss": 0.433735191822052,
+      "step": 5
+    },
+    {
+      "examples_seen": 96,
+      "loss": 0.4590963125228882,
+      "step": 6
+    },
+    {
+      "examples_seen": 112,
+      "loss": 0.46668191999197006,
+      "step": 7
+    },
+    {
+      "examples_seen": 128,
+      "loss": 0.4156322032213211,
+      "step": 8
+    },
+    {
+      "examples_seen": 144,
+      "loss": 0.4591789245605469,
+      "step": 9
+    },
+    {
+      "examples_seen": 160,
+      "loss": 0.4137979596853256,
+      "step": 10
+    },
+    {
+      "examples_seen": 176,
+      "loss": 0.44721580296754837,
+      "step": 11
+    },
+    {
+      "examples_seen": 192,
+      "loss": 0.4057030975818634,
+      "step": 12
+    },
+    {
+      "examples_seen": 208,
+      "loss": 0.41345490515232086,
+      "step": 13
+    },
+    {
+      "examples_seen": 224,
+      "loss": 0.44056155532598495,
+      "step": 14
+    },
+    {
+      "examples_seen": 240,
+      "loss": 0.4570179730653763,
+      "step": 15
+    },
+    {
+      "examples_seen": 256,
+      "loss": 0.42673321068286896,
+      "step": 16
+    },
+    {
+      "examples_seen": 272,
+      "loss": 0.3847334682941437,
+      "step": 17
+    },
+    {
+      "examples_seen": 288,
+      "loss": 0.4588597044348717,
+      "step": 18
+    },
+    {
+      "examples_seen": 304,
+      "loss": 0.400049053132534,
+      "step": 19
+    },
+    {
+      "examples_seen": 320,
+      "loss": 0.4546203836798668,
+      "step": 20
+    },
+    {
+      "examples_seen": 336,
+      "loss": 0.4204695597290993,
+      "step": 21
+    },
+    {
+      "examples_seen": 352,
+      "loss": 0.371960811316967,
+      "step": 22
+    },
+    {
+      "examples_seen": 368,
+      "loss": 0.4268292933702469,
+      "step": 23
+    },
+    {
+      "examples_seen": 384,
+      "loss": 0.44993799924850464,
+      "step": 24
+    },
+    {
+      "examples_seen": 400,
+      "loss": 0.47529286891222,
+      "step": 25
+    },
+    {
+      "examples_seen": 416,
+      "loss": 0.41307538747787476,
+      "step": 26
+    },
+    {
+      "examples_seen": 432,
+      "loss": 0.4163840264081955,
+      "step": 27
+    },
+    {
+      "examples_seen": 448,
+      "loss": 0.4511154219508171,
+      "step": 28
+    },
+    {
+      "examples_seen": 464,
+      "loss": 0.43337276577949524,
+      "step": 29
+    },
+    {
+      "examples_seen": 480,
+      "loss": 0.4163394793868065,
+      "step": 30
+    },
+    {
+      "examples_seen": 496,
+      "loss": 0.413075789809227,
+      "step": 31
+    },
+    {
+      "examples_seen": 512,
+      "loss": 0.45107243210077286,
+      "step": 32
+    },
+    {
+      "examples_seen": 528,
+      "loss": 0.42142051458358765,
+      "step": 33
+    },
+    {
+      "examples_seen": 544,
+      "loss": 0.4445786476135254,
+      "step": 34
+    },
+    {
+      "examples_seen": 560,
+      "loss": 0.4134214222431183,
+      "step": 35
+    },
+    {
+      "examples_seen": 576,
+      "loss": 0.4632200300693512,
+      "step": 36
+    },
+    {
+      "examples_seen": 592,
+      "loss": 0.4364622160792351,
+      "step": 37
+    },
+    {
+      "examples_seen": 608,
+      "loss": 0.5106197893619537,
+      "step": 38
+    },
+    {
+      "examples_seen": 624,
+      "loss": 0.4358872324228287,
+      "step": 39
+    },
+    {
+      "examples_seen": 640,
+      "loss": 0.47673550248146057,
+      "step": 40
+    },
+    {
+      "examples_seen": 656,
+      "loss": 0.48368100821971893,
+      "step": 41
+    },
+    {
+      "examples_seen": 672,
+      "loss": 0.4650165066123009,
+      "step": 42
+    },
+    {
+      "examples_seen": 688,
+      "loss": 0.47078293561935425,
+      "step": 43
+    },
+    {
+      "examples_seen": 704,
+      "loss": 0.44499505311250687,
+      "step": 44
+    },
+    {
+      "examples_seen": 720,
+      "loss": 0.45057404041290283,
+      "step": 45
+    },
+    {
+      "examples_seen": 736,
+      "loss": 0.470347099006176,
+      "step": 46
+    },
+    {
+      "examples_seen": 752,
+      "loss": 0.45260344445705414,
+      "step": 47
+    },
+    {
+      "examples_seen": 768,
+      "loss": 0.4556690379977226,
+      "step": 48
+    },
+    {
+      "examples_seen": 784,
+      "loss": 0.45479342341423035,
+      "step": 49
+    },
+    {
+      "examples_seen": 800,
+      "loss": 0.4669667109847069,
+      "step": 50
+    },
+    {
+      "examples_seen": 816,
+      "loss": 0.49085473269224167,
+      "step": 51
+    },
+    {
+      "examples_seen": 832,
+      "loss": 0.4410167261958122,
+      "step": 52
+    },
+    {
+      "examples_seen": 848,
+      "loss": 0.4602159783244133,
+      "step": 53
+    },
+    {
+      "examples_seen": 864,
+      "loss": 0.4597099497914314,
+      "step": 54
+    },
+    {
+      "examples_seen": 880,
+      "loss": 0.4358339309692383,
+      "step": 55
+    },
+    {
+      "examples_seen": 896,
+      "loss": 0.3709682673215866,
+      "step": 56
+    },
+    {
+      "examples_seen": 912,
+      "loss": 0.4449545294046402,
+      "step": 57
+    },
+    {
+      "examples_seen": 928,
+      "loss": 0.4365975558757782,
+      "step": 58
+    },
+    {
+      "examples_seen": 944,
+      "loss": 0.443239763379097,
+      "step": 59
+    },
+    {
+      "examples_seen": 960,
+      "loss": 0.43696317821741104,
+      "step": 60
+    },
+    {
+      "examples_seen": 976,
+      "loss": 0.47480762749910355,
+      "step": 61
+    },
+    {
+      "examples_seen": 992,
+      "loss": 0.4524531289935112,
+      "step": 62
+    },
+    {
+      "examples_seen": 1008,
+      "loss": 0.4229561984539032,
+      "step": 63
+    },
+    {
+      "examples_seen": 1024,
+      "loss": 0.4011632278561592,
+      "step": 64
+    },
+    {
+      "examples_seen": 1040,
+      "loss": 0.48937661200761795,
+      "step": 65
+    },
+    {
+      "examples_seen": 1056,
+      "loss": 0.441649466753006,
+      "step": 66
+    },
+    {
+      "examples_seen": 1072,
+      "loss": 0.4531594216823578,
+      "step": 67
+    },
+    {
+      "examples_seen": 1088,
+      "loss": 0.47539111971855164,
+      "step": 68
+    },
+    {
+      "examples_seen": 1104,
+      "loss": 0.40092676132917404,
+      "step": 69
+    },
+    {
+      "examples_seen": 1120,
+      "loss": 0.40928303450345993,
+      "step": 70
+    },
+    {
+      "examples_seen": 1136,
+      "loss": 0.44694220274686813,
+      "step": 71
+    },
+    {
+      "examples_seen": 1152,
+      "loss": 0.4547390341758728,
+      "step": 72
+    },
+    {
+      "examples_seen": 1168,
+      "loss": 0.4560776874423027,
+      "step": 73
+    },
+    {
+      "examples_seen": 1184,
+      "loss": 0.4243606999516487,
+      "step": 74
+    },
+    {
+      "examples_seen": 1200,
+      "loss": 0.46156836301088333,
+      "step": 75
+    },
+    {
+      "examples_seen": 1216,
+      "loss": 0.4502491429448128,
+      "step": 76
+    },
+    {
+      "examples_seen": 1232,
+      "loss": 0.4217759743332863,
+      "step": 77
+    },
+    {
+      "examples_seen": 1248,
+      "loss": 0.41991253942251205,
+      "step": 78
+    },
+    {
+      "examples_seen": 1264,
+      "loss": 0.3911461681127548,
+      "step": 79
+    },
+    {
+      "examples_seen": 1280,
+      "loss": 0.41238536685705185,
+      "step": 80
+    },
+    {
+      "examples_seen": 1296,
+      "loss": 0.4209703430533409,
+      "step": 81
+    },
+    {
+      "examples_seen": 1312,
+      "loss": 0.4150225445628166,
+      "step": 82
+    },
+    {
+      "examples_seen": 1328,
+      "loss": 0.4194005951285362,
+      "step": 83
+    },
+    {
+      "examples_seen": 1344,
+      "loss": 0.46401821076869965,
+      "step": 84
+    },
+    {
+      "examples_seen": 1360,
+      "loss": 0.45015501976013184,
+      "step": 85
+    },
+    {
+      "examples_seen": 1376,
+      "loss": 0.41856997460126877,
+      "step": 86
+    },
+    {
+      "examples_seen": 1392,
+      "loss": 0.44109173119068146,
+      "step": 87
+    },
+    {
+      "examples_seen": 1408,
+      "loss": 0.4113362729549408,
+      "step": 88
+    },
+    {
+      "examples_seen": 1424,
+      "loss": 0.44878100603818893,
+      "step": 89
+    },
+    {
+      "examples_seen": 1440,
+      "loss": 0.4331722781062126,
+      "step": 90
+    },
+    {
+      "examples_seen": 1456,
+      "loss": 0.4846580922603607,
+      "step": 91
+    },
+    {
+      "examples_seen": 1472,
+      "loss": 0.41206979751586914,
+      "step": 92
+    },
+    {
+      "examples_seen": 1488,
+      "loss": 0.4221723973751068,
+      "step": 93
+    },
+    {
+      "examples_seen": 1504,
+      "loss": 0.408526286482811,
+      "step": 94
+    },
+    {
+      "examples_seen": 1520,
+      "loss": 0.4342857599258423,
+      "step": 95
+    },
+    {
+      "examples_seen": 1536,
+      "loss": 0.4133826196193695,
+      "step": 96
+    },
+    {
+      "examples_seen": 1552,
+      "loss": 0.46775394678115845,
+      "step": 97
+    },
+    {
+      "examples_seen": 1568,
+      "loss": 0.43997815251350403,
+      "step": 98
+    },
+    {
+      "examples_seen": 1584,
+      "loss": 0.4692053571343422,
+      "step": 99
+    },
+    {
+      "examples_seen": 1600,
+      "loss": 0.47075945883989334,
+      "step": 100
+    },
+    {
+      "examples_seen": 1616,
+      "loss": 0.43526842445135117,
+      "step": 101
+    },
+    {
+      "examples_seen": 1632,
+      "loss": 0.3945715129375458,
+      "step": 102
+    },
+    {
+      "examples_seen": 1648,
+      "loss": 0.47709110379219055,
+      "step": 103
+    },
+    {
+      "examples_seen": 1664,
+      "loss": 0.4525291174650192,
+      "step": 104
+    },
+    {
+      "examples_seen": 1680,
+      "loss": 0.3995051756501198,
+      "step": 105
+    },
+    {
+      "examples_seen": 1696,
+      "loss": 0.4369405135512352,
+      "step": 106
+    },
+    {
+      "examples_seen": 1712,
+      "loss": 0.39816830307245255,
+      "step": 107
+    },
+    {
+      "examples_seen": 1728,
+      "loss": 0.39921218901872635,
+      "step": 108
+    },
+    {
+      "examples_seen": 1744,
+      "loss": 0.42074255645275116,
+      "step": 109
+    },
+    {
+      "examples_seen": 1760,
+      "loss": 0.4364602416753769,
+      "step": 110
+    },
+    {
+      "examples_seen": 1776,
+      "loss": 0.49212732911109924,
+      "step": 111
+    },
+    {
+      "examples_seen": 1792,
+      "loss": 0.4471089169383049,
+      "step": 112
+    },
+    {
+      "examples_seen": 1808,
+      "loss": 0.4014521613717079,
+      "step": 113
+    },
+    {
+      "examples_seen": 1824,
+      "loss": 0.409813329577446,
+      "step": 114
+    },
+    {
+      "examples_seen": 1840,
+      "loss": 0.42285600304603577,
+      "step": 115
+    },
+    {
+      "examples_seen": 1856,
+      "loss": 0.45085756480693817,
+      "step": 116
+    },
+    {
+      "examples_seen": 1872,
+      "loss": 0.42064908146858215,
+      "step": 117
+    },
+    {
+      "examples_seen": 1888,
+      "loss": 0.43531060963869095,
+      "step": 118
+    },
+    {
+      "examples_seen": 1904,
+      "loss": 0.41691889613866806,
+      "step": 119
+    },
+    {
+      "examples_seen": 1920,
+      "loss": 0.4017951563000679,
+      "step": 120
+    },
+    {
+      "examples_seen": 1936,
+      "loss": 0.40097885578870773,
+      "step": 121
+    },
+    {
+      "examples_seen": 1952,
+      "loss": 0.4214213490486145,
+      "step": 122
+    },
+    {
+      "examples_seen": 1968,
+      "loss": 0.4590228423476219,
+      "step": 123
+    },
+    {
+      "examples_seen": 1984,
+      "loss": 0.41131332516670227,
+      "step": 124
+    },
+    {
+      "examples_seen": 2000,
+      "loss": 0.3958105593919754,
+      "step": 125
+    },
+    {
+      "examples_seen": 2016,
+      "loss": 0.42414242774248123,
+      "step": 126
+    },
+    {
+      "examples_seen": 2032,
+      "loss": 0.41504086554050446,
+      "step": 127
+    },
+    {
+      "examples_seen": 2048,
+      "loss": 0.4487004280090332,
+      "step": 128
+    },
+    {
+      "examples_seen": 2064,
+      "loss": 0.44930558651685715,
+      "step": 129
+    },
+    {
+      "examples_seen": 2080,
+      "loss": 0.3952350839972496,
+      "step": 130
+    },
+    {
+      "examples_seen": 2096,
+      "loss": 0.43312860280275345,
+      "step": 131
+    },
+    {
+      "examples_seen": 2112,
+      "loss": 0.38036278635263443,
+      "step": 132
+    },
+    {
+      "examples_seen": 2128,
+      "loss": 0.3884427025914192,
+      "step": 133
+    },
+    {
+      "examples_seen": 2144,
+      "loss": 0.47026781737804413,
+      "step": 134
+    },
+    {
+      "examples_seen": 2160,
+      "loss": 0.377735897898674,
+      "step": 135
+    },
+    {
+      "examples_seen": 2176,
+      "loss": 0.4167874902486801,
+      "step": 136
+    },
+    {
+      "examples_seen": 2192,
+      "loss": 0.43763910233974457,
+      "step": 137
+    },
+    {
+      "examples_seen": 2208,
+      "loss": 0.44667724519968033,
+      "step": 138
+    },
+    {
+      "examples_seen": 2224,
+      "loss": 0.40021566301584244,
+      "step": 139
+    },
+    {
+      "examples_seen": 2240,
+      "loss": 0.4227770268917084,
+      "step": 140
+    },
+    {
+      "examples_seen": 2256,
+      "loss": 0.3841225504875183,
+      "step": 141
+    },
+    {
+      "examples_seen": 2272,
+      "loss": 0.4485078901052475,
+      "step": 142
+    },
+    {
+      "examples_seen": 2288,
+      "loss": 0.4717576131224632,
+      "step": 143
+    },
+    {
+      "examples_seen": 2304,
+      "loss": 0.36517681926488876,
+      "step": 144
+    },
+    {
+      "examples_seen": 2320,
+      "loss": 0.41689442843198776,
+      "step": 145
+    },
+    {
+      "examples_seen": 2336,
+      "loss": 0.4578555151820183,
+      "step": 146
+    },
+    {
+      "examples_seen": 2352,
+      "loss": 0.4459977149963379,
+      "step": 147
+    },
+    {
+      "examples_seen": 2368,
+      "loss": 0.4677797257900238,
+      "step": 148
+    },
+    {
+      "examples_seen": 2384,
+      "loss": 0.4203034043312073,
+      "step": 149
+    },
+    {
+      "examples_seen": 2400,
+      "loss": 0.39568425714969635,
+      "step": 150
+    },
+    {
+      "examples_seen": 2416,
+      "loss": 0.42504288256168365,
+      "step": 151
+    },
+    {
+      "examples_seen": 2432,
+      "loss": 0.4140007570385933,
+      "step": 152
+    },
+    {
+      "examples_seen": 2448,
+      "loss": 0.4499962702393532,
+      "step": 153
+    },
+    {
+      "examples_seen": 2464,
+      "loss": 0.4533480778336525,
+      "step": 154
+    },
+    {
+      "examples_seen": 2480,
+      "loss": 0.42119163274765015,
+      "step": 155
+    },
+    {
+      "examples_seen": 2496,
+      "loss": 0.44416850060224533,
+      "step": 156
+    },
+    {
+      "examples_seen": 2512,
+      "loss": 0.40142622590065,
+      "step": 157
+    },
+    {
+      "examples_seen": 2528,
+      "loss": 0.4411461651325226,
+      "step": 158
+    },
+    {
+      "examples_seen": 2544,
+      "loss": 0.3760596215724945,
+      "step": 159
+    },
+    {
+      "examples_seen": 2560,
+      "loss": 0.4742075875401497,
+      "step": 160
+    },
+    {
+      "examples_seen": 2576,
+      "loss": 0.5314541086554527,
+      "step": 161
+    },
+    {
+      "examples_seen": 2592,
+      "loss": 0.45309384167194366,
+      "step": 162
+    },
+    {
+      "examples_seen": 2608,
+      "loss": 0.3833393007516861,
+      "step": 163
+    },
+    {
+      "examples_seen": 2624,
+      "loss": 0.43161439895629883,
+      "step": 164
+    },
+    {
+      "examples_seen": 2640,
+      "loss": 0.45877689868211746,
+      "step": 165
+    },
+    {
+      "examples_seen": 2656,
+      "loss": 0.43812258541584015,
+      "step": 166
+    },
+    {
+      "examples_seen": 2672,
+      "loss": 0.39050523191690445,
+      "step": 167
+    },
+    {
+      "examples_seen": 2688,
+      "loss": 0.3852684944868088,
+      "step": 168
+    },
+    {
+      "examples_seen": 2704,
+      "loss": 0.3974233865737915,
+      "step": 169
+    },
+    {
+      "examples_seen": 2720,
+      "loss": 0.4449484050273895,
+      "step": 170
+    },
+    {
+      "examples_seen": 2736,
+      "loss": 0.4477962478995323,
+      "step": 171
+    },
+    {
+      "examples_seen": 2752,
+      "loss": 0.4804098531603813,
+      "step": 172
+    },
+    {
+      "examples_seen": 2768,
+      "loss": 0.4118819460272789,
+      "step": 173
+    },
+    {
+      "examples_seen": 2784,
+      "loss": 0.4045218974351883,
+      "step": 174
+    },
+    {
+      "examples_seen": 2800,
+      "loss": 0.48168761283159256,
+      "step": 175
+    },
+    {
+      "examples_seen": 2816,
+      "loss": 0.48005127906799316,
+      "step": 176
+    },
+    {
+      "examples_seen": 2832,
+      "loss": 0.45374663919210434,
+      "step": 177
+    },
+    {
+      "examples_seen": 2848,
+      "loss": 0.4319039136171341,
+      "step": 178
+    },
+    {
+      "examples_seen": 2864,
+      "loss": 0.4525067135691643,
+      "step": 179
+    },
+    {
+      "examples_seen": 2880,
+      "loss": 0.4709615409374237,
+      "step": 180
+    },
+    {
+      "examples_seen": 2896,
+      "loss": 0.4356990307569504,
+      "step": 181
+    },
+    {
+      "examples_seen": 2912,
+      "loss": 0.4329220876097679,
+      "step": 182
+    },
+    {
+      "examples_seen": 2928,
+      "loss": 0.4395982697606087,
+      "step": 183
+    },
+    {
+      "examples_seen": 2944,
+      "loss": 0.4238409101963043,
+      "step": 184
+    },
+    {
+      "examples_seen": 2960,
+      "loss": 0.4247322157025337,
+      "step": 185
+    },
+    {
+      "examples_seen": 2976,
+      "loss": 0.482223205268383,
+      "step": 186
+    },
+    {
+      "examples_seen": 2992,
+      "loss": 0.37202513962984085,
+      "step": 187
+    },
+    {
+      "examples_seen": 3008,
+      "loss": 0.4216087833046913,
+      "step": 188
+    },
+    {
+      "examples_seen": 3024,
+      "loss": 0.39485637843608856,
+      "step": 189
+    },
+    {
+      "examples_seen": 3040,
+      "loss": 0.3828340992331505,
+      "step": 190
+    },
+    {
+      "examples_seen": 3056,
+      "loss": 0.5068489462137222,
+      "step": 191
+    },
+    {
+      "examples_seen": 3072,
+      "loss": 0.412588968873024,
+      "step": 192
+    },
+    {
+      "examples_seen": 3088,
+      "loss": 0.4342799261212349,
+      "step": 193
+    },
+    {
+      "examples_seen": 3104,
+      "loss": 0.45613938570022583,
+      "step": 194
+    },
+    {
+      "examples_seen": 3120,
+      "loss": 0.4465532600879669,
+      "step": 195
+    },
+    {
+      "examples_seen": 3136,
+      "loss": 0.43412401527166367,
+      "step": 196
+    },
+    {
+      "examples_seen": 3152,
+      "loss": 0.4238290414214134,
+      "step": 197
+    },
+    {
+      "examples_seen": 3168,
+      "loss": 0.43616625666618347,
+      "step": 198
+    },
+    {
+      "examples_seen": 3184,
+      "loss": 0.43800024688243866,
+      "step": 199
+    },
+    {
+      "examples_seen": 3200,
+      "loss": 0.39996063709259033,
+      "step": 200
+    },
+    {
+      "examples_seen": 3216,
+      "loss": 0.4051923230290413,
+      "step": 201
+    },
+    {
+      "examples_seen": 3232,
+      "loss": 0.3865960091352463,
+      "step": 202
+    },
+    {
+      "examples_seen": 3248,
+      "loss": 0.42129552364349365,
+      "step": 203
+    },
+    {
+      "examples_seen": 3264,
+      "loss": 0.42611391842365265,
+      "step": 204
+    },
+    {
+      "examples_seen": 3280,
+      "loss": 0.440192349255085,
+      "step": 205
+    },
+    {
+      "examples_seen": 3296,
+      "loss": 0.4693252071738243,
+      "step": 206
+    },
+    {
+      "examples_seen": 3312,
+      "loss": 0.44845329225063324,
+      "step": 207
+    },
+    {
+      "examples_seen": 3328,
+      "loss": 0.4212838411331177,
+      "step": 208
+    },
+    {
+      "examples_seen": 3344,
+      "loss": 0.4573334753513336,
+      "step": 209
+    },
+    {
+      "examples_seen": 3360,
+      "loss": 0.510784812271595,
+      "step": 210
+    },
+    {
+      "examples_seen": 3376,
+      "loss": 0.47063180059194565,
+      "step": 211
+    },
+    {
+      "examples_seen": 3392,
+      "loss": 0.4492710083723068,
+      "step": 212
+    },
+    {
+      "examples_seen": 3408,
+      "loss": 0.45789583772420883,
+      "step": 213
+    },
+    {
+      "examples_seen": 3424,
+      "loss": 0.41913004219532013,
+      "step": 214
+    },
+    {
+      "examples_seen": 3440,
+      "loss": 0.4144254997372627,
+      "step": 215
+    },
+    {
+      "examples_seen": 3456,
+      "loss": 0.42610760778188705,
+      "step": 216
+    },
+    {
+      "examples_seen": 3472,
+      "loss": 0.377379447221756,
+      "step": 217
+    },
+    {
+      "examples_seen": 3488,
+      "loss": 0.4391096904873848,
+      "step": 218
+    },
+    {
+      "examples_seen": 3504,
+      "loss": 0.4049568697810173,
+      "step": 219
+    },
+    {
+      "examples_seen": 3520,
+      "loss": 0.4462335780262947,
+      "step": 220
+    },
+    {
+      "examples_seen": 3536,
+      "loss": 0.4460670277476311,
+      "step": 221
+    },
+    {
+      "examples_seen": 3552,
+      "loss": 0.38940470665693283,
+      "step": 222
+    },
+    {
+      "examples_seen": 3568,
+      "loss": 0.4645771235227585,
+      "step": 223
+    },
+    {
+      "examples_seen": 3584,
+      "loss": 0.42924126982688904,
+      "step": 224
+    },
+    {
+      "examples_seen": 3600,
+      "loss": 0.5206666439771652,
+      "step": 225
+    },
+    {
+      "examples_seen": 3616,
+      "loss": 0.45291443914175034,
+      "step": 226
+    },
+    {
+      "examples_seen": 3632,
+      "loss": 0.3928321525454521,
+      "step": 227
+    },
+    {
+      "examples_seen": 3648,
+      "loss": 0.45495253056287766,
+      "step": 228
+    },
+    {
+      "examples_seen": 3664,
+      "loss": 0.4070027992129326,
+      "step": 229
+    },
+    {
+      "examples_seen": 3680,
+      "loss": 0.4281899258494377,
+      "step": 230
+    },
+    {
+      "examples_seen": 3696,
+      "loss": 0.39769866317510605,
+      "step": 231
+    },
+    {
+      "examples_seen": 3712,
+      "loss": 0.43239232152700424,
+      "step": 232
+    },
+    {
+      "examples_seen": 3728,
+      "loss": 0.43471913784742355,
+      "step": 233
+    },
+    {
+      "examples_seen": 3744,
+      "loss": 0.4134466052055359,
+      "step": 234
+    },
+    {
+      "examples_seen": 3760,
+      "loss": 0.44831887632608414,
+      "step": 235
+    },
+    {
+      "examples_seen": 3776,
+      "loss": 0.43709462881088257,
+      "step": 236
+    },
+    {
+      "examples_seen": 3792,
+      "loss": 0.41589201241731644,
+      "step": 237
+    },
+    {
+      "examples_seen": 3808,
+      "loss": 0.42373280972242355,
+      "step": 238
+    },
+    {
+      "examples_seen": 3824,
+      "loss": 0.4830082356929779,
+      "step": 239
+    },
+    {
+      "examples_seen": 3840,
+      "loss": 0.44328251481056213,
+      "step": 240
+    },
+    {
+      "examples_seen": 3856,
+      "loss": 0.45087816566228867,
+      "step": 241
+    },
+    {
+      "examples_seen": 3872,
+      "loss": 0.42524681240320206,
+      "step": 242
+    },
+    {
+      "examples_seen": 3888,
+      "loss": 0.4211438000202179,
+      "step": 243
+    },
+    {
+      "examples_seen": 3904,
+      "loss": 0.43628738075494766,
+      "step": 244
+    },
+    {
+      "examples_seen": 3920,
+      "loss": 0.47836823761463165,
+      "step": 245
+    },
+    {
+      "examples_seen": 3936,
+      "loss": 0.4081778824329376,
+      "step": 246
+    },
+    {
+      "examples_seen": 3952,
+      "loss": 0.42421064525842667,
+      "step": 247
+    },
+    {
+      "examples_seen": 3968,
+      "loss": 0.4453072100877762,
+      "step": 248
+    },
+    {
+      "examples_seen": 3984,
+      "loss": 0.45179494470357895,
+      "step": 249
+    },
+    {
+      "examples_seen": 4000,
+      "loss": 0.4137730970978737,
+      "step": 250
+    },
+    {
+      "examples_seen": 4016,
+      "loss": 0.38915837556123734,
+      "step": 251
+    },
+    {
+      "examples_seen": 4032,
+      "loss": 0.42294856905937195,
+      "step": 252
+    },
+    {
+      "examples_seen": 4048,
+      "loss": 0.4505120813846588,
+      "step": 253
+    },
+    {
+      "examples_seen": 4064,
+      "loss": 0.4497038573026657,
+      "step": 254
+    },
+    {
+      "examples_seen": 4080,
+      "loss": 0.4610298126935959,
+      "step": 255
+    },
+    {
+      "examples_seen": 4096,
+      "loss": 0.4153784140944481,
+      "step": 256
+    },
+    {
+      "examples_seen": 4112,
+      "loss": 0.4423832297325134,
+      "step": 257
+    },
+    {
+      "examples_seen": 4128,
+      "loss": 0.4391186535358429,
+      "step": 258
+    },
+    {
+      "examples_seen": 4144,
+      "loss": 0.48274294286966324,
+      "step": 259
+    },
+    {
+      "examples_seen": 4160,
+      "loss": 0.44951842725276947,
+      "step": 260
+    },
+    {
+      "examples_seen": 4176,
+      "loss": 0.4770073741674423,
+      "step": 261
+    },
+    {
+      "examples_seen": 4192,
+      "loss": 0.4447124972939491,
+      "step": 262
+    },
+    {
+      "examples_seen": 4208,
+      "loss": 0.4258706122636795,
+      "step": 263
+    },
+    {
+      "examples_seen": 4224,
+      "loss": 0.46800360083580017,
+      "step": 264
+    },
+    {
+      "examples_seen": 4240,
+      "loss": 0.42384493350982666,
+      "step": 265
+    },
+    {
+      "examples_seen": 4256,
+      "loss": 0.43286726623773575,
+      "step": 266
+    },
+    {
+      "examples_seen": 4272,
+      "loss": 0.38456443697214127,
+      "step": 267
+    },
+    {
+      "examples_seen": 4288,
+      "loss": 0.41308411210775375,
+      "step": 268
+    },
+    {
+      "examples_seen": 4304,
+      "loss": 0.4940509870648384,
+      "step": 269
+    },
+    {
+      "examples_seen": 4320,
+      "loss": 0.4485618770122528,
+      "step": 270
+    },
+    {
+      "examples_seen": 4336,
+      "loss": 0.44659993052482605,
+      "step": 271
+    },
+    {
+      "examples_seen": 4352,
+      "loss": 0.4804854094982147,
+      "step": 272
+    },
+    {
+      "examples_seen": 4368,
+      "loss": 0.4370393753051758,
+      "step": 273
+    },
+    {
+      "examples_seen": 4384,
+      "loss": 0.45958518236875534,
+      "step": 274
+    },
+    {
+      "examples_seen": 4400,
+      "loss": 0.4253428429365158,
+      "step": 275
+    },
+    {
+      "examples_seen": 4416,
+      "loss": 0.5147435516119003,
+      "step": 276
+    },
+    {
+      "examples_seen": 4432,
+      "loss": 0.406547375023365,
+      "step": 277
+    },
+    {
+      "examples_seen": 4448,
+      "loss": 0.43343503773212433,
+      "step": 278
+    },
+    {
+      "examples_seen": 4464,
+      "loss": 0.42746926099061966,
+      "step": 279
+    },
+    {
+      "examples_seen": 4480,
+      "loss": 0.46359263360500336,
+      "step": 280
+    },
+    {
+      "examples_seen": 4496,
+      "loss": 0.5109588727355003,
+      "step": 281
+    },
+    {
+      "examples_seen": 4512,
+      "loss": 0.436413437128067,
+      "step": 282
+    },
+    {
+      "examples_seen": 4528,
+      "loss": 0.3824594244360924,
+      "step": 283
+    },
+    {
+      "examples_seen": 4544,
+      "loss": 0.3858964219689369,
+      "step": 284
+    },
+    {
+      "examples_seen": 4560,
+      "loss": 0.3917630910873413,
+      "step": 285
+    },
+    {
+      "examples_seen": 4576,
+      "loss": 0.4646552875638008,
+      "step": 286
+    },
+    {
+      "examples_seen": 4592,
+      "loss": 0.379280649125576,
+      "step": 287
+    },
+    {
+      "examples_seen": 4608,
+      "loss": 0.40532174706459045,
+      "step": 288
+    },
+    {
+      "examples_seen": 4624,
+      "loss": 0.3859987333416939,
+      "step": 289
+    },
+    {
+      "examples_seen": 4640,
+      "loss": 0.4765644147992134,
+      "step": 290
+    },
+    {
+      "examples_seen": 4656,
+      "loss": 0.4382267892360687,
+      "step": 291
+    },
+    {
+      "examples_seen": 4672,
+      "loss": 0.3804570659995079,
+      "step": 292
+    },
+    {
+      "examples_seen": 4688,
+      "loss": 0.43424826115369797,
+      "step": 293
+    },
+    {
+      "examples_seen": 4704,
+      "loss": 0.4775969833135605,
+      "step": 294
+    },
+    {
+      "examples_seen": 4720,
+      "loss": 0.4965556263923645,
+      "step": 295
+    },
+    {
+      "examples_seen": 4736,
+      "loss": 0.4240986704826355,
+      "step": 296
+    },
+    {
+      "examples_seen": 4752,
+      "loss": 0.4516811743378639,
+      "step": 297
+    },
+    {
+      "examples_seen": 4768,
+      "loss": 0.392921082675457,
+      "step": 298
+    },
+    {
+      "examples_seen": 4784,
+      "loss": 0.41795556992292404,
+      "step": 299
+    },
+    {
+      "examples_seen": 4800,
+      "loss": 0.3713711202144623,
+      "step": 300
+    },
+    {
+      "examples_seen": 4816,
+      "loss": 0.4409721940755844,
+      "step": 301
+    },
+    {
+      "examples_seen": 4832,
+      "loss": 0.41774407774209976,
+      "step": 302
+    },
+    {
+      "examples_seen": 4848,
+      "loss": 0.42561785131692886,
+      "step": 303
+    },
+    {
+      "examples_seen": 4864,
+      "loss": 0.4072386622428894,
+      "step": 304
+    },
+    {
+      "examples_seen": 4880,
+      "loss": 0.430439755320549,
+      "step": 305
+    },
+    {
+      "examples_seen": 4896,
+      "loss": 0.4495907127857208,
+      "step": 306
+    },
+    {
+      "examples_seen": 4912,
+      "loss": 0.4403280168771744,
+      "step": 307
+    },
+    {
+      "examples_seen": 4928,
+      "loss": 0.4270092099905014,
+      "step": 308
+    },
+    {
+      "examples_seen": 4944,
+      "loss": 0.41602427512407303,
+      "step": 309
+    },
+    {
+      "examples_seen": 4960,
+      "loss": 0.41858070343732834,
+      "step": 310
+    },
+    {
+      "examples_seen": 4976,
+      "loss": 0.3829740732908249,
+      "step": 311
+    },
+    {
+      "examples_seen": 4992,
+      "loss": 0.4529322609305382,
+      "step": 312
+    },
+    {
+      "examples_seen": 5008,
+      "loss": 0.4258131831884384,
+      "step": 313
+    },
+    {
+      "examples_seen": 5024,
+      "loss": 0.41266896575689316,
+      "step": 314
+    },
+    {
+      "examples_seen": 5040,
+      "loss": 0.44540344178676605,
+      "step": 315
+    },
+    {
+      "examples_seen": 5056,
+      "loss": 0.44246768206357956,
+      "step": 316
+    },
+    {
+      "examples_seen": 5072,
+      "loss": 0.4832966849207878,
+      "step": 317
+    },
+    {
+      "examples_seen": 5088,
+      "loss": 0.464539609849453,
+      "step": 318
+    },
+    {
+      "examples_seen": 5104,
+      "loss": 0.4325493350625038,
+      "step": 319
+    },
+    {
+      "examples_seen": 5120,
+      "loss": 0.45736561715602875,
+      "step": 320
+    },
+    {
+      "examples_seen": 5136,
+      "loss": 0.4763697683811188,
+      "step": 321
+    },
+    {
+      "examples_seen": 5152,
+      "loss": 0.41512465476989746,
+      "step": 322
+    },
+    {
+      "examples_seen": 5168,
+      "loss": 0.5047884657979012,
+      "step": 323
+    },
+    {
+      "examples_seen": 5184,
+      "loss": 0.44075024873018265,
+      "step": 324
+    },
+    {
+      "examples_seen": 5200,
+      "loss": 0.4218597039580345,
+      "step": 325
+    },
+    {
+      "examples_seen": 5216,
+      "loss": 0.41712333261966705,
+      "step": 326
+    },
+    {
+      "examples_seen": 5232,
+      "loss": 0.4766920283436775,
+      "step": 327
+    },
+    {
+      "examples_seen": 5248,
+      "loss": 0.3932233303785324,
+      "step": 328
+    },
+    {
+      "examples_seen": 5264,
+      "loss": 0.4645857587456703,
+      "step": 329
+    },
+    {
+      "examples_seen": 5280,
+      "loss": 0.36337971687316895,
+      "step": 330
+    },
+    {
+      "examples_seen": 5296,
+      "loss": 0.46667366474866867,
+      "step": 331
+    },
+    {
+      "examples_seen": 5312,
+      "loss": 0.48510679602622986,
+      "step": 332
+    },
+    {
+      "examples_seen": 5328,
+      "loss": 0.47095608711242676,
+      "step": 333
+    },
+    {
+      "examples_seen": 5344,
+      "loss": 0.47925855964422226,
+      "step": 334
+    },
+    {
+      "examples_seen": 5360,
+      "loss": 0.45094460994005203,
+      "step": 335
+    },
+    {
+      "examples_seen": 5376,
+      "loss": 0.41993025690317154,
+      "step": 336
+    },
+    {
+      "examples_seen": 5392,
+      "loss": 0.4195609539747238,
+      "step": 337
+    },
+    {
+      "examples_seen": 5408,
+      "loss": 0.3910127654671669,
+      "step": 338
+    },
+    {
+      "examples_seen": 5424,
+      "loss": 0.3927936777472496,
+      "step": 339
+    },
+    {
+      "examples_seen": 5440,
+      "loss": 0.43150150775909424,
+      "step": 340
+    },
+    {
+      "examples_seen": 5456,
+      "loss": 0.42444179952144623,
+      "step": 341
+    },
+    {
+      "examples_seen": 5472,
+      "loss": 0.39793752133846283,
+      "step": 342
+    },
+    {
+      "examples_seen": 5488,
+      "loss": 0.37660403549671173,
+      "step": 343
+    },
+    {
+      "examples_seen": 5504,
+      "loss": 0.4027894139289856,
+      "step": 344
+    },
+    {
+      "examples_seen": 5520,
+      "loss": 0.4374265894293785,
+      "step": 345
+    },
+    {
+      "examples_seen": 5536,
+      "loss": 0.4631052389740944,
+      "step": 346
+    },
+    {
+      "examples_seen": 5552,
+      "loss": 0.5191796571016312,
+      "step": 347
+    },
+    {
+      "examples_seen": 5568,
+      "loss": 0.3807551935315132,
+      "step": 348
+    },
+    {
+      "examples_seen": 5584,
+      "loss": 0.43725400418043137,
+      "step": 349
+    },
+    {
+      "examples_seen": 5600,
+      "loss": 0.47570569813251495,
+      "step": 350
+    },
+    {
+      "examples_seen": 5616,
+      "loss": 0.46105094999074936,
+      "step": 351
+    },
+    {
+      "examples_seen": 5632,
+      "loss": 0.4365108087658882,
+      "step": 352
+    },
+    {
+      "examples_seen": 5648,
+      "loss": 0.43077512085437775,
+      "step": 353
+    },
+    {
+      "examples_seen": 5664,
+      "loss": 0.3977101817727089,
+      "step": 354
+    },
+    {
+      "examples_seen": 5680,
+      "loss": 0.3857308328151703,
+      "step": 355
+    },
+    {
+      "examples_seen": 5696,
+      "loss": 0.4197128638625145,
+      "step": 356
+    },
+    {
+      "examples_seen": 5712,
+      "loss": 0.4544210880994797,
+      "step": 357
+    },
+    {
+      "examples_seen": 5728,
+      "loss": 0.3806948736310005,
+      "step": 358
+    },
+    {
+      "examples_seen": 5744,
+      "loss": 0.43253859132528305,
+      "step": 359
+    },
+    {
+      "examples_seen": 5760,
+      "loss": 0.464199036359787,
+      "step": 360
+    },
+    {
+      "examples_seen": 5776,
+      "loss": 0.40370386093854904,
+      "step": 361
+    },
+    {
+      "examples_seen": 5792,
+      "loss": 0.4534665122628212,
+      "step": 362
+    },
+    {
+      "examples_seen": 5808,
+      "loss": 0.43348363041877747,
+      "step": 363
+    },
+    {
+      "examples_seen": 5824,
+      "loss": 0.40154292434453964,
+      "step": 364
+    },
+    {
+      "examples_seen": 5840,
+      "loss": 0.4027095139026642,
+      "step": 365
+    },
+    {
+      "examples_seen": 5856,
+      "loss": 0.47085829824209213,
+      "step": 366
+    },
+    {
+      "examples_seen": 5872,
+      "loss": 0.44575823843479156,
+      "step": 367
+    },
+    {
+      "examples_seen": 5888,
+      "loss": 0.5265009552240372,
+      "step": 368
+    },
+    {
+      "examples_seen": 5904,
+      "loss": 0.4780934900045395,
+      "step": 369
+    },
+    {
+      "examples_seen": 5920,
+      "loss": 0.46436212211847305,
+      "step": 370
+    },
+    {
+      "examples_seen": 5936,
+      "loss": 0.48628197610378265,
+      "step": 371
+    },
+    {
+      "examples_seen": 5952,
+      "loss": 0.40444163233041763,
+      "step": 372
+    },
+    {
+      "examples_seen": 5968,
+      "loss": 0.4460834041237831,
+      "step": 373
+    },
+    {
+      "examples_seen": 5984,
+      "loss": 0.4412407949566841,
+      "step": 374
+    },
+    {
+      "examples_seen": 6000,
+      "loss": 0.5346748158335686,
+      "step": 375
+    },
+    {
+      "examples_seen": 6016,
+      "loss": 0.4093004912137985,
+      "step": 376
+    },
+    {
+      "examples_seen": 6032,
+      "loss": 0.42176925390958786,
+      "step": 377
+    },
+    {
+      "examples_seen": 6048,
+      "loss": 0.4165723845362663,
+      "step": 378
+    },
+    {
+      "examples_seen": 6064,
+      "loss": 0.5055371522903442,
+      "step": 379
+    },
+    {
+      "examples_seen": 6080,
+      "loss": 0.44319555163383484,
+      "step": 380
+    },
+    {
+      "examples_seen": 6096,
+      "loss": 0.450005866587162,
+      "step": 381
+    },
+    {
+      "examples_seen": 6112,
+      "loss": 0.4049539342522621,
+      "step": 382
+    },
+    {
+      "examples_seen": 6128,
+      "loss": 0.46616076678037643,
+      "step": 383
+    },
+    {
+      "examples_seen": 6144,
+      "loss": 0.4456411674618721,
+      "step": 384
+    },
+    {
+      "examples_seen": 6160,
+      "loss": 0.4464527368545532,
+      "step": 385
+    },
+    {
+      "examples_seen": 6176,
+      "loss": 0.39885567128658295,
+      "step": 386
+    },
+    {
+      "examples_seen": 6192,
+      "loss": 0.45082060992717743,
+      "step": 387
+    },
+    {
+      "examples_seen": 6208,
+      "loss": 0.4507684037089348,
+      "step": 388
+    },
+    {
+      "examples_seen": 6224,
+      "loss": 0.38958052545785904,
+      "step": 389
+    },
+    {
+      "examples_seen": 6240,
+      "loss": 0.4820573106408119,
+      "step": 390
+    },
+    {
+      "examples_seen": 6256,
+      "loss": 0.454000823199749,
+      "step": 391
+    },
+    {
+      "examples_seen": 6272,
+      "loss": 0.40892934054136276,
+      "step": 392
+    },
+    {
+      "examples_seen": 6288,
+      "loss": 0.4344509690999985,
+      "step": 393
+    },
+    {
+      "examples_seen": 6304,
+      "loss": 0.4487031027674675,
+      "step": 394
+    },
+    {
+      "examples_seen": 6320,
+      "loss": 0.5229815393686295,
+      "step": 395
+    },
+    {
+      "examples_seen": 6336,
+      "loss": 0.41515257209539413,
+      "step": 396
+    },
+    {
+      "examples_seen": 6352,
+      "loss": 0.4329708516597748,
+      "step": 397
+    },
+    {
+      "examples_seen": 6368,
+      "loss": 0.42830444127321243,
+      "step": 398
+    },
+    {
+      "examples_seen": 6384,
+      "loss": 0.44453762471675873,
+      "step": 399
+    },
+    {
+      "examples_seen": 6400,
+      "loss": 0.46219200640916824,
+      "step": 400
+    },
+    {
+      "examples_seen": 6416,
+      "loss": 0.44768356531858444,
+      "step": 401
+    },
+    {
+      "examples_seen": 6432,
+      "loss": 0.44083859771490097,
+      "step": 402
+    },
+    {
+      "examples_seen": 6448,
+      "loss": 0.41283879429101944,
+      "step": 403
+    },
+    {
+      "examples_seen": 6464,
+      "loss": 0.40951601415872574,
+      "step": 404
+    },
+    {
+      "examples_seen": 6480,
+      "loss": 0.43105456978082657,
+      "step": 405
+    },
+    {
+      "examples_seen": 6496,
+      "loss": 0.45442165434360504,
+      "step": 406
+    },
+    {
+      "examples_seen": 6512,
+      "loss": 0.44199730455875397,
+      "step": 407
+    },
+    {
+      "examples_seen": 6528,
+      "loss": 0.44260373711586,
+      "step": 408
+    },
+    {
+      "examples_seen": 6544,
+      "loss": 0.390649177134037,
+      "step": 409
+    },
+    {
+      "examples_seen": 6560,
+      "loss": 0.4263961985707283,
+      "step": 410
+    },
+    {
+      "examples_seen": 6576,
+      "loss": 0.4591856151819229,
+      "step": 411
+    },
+    {
+      "examples_seen": 6592,
+      "loss": 0.41270607709884644,
+      "step": 412
+    },
+    {
+      "examples_seen": 6608,
+      "loss": 0.42052966356277466,
+      "step": 413
+    },
+    {
+      "examples_seen": 6624,
+      "loss": 0.42514462023973465,
+      "step": 414
+    },
+    {
+      "examples_seen": 6640,
+      "loss": 0.4209651052951813,
+      "step": 415
+    },
+    {
+      "examples_seen": 6656,
+      "loss": 0.3988574519753456,
+      "step": 416
+    },
+    {
+      "examples_seen": 6672,
+      "loss": 0.351763591170311,
+      "step": 417
+    },
+    {
+      "examples_seen": 6688,
+      "loss": 0.4425037056207657,
+      "step": 418
+    },
+    {
+      "examples_seen": 6704,
+      "loss": 0.37293291091918945,
+      "step": 419
+    },
+    {
+      "examples_seen": 6720,
+      "loss": 0.38566754758358,
+      "step": 420
+    },
+    {
+      "examples_seen": 6736,
+      "loss": 0.417081817984581,
+      "step": 421
+    },
+    {
+      "examples_seen": 6752,
+      "loss": 0.40832701325416565,
+      "step": 422
+    },
+    {
+      "examples_seen": 6768,
+      "loss": 0.4313458874821663,
+      "step": 423
+    },
+    {
+      "examples_seen": 6784,
+      "loss": 0.4153231680393219,
+      "step": 424
+    },
+    {
+      "examples_seen": 6800,
+      "loss": 0.40502119064331055,
+      "step": 425
+    }
+  ],
+  "plotter_sha256": "e927e0098043bac56f6be304cdadbeda0caf2246514f52176f3807903f3572fe",
+  "qualification": "unqualified",
+  "runs": [
+    {
+      "completed_steps": 420,
+      "evidence_kind": "real_checkpoint_connector_diffusion_webdataset_pilot",
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z",
+      "status": "running"
+    }
+  ],
+  "schema_version": 1,
+  "selected_train_count": 9647,
+  "source_sha256": {
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z/evaluations.jsonl": "235e20061c5aae5c96a5a82a077e3f328870db9ac369c6eb6d0911c53d3b479e",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z/report.json": "a142267c8b663ddc295f1c56aed18977c073b280bd1fb0eff53868091041a378",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z/steps.jsonl": "0045034956bf66777135452f6e25a2a6b74d5e448af7ac53f4de3bab528f0f8d"
+  },
+  "train_count": 9647,
+  "training_scope": "connector_and_diffusion",
+  "validation_count": 100
+}

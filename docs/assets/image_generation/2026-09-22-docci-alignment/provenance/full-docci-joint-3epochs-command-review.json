@@ -1,0 +1,157 @@
+{
+  "authorization_context": "User explicitly requested joint connector and diffusion training on the full prepared data pool; this supersedes the earlier small-set generation-quality prerequisite.",
+  "capacity_proposal": {
+    "approximate_added_checkpoint_bytes": 190697570900,
+    "approximate_each_checkpoint_bytes": 47674392725,
+    "cpu_optimizer_threads": 32,
+    "large_weights_stay_on_aurora": true,
+    "measured_update_seconds": 11.14,
+    "nodes": 1,
+    "planned_checkpoint_count": 4,
+    "processes": 1,
+    "remaining_overhead_margin_hours": 6.40215,
+    "runtime_estimate_is_not_a_completion_guarantee": true,
+    "training_only_hours": 5.59785,
+    "training_only_seconds": 20152.260000000002,
+    "uncertainties": [
+      "Full-pool caption-length variability",
+      "Initialization and full FP32 checkpoint restoration",
+      "Periodic fixed-cohort evaluation and 50-step galleries",
+      "Four dense optimizer checkpoint writes plus streaming digest checks"
+    ],
+    "walltime_hours": 12,
+    "xpu_tiles": 1
+  },
+  "command_file": "full-docci-joint-3epochs-command-NOT-SUBMITTED.json",
+  "command_file_sha256": "c8d5e1e32f80584ce1cbda3367b3c3d19d9b21db655d04a252105f7dfdde4221",
+  "data_identity": {
+    "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+    "new_downloads_required": false,
+    "train_index": "/lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/webdataset/train.jsonl",
+    "train_index_sha256": "05cbffcb89eccdf6e96eb69d0d7f0faa81db5e357c2a4f8eb4a551cef5a4f5d0",
+    "validation_index": "/lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/webdataset/validation.jsonl",
+    "validation_index_sha256": "e4737f4c003fb49322cfae8862a66ce31d97312bc50cc987102610196d88eea2",
+    "validation_training_overlap_permitted": false
+  },
+  "entrypoint": "tools/train_prism_image_diffusion.py",
+  "entrypoint_sha256": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7",
+  "evaluation": {
+    "caption_control_limitation": "Training-run wrong-caption gaps remain provisional until separate actual noisy-input/timestep controls.",
+    "checkpoint_steps": [
+      600,
+      1200,
+      1800,
+      1809
+    ],
+    "evaluation_steps": [
+      0,
+      200,
+      400,
+      600,
+      800,
+      1000,
+      1200,
+      1400,
+      1600,
+      1800,
+      1809
+    ],
+    "final_validation_examples": 100,
+    "fixed_cohort_comparison": "Compare the same first32 validation examples over steps; final100 mean is a larger cohort.",
+    "fixed_probe_examples_per_split": 32,
+    "gallery_examples_per_split": 2,
+    "gallery_steps": [
+      0,
+      600,
+      1200,
+      1800,
+      1809
+    ],
+    "image_guidance_scale": 2,
+    "native_baseline": false,
+    "native_baseline_reason": "Initialization uses adapted DiT; original-native controls belong in separate diagnostics.",
+    "negative_conditioning": "native",
+    "negative_prompt": "",
+    "prompt_format": "chat",
+    "sampling_steps": 50,
+    "text_guidance_scale": 5
+  },
+  "historical_full_data_proposal_used_as_execution_evidence": false,
+  "initialization": {
+    "alignment_lineage": "Indirect through completed joint source report; this is not a new direct feature-checkpoint restore.",
+    "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01/connector-diffusion-pilot-step-000006.pt",
+    "checkpoint_sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+    "diffusion_buffers_restored": true,
+    "fresh_optimizer": true,
+    "fresh_rng": true,
+    "fresh_sampler": true,
+    "full_fp32_connector_masters": true,
+    "full_fp32_diffusion_masters": true,
+    "optimizer_moments_inherited": false,
+    "policy": "completed_joint_checkpoint_fp32_masters_fresh_stage",
+    "source_audit": "Completed joint source passed both trainable-group updates, unchanged frozen hashes, independent terminal digest, and matched-input diagnostics.",
+    "source_completed_step": 6,
+    "source_region_checkpoint_sha256": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d",
+    "source_report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590"
+  },
+  "purpose": "Larger-data learning experiment; image quality improvement is not guaranteed.",
+  "rebuilt_from_actual_submission": {
+    "command_file": "aligned-regions-joint-smoke-command.json",
+    "command_file_sha256": "dfaebafe1ae5ed8b50650e9188ca8ade0b15296a2e7192a61fcce5ff42c32258",
+    "job_id": "8848651.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov"
+  },
+  "required_before_submission": [
+    "Read-only source/config and checkpoint identity checks",
+    "Reviewed launcher dry-run with 12-hour allocation",
+    "PBS and worker bash syntax checks",
+    "No running source changes"
+  ],
+  "review_checks": {
+    "actual_accepted_parser_passed": true,
+    "budget_validation_passed": true,
+    "chat_and_native_negative_explicit": true,
+    "fresh_optimizer_and_sampler_supported_by_restore_api": true,
+    "full_pool_sampler_exposure_simulated": true,
+    "joint_source_digest_explicit": true,
+    "new_remote_launch_not_performed": true,
+    "no_native_baseline_with_adapted_dit": true,
+    "unchanged_learning_rates": true
+  },
+  "source_snapshot": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components",
+  "source_snapshot_mutated": false,
+  "status": "candidate_reviewed_NOT_SUBMITTED",
+  "training": {
+    "connector_learning_rate": 0.0001,
+    "diffusion_learning_rate": 2e-06,
+    "effective_pairs_per_update": 16,
+    "extra_exposures": 3,
+    "frozen_groups": [
+      "PRISM",
+      "VAE",
+      "native conditioner"
+    ],
+    "full_passes": 3,
+    "global_gradient_clip": 1.0,
+    "gradient_accumulation": 4,
+    "learning_rate_schedule": "constant",
+    "microbatch_pairs": 4,
+    "new_stage_exposures_exclude_prior_stage": true,
+    "objective": "existing image flow MSE only; no alignment-retention loss or text-head loss",
+    "planned_exposures": 28944,
+    "pool_pairs": 9647,
+    "sampler_simulation": {
+      "four_exposures_indices": 3,
+      "seed": 42,
+      "three_exposures_indices": 9644,
+      "unique_indices": 9647
+    },
+    "source_stage_prior_exposures": 96,
+    "train_subset_size": 0,
+    "trainable_groups": [
+      "connector",
+      "diffusion"
+    ],
+    "updates": 1809,
+    "weight_decay": 0.0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "base_commit": "2c0795e640e95d94cfb69a4832281ca5bafbbb2d",
+  "files": {
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/training/cpu_master_adamw.py": "ad81e003fe1db35dbc69d7b9df46f47c9cd4b3a13dee58b734b9be2d68c9adaf",
+    "tools/train_prism_image_diffusion.py": "66711a1f2623e0cdfc48d2e0378f3d4665da6da26faa59c93b7ed8f6ad0aad23",
+    "tools/launch_aurora_image_experiment.py": "2adf64bb1d4c1dddd0423deb1c5f3513bd4f454b55ce5d11a174c863b37ac9df",
+    "tools/plot_prism_image_connector.py": "a0bb9d94426f317e787c08376ba797ba37baccadceaaff2383c96d37e4c520c8",
+    "tests/test_train_prism_image_diffusion.py": "96fc7f7c9838bc10eb5bc34dde8e52db0967066e3d0989a96039e35cfd00117d",
+    "tests/test_cpu_master_adamw.py": "5cbd19449109908b7f118882de638145ab48b67c2ba5fc9441010dd3a9f219a2",
+    "tests/test_image_diffusion_trainability.py": "6a51e90a866f2b7cd14732bf304aff64dc5ffab16d18255b8df49ab7308152d3",
+    "tests/test_image_experiment_launcher.py": "0a8621bf0f5b12452ca1bfe39b8d6c71a1cd3aa27c1712cad2496ca6617a5e33",
+    "tests/test_plot_prism_image_connector.py": "2715567e5133b5299ff6e9ef87d4eef76779230da76bacd008c7d92f33d26fd7"
+  }
+}

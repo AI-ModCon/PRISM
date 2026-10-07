@@ -1,0 +1,59 @@
+{
+  "report_sha256": {
+    "runs/conditioning-aligned-joint6-01": "127a399abf3276805213fa0101a169324ac2b5e75e089b300ec0febc89907f8e",
+    "runs/full-docci-joint-conditioning-01": "896ffae828c792b6e3735b9a2b1efff37620ffe6e56800401b56bbec6be83606"
+  },
+  "samples": [
+    {
+      "case": "validation-00",
+      "route": "prism_chat_native_negative_cfg5",
+      "source": "runs/conditioning-aligned-joint6-01/sample-validation-00-prism_chat_native_negative_cfg5.png",
+      "sha256": "6dbb58e6099a80cc4c99a96293f2d3b00d2fadea435ab9fd0747867380d038ca",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "seed": 200042
+    },
+    {
+      "case": "validation-00",
+      "route": "prism_chat_native_negative_cfg5",
+      "source": "runs/full-docci-joint-conditioning-01/sample-validation-00-prism_chat_native_negative_cfg5.png",
+      "sha256": "b663e2b3e83cbf057e4af7ec67f0e07305b5a1e1dcebb20cdf9805fcc900c1b8",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "seed": 200042
+    },
+    {
+      "case": "validation-00",
+      "route": "native_adapted_diffusion",
+      "source": "runs/full-docci-joint-conditioning-01/sample-validation-00-native_adapted_diffusion.png",
+      "sha256": "5a51c241db8cd1f04bc8b77d3da1e7f48ec4284d120a163ccdc474c2a71d1fa3",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "seed": 200042
+    },
+    {
+      "case": "validation-01",
+      "route": "prism_chat_native_negative_cfg5",
+      "source": "runs/conditioning-aligned-joint6-01/sample-validation-01-prism_chat_native_negative_cfg5.png",
+      "sha256": "3c11347d5d5e7de6dcac894336e376db0935bb80c77f347f8b243fd1b64bdb52",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "seed": 200043
+    },
+    {
+      "case": "validation-01",
+      "route": "prism_chat_native_negative_cfg5",
+      "source": "runs/full-docci-joint-conditioning-01/sample-validation-01-prism_chat_native_negative_cfg5.png",
+      "sha256": "ed151a197b34c3449f087f02ac01a28d01b69104679c14716f459b3cda06544f",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "seed": 200043
+    },
+    {
+      "case": "validation-01",
+      "route": "native_adapted_diffusion",
+      "source": "runs/full-docci-joint-conditioning-01/sample-validation-01-native_adapted_diffusion.png",
+      "sha256": "7fd5d69e899676cf68e965aa825d1b74a201d81b800f133d0463d767d75bfd15",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "seed": 200043
+    }
+  ],
+  "output": "matched-seed-before-after.png",
+  "output_sha256": "a2167f682158b8c56556304e0920ea3b11648acf9a7027c1f319e764eff43dac",
+  "all_image_hashes_and_initial_noise_verified": true
+}

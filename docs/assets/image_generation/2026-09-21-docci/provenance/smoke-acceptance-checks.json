@@ -1,0 +1,11 @@
+{
+  "real_completed_smoke": true,
+  "two_updates": true,
+  "finite_losses_and_gradients": true,
+  "connector_only": true,
+  "all_connector_gradients": true,
+  "frozen_unchanged": true,
+  "full_parent_restored": true,
+  "target_free_samples": true,
+  "same_policy_numerical_checks": true
+}

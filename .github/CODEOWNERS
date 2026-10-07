@@ -1,0 +1,27 @@
+# Code owners for BaseMM_PRISM.
+#
+# GitHub requests a review from the owning entry whenever a matching file
+# changes. Branch protection on `main` will require one approving review at the
+# public release (it runs with `required_approving_review_count: 0` while the
+# release gates land); without this file that review can come from any account
+# with write access, with no routing to anyone who knows the area.
+#
+# @AI-ModCon/base-multimodal is the only team with access to this repository
+# (permission: maintain). Entries naming a team without repo access are
+# silently ignored by GitHub, so keep this list in sync with that grant.
+#
+# Note: `require_code_owner_reviews` is NOT enabled on `main` today, so these
+# entries request reviews rather than block merges. Turn that setting on once
+# the maintainer roster is settled.
+
+# Default owner for everything not matched by a more specific rule.
+*                           @AI-ModCon/base-multimodal
+
+# Release governance and CI: changes here decide what can merge at all.
+/.github/                   @AI-ModCon/base-multimodal
+/tools/ci/                  @AI-ModCon/base-multimodal
+/requirements/              @AI-ModCon/base-multimodal
+
+# Licensing and public-release surface.
+/LICENSE                    @AI-ModCon/base-multimodal
+/NOTICE                     @AI-ModCon/base-multimodal

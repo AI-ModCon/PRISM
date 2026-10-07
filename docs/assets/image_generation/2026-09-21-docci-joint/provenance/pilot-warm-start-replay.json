@@ -1,0 +1,16 @@
+{
+  "train": {
+    "count": 16,
+    "all_fields_exact": true,
+    "max_loss_difference": 0.0
+  },
+  "validation": {
+    "count": 16,
+    "all_fields_exact": true,
+    "max_loss_difference": 0.0
+  },
+  "first_two_updates": {
+    "all_fields_exact": false,
+    "max_loss_difference": 0.00011688470840454102
+  }
+}

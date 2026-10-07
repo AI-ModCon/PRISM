@@ -1,0 +1,38 @@
+backbone_id: allenai/Olmo-3-7B-Instruct
+tokenizer_id: "${oc.env:PRISM_TOKENIZERS}/prism-olmo-3-7b-instruct-interleaved"  # Custom tokenizer with interleaving tokens added
+
+modalities: [text,time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+d_model: 4096
+d_text: 4096
+# Olmo-3 base vocab (100278) + 12 modality tokens added by the custom tokenizer:
+# <ts>, <ts/>, <image>, <image/>, <table>, <table/>, <graph>, <graph/>, <geometry>, <geometry/>, <num>, <num/>
+vocab_size: 100290
+
+is_timeseries: true
+ts_variates: 1
+# max_ts_length is auto-computed by train.py for timeomni:
+#   max_ts_length = max(timeomni_patch_len) * (timeomni_max_patches - 1)
+# Set to a sentinel here; train.py will override.
+max_ts_length: 0
+is_interleaved_qa: true
+normalize_ts_in_encoder: true
+ts_projector: "timeomni"
+modality_start_end_token_indices: {"time_series": [100278,100279]}
+
+# TimeOmni dynamic patching knobs
+# Candidate patch lengths (and matching strides) tried per sample; the
+# largest that keeps num_patches <= timeomni_max_patches is chosen.
+timeomni_patch_len: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_stride: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_d_model: 512       # Patch embedding hidden dimension
+timeomni_dropout: 0.1
+timeomni_ts_tokens: 100     # Target tokens-per-series for patch-size selection
+timeomni_max_patches: 100   # Hard budget: tokens per variate in merged sequence
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+projector_hidden_mult: 1
+projector_num_layers: 2

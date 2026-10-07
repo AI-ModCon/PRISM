@@ -1,0 +1,2 @@
+{"id": "pen-t2i-smoke", "task": "t2i", "prompt": "A photograph of a black fountain pen lying horizontally on squared paper with handwritten notes.", "source_images": [], "target_image": "../../src/ui/pixmo_samples/00000000.jpg", "split": "train", "group_ids": ["pixmo-ui-00000000"]}
+{"id": "chicken-t2i-smoke", "task": "t2i", "prompt": "A close-up photograph of a dark chicken with a bright red comb beneath a metal roof.", "source_images": [], "target_image": "../../src/ui/pixmo_samples/00000066.jpg", "split": "train", "group_ids": ["pixmo-ui-00000066"]}

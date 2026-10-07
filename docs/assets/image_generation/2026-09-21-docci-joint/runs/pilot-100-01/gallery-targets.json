@@ -1,0 +1,147 @@
+{
+  "source": "Google DOCCI",
+  "license": "CC-BY-4.0",
+  "source_url": "https://google.github.io/docci/",
+  "records": [
+    {
+      "data_offset": 88152576,
+      "group_ids": [
+        "docci:train_04996",
+        "pixels:41ecbe4205dcabe50be4c498a56914d158bf3450a5dd1b7c783584f8cf9a210f"
+      ],
+      "header_offset": 88152064,
+      "height": 1536,
+      "id": "train_04996",
+      "image_sha256": "bf41d73519185f1f5ec874c030c3af7a01f6c03b1294ae6ab103117610738fce",
+      "license": "CC-BY-4.0",
+      "member": "train_04996.jpg",
+      "pixel_sha256": "41ecbe4205dcabe50be4c498a56914d158bf3450a5dd1b7c783584f8cf9a210f",
+      "prompt": "A turquoise genie statue is on top of a brown brick building where the torso and up is visible only. The genie has its left hand raised with its elbow resting on the building, and his right arm is placed laying on the building with its hand slightly raised. The genie has a black beard and a bald head with pointed ears. The shirt is golden on the genie's body and is similar to a tank top. On the front of the building is a blue sign saying \"BLUE GENIE\" in yellow and \"ART BAZAAR\" in black with white outline.",
+      "related_group_ids": [
+        "docci-cluster:105"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/train/docci-000013.tar",
+      "size": 223012,
+      "source_archive_member": "images/train_04996.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "train_04996.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "105",
+        "entity_tags": [],
+        "image_height": 1536,
+        "image_width": 2048
+      },
+      "source_split": "train",
+      "split": "train",
+      "task": "t2i",
+      "width": 2048
+    },
+    {
+      "data_offset": 38736896,
+      "group_ids": [
+        "docci:train_08983",
+        "pixels:f85558d615620b8aa6e0f469b4334baba1ddf2c36de8b05efa4ee5bd24117401"
+      ],
+      "header_offset": 38736384,
+      "height": 2048,
+      "id": "train_08983",
+      "image_sha256": "2cfc30c10478538dcf5d4be4a7ca9e086b8f49ac8fb18b24633a368767fbd8d2",
+      "license": "CC-BY-4.0",
+      "member": "train_08983.jpg",
+      "pixel_sha256": "f85558d615620b8aa6e0f469b4334baba1ddf2c36de8b05efa4ee5bd24117401",
+      "prompt": "An outdoor day time view looking down at two mosaic pyramids. The pyramids do not have equilateral sides and are somewhat misshapen. The pyramid in the front has zig zag tile stripes that alternate between the colors of black and pink. The grout between the tiles is a silver gray. The second pyramid is behind and slightly to the right of the first. The second pyramid has horizontal tile stripes. The tiles are rectangles. This pyramid has a flat top tiled in all navy blue. The top stripe is solid white. There are three more solid white stripes. The other stripes have random colors of navy blue, brown, maroon, and green. The bottom left corner of this pyramid is obscured by the pink and black pyramid. The fourth stripe up from the bottom is solid green except for a short tile of aqua blue. This short tile's left end is cut off by the front pyramid. The pyramids are placed upon brown bricked pavement within a permanently chained-off area. Large concrete squares are behind the pyramids and angled to the top right corner. On the upper left edge of the frame, the back wheel of a scooter is sticking out.",
+      "related_group_ids": [
+        "docci-cluster:56"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/train/docci-000033.tar",
+      "size": 588548,
+      "source_archive_member": "images/train_08983.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "train_08983.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "56",
+        "entity_tags": [],
+        "image_height": 2048,
+        "image_width": 1535
+      },
+      "source_split": "train",
+      "split": "train",
+      "task": "t2i",
+      "width": 1535
+    },
+    {
+      "data_offset": 26494976,
+      "group_ids": [
+        "docci:qual_dev_00000",
+        "pixels:be771c27cc43b2770b61fc017a3287b870006dce4fd668a6057257314a8fca2e"
+      ],
+      "header_offset": 26494464,
+      "height": 2048,
+      "id": "qual_dev_00000",
+      "image_sha256": "8a4c739822dcdef19b1297b875da32b030976a2d17f1503dae8a9706909482ba",
+      "license": "CC-BY-4.0",
+      "member": "qual_dev_00000.jpg",
+      "pixel_sha256": "be771c27cc43b2770b61fc017a3287b870006dce4fd668a6057257314a8fca2e",
+      "prompt": "An indoor angled down medium close-up front view of a real sized stuffed dog with white and black colored fur wearing a blue hard hat with a light on it. A couple inches to the right of the dog is a real sized black and white penguin that is also wearing a blue hard hat with a light on it. The dog is sitting, and is facing slightly towards the right while looking to its right with its mouth slightly open, showing its pink tongue. The dog and penguin are placed on a gray and white carpet, and placed against a white drawer that has a large gray cushion on top of it. Behind the gray cushion is a transparent window showing green trees on the outside.",
+      "related_group_ids": [
+        "docci-cluster:130"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/validation/docci-000000.tar",
+      "size": 440611,
+      "source_archive_member": "images/qual_dev_00000.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "qual_dev_00000.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "130",
+        "entity_tags": [],
+        "image_height": 2048,
+        "image_width": 1536
+      },
+      "source_split": "qual_dev",
+      "split": "validation",
+      "task": "t2i",
+      "width": 1536
+    },
+    {
+      "data_offset": 512,
+      "group_ids": [
+        "docci:qual_dev_00001",
+        "pixels:8f5f3d79b33aea26602fb5293871bb4981671e6c6a0b65ced0ee52496341e11a"
+      ],
+      "header_offset": 0,
+      "height": 1536,
+      "id": "qual_dev_00001",
+      "image_sha256": "825545c57f2e908a3fde8d1f328952dd9f3848830eb4729562c5d47dcfd69823",
+      "license": "CC-BY-4.0",
+      "member": "qual_dev_00001.jpg",
+      "pixel_sha256": "8f5f3d79b33aea26602fb5293871bb4981671e6c6a0b65ced0ee52496341e11a",
+      "prompt": "An airplane runway is visible, with one yellow airplane and one silver airplane moving down it. The runway stretches away from the camera, and then an intersection runs horizontally across it; the yellow airplane is at the intersection, and the silver plane is several feet behind it. The yellow airplane is a bright yellow with the text \"spirit\" written in black on the side as well as on the tail of the airplane. The airplane is mostly facing sideways, at a very slight three-quarter view, and the nose of the plane is facing to the left. The silver airplane has a blue tail and the word \"UNITED\" written on the side. It is also facing sideways, with the nose to the left. Surrounding the runway are large stretches of green grass, and the sky is a bright blue with many fluffy white cumulus clouds. In the distance is a long row of trees that run from the left to the right.",
+      "related_group_ids": [
+        "docci-cluster:42"
+      ],
+      "schema": "prism.docci.webdataset.v1",
+      "shard": "shards/validation/docci-000000.tar",
+      "size": 270250,
+      "source_archive_member": "images/qual_dev_00001.jpg",
+      "source_dataset": "google/docci",
+      "source_image": "qual_dev_00001.jpg",
+      "source_images": [],
+      "source_metadata": {
+        "cluster_id": "42",
+        "entity_tags": [],
+        "image_height": 1536,
+        "image_width": 2048
+      },
+      "source_split": "qual_dev",
+      "split": "validation",
+      "task": "t2i",
+      "width": 2048
+    }
+  ]
+}

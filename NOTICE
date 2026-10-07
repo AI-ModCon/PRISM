@@ -1,0 +1,70 @@
+PRISM: Poly-Reasoning Integrated Scientific Multimodal Model
+
+Copyright (c) 2026, UChicago Argonne, LLC. All Rights Reserved.
+
+This software was produced under U.S. Government contract DE-AC02-06CH11357
+for Argonne National Laboratory, which is operated by UChicago Argonne, LLC
+for the U.S. Department of Energy. The U.S. Government has rights to use,
+reproduce, and distribute this software. NEITHER THE GOVERNMENT NOR UCHICAGO
+ARGONNE, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY
+FOR THE USE OF THIS SOFTWARE. If software is modified to produce derivative
+works, such modified software should be clearly marked, so as not to confuse
+it with the version available from Argonne National Laboratory.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this software except in compliance with the License. You may obtain a
+copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+
+This project acknowledges support from the U.S. Department of Energy's
+Genesis Mission.
+
+
+================================================================================
+THIRD-PARTY COMPONENTS
+================================================================================
+
+This section covers material redistributed within this repository, and
+components referenced as submodules. Packages installed from PyPI at build or
+run time are not redistributed here and remain governed by their own licenses;
+see pyproject.toml and requirements/ for those declarations.
+
+--------------------------------------------------------------------------------
+Tokenizer assets
+  tokenizers/prism-olmo-1b-interleaved/
+  tokenizers/prism-olmo-3-7b-instruct-interleaved/
+--------------------------------------------------------------------------------
+Derived from the OLMo tokenizer released by the Allen Institute for AI.
+
+    OLMo
+    Copyright Allen Institute for Artificial Intelligence
+    Licensed under the Apache License, Version 2.0
+    https://github.com/allenai/OLMo
+
+These files add PRISM-specific interleaved multimodal special tokens. The
+underlying vocabulary and merge tables remain those of the upstream OLMo
+tokenizer.
+
+--------------------------------------------------------------------------------
+Walrus
+  src/libs/walrus (Git submodule, pinned to commit 9c8b39ac)
+--------------------------------------------------------------------------------
+The geometry encoder (src/encoders/geometry.py) imports the Walrus model
+library, referenced as a Git submodule. No Walrus source is redistributed in
+this repository; only the submodule reference is recorded.
+
+    Walrus
+    Copyright (c) 2024 Polymathic AI
+    Licensed under the MIT License
+    https://github.com/PolymathicAI/walrus
+
+The MIT License is compatible with Apache License 2.0 for this use. Its
+copyright notice and permission text must be retained wherever Walrus source
+is distributed.

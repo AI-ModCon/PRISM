@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.ai/schemas/hpc_result.schema.json",
+  "title": "HPC Result Contract",
+  "type": "object",
+  "required": [
+    "platform",
+    "job_id",
+    "git_sha",
+    "status",
+    "duration_sec",
+    "backend",
+    "steps_completed",
+    "tests_passed",
+    "error_summary"
+  ],
+  "properties": {
+    "platform": { "type": "string", "enum": ["aurora", "perlmutter"] },
+    "job_id": { "type": "string", "minLength": 1 },
+    "git_sha": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["success", "failed", "timeout"] },
+    "duration_sec": { "type": "integer", "minimum": 0 },
+    "backend": { "type": "string", "enum": ["xccl", "nccl"] },
+    "steps_completed": { "type": "integer", "minimum": 0 },
+    "tests_passed": { "type": "integer", "minimum": 0 },
+    "error_summary": { "type": "string" },
+    "completed_at": { "type": "string" },
+    "artifact_dir": { "type": "string" },
+    "scheduler_state": { "type": "string" }
+  },
+  "additionalProperties": true
+}

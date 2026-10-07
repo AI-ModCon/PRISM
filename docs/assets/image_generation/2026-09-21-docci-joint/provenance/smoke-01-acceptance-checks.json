@@ -1,0 +1,18 @@
+{
+  "completed_real_run": true,
+  "all_requested_updates": true,
+  "training_ids_only": true,
+  "finite_losses_and_group_gradients": true,
+  "complete_dense_scope": true,
+  "both_groups_changed": true,
+  "frozen_unchanged": true,
+  "sampler_progress": true,
+  "final_checkpoint_verified": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-joint-20260921/runs/smoke-01/connector-diffusion-pilot-step-000002.pt",
+    "bytes": 47674267569,
+    "sha256": "d4cbfa164f07fd48cef7149637213b64b74426164d26904d6ff5bbc7850a7f69"
+  },
+  "sampling_exercised": false,
+  "examples_consumed": 2,
+  "unique_training_examples": 2
+}

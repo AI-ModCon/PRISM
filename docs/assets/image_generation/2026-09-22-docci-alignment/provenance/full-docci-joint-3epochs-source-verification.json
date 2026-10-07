@@ -1,0 +1,10 @@
+{
+  "verified_source_files": 14,
+  "runner_sha256": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7",
+  "config_sha256": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf",
+  "completed_initializer_report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590",
+  "train_pairs": 9647,
+  "validation_pairs": 100,
+  "overlap": 0,
+  "new_output_and_job_directories": true
+}

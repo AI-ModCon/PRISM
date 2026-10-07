@@ -1,0 +1,54 @@
+# Canonical modality combinations for ablation sweeps.
+#
+# Each preset maps a short name to the `model.modalities` list. Consumed by
+# tools/run_sweep.py and any external workflow that wants a stable, named
+# handle for "the modalities used in run X" instead of a freeform list.
+#
+# Keep this file small — adding a preset is a project-wide commitment to
+# support that combination in the data loader, dummy fallbacks, and
+# encoder gates.
+
+presets:
+  text_only:
+    modalities: [text]
+    description: "Text-only baseline (no vision, no scientific modalities)."
+
+  text_image:
+    modalities: [text, image]
+    description: "VLM baseline. Production target for OLMo-3 E2E."
+
+  text_image_ts:
+    modalities: [text, image, time_series]
+    description: "Adds time-series for scientific reasoning."
+
+  all6:
+    modalities: [text, image, table, time_series, geometry, graph]
+    description: "Full PRISM stack. Requires torch_geometric + walrus."
+
+  # Per-modality smoke cells (Phase 2 plan). Paired with the
+  # `src/conf/data/per_modality_smoke/*.yaml` skip-overrides so the dataloader
+  # actually emits the requested modality; the startup divergence assertion
+  # plus batch_modality_counts column self-validate every cell.
+  text_ts:
+    modalities: [text, time_series]
+    description: "Per-modality smoke: text + time series only."
+
+  text_graph:
+    modalities: [text, graph]
+    description: "Per-modality smoke: text + graph only."
+
+  text_table:
+    modalities: [text, table]
+    description: "Per-modality smoke: text + table only."
+
+  text_geometry:
+    modalities: [text, geometry]
+    description: "Per-modality smoke: text + geometry only."
+
+  # CALVIN VLA cell for the per-modality sweep. Reuses [text, image] because
+  # pose and action are HEAD outputs (regression), not input modalities.
+  # The skip rule in tools/run_sweep.py constrains this preset to VLA designs
+  # so non-VLA designs don't accidentally land on the VLA trainer.
+  vla:
+    modalities: [text, image]
+    description: "VLA (CALVIN) — head/wrist images + text → action regression."

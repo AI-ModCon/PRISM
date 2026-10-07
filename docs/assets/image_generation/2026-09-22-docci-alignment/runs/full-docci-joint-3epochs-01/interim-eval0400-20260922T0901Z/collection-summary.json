@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T09:00:39.324020+00:00",
+  "completed_steps": 420,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": null,
+  "final_acceptance_passed": null,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "training",
+  "report_sha256": "a142267c8b663ddc295f1c56aed18977c073b280bd1fb0eff53868091041a378",
+  "report_status": "running",
+  "run_name": "full-docci-joint-3epochs-01",
+  "samples": 4,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components",
+  "target_count": 4
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "run_name": "aligned-regions-joint-smoke-01",
+  "report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590",
+  "audit_scope": "Independent local metadata, collected source identity acceptance, replayed image hash and visual audit; terminal bytes independently hashed by remote metadata collector, not transferred or loaded locally.",
+  "integrity": {
+    "final_acceptance_passed": true,
+    "region_checkpoint_sha256": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d",
+    "fresh_optimizer_sampler_rng": true,
+    "original_fp32_dit_masters": true,
+    "connector_runtime_and_masters_fp32": true,
+    "both_groups_master_and_runtime_changed": true,
+    "finite_nonzero_group_gradients_all_steps": true,
+    "frozen_tensor_count": 1634,
+    "frozen_hashes_identical": true,
+    "terminal_checkpoint": {
+      "bytes": 47674392725,
+      "independently_verified": true,
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01/connector-diffusion-pilot-step-000006.pt",
+      "qualification": "unqualified",
+      "sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+      "step": 6
+    },
+    "all_ten_image_hashes_pass": true,
+    "within_run_initial_latents_match": true
+  },
+  "exposure": {
+    "updates": 6,
+    "batch_size": 4,
+    "gradient_accumulation": 4,
+    "examples": 96,
+    "unique_pairs": 32,
+    "uses_per_pair": 3
+  },
+  "timing": {
+    "total_run_seconds": 548.7386455568485,
+    "update_seconds": [
+      13.719353412976488,
+      11.725678878836334,
+      11.239565374096856,
+      10.689241349929944,
+      11.239388595800847,
+      10.79001912404783
+    ],
+    "mean_after_first": 11.136778664542362,
+    "median_after_first": 11.239388595800847,
+    "range_after_first": [
+      10.689241349929944,
+      11.725678878836334
+    ],
+    "peak_allocated_GiB": 27.740126132965088,
+    "peak_reserved_GiB": 29.736328125,
+    "interpretation": "Timing at 256x256 on this 32-pair caption cohort; full-pool token lengths and checkpoint/evaluation overhead may change throughput."
+  },
+  "fixed_probe_losses": {
+    "train": {
+      "count": 8,
+      "initial": 0.37544530257582664,
+      "final": 0.3783402852714062,
+      "relative_change_percent": 0.7710797486925047,
+      "same_ids_and_seeds": true,
+      "legacy_wrong_caption_gaps_provisional": true
+    },
+    "validation": {
+      "count": 8,
+      "initial": 0.5263295397162437,
+      "final": 0.5270050689578056,
+      "relative_change_percent": 0.1283472027669319,
+      "same_ids_and_seeds": true,
+      "legacy_wrong_caption_gaps_provisional": true
+    }
+  },
+  "cross_run_sampling_controls": [
+    {
+      "id": "qual_dev_00000",
+      "smoke_seed": 200043,
+      "preceding_diagnostic_seed": 200042,
+      "initial_latent_matches": false
+    },
+    {
+      "id": "qual_dev_00001",
+      "smoke_seed": 200045,
+      "preceding_diagnostic_seed": 200043,
+      "initial_latent_matches": false
+    }
+  ],
+  "visual_findings": {
+    "train_02098": "Warm-start clock correctly shows 3:41; after six joint updates displays 3:44. Rectangular black clock and cream wall retained, layout changes.",
+    "train_01677": "Both depict pine/grill/stone-wall scene; final places the pine inside a basket rather than preserving a separate dirt patch, logs and tool basket.",
+    "qual_dev_00000": "Both PRISM stages fail to separate dog and penguin. Final is a simplified combined figure. Native same-seed reference depicts a dog and smaller penguin, with incorrect placement/scale.",
+    "qual_dev_00001": "At the smoke seed both PRISM stages miss requested two airplanes. Initial has a wheeled cart-like object; final becomes a stylized road/sign scene. Native same-seed reference depicts yellow and silver planes.",
+    "cross_run_limit": "Prior region diagnostic used different noise seeds for both subjects, so earlier recognizable aircraft versus smoke absence cannot establish training-induced degradation. Within-smoke comparisons do hold noise fixed."
+  },
+  "recommendation": {
+    "next": "Diagnose the completed joint-six checkpoint with actual matched/wrong-caption noisy-input/timestep hashes, the preceding diagnostic fixed cases/seeds, and native conditioning on the same adapted DiT; retain original native same-seed image reference. Do not extend joint training or start full data solely on this smoke.",
+    "later_bounded_teacher_alignment": "Justified as a hypothesis if residual content/semantic errors persist: 32-caption alignment content cosine is 0.9437 train versus 0.8634 held-out, despite nearly exact prefix/suffix. More diverse prepared training captions with untouched validation may improve generalization, but this gap does not prove more data resolves generation. Use a separately audited cohort/objective protocol and compare original DiT without joint-update confounding.",
+    "alternative_control": "If completed-joint diagnosis confirms degradation, inspect connector feature drift and consider a lower connector learning-rate or explicitly recorded alignment-retention objective before another joint run; six steps do not establish a general learning-rate conclusion.",
+    "full_data_generation_gate_passed": false
+  },
+  "region_initializer_final_content_metrics": {
+    "train": {
+      "content_mse": 0.024105298391077667,
+      "content_cosine": 0.9437246527522802,
+      "prefix_mse": 0.0005273960205158801,
+      "suffix_mse": 0.002301899075973779
+    },
+    "validation": {
+      "content_mse": 0.06282782694324851,
+      "content_cosine": 0.8634128123521805,
+      "prefix_mse": 0.0005265272047836334,
+      "suffix_mse": 0.005021584045607597
+    }
+  }
+}

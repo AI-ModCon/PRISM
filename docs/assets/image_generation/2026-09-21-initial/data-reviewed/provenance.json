@@ -1,0 +1,671 @@
+{
+  "asset_bytes": 13628555,
+  "auxiliary_manifest_sha256": {
+    "parent-cases.jsonl": "48c30080f5a0c5af27ea7a2049c4c67e1d1998421e8349b76692472d83500529",
+    "train.jsonl": "e60043f3077d5c0201973959815855368e83b0107f42a4e069a3c6b060d0e5c6",
+    "validation.jsonl": "546a8c522340b76a1f27858bad6113518526adbc0346cd615e42be7a4ce720a3"
+  },
+  "caption_policy": "original UTF-8 text bytes preserved; no rewriting or truncation",
+  "counts": {
+    "train": 16,
+    "validation": 8
+  },
+  "deduplication": "source URLs, recorded image/video/subject IDs, YouTube/Flickr IDs, decoded RGB SHA256, dHash distance <=4 with RGB means <12",
+  "evidence_kind": "original_caption_connector_diagnostic_data",
+  "examples": [
+    {
+      "caption_member": "00000086.txt",
+      "caption_offset_data": 44890624,
+      "caption_sha256": "ba9aae9b257716e742ac77bf18a74f147b13b85aaaee44a94945857bf05eaaf8",
+      "caption_words": 77,
+      "dhash64": "0292d070d0503800",
+      "id": "pixmo-train-00000086",
+      "image_content_sha256": "4e23e3c49d83e006ebf0f1cf994c414674e4c2a2c6d51c6ad8a13fe82efd9582",
+      "image_dimensions": [
+        1242,
+        1237
+      ],
+      "image_member": "00000086.jpg",
+      "image_offset_data": 43606528,
+      "image_sha256": "bacf21fc2873a4200ffaf291fabd2a1dc31c731fbd95d30b8b471f59f45fd97c",
+      "metadata_member": "00000086.json",
+      "metadata_sha256": "a59653a50660e42578fcfdbd56967fa25787a03fc4fe42bb162298ceb523f237",
+      "source_key": "00000086",
+      "source_metadata": {
+        "image_url": "https://live.staticflickr.com/65535/49893821928_c6c51c4b31_o.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/49893821928_c6c51c4b31_o.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00000139.txt",
+      "caption_offset_data": 70064128,
+      "caption_sha256": "d22d0ddc82bc94dfc36950970bff35cfa3b754f827a018db66e86b8a76a64f78",
+      "caption_words": 80,
+      "dhash64": "e7e7e7e7e7e7e7e7",
+      "id": "pixmo-train-00000139",
+      "image_content_sha256": "9c6f5ed278c703a784212d1f4cb9282467c2c90be217b1f7d884bf0097816eff",
+      "image_dimensions": [
+        854,
+        240
+      ],
+      "image_member": "00000139.jpg",
+      "image_offset_data": 70048256,
+      "image_sha256": "c029176d1219628eda6cec44b4618e7690e58bd8097f4bcea0d2a7bd6f2916ca",
+      "metadata_member": "00000139.json",
+      "metadata_sha256": "421e32b637072025ea4ec8092f426a35389b8685406c49ff7d0b977730c1fb18",
+      "source_key": "00000139",
+      "source_metadata": {
+        "image_url": "https://pixmo.s3.us-west-2.amazonaws.com/compare/something_something_v2/97538-seed1337-Hx2W-240x854.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/97538-seed1337-Hx2W-240x854.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00000209.txt",
+      "caption_offset_data": 108413440,
+      "caption_sha256": "e802b0b2733e292e762e178402941d186548a0f92289c42690bb90e1d4c4e17c",
+      "caption_words": 71,
+      "dhash64": "cfcccccecececeea",
+      "id": "pixmo-train-00000209",
+      "image_content_sha256": "038897fb4112d6ff383dbc53b0f5345a28a1439d5d963da1d5bcc37e678e38f2",
+      "image_dimensions": [
+        4608,
+        3456
+      ],
+      "image_member": "00000209.jpg",
+      "image_offset_data": 107478528,
+      "image_sha256": "f7796c1941f5d23c6d392bb505ee58a9559a87ef7ddf827b9a18ba218615fea5",
+      "metadata_member": "00000209.json",
+      "metadata_sha256": "8c85fdda65b097c0ac9eda304c2a9f7a4a7bfe656af3e3c7688d479f01de9a95",
+      "source_key": "00000209",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/3qicho86q8601.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/3qicho86q8601.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00000278.txt",
+      "caption_offset_data": 139367936,
+      "caption_sha256": "3c0ba264347526031b42062208190cea67e1a36737e643fc995a11338deccede",
+      "caption_words": 70,
+      "dhash64": "d8c88cecf0d8151b",
+      "id": "pixmo-train-00000278",
+      "image_content_sha256": "f8cd23a9ab7455deb489d81de837a99db39c63cfcb262ac18f83781901055d3a",
+      "image_dimensions": [
+        2048,
+        2048
+      ],
+      "image_member": "00000278.jpg",
+      "image_offset_data": 138776064,
+      "image_sha256": "e26bc9a74c8bf2ec39afe153eaca1e0c12b4b156192d65fb898745399f9ffb3d",
+      "metadata_member": "00000278.json",
+      "metadata_sha256": "ba25db3a5c7eb820fd4af63e5708a2913765417a56236867299f8dcc592aa160",
+      "source_key": "00000278",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/q0axuleydw241.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/q0axuleydw241.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00000748.txt",
+      "caption_offset_data": 398873600,
+      "caption_sha256": "17ce032d022e3d5681c96da2b2f7d5f8afca9a45fe2e2bb2102c7bcbf717a878",
+      "caption_words": 74,
+      "dhash64": "84284d45454dba04",
+      "id": "pixmo-train-00000748",
+      "image_content_sha256": "2d2c8de9afd5037a68cf847254ff077d3bb174ae98cfd9047412f1c68a8b4822",
+      "image_dimensions": [
+        2034,
+        1366
+      ],
+      "image_member": "00000748.jpg",
+      "image_offset_data": 398673408,
+      "image_sha256": "450e32a688272d769b503ae2c5c2de0511ab3d4c74c23658f374f126ad4d92d2",
+      "metadata_member": "00000748.json",
+      "metadata_sha256": "2c49b2d36af777d27fcdf1cdbb078ebde40c6ef8d82ea5076806038df6a6bc01",
+      "source_key": "00000748",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/mnv1obhnekg41.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/mnv1obhnekg41.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00000976.txt",
+      "caption_offset_data": 515790848,
+      "caption_sha256": "63aaa00e49f7d3f3c503c08014412cb2731db74d2faf30393ceb7493f8bdc89c",
+      "caption_words": 80,
+      "dhash64": "1e3ce1a28448d093",
+      "id": "pixmo-train-00000976",
+      "image_content_sha256": "8dee0bbeda4e45f0bb3aa5e7cba530a490c340afa90fdd32ca210496e3d1235d",
+      "image_dimensions": [
+        612,
+        430
+      ],
+      "image_member": "00000976.png",
+      "image_offset_data": 515425280,
+      "image_sha256": "328d5b01de4ea49fc339a92e9722a487cc845778c85467df0a872ecf1b81dfda",
+      "metadata_member": "00000976.json",
+      "metadata_sha256": "7ecec700429f66a62418c8217a45b8fe6fd2b6b3fd23dcb2ec84bc5391ef6f8d",
+      "source_key": "00000976",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/jlr7dos3n9pb1.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/jlr7dos3n9pb1.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00001143.txt",
+      "caption_offset_data": 75841536,
+      "caption_sha256": "49a326d0f430a1c55e21ad0f33afe8c2c9b4737194ce69479c03efc3e3a2ddc4",
+      "caption_words": 80,
+      "dhash64": "3f364cac2f4fd7f3",
+      "id": "pixmo-train-00001143",
+      "image_content_sha256": "b260604cea1fb5c536239bfc832331a94c129264832b8311e6bdf5a44aadda4b",
+      "image_dimensions": [
+        3024,
+        4032
+      ],
+      "image_member": "00001143.jpeg",
+      "image_offset_data": 73045504,
+      "image_sha256": "c54a095399be842e48a478f758ab8f109924e97afa502ae63bf90566effc0d4e",
+      "metadata_member": "00001143.json",
+      "metadata_sha256": "e8b1e084daf20ce8dac8c6c5f98ea1d8379e5a87a9ea89bf6b1548ff6ee41faf",
+      "source_key": "00001143",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/47jl7f14yklc1.jpeg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/47jl7f14yklc1.jpeg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000001.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00001341.txt",
+      "caption_offset_data": 167732224,
+      "caption_sha256": "e8bc0e3860117c23868fdfd8bad7eaec7bb94c16f13ce45c89b6fce5062e6089",
+      "caption_words": 75,
+      "dhash64": "a4076be6e76f37b3",
+      "id": "pixmo-train-00001341",
+      "image_content_sha256": "ef22df411bd9d92b0c9a92b10eecda78054300d6115e293f1c98017c1783e4f8",
+      "image_dimensions": [
+        2048,
+        1365
+      ],
+      "image_member": "00001341.jpg",
+      "image_offset_data": 166844416,
+      "image_sha256": "e04d5cfc1885c39ccdef73c759a9f633174f0c60718cb017fd735090f5a70c11",
+      "metadata_member": "00001341.json",
+      "metadata_sha256": "bf0e3313dcd3026da3592c4707743826ee0a3b3a59b28c1cda15fd6711abd34e",
+      "source_key": "00001341",
+      "source_metadata": {
+        "image_url": "https://explore-multimodal-datasets.s3.us-west-2.amazonaws.com/mturk/unique-subreddits/whatisthisthing/8cef931860041b61d35149ac97a7a5bb6e3aad781c6a5c69020b8c7867da8824.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/8cef931860041b61d35149ac97a7a5bb6e3aad781c6a5c69020b8c7867da8824.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000001.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00001390.txt",
+      "caption_offset_data": 189453824,
+      "caption_sha256": "6bf182b3c4e075f82ba9077e9d1ad0635bba96b6074e20ee86df24f0151a030b",
+      "caption_words": 76,
+      "dhash64": "33b2b2b4c6d0f0f0",
+      "id": "pixmo-train-00001390",
+      "image_content_sha256": "f7be027366cc8ad56583b45139fb434ed4469c2a672bfb04bff0e83a447e2408",
+      "image_dimensions": [
+        500,
+        421
+      ],
+      "image_member": "00001390.jpg",
+      "image_offset_data": 189336576,
+      "image_sha256": "b8b54ea0a47883abc3d4d22a9b102305d371cdbb979590f3d7322ae4d4f5e551",
+      "metadata_member": "00001390.json",
+      "metadata_sha256": "39abca369e6884db751bb3767e9bb043d6f7fda274fab673bea924325f5bb8e6",
+      "source_key": "00001390",
+      "source_metadata": {
+        "image_url": "http://taint.org/x/2008/dsc05771.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/dsc05771.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000001.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00002531.txt",
+      "caption_offset_data": 281041920,
+      "caption_sha256": "970d9dfeadc4106a897439dd203772d8c669fa28316db7341a4025570713d718",
+      "caption_words": 74,
+      "dhash64": "3f1dec66676dcf72",
+      "id": "pixmo-train-00002531",
+      "image_content_sha256": "08dd41d5773000529b718d96db7bb17419f30c42d3e9954a6a0975f04e0406d7",
+      "image_dimensions": [
+        4032,
+        3024
+      ],
+      "image_member": "00002531.jpg",
+      "image_offset_data": 279778304,
+      "image_sha256": "7419448e2ad468f9cb587070837bc0bda9c4314008e7eabe875ecdcb7a069e33",
+      "metadata_member": "00002531.json",
+      "metadata_sha256": "0219db9c304ef210635f424b19e4533be45533b3ddd51b717ff259f3ace21356",
+      "source_key": "00002531",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/xve8myenwjp01.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/xve8myenwjp01.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000002.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00002870.txt",
+      "caption_offset_data": 453549056,
+      "caption_sha256": "7401b3728e164fc5345182173c23000322708cd998305cfd0c395b58842654bb",
+      "caption_words": 79,
+      "dhash64": "080f96070f0f0f00",
+      "id": "pixmo-train-00002870",
+      "image_content_sha256": "6c165e571a7c6a777732248f9ef2ecfe28eaeb4b706b0fcb1735ded7f625a9a7",
+      "image_dimensions": [
+        512,
+        512
+      ],
+      "image_member": "00002870.png",
+      "image_offset_data": 453356032,
+      "image_sha256": "7c1c464289ed4d10930c56a91b0ebfdd3f13d7dcb0348aaacd3267ee9c76df81",
+      "metadata_member": "00002870.json",
+      "metadata_sha256": "f55b62a4bb92b7e64225ae2a5a204405e1ec55d3a18ed7b0300d2ee2f37db4b7",
+      "source_key": "00002870",
+      "source_metadata": {
+        "image_url": "https://objaverse-renders.s3.us-west-2.amazonaws.com/robustness/shirt/dcd980a74cd44a1dbde7f8ad4d5818db-003.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/dcd980a74cd44a1dbde7f8ad4d5818db-003.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000002.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00003116.txt",
+      "caption_offset_data": 61578752,
+      "caption_sha256": "d2aae1c2d2cb2ae58ab5742168de5931a60f096669245c11e05db9bd0cfd8ec9",
+      "caption_words": 72,
+      "dhash64": "1f1f1f3be1f0f1e1",
+      "id": "pixmo-train-00003116",
+      "image_content_sha256": "4a8b772113685d8c2b59fdf66ffe56c3cf495a480e644a634845243b51cc4933",
+      "image_dimensions": [
+        3024,
+        4032
+      ],
+      "image_member": "00003116.jpg",
+      "image_offset_data": 61099008,
+      "image_sha256": "cbeca54a492113dd1b0a93f033588c267ca8eda1827abbe0c4ad09a78177d23d",
+      "metadata_member": "00003116.json",
+      "metadata_sha256": "ae315ba955751cbf9708dd7d019af488945b4343d4d829ce5b4d541b7860c76c",
+      "source_key": "00003116",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/lh703bvesqv11.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/lh703bvesqv11.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00003258.txt",
+      "caption_offset_data": 128095232,
+      "caption_sha256": "bb35471eb51f3873f6cb399deccd244afb3ee787bd9394f9fe940c7561d8d6e1",
+      "caption_words": 78,
+      "dhash64": "b534413515d31b38",
+      "id": "pixmo-train-00003258",
+      "image_content_sha256": "c7042cf25c3c63bc2710a80f6930e561fadf1f753ca144005b9d3379a0ab5c0b",
+      "image_dimensions": [
+        1263,
+        745
+      ],
+      "image_member": "00003258.png",
+      "image_offset_data": 128033792,
+      "image_sha256": "c83949fb3f6011612c2aabcb8eb228ac2a4d322b82bb07c55277e06ce8df8c09",
+      "metadata_member": "00003258.json",
+      "metadata_sha256": "ba244ff8168ee125632ebda8369069fc4a86933401e035dbfc004b9959f8bde7",
+      "source_key": "00003258",
+      "source_metadata": {
+        "image_url": "http://i0.wp.com/www.synthtopia.com/wp-content/uploads/2013/05/hollyhock.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/hollyhock.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00003651.txt",
+      "caption_offset_data": 328972800,
+      "caption_sha256": "95640027e103746da8e1be5930577bb49610992bc03142e839d78cbd5a92e7a0",
+      "caption_words": 50,
+      "dhash64": "e8c4231b3b3cd04d",
+      "id": "pixmo-train-00003651",
+      "image_content_sha256": "e55796468cf9f115b84e7f500db7fbeebc94a3e5a083bad50d52e4447f43d1e8",
+      "image_dimensions": [
+        4032,
+        3024
+      ],
+      "image_member": "00003651.jpg",
+      "image_offset_data": 328204800,
+      "image_sha256": "38ccb53c43c8ae7b15db089b5c748f3027e1a88e4f5dd5488e4674af4adeb5d5",
+      "metadata_member": "00003651.json",
+      "metadata_sha256": "ff6b5ccc18faa550ae7b7a19b4863bc3a7d04c40a44ba09e43787f9919c0a100",
+      "source_key": "00003651",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/ff5egvo9mvn51.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/ff5egvo9mvn51.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00003676.txt",
+      "caption_offset_data": 346851328,
+      "caption_sha256": "07f4cb2e1a0f55d3a7d12efa046c66ff6b04f9e69a64c9afacdca187fed6659f",
+      "caption_words": 76,
+      "dhash64": "26d28e8e189c140c",
+      "id": "pixmo-train-00003676",
+      "image_content_sha256": "5f6ca3cf3cecf9c8bc2ad54c481719fbb902212f88b86747fd07461ca6c4a805",
+      "image_dimensions": [
+        1599,
+        1200
+      ],
+      "image_member": "00003676.jpg",
+      "image_offset_data": 346643456,
+      "image_sha256": "68a607cafe6e3015a620b1069769f561ed5d79df9ee4f6d84da426264575a07b",
+      "metadata_member": "00003676.json",
+      "metadata_sha256": "93ebb1b2a457770780da798c2deec90048d0a9da13e36c87ae3f55e58b0dcd2f",
+      "source_key": "00003676",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/c6lt7zqqrga11.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/c6lt7zqqrga11.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00003701.txt",
+      "caption_offset_data": 359110656,
+      "caption_sha256": "24d30668fadd877c249f40125b58c46cd137b4ae34a5bca7465ea21808744014",
+      "caption_words": 80,
+      "dhash64": "04104f07360d0a64",
+      "id": "pixmo-train-00003701",
+      "image_content_sha256": "fc9108f64a49f1c3014bd7836eeb6a7713aba19b7884e1db64bf18463907e07f",
+      "image_dimensions": [
+        512,
+        512
+      ],
+      "image_member": "00003701.png",
+      "image_offset_data": 358884352,
+      "image_sha256": "b173408cf03117f43b310b38cddb165f7a9e3b05f78f88424a959935770d784d",
+      "metadata_member": "00003701.json",
+      "metadata_sha256": "97099e987bf2337bce310f1e5f73c328fd3d1dba1bab961be293980a4c275ae4",
+      "source_key": "00003701",
+      "source_metadata": {
+        "image_url": "https://objaverse-renders.s3.us-west-2.amazonaws.com/robustness/solar_array/66ae00e8332940debe934024429fbd40-007.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/66ae00e8332940debe934024429fbd40-007.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "split": "train"
+    },
+    {
+      "caption_member": "00613040.txt",
+      "caption_offset_data": 18259456,
+      "caption_sha256": "e17ab573444a47e38ea05c1a44e127a4b0bf0198a7b6f69dcbad44320c3f4291",
+      "caption_words": 63,
+      "dhash64": "04869f0f4d4f4a00",
+      "id": "pixmo-validation-00613040",
+      "image_content_sha256": "12c9d1aa6e27813325595df77ecda1e741e7c351ca1ed5802fae6b8e2758c00e",
+      "image_dimensions": [
+        512,
+        512
+      ],
+      "image_member": "00613040.png",
+      "image_offset_data": 18079744,
+      "image_sha256": "9bb2755d87adc788465aecd927480b9847c60106166b2543ac4b29dc11e23020",
+      "metadata_member": "00613040.json",
+      "metadata_sha256": "b1740c7cd36a53c57bce4aa612b34389820298ad395bac2892a42bbaa3e5a4ca",
+      "source_key": "00613040",
+      "source_metadata": {
+        "image_url": "https://objaverse-renders.s3.us-west-2.amazonaws.com/robustness/dog/61a06fc8e6974484bb9f0b3bbbef92d0-000.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/61a06fc8e6974484bb9f0b3bbbef92d0-000.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613080.txt",
+      "caption_offset_data": 31653888,
+      "caption_sha256": "1cd2e2815b2f3716c8be15e7ab990d971cce9fab9c35163ae173275f4b80079b",
+      "caption_words": 76,
+      "dhash64": "b4ccc4ccccc8c484",
+      "id": "pixmo-validation-00613080",
+      "image_content_sha256": "32337182367a032f011c234d6b45e092cad51f3f068aebcf3a0bf0c9eb8b85d9",
+      "image_dimensions": [
+        1089,
+        1599
+      ],
+      "image_member": "00613080.jpg",
+      "image_offset_data": 31377920,
+      "image_sha256": "3b5a0b03b706e5c728855eb92b152b2a1fc9d76c50787be34b627cc14a67e2f9",
+      "metadata_member": "00613080.json",
+      "metadata_sha256": "82eba011179c4e36ecdd972d75aef3927223fb500ae127dbee4df278b08f6302",
+      "source_key": "00613080",
+      "source_metadata": {
+        "image_url": "https://live.staticflickr.com/2728/32670771592_55dbc3e124_h.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/32670771592_55dbc3e124_h.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613139.txt",
+      "caption_offset_data": 54340608,
+      "caption_sha256": "7f676425c545ff69ddef42fd4525addb2ed604931aabe4db722b7dafde853e63",
+      "caption_words": 63,
+      "dhash64": "1e5b19d918b2b26c",
+      "id": "pixmo-validation-00613139",
+      "image_content_sha256": "a5f23c273bf639a42f1cf62bc4a32cac5de5fe5624e803cb7700f3e6feb3b8f1",
+      "image_dimensions": [
+        1080,
+        1533
+      ],
+      "image_member": "00613139.jpg",
+      "image_offset_data": 54269952,
+      "image_sha256": "b34f856a1a683118431b1457f0393532b4dd5025e069edad8cc8ff6205c8f939",
+      "metadata_member": "00613139.json",
+      "metadata_sha256": "53a2583c6d779814f77d209db5594bed0f4374ba14229467093f315af7b880be",
+      "source_key": "00613139",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/1x8jepqdye0c1.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/1x8jepqdye0c1.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613181.txt",
+      "caption_offset_data": 71461888,
+      "caption_sha256": "fc3ab05db04e31669557accfdcd3707e52061933215a493d90226789c7f497fd",
+      "caption_words": 78,
+      "dhash64": "8c0a3cfcf046dab3",
+      "id": "pixmo-validation-00613181",
+      "image_content_sha256": "87c2f5d7302c6cd65e3080d7910dc4792477671bcdc76d15dc26b87735acca6b",
+      "image_dimensions": [
+        1944,
+        2592
+      ],
+      "image_member": "00613181.jpg",
+      "image_offset_data": 70452736,
+      "image_sha256": "243f4b988ac8850388aee93ab66db56d6d0a6cc569c170b71d28bd199aa01d1c",
+      "metadata_member": "00613181.json",
+      "metadata_sha256": "8c05aa9aa8240720733a8be883ccdc6104f04ed1cf4618c611f6c257c0437e6d",
+      "source_key": "00613181",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/oj27juj03wu41.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/oj27juj03wu41.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613373.txt",
+      "caption_offset_data": 162676736,
+      "caption_sha256": "de55ed3a179150fbea072a0df452835940037c142fafdf98a325905efd7dfcbc",
+      "caption_words": 69,
+      "dhash64": "36e4c8e69b3b3717",
+      "id": "pixmo-validation-00613373",
+      "image_content_sha256": "945548597aa54481fb5585e0337ddeedf61be321381bc41ee2a36ca226b6104d",
+      "image_dimensions": [
+        3024,
+        3024
+      ],
+      "image_member": "00613373.jpg",
+      "image_offset_data": 161305088,
+      "image_sha256": "5ff88681fe70a897683dda4ba3cfccad7b590d6d7adb7775bd44dbfa809d0e2d",
+      "metadata_member": "00613373.json",
+      "metadata_sha256": "c20f99faf26c5475ffbd5f861ef38cc9d45f27535652fe249b832b989775431f",
+      "source_key": "00613373",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/lu5yi651g8tb1.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/lu5yi651g8tb1.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613391.txt",
+      "caption_offset_data": 174766080,
+      "caption_sha256": "61527bdbaa1bdcf7cb54a53c921de513be582dbb9ed80cad2d4d6f2db03ac85c",
+      "caption_words": 68,
+      "dhash64": "c5979686970b030a",
+      "id": "pixmo-validation-00613391",
+      "image_content_sha256": "fc5535d2e44a76621d745449063e9555ed579ed90c51e5df5739f24632a4ae69",
+      "image_dimensions": [
+        1125,
+        1115
+      ],
+      "image_member": "00613391.jpg",
+      "image_offset_data": 174646272,
+      "image_sha256": "71ee68990f9188f2324d56fc6e3c555c5f793cceec7b7c4def43540b569b0237",
+      "metadata_member": "00613391.json",
+      "metadata_sha256": "ee97e1ff0d03950f49b6edb3c6be9acf0c0b93e16965ad71b621b3e1ce03dcda",
+      "source_key": "00613391",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/ktn3v2fks3931.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/ktn3v2fks3931.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613401.txt",
+      "caption_offset_data": 177143296,
+      "caption_sha256": "106818fd6573551628d2abd5d60b778852f43573d9d664d06d09f7969343d102",
+      "caption_words": 77,
+      "dhash64": "8000000000000000",
+      "id": "pixmo-validation-00613401",
+      "image_content_sha256": "9e9366d7c387bc8e86e43f1b9714557882e9cf7119af9530113383d706ff28e3",
+      "image_dimensions": [
+        696,
+        564
+      ],
+      "image_member": "00613401.png",
+      "image_offset_data": 177118208,
+      "image_sha256": "e4cb89e7c0ad5b69a4d51e81a1974f3fdad227688c0fd720a2b65882fb304107",
+      "metadata_member": "00613401.json",
+      "metadata_sha256": "051cf6431a63643bf7c0e111685fc863f530c08d604f0133549614e915f4e64b",
+      "source_key": "00613401",
+      "source_metadata": {
+        "image_url": "https://media.cheggcdn.com/media/5da/5dae6b3a-88e3-4cc3-a439-5b6c7fb5f82e/phpIpMTxX.png",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/phpIpMTxX.png"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    },
+    {
+      "caption_member": "00613462.txt",
+      "caption_offset_data": 210934272,
+      "caption_sha256": "71bd68de581765fc1bcae29a615ee33354279616e9e95b475ff42e18e2bdb996",
+      "caption_words": 69,
+      "dhash64": "1965b16179fcd0da",
+      "id": "pixmo-validation-00613462",
+      "image_content_sha256": "201a673bf7ab07b2f7658c042f0bbd663cf1cb944c2f668d6d7f51e264faf078",
+      "image_dimensions": [
+        1125,
+        2436
+      ],
+      "image_member": "00613462.jpg",
+      "image_offset_data": 210732032,
+      "image_sha256": "ab599c6e59279a771c184a694783193c4f3a3eb523e5ce9c7b54a5c1bf720b13",
+      "metadata_member": "00613462.json",
+      "metadata_sha256": "9003a8f4c00e0bc9209643d5af46d72342492f06e63ac6016fd3ddb94f56fff1",
+      "source_key": "00613462",
+      "source_metadata": {
+        "image_url": "https://i.redd.it/xlerir3e9am21.jpg",
+        "local_path": "/flare/ModCon/ngetty/data/zone_a/pixmo_cap/images/xlerir3e9am21.jpg"
+      },
+      "source_shard": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "split": "validation"
+    }
+  ],
+  "exclusions": {
+    "caption_word_budget": 4134,
+    "explicit_quality_review": 6,
+    "image_member_size": 1
+  },
+  "held_out_scope": "connector training only; parent pretraining overlap unknown",
+  "image_bytes_read": 13628555,
+  "manifest_sha256": "1a0b6e2cdc1545f901ffae604f4334c9d15198549a7ece161ba42a230905fcfb",
+  "max_caption_words": 80,
+  "metadata_bytes_read": 5035340,
+  "quality_review_exclusions": {
+    "00000104": "Diagnostic selection: original caption is uncertain between feces and chocolate; prefer unambiguous recognizable object supervision for the first controlled overfit.",
+    "00000642": "Diagnostic selection: text-dominated Twitter screenshot with long exact OCR content; defer to larger mixed-task evaluation.",
+    "00000939": "Visual review: the image shows a lizard/reptile; the original caption identifies it as an amphibian.",
+    "00001376": "Diagnostic selection: text-dominated permit login screenshot with uncertain verbatim text transcription; defer to larger mixed-task evaluation.",
+    "00001969": "Visual review: the image is blank black; the original caption is a white-image loading-failure narrative rather than grounded scene supervision.",
+    "00002426": "Visual review: the pictured coin is a Jefferson nickel, while the original caption identifies it as a quarter."
+  },
+  "schema_version": 1,
+  "selection": "first eligible members in train shard then validation shard archive order",
+  "semantic_identity_limit": "unrecorded subjects and semantic duplicates cannot be proven absent",
+  "source_manifest_sha256": "b26f0537cf5882ce9756d63a141cf631bbe1b0574c9de31d0adbbf9e015db7cb",
+  "sources": [
+    {
+      "mtime_ns": 1768449743000000000,
+      "path": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000000.tar",
+      "size_bytes": 538562560,
+      "split": "train"
+    },
+    {
+      "mtime_ns": 1768449747000000000,
+      "path": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000001.tar",
+      "size_bytes": 484280320,
+      "split": "train"
+    },
+    {
+      "mtime_ns": 1768449750000000000,
+      "path": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000002.tar",
+      "size_bytes": 519219200,
+      "split": "train"
+    },
+    {
+      "mtime_ns": 1768449753000000000,
+      "path": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/shards/pixmo-000003.tar",
+      "size_bytes": 534353920,
+      "split": "train"
+    },
+    {
+      "mtime_ns": 1768452488000000000,
+      "path": "/lus/flare/projects/ModCon/ngetty/data/zone_a/pixmo_cap_webdataset/val_shards/pixmo-000613.tar",
+      "size_bytes": 296919040,
+      "split": "validation"
+    }
+  ]
+}

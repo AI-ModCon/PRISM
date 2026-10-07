@@ -1,0 +1,25 @@
+# 1B timeseries variant
+
+backbone_id: allenai/OLMo-7B-0724-hf
+# Custom tokenizer with interleaving tokens added.
+# Placeholder path — set to wherever you've built/copied this tokenizer
+# (see PRISM_OLMO1B_INTERLEAVED_TOKENIZER default in src/config.py).
+tokenizer_id: "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-1b-interleaved"
+
+modalities: [text,time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+is_timeseries: true
+ts_variates: 1
+max_ts_length: 256
+is_interleaved_qa: true
+normalize_ts_in_encoder: false
+ts_projector: "linear"
+modality_start_end_token_indices: {"time_series": [50280,50281]}
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

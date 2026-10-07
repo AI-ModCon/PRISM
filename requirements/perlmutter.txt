@@ -1,0 +1,22 @@
+transformers==4.56.2
+accelerate
+einops
+numpy
+pandas
+scikit-learn
+wandb
+hydra-core
+omegaconf
+tqdm
+pydantic
+gradio
+triton
+safetensors
+pillow
+sentencepiece
+protobuf
+# Graph Dependencies (Might need --find-links in setup script)
+torch_geometric
+torch_scatter
+torch_sparse
+torch_cluster

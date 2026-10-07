@@ -1,0 +1,21 @@
+backbone_id: allenai/OLMo-1B-0724-hf
+tokenizer_id: "${oc.env:PRISM_TOKENIZERS}/prism-olmo-1b-interleaved"
+
+modalities: [text,time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+is_timeseries: true
+ts_projector: "intern_s2_397b"
+ts_encoder_id: "${oc.env:HF_HOME}/intern-s2-preview-397b-timeseries/model.safetensors"
+ts_load_pretrained: true
+ts_variates: 1
+max_ts_length: 512
+d_ts: 4096
+is_interleaved_qa: false
+normalize_ts_in_encoder: false
+modality_start_end_token_indices: {"time_series": [50280,50281]}
+
+projector_hidden_mult: 1
+projector_num_layers: 2

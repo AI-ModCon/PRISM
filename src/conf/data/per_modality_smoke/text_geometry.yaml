@@ -1,0 +1,17 @@
+# Per-modality smoke: text + geometry.
+# Skip ts_qa (only zone_a default-on); enable geo_pde (PDEBench-style problem
+# statements + 1D initial-condition tensors).
+#
+# The default geo_pde directory in datasets_config.json may be empty/missing,
+# so this preset points at a sibling geo_pde_synthetic_arrow directory — a
+# 200-record Arrow dataset of (1D IC, parameter string) pairs matching the
+# schema _process_geo_pde expects. The PDEBench code-path in multimodal.py
+# uses datasets.load_from_disk, so the data must be in HF Arrow format (not
+# raw JSONL). Placeholder path below — point it at your own prepared data.
+dataset_overrides:
+  ts_qa:
+    skip: true
+  geo_pde:
+    skip: false
+    local_path: /flare/<project>/<user>/data/zone_a/geo_pde_synthetic_arrow
+    preferred_source: local

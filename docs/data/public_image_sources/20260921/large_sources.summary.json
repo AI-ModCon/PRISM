@@ -1,0 +1,317 @@
+{
+  "audit_date_utc": "2026-09-21T17:12:21.786533+00:00",
+  "scope": "Public OmniGen2 T2I source audit: Recap-DataComp, LAION-Aesthetic, SAM-LLaVA. Metadata/manifests only; no image bytes, caption archives, or parquet data shards downloaded. Two metadata-only example rows fetched from the HF viewer.",
+  "units": "All measured bytes are decimal bytes; GB=10^9, TB=10^12.",
+  "sources": [
+    {
+      "name": "Recap-DataComp-1B",
+      "official_urls": [
+        "https://github.com/UCSC-VLAA/Recap-DataComp-1B",
+        "https://huggingface.co/datasets/UCSC-VLAA/Recap-DataComp-1B",
+        "https://arxiv.org/abs/2406.08478"
+      ],
+      "revision": "457c44d98651bcfdfb3cc8695f5e60a0d2705e78",
+      "published_counts": {
+        "paper_approximate": 1300000000,
+        "github_release_table": 1240000000
+      },
+      "current_count": {
+        "train_metadata_rows": 940890257,
+        "preview_rows": 1000,
+        "basis": "HF /size and /rows APIs, partial=false; metadata rows are not proven distinct images or successful URL downloads."
+      },
+      "caption_metadata": {
+        "train_parquet_files": 4627,
+        "train_bytes": 527439101358,
+        "preview_parquet_files": 1,
+        "preview_bytes": 572363,
+        "total_data_bytes": 527439673721,
+        "approx_gb": 527.439673721,
+        "downloaded": false,
+        "config_warning": "default and condition_diverse_topk point at the same data/train_data and data/preview_data globs. Do not sum the two configs or use the HF headline 1,881,782,514 as independent images. Old card default.download_size=332,624,746,842 disagrees with current file sum and live viewer /size=527,439,673,721."
+      },
+      "image_delivery": {
+        "type": "original_web_urls",
+        "images_hosted_in_caption_repo": false,
+        "image_bytes_known": false,
+        "image_bytes": null,
+        "join_fields": [
+          "url",
+          "sha256",
+          "key"
+        ],
+        "caption_fields": [
+          "re_caption",
+          "org_caption",
+          "re_caption_condition_diverse_topk"
+        ],
+        "retrieval_instruction_source": "https://github.com/UCSC-VLAA/Recap-DataComp-1B#-download-dataset",
+        "notes": "Official instructions require img2dataset URL retrieval; availability and byte identity must be checked when images are collected. One viewer row verified schema without fetching its image."
+      },
+      "access_license": {
+        "hf_gated": false,
+        "metadata_card_license": "cc-by-4.0",
+        "image_license": "Underlying web image rights are not established by the recaption metadata license; no per-image license field observed in schema."
+      },
+      "storage_scenario": {
+        "type": "illustrative_capacity_scenario_not_measured_source_image_bytes",
+        "assumed_preprocessed_jpeg_bytes_per_image": [
+          200000,
+          500000
+        ],
+        "image_count_assumption": 940890257,
+        "estimated_bytes": [
+          188178051400000,
+          470445128500000
+        ],
+        "notes": "Assumes one accepted resized/reencoded image per row. Excludes captions, tar padding, original high-resolution files, masks, intermediate features, and failed URL downloads. Does not estimate obtainable image count."
+      },
+      "prism_recommendation": {
+        "decision": "defer_full_corpus; optional bounded later sample",
+        "reason": "A 527.44GB caption/URL scan plus web retrieval is excessive for an initial practical subset. Rich synthetic captions are useful for later scale-up. Use one pinned config, deduplication, quality checks, and a hard sample quota.",
+        "proposed_later_sample_images": 100000,
+        "scenario_for_later_sample": {
+          "type": "illustrative_capacity_scenario_not_measured_source_image_bytes",
+          "assumed_preprocessed_jpeg_bytes_per_image": [
+            200000,
+            500000
+          ],
+          "image_count_assumption": 100000,
+          "estimated_bytes": [
+            20000000000,
+            50000000000
+          ],
+          "notes": "Assumes one accepted resized/reencoded image per row. Excludes captions, tar padding, original high-resolution files, masks, intermediate features, and failed URL downloads. Does not estimate obtainable image count."
+        }
+      },
+      "evidence_files": [
+        "UCSC-VLAA__Recap-DataComp-1B_api.json",
+        "UCSC-VLAA__Recap-DataComp-1B_size.json",
+        "Recap_one_row.json",
+        "Recap_GitHub_README_master.json"
+      ]
+    },
+    {
+      "name": "LAION-Aesthetic",
+      "official_urls": [
+        "https://projects.laion.ai/laion-datasets/laion-aesthetic.html",
+        "https://laion.ai/blog/laion-aesthetics/",
+        "https://github.com/rom1504/img2dataset/blob/main/dataset_examples/laion-aesthetic.md",
+        "https://laion.ai/blog/relaion-5b/"
+      ],
+      "subset_identity_warning": "The source name alone does not specify V1/V2, threshold, language, or exact OmniGen2 selected manifest. Historical V1 counts must not be mistaken for exact current gated revision counts.",
+      "published_counts": {
+        "v1_aesthetic_approximate": 120000000,
+        "v1_laion_art_approximate": 8000000,
+        "download_guide_language_counts_millions": [
+          52,
+          51,
+          17
+        ],
+        "thresholds": {
+          "aesthetic": "score > 7, pwatermark < 0.8, punsafe < 0.5",
+          "art": "score > 8, pwatermark < 0.8, punsafe < 0.5"
+        },
+        "source": "https://github.com/rom1504/img2dataset/blob/main/dataset_examples/laion-aesthetic.md"
+      },
+      "current_exact_row_count": null,
+      "current_exact_row_count_reason": "Unauthenticated /size and /splits return HTTP 401. No conditions were accepted and no gate was bypassed.",
+      "current_repositories": [
+        {
+          "id": "laion/laion2B-en-aesthetic",
+          "revision": "c2f3a74facd1c4f019f7623414fab06285e50f75",
+          "gated": "auto",
+          "parquet_files": 128,
+          "parquet_bytes": 8286209479,
+          "all_repository_file_bytes": 8350960087,
+          "rows": null
+        },
+        {
+          "id": "laion/relaion2B-multi-aesthetic",
+          "revision": "9928aeb28c4035e7a2c3b6f24ae0cb2a6e04a75b",
+          "gated": "auto",
+          "parquet_files": 128,
+          "parquet_bytes": 8358704980,
+          "all_repository_file_bytes": 8424021972,
+          "rows": null
+        },
+        {
+          "id": "laion/relaion1B-nolang-aesthetic",
+          "revision": "cb11191ca662c57e52d0647fd62f7bac0d3144f9",
+          "gated": "auto",
+          "parquet_files": 128,
+          "parquet_bytes": 4037595620,
+          "all_repository_file_bytes": 4069153940,
+          "rows": null
+        },
+        {
+          "id": "laion/relaion-art",
+          "revision": "148b2091978ce43a59ae1ebc0d3033c514107e7c",
+          "gated": "auto",
+          "parquet_files": 128,
+          "parquet_bytes": 1276354266,
+          "all_repository_file_bytes": 1286340382,
+          "rows": null
+        }
+      ],
+      "metadata_total_three_language_subsets_bytes": 20682510079,
+      "overlap_warning": "The art subset is nested by its stronger aesthetic filter; do not add it as independent extra images to the broad aesthetics pool. Old laion-art, multi, and nolang URLs redirect to re-LAION names in current API responses.",
+      "image_delivery": {
+        "type": "original_web_urls",
+        "images_hosted_in_caption_repo": false,
+        "image_bytes_known": false,
+        "image_bytes": null,
+        "columns_in_official_download_recipe": [
+          "URL",
+          "TEXT",
+          "similarity",
+          "hash",
+          "punsafe",
+          "pwatermark",
+          "aesthetic"
+        ],
+        "source": "https://github.com/rom1504/img2dataset/blob/main/dataset_examples/laion-aesthetic.md"
+      },
+      "access_license": {
+        "hf_gated": "auto; contact-sharing/conditions required by current Hub pages",
+        "historical_metadata_license": "CC-BY-4.0 per LAION-5B announcement",
+        "current_card_license": null,
+        "notes": "Current audited repositories have no dataset card/license in public metadata. Verify current gated terms before ingestion; underlying images retain their own copyrights. Re-LAION is a safety-revised successor, so record exact revision rather than treating old download scripts as current.",
+        "sources": [
+          "https://huggingface.co/datasets/laion/laion2B-en-aesthetic",
+          "https://huggingface.co/datasets/laion/relaion-art",
+          "https://laion.ai/blog/laion-5b/",
+          "https://laion.ai/blog/relaion-5b/"
+        ]
+      },
+      "storage_scenario_historical_120m_pool": {
+        "type": "illustrative_capacity_scenario_not_measured_source_image_bytes",
+        "assumed_preprocessed_jpeg_bytes_per_image": [
+          200000,
+          500000
+        ],
+        "image_count_assumption": 120000000,
+        "estimated_bytes": [
+          24000000000000,
+          60000000000000
+        ],
+        "notes": "Assumes one accepted resized/reencoded image per row. Excludes captions, tar padding, original high-resolution files, masks, intermediate features, and failed URL downloads. Does not estimate obtainable image count."
+      },
+      "prism_recommendation": {
+        "decision": "exclude_from_initial_subset; revisit_only_with_exact_subset_and_access",
+        "reason": "Gated metadata, ambiguous source variant, external URL recovery, and overlap make it a poor first reproducible source. Later prefer a bounded sample from a pinned current safety-revised release."
+      },
+      "evidence_files": [
+        "laion__laion1B-nolang-aesthetic_api.json",
+        "laion__laion2B-en-aesthetic_size.json",
+        "laion__laion2B-en-aesthetic_splits.json",
+        "laion__laion2B-multi-aesthetic_api.json",
+        "laion__relaion-art_size.json",
+        "laion__laion2B-en-aesthetic_api.json",
+        "laion__relaion-art_splits.json",
+        "laion__laion-art_api.json",
+        "LAION_aesthetic_download.md.json",
+        "LAION_art_download.md.json"
+      ]
+    },
+    {
+      "name": "SAM-LLaVA-Captions10M",
+      "official_urls": [
+        "https://huggingface.co/datasets/PixArt-alpha/SAM-LLaVA-Captions10M",
+        "https://github.com/PixArt-alpha/PixArt-alpha",
+        "https://ai.meta.com/datasets/segment-anything/",
+        "https://github.com/facebookresearch/segment-anything#dataset"
+      ],
+      "revision": "1d50d072286a44df06111fadbd156f5e3d504922",
+      "current_count": {
+        "caption_rows": 11529794,
+        "basis": "HF /size and /rows; partial=false",
+        "warning": "Caption rows have not been validated as unique successfully joined images. Meta describes the original SA-1B image corpus as 11M images with 1.1B masks."
+      },
+      "caption_metadata": {
+        "archive": "SA1B_caption.tar.gz",
+        "original_compressed_bytes": 2236204177,
+        "approx_gb": 2.236204177,
+        "hf_generated_parquet_bytes": 3351732573,
+        "hf_in_memory_bytes": 8919454827,
+        "downloaded": false,
+        "notes": "Original archive and auto-converted parquet are alternative representations; do not sum both as necessary downloads."
+      },
+      "image_delivery": {
+        "type": "separate_SA1B_collection",
+        "images_hosted_in_caption_repo": false,
+        "image_bytes_known": false,
+        "image_bytes": null,
+        "join_key": "sa_<id> captions -> sa_<id>.jpg images",
+        "caption_schema": [
+          "__key__",
+          "__url__",
+          "txt"
+        ],
+        "warning": "__url__ identifies the caption archive or internal cache path, not an image URL. Meta/official SAM README advertises separate SA-1B download; the current fetched download page did not expose a verifiable image-archive manifest. Actual current image archive availability and size remain unverified.",
+        "official_image_download_url": "https://ai.meta.com/datasets/segment-anything-downloads/"
+      },
+      "access_license": {
+        "hf_captions_gated": false,
+        "caption_card_license_tag": "openrail",
+        "caption_license_limitation": "Card is only a generic openrail tag; full license variant/terms not present.",
+        "images": "Separate SA-1B Dataset Research License; Meta lists research purposes only and limited license. SAM model/code Apache-2.0 does not license SA-1B images.",
+        "sources": [
+          "https://huggingface.co/datasets/PixArt-alpha/SAM-LLaVA-Captions10M",
+          "https://ai.meta.com/datasets/segment-anything/",
+          "https://github.com/facebookresearch/segment-anything#dataset"
+        ]
+      },
+      "storage_scenario": {
+        "type": "illustrative_capacity_scenario_not_measured_source_image_bytes",
+        "assumed_preprocessed_jpeg_bytes_per_image": [
+          200000,
+          500000
+        ],
+        "image_count_assumption": 11529794,
+        "estimated_bytes": [
+          2305958800000,
+          5764897000000
+        ],
+        "notes": "Assumes one accepted resized/reencoded image per row. Excludes captions, tar padding, original high-resolution files, masks, intermediate features, and failed URL downloads. Does not estimate obtainable image count."
+      },
+      "prism_recommendation": {
+        "decision": "conditional_later_subset; exclude_from_unconditional_initial_download",
+        "reason": "Caption payload is manageable, but training needs separate licensed SA-1B images and a validated join. Include only if a usable research-licensed SA-1B image store is already accessible or its acquisition is approved and verified.",
+        "proposed_later_sample_images": 100000,
+        "scenario_for_later_sample": {
+          "type": "illustrative_capacity_scenario_not_measured_source_image_bytes",
+          "assumed_preprocessed_jpeg_bytes_per_image": [
+            200000,
+            500000
+          ],
+          "image_count_assumption": 100000,
+          "estimated_bytes": [
+            20000000000,
+            50000000000
+          ],
+          "notes": "Assumes one accepted resized/reencoded image per row. Excludes captions, tar padding, original high-resolution files, masks, intermediate features, and failed URL downloads. Does not estimate obtainable image count."
+        }
+      },
+      "evidence_files": [
+        "PixArt-alpha__SAM-LLaVA-Captions10M_api.json",
+        "PixArt-alpha__SAM-LLaVA-Captions10M_size.json",
+        "SAM_one_row.json",
+        "PixArt_GitHub_README.md.json",
+        "SA1B_GitHub_README.json"
+      ]
+    }
+  ],
+  "methodology": {
+    "actual_downloads": "Only small API metadata/size/split responses, official READMEs, and two text-only row examples.",
+    "full_data_downloads": false,
+    "images_downloaded": 0,
+    "caption_archives_downloaded": 0,
+    "parquet_data_shards_downloaded": 0,
+    "authenticated_requests": false,
+    "terms_accepted": false,
+    "file_inventory": "file_manifest.json includes names, byte sizes, SHA256 when present, and revision-pinned remote URLs.",
+    "limitations": "File sizes describe current remote metadata objects, not image payloads. Current row statistics are service-reported, not an independently scanned unique-image count. Archive HEAD/GET and image availability were not tested."
+  },
+  "archive_note": "Compact tracked audit; detailed file inventories and raw HTTP/API evidence remain in the verified metadata bundle on Aurora."
+}

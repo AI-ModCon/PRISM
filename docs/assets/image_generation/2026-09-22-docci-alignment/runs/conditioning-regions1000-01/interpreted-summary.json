@@ -1,0 +1,201 @@
+{
+  "kind": "independent_collected_result_interpretation",
+  "run_name": "conditioning-regions1000-01",
+  "job_id": "8848573.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "report_sha256": "1c7796ec8414fc80db975cc780741bd03295af16a1049ebf9361753611c3c7e7",
+  "duration_seconds": 446.8194768920075,
+  "checks": {
+    "completed": true,
+    "collection_report_hash": true,
+    "collector_acceptance": true,
+    "frozen_2220_equal": true,
+    "strict_v2_identity": true,
+    "strict_restore_audits": true,
+    "v2_report_hash": true,
+    "v1_initializer_identity": true,
+    "v1_report_hash": true,
+    "no_optimizer_sampler_rng_restore": true,
+    "all_10_source_hashes_match": true,
+    "all_10_image_hashes_match": true,
+    "five_routes_same_noise_per_case": true,
+    "48_unique_flow_cases": true,
+    "same_48_cases_as_content_only": true,
+    "all_48_actual_noise_time_controls_replay": true,
+    "all_48_native_flow_results_replay": true,
+    "native_cfg5_images_replay": true
+  },
+  "quantitative_comparison": {
+    "train": {
+      "native": {
+        "matched_loss": 0.4536604086558024,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.4785098787397146,
+        "wrong_minus_matched": 0.024849470083912212
+      },
+      "region_aligned_prism": {
+        "matched_loss": 0.4554043480505546,
+        "matched_wins": 23,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.47767141088843346,
+        "wrong_minus_matched": 0.022267062837878864
+      },
+      "content_only_prism": {
+        "matched_loss": 0.6734810521205267,
+        "matched_wins": 18,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.6949658803641796,
+        "wrong_minus_matched": 0.02148482824365298
+      },
+      "matched_mse_change_from_content_only_percent": -32.380525537182436,
+      "matched_mse_excess_vs_native_percent": 0.38441516197533776,
+      "excess_mse_removed_percent": 99.20665349383712,
+      "gap_relative_to_native_percent": 89.60779752118246,
+      "by_timestep": {
+        "0.1": {
+          "native_pretrained": {
+            "matched_mse": 0.32029619812965393,
+            "wrong_minus_matched": 0.054930469021201134,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.3244291450828314,
+            "wrong_minus_matched": 0.0496609453111887,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.5": {
+          "native_pretrained": {
+            "matched_mse": 0.45261457562446594,
+            "wrong_minus_matched": 0.01844780519604683,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.453607015311718,
+            "wrong_minus_matched": 0.016121987253427505,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.9": {
+          "native_pretrained": {
+            "matched_mse": 0.5880704522132874,
+            "wrong_minus_matched": 0.001170136034488678,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.5881768837571144,
+            "wrong_minus_matched": 0.0010182559490203857,
+            "matched_wins": 7,
+            "cases": 8
+          }
+        }
+      }
+    },
+    "validation": {
+      "native": {
+        "matched_loss": 0.485446959733963,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.512051947414875,
+        "wrong_minus_matched": 0.026604987680912018
+      },
+      "region_aligned_prism": {
+        "matched_loss": 0.4931487888097763,
+        "matched_wins": 20,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5091523205240568,
+        "wrong_minus_matched": 0.016003531714280445
+      },
+      "content_only_prism": {
+        "matched_loss": 0.7247321481506029,
+        "matched_wins": 16,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.7380136102437973,
+        "wrong_minus_matched": 0.013281462093194326
+      },
+      "matched_mse_change_from_content_only_percent": -31.954337879420592,
+      "matched_mse_excess_vs_native_percent": 1.5865438893744699,
+      "excess_mse_removed_percent": 96.7813180887724,
+      "gap_relative_to_native_percent": 60.15237408195577,
+      "by_timestep": {
+        "0.1": {
+          "native_pretrained": {
+            "matched_mse": 0.3832806497812271,
+            "wrong_minus_matched": 0.059516362845897675,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.4002753309905529,
+            "wrong_minus_matched": 0.03906000405550003,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.5": {
+          "native_pretrained": {
+            "matched_mse": 0.48097240179777145,
+            "wrong_minus_matched": 0.01900477334856987,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.48711274936795235,
+            "wrong_minus_matched": 0.008091580122709274,
+            "matched_wins": 6,
+            "cases": 8
+          }
+        },
+        "0.9": {
+          "native_pretrained": {
+            "matched_mse": 0.5920878276228905,
+            "wrong_minus_matched": 0.001293826848268509,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_chat": {
+            "matched_mse": 0.5920582860708237,
+            "wrong_minus_matched": 0.0008590109646320343,
+            "matched_wins": 6,
+            "cases": 8
+          }
+        }
+      }
+    }
+  },
+  "visual_assessment": {
+    "method": "Direct inspection of six-column comparison image; subjective qualitative assessment of two captions at one seed each, 256x256, 50 diffusion steps.",
+    "comparison_sha256": "6ea5a3417223c5d894724e4884030adf75cde8b38250d39d5ad54d1932f3e22c",
+    "dog_penguin": {
+      "native_cfg5": "Recognizable dog and penguin with blue helmets; desired relation broadly present.",
+      "native_cfg1": "Dog and penguin recognizable with distortions; weaker than CFG5.",
+      "prism_cfg1": "Coherent room and window; distorted merged figure, no clear second penguin or requested pair.",
+      "prism_native_negative_cfg5": "Coherent room, black/white plush-like figure below separate blue object; requested dog/penguin pair and worn helmets not preserved.",
+      "prism_prism_negative_cfg5": "Very similar to mixed CFG5, with the same missing/merged subjects; untrained negative anchor."
+    },
+    "airplanes": {
+      "native_cfg5": "Two recognizable aircraft, but one airborne although caption describes both on runway.",
+      "native_cfg1": "Runway-like scene and small aircraft/vehicle forms; weaker than CFG5.",
+      "prism_cfg1": "Coherent runway with small ambiguous objects; two recognizable airplanes not established.",
+      "prism_native_negative_cfg5": "Two aircraft-like objects recovered: yellow airborne and blue/purple lower object. Ground-plane identity is distorted; silver color and both-on-runway relation are missed.",
+      "prism_prism_negative_cfg5": "Similar two aircraft-like objects and relational errors; untrained negative anchor."
+    }
+  },
+  "limits": [
+    "Flow probes cover eight captions per split at three correlated timesteps, not 24 independent examples.",
+    "Near-native aggregate flow loss does not establish generation fidelity. Held-out caption gap remains about 60 percent of native.",
+    "Checkpoint bytes stayed on Aurora: this local audit verifies recorded strict restore and collected report identity, not a fresh checkpoint-byte read.",
+    "Ordinary diagnostic captures actual noisy-input/timestep equality at each DiT forward; unlike template-swap diagnostic, it does not record conditioning tensor hashes per forward.",
+    "Two generated captions at one seed and 256px are qualitative diagnostics only; DOCCI also overlaps original OmniGen2 training sources."
+  ],
+  "recommendation": {
+    "full_data_training_supported": false,
+    "short_joint_smoke": "Mechanics/timing smoke may be reasonable but should not be called a generation-supported scaling gate.",
+    "preferred_next_step": "Bounded frozen-DiT content intervention: preserve learned aligned prefix/suffix and replace or interpolate only caption-content states toward native teacher states, with exact token partition and actual DiT conditioning/noise controls at CFG1 and matched native-negative CFG5. This tests residual caption-content sensitivity independently of prefix/template repair. Teacher-assisted recovery would remain diagnostic only."
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "status": "completed",
+  "frozen_state_unchanged": true,
+  "unique_cases": 8,
+  "flow_probes": 24,
+  "generated_images": 14,
+  "routes": {
+    "train/native_pretrained": {
+      "paired_probes": 12,
+      "matched_loss": 0.46117062369982403,
+      "wrong_minus_matched": 0.02481181671222051,
+      "matched_wins": 12
+    },
+    "train/prism_raw": {
+      "paired_probes": 12,
+      "matched_loss": 0.48794128994146985,
+      "wrong_minus_matched": 0.0027675082286198935,
+      "matched_wins": 6
+    },
+    "train/prism_chat": {
+      "paired_probes": 12,
+      "matched_loss": 0.48875397195418674,
+      "wrong_minus_matched": 0.0024260058999061584,
+      "matched_wins": 6
+    },
+    "validation/native_pretrained": {
+      "paired_probes": 12,
+      "matched_loss": 0.47687218089898425,
+      "wrong_minus_matched": 0.02859385808308919,
+      "matched_wins": 12
+    },
+    "validation/prism_raw": {
+      "paired_probes": 12,
+      "matched_loss": 0.5016877378026644,
+      "wrong_minus_matched": 0.0017256985108057659,
+      "matched_wins": 8
+    },
+    "validation/prism_chat": {
+      "paired_probes": 12,
+      "matched_loss": 0.5018758922815323,
+      "wrong_minus_matched": 0.001043399175008138,
+      "matched_wins": 8
+    }
+  },
+  "token_alignment": [
+    {
+      "id": "train_04996",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_04996",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_08983",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_08983",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_05538",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_05538",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_03445",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "train_03445",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00000",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00000",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00001",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00001",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00002",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00002",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00003",
+      "caption_kind": "matched",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    },
+    {
+      "id": "qual_dev_00003",
+      "caption_kind": "wrong",
+      "formatted_text_equal": true,
+      "token_ids_equal": true,
+      "mask_sha_equal": true
+    }
+  ],
+  "visual_assessment": {
+    "cases": 2,
+    "native_pretrained": "Requested dog and penguin with blue helmets; two airplanes including yellow airplane are recognizable.",
+    "prism_raw_native_negative_cfg5": "Blurred scene or empty enclosure; requested animals and airplanes absent.",
+    "prism_raw_cfg1": "Foliage or garbled text; requested objects absent.",
+    "prism_raw_prism_negative_cfg5": "Nearly uniform purple/cyan output; experimental untrained EOS anchor.",
+    "prism_chat_variants": "None restores requested principal objects; scenes/text remain unrelated."
+  },
+  "rms_note": "Raw feature RMS differs, but upstream caption embedding begins with RMSNorm; global magnitude alone is not an established cause."
+}

@@ -1,0 +1,9 @@
+# Per-modality smoke: text + graph.
+# Skip ts_qa (only zone_a default-on); enable graph_captioning (ChEBI-20).
+# Phase 2 plan flag: graph handler is currently untested; this cell may
+# surface handler bugs.
+dataset_overrides:
+  ts_qa:
+    skip: true
+  graph_captioning:
+    skip: false

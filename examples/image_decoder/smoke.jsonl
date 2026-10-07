@@ -1,0 +1,1 @@
+{"case_id":"t2i-smoke","task":"text_to_image","prompt":"A red ceramic mug on a white table, soft daylight, plain background.","reference_paths":[],"group":"smoke-mug","split":"smoke","seeds":[42],"height":256,"width":256}

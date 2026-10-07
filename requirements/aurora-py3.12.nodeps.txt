@@ -1,0 +1,29 @@
+# Packages installed with --no-deps because their declared torch version
+# constraints (or other deps) conflict with Aurora's XPU-patched torch 2.10.
+#
+# Install order: after `uv pip sync` of the lockfile, then before walrus.
+#
+#   uv pip install --no-deps -r requirements/aurora-py3.12.nodeps.txt
+
+# Lightning ecosystem — both pin torch ranges that exclude 2.10.0a0+git*
+lightning
+pytorch-lightning
+
+# Time series stack — uni2ts pins torch<2.x; gluonts pins pandas<3 which
+# conflicts with system pandas 3.0.0 in 2025.3.1. We accept the dep-graph
+# inconsistency because moirai inference only touches a narrow gluonts API.
+gluonts
+uni2ts
+
+# Intern-S2 Preview's transformers/huggingface-hub/hf_xet trio used to live
+# here. It moved to requirements/aurora-py3.12.intern-s2.nodeps.txt because
+# transformers>=5.2.0 and the system vLLM (transformers<5,>=4.56.0) cannot
+# both be satisfied — the default build now keeps vLLM and leaves Intern-S2
+# disabled. Opt in with `bash tools/build_aurora_env.sh --intern-s2`.
+
+# Vision tower fallback. Not in frameworks/2025.3.1 despite what the .in
+# header claims, and tools/build_aurora_env.sh's [6/7] verify matrix imports
+# it, so a clean build fails without it. It belongs here and not in the .in
+# or the lock: a resolving `pip install timm` drags torch plus the cu12
+# wheel set, which would shadow Aurora's XPU-patched torch.
+timm

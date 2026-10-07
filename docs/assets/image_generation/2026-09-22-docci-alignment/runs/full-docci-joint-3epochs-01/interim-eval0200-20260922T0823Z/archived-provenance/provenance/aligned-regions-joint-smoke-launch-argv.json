@@ -1,0 +1,22 @@
+[
+  "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/.venv-image/bin/python",
+  "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-aligned-joint-smoke/tools/launch_aurora_image_experiment.py",
+  "--repo",
+  "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-aligned-joint-smoke",
+  "--venv",
+  "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/.venv-image",
+  "--upstream",
+  "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/OmniGen2",
+  "--job-dir",
+  "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/jobs/aligned-regions-joint-smoke-01",
+  "--command-file",
+  "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/provenance/aligned-regions-joint-smoke-command.json",
+  "--project",
+  "ModCon",
+  "--queue",
+  "capacity",
+  "--name",
+  "prism-docci-aligned-smoke",
+  "--minutes",
+  "20"
+]

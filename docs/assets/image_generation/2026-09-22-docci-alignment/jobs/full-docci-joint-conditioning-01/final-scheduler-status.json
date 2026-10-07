@@ -1,0 +1,10 @@
+{
+  "job_id": "8854234.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "observed_at_utc": "2026-09-22T16:37:15.205652Z",
+  "job_state": "F",
+  "Exit_status": 0,
+  "walltime": "00:08:57",
+  "stime": "Tue Sep 22 16:27:40 2026",
+  "mtime": "Tue Sep 22 16:37:06 2026",
+  "source": "qstat -xf -F json 8854234"
+}

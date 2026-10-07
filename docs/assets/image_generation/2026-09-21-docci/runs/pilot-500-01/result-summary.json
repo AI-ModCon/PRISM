@@ -1,0 +1,59 @@
+{
+  "completed_steps": 500,
+  "distinct_optimized_examples": 500,
+  "training_population": 9647,
+  "epoch_fraction": 0.0518295843267337,
+  "connector_parameters": 4200448,
+  "frozen_state_unchanged": true,
+  "train_initial": {
+    "count": 32,
+    "mean_loss": 0.5732740219682455,
+    "mean_shuffled_loss": 0.5340463519096375,
+    "mean_shuffled_minus_correct": -0.039227670058608055,
+    "optimized_count": 0,
+    "step": 0
+  },
+  "train_final": {
+    "count": 32,
+    "mean_loss": 0.45971010625362396,
+    "mean_shuffled_loss": 0.42129326378926635,
+    "mean_shuffled_minus_correct": -0.038416842464357615,
+    "optimized_count": 32,
+    "step": 500
+  },
+  "validation_initial_fixed32": {
+    "count": 32,
+    "mean_loss": 0.5766001641750336,
+    "mean_shuffled_loss": 0.5555332507938147,
+    "mean_shuffled_minus_correct": -0.02106691338121891,
+    "optimized_count": 0,
+    "step": 0
+  },
+  "validation_final_fixed32": {
+    "count": 32,
+    "mean_loss": 0.4570643249899149,
+    "mean_shuffled_loss": 0.4471762254834175,
+    "mean_shuffled_minus_correct": -0.009888099506497383,
+    "optimized_count": 0,
+    "step": 500
+  },
+  "validation_final_full100": {
+    "count": 100,
+    "mean_loss": 0.4653822898864746,
+    "mean_shuffled_loss": 0.46237384557724,
+    "mean_shuffled_minus_correct": -0.003008444309234619,
+    "optimized_count": 0,
+    "step": 500
+  },
+  "full100_matched_caption_win_count": 54,
+  "checkpoint": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/runs/pilot-500-01/connector-pilot-step-000500.pt",
+    "qualification": "unqualified",
+    "sha256": "e84b3550304f4cebe56b394e1e1f65dfc333bd9c6ed8e9adbb240c6694c4387f",
+    "step": 500
+  },
+  "job_id": "8847660.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "pbs_exit_status": 0,
+  "pbs_walltime": "00:10:40",
+  "visual_assessment": "Four qualitative cases: artifacts reduced but key caption objects remain missing. Native OmniGen2 control follows the two validation captions better. This is not an image-quality benchmark."
+}

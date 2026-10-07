@@ -1,0 +1,71 @@
+# BioReason GRPO Configuration
+# Based on: https://arxiv.org/abs/2505.23579
+# Stage 2: Group Relative Policy Optimization for biological reasoning
+
+task: "bioreason_grpo"
+batch_size: 8
+max_steps: 1000
+device: "auto"
+learning_rate: 1e-5
+gradient_accumulation_steps: 4
+eval_enabled: false  # ZoneDTrainer (GRPO) has no periodic held-out eval path; declared for Hydra struct-mode consistency only
+eval_every_n_steps: 100
+viz_every_n_steps: 500
+
+# Checkpointing
+save_every_n_steps: 100
+resume_from_checkpoint: null
+resume_weights_only: null  # Set to SFT checkpoint path for stage transition
+output_dir: ${hydra:run.dir}
+
+# Optimization
+warmup_steps: 30  # ~3% of 1000 steps
+weight_decay: 0.01
+scheduler_type: "cosine"
+min_lr_ratio: 0.0
+
+# Freezing
+freeze_llm: true
+freeze_vit: true
+freeze_connector: true  # Projector frozen during GRPO; set false to co-train
+
+# LoRA (lighter config for GRPO)
+lora_enabled: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.0
+
+# alpha the resume_weights_only checkpoint's lora_adapter.pt was trained with
+# (see bioreason_sft.yaml lora_alpha). Used only to merge that adapter into the
+# base weights before the fresh GRPO-rank LoRA is attached; rank is inferred
+# from the checkpoint's tensor shapes.
+resume_lora_alpha: 64
+
+# GRPO-specific
+grpo_num_generations: 8
+grpo_max_completion_length: 800
+grpo_temperature: 1.0
+grpo_top_p: 0.95
+grpo_top_k: 20
+grpo_beta: 0.0  # No KL penalty (pure reward optimization)
+grpo_reward_functions:
+  - xmlcount
+  - soft_format
+  - strict_format
+  - concise
+  - correctness
+
+# Data
+data_num_workers: 4
+bioreason_dataset: "wanglab/kegg"
+max_dna_length: 1024
+max_text_length: 1024
+
+# Distributed
+distribution_strategy: "ddp"
+
+ddp:
+  bucket_cap_mb: 25
+  find_unused_parameters: false
+  static_graph: false  # GRPO has variable computation graphs
+  gradient_as_bucket_view: true

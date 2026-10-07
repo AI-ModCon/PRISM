@@ -1,0 +1,28 @@
+# Canonical identities for PRISM contributors.
+#
+# This snapshot carries no git history, so these entries exist to normalize
+# attribution if history is ever grafted on, and to record the mapping from
+# the aliases that appear in the development repository (AI-ModCon/BaseMM_PRISM)
+# to the authors ratified in pyproject.toml.
+
+Sandeep Madireddy <smadireddy@anl.gov> <38361704+Sande33p@users.noreply.github.com>
+Sandeep Madireddy <smadireddy@anl.gov> Sande33p <smadireddy@anl.gov>
+Sandeep Madireddy <smadireddy@anl.gov> Sande33p <sandeep@users.noreply.github.com>
+Patrick Emami <patrick.emami@nlr.gov> <patrickemami@gmail.com>
+Patrick Emami <patrick.emami@nlr.gov> <pemami4911@users.noreply.github.com>
+Patrick Emami <patrick.emami@nlr.gov> Patrick <pemami@aurora-uan-0009.hostmgmt.cm.aurora.alcf.anl.gov>
+Patrick Emami <patrick.emami@nlr.gov> Patrick <pemami@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <nygfee@gmail.com>
+Neil Getty <ngetty@anl.gov> n-getty <nygfee@gmail.com>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0009.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0010.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0012.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <130686874+balajiadarsha@users.noreply.github.com>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0010.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Guojing Cong <congg@ornl.gov> goooopy <guojingcong@yahoo.com>
+Guojing Cong <congg@ornl.gov> <congg@polaris-login-04.hsn.cm.polaris.alcf.anl.gov>
+Samuel Wheeler <swheeler@anl.gov> <91495954+samuelwheeler@users.noreply.github.com>
+Samuel Wheeler <swheeler@anl.gov> Your Name <you@example.com>
+Jared Willard <Jared.Willard@nlr.gov> <jared.willard@nlr.gov>

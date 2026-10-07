@@ -1,0 +1,122 @@
+{
+  "report_status": "completed",
+  "report_phase": "completed",
+  "report_completed_steps": 256,
+  "selected_gallery_step": 256,
+  "gallery_is_final": true,
+  "all_image_hashes_verified": true,
+  "all_case_initial_latents_identical": true,
+  "report_sha256": "1d29ae7092fdbbc056df9265c19c93460bce507ef5aea2317947b606827fa208",
+  "outputs": {
+    "train": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/overfit32-256-01/train-comparison-step-000256.png",
+      "sha256": "8792954bf939ae8ebb9add42b8330c1d6f0b23fa027934e6c67575c513e0b528",
+      "cases": [
+        "train_02098",
+        "train_01677"
+      ],
+      "samples": [
+        {
+          "id": "train_02098",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "9e81f1e75cba03a4e8a66459c1b63ba77548c3fa5d3b446a6f7c525ac6e8d9e8",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_02098",
+          "stage": "trained",
+          "step": 256,
+          "sha256": "69c525ffaf6b09245503c454c20a7a501cc22081c0ab1d345dc35ba1385e7ac2",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "4b1cca50287b5d45ea5ab9129168ec78b42efc640d755371f0dd88c15723790a",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "trained",
+          "step": 256,
+          "sha256": "cf4a1a1fa02f6ccded6142771e92aa469f3fef57bfb6eebd1212ef1c986c8561",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        }
+      ]
+    },
+    "validation": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/overfit32-256-01/validation-comparison-step-000256.png",
+      "sha256": "19e2cb1cd6dbf6e1b09afb57161b12d2961ecc5991f5a89436891b66b815989c",
+      "cases": [
+        "qual_dev_00000",
+        "qual_dev_00001"
+      ],
+      "samples": [
+        {
+          "id": "qual_dev_00000",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "47845c3612c545f4c2d462bbee922d3c491f43e56b0936362ae595de15c98987",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "trained",
+          "step": 256,
+          "sha256": "c10e379cc44fb952dce4e17536b5f978cbee436c6077003a252b3caa22e71e54",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "c7a288c7b0d88908698ad3ad0b1c60bd50dc19e774239b7e36e9b2f5069840e7",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "70375cc8430bce45bcacceb7b9c76d9c3b8e7aabfe136751fefdc7dd5435ebcb",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "trained",
+          "step": 256,
+          "sha256": "ab9f2b22a2dae08fd52c1acb4034db23aae2ccf9620bf3b8b445a69db4cd4ba4",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "raw",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "e8faa8f46f346543f55549660972adbe319c820e839407fc21ff4866eba1d6ac",
+          "text_guidance_scale": 1.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        }
+      ]
+    }
+  }
+}

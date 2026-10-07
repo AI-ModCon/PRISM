@@ -1,0 +1,122 @@
+{
+  "report_status": "completed",
+  "report_phase": "completed",
+  "report_completed_steps": 6,
+  "selected_gallery_step": 6,
+  "gallery_is_final": true,
+  "all_image_hashes_verified": true,
+  "all_case_initial_latents_identical": true,
+  "report_sha256": "66b38f33f7ab3719d621a8988e779d2ff90d07d2b4741862a76179d87ba52b7c",
+  "outputs": {
+    "train": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/train-comparison-step-000006.png",
+      "sha256": "c8d814f9089a1c3025f31efacc7dde5fbf41edd709d0286c7b1bb94684a698a1",
+      "cases": [
+        "train_02098",
+        "train_01677"
+      ],
+      "samples": [
+        {
+          "id": "train_02098",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "c09034768c972462f14b9906da4eaaba7140ddd3de6ccca6235955b2e2ef6349",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_02098",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "a0735da9710a534f070cb34e3f92f31edefe69a2238c848da491cacc6750159c",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "2943884f9306b6a34f1ed9ae9c9584fb5c468236db0a1e85d6339887e36c9327",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "660fd9079f56bfcbeeb582d3c3037ab70b228e4e4207024c5c4816d2ef937c85",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        }
+      ]
+    },
+    "validation": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/validation-comparison-step-000006.png",
+      "sha256": "466652dc9dd303db91d2c83af081a0cc26a8a2eaf55a593855e03e20701da8e1",
+      "cases": [
+        "qual_dev_00000",
+        "qual_dev_00001"
+      ],
+      "samples": [
+        {
+          "id": "qual_dev_00000",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "b5f005499cae584fb85c990e4e940d0402c51015dee2864d4eac15bbeb84b02e",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "fd6395b67706938ef331df141042700a8a5d0fd7619874979680b09354a2984e",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "c35f79954d0d0467ac00429b76a46579c2f9929318e48706d3138be52baf115d",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "c69dcf5ea830f7a2480d733bf45ed37d88df6d6b4561e68727cfb4e78eeac28a",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "07324e9aeb1b6a8bfa8c4622547c6cdb59362bf9e4e685c20e88b5579fdcedd1",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "92eb78fa628abf6a28c058cc7b5fb93469ad3561b546487325cf2c8c68e0f088",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        }
+      ]
+    }
+  }
+}

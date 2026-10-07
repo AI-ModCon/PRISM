@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "44979fe8defdff242a49135aa018976703dbd64ae88c604d9fb630339024f91b",
+  "archive_bytes": 2335680,
+  "members": 74,
+  "interim": true,
+  "snapshot_directory": "runs/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z",
+  "relocated_source_root": "provenance/source-snapshots/full-docci-joint-3epochs-01/interim-eval0400-20260922T0901Z",
+  "historical_helpers": "archived-provenance/provenance",
+  "final_acceptance_passed": null
+}

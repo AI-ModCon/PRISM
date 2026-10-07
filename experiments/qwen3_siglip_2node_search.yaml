@@ -1,0 +1,48 @@
+experiments:
+  - id: PRISM-QWEN3-SIGLIP-2N-SEARCH
+    name: "Two-node Qwen3/SigLIP throughput search"
+    default_dataset_groups: pixmo
+    resources:
+      ngpus: 12
+      topology: "2x12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      model: prism_qwen3_0_6b_image_only
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.modalities: ["text", "image"]
+      training.task: "vlm"
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 80
+      training.eval_every_n_steps: 1000
+      training.save_every_n_steps: 1000
+      training.viz_every_n_steps: 1000
+      training.data_num_workers: 4
+      training.learning_rate: 5e-4
+      training.weight_decay: 0.0
+      training.warmup_steps: 20
+      training.device: "xpu"
+      wandb.mode: "offline"
+    variants:
+      - id: PRISM-QWEN3-0P6B-SIGLIP2-BASE-2N
+        name: "Qwen3 0.6B + SigLIP2 base, two-node search"
+        overrides: {}
+
+      - id: PRISM-QWEN3-0P6B-SIGLIP2-SO400M-2N
+        name: "Qwen3 0.6B + SigLIP2 So400M, two-node search"
+        overrides:
+          model.image_encoder_id: "google/siglip2-so400m-patch14-384"
+          model.image_processor_id: "google/siglip2-so400m-patch14-384"
+          model.d_img: 1152
+          model.image_size: 384
+
+      - id: PRISM-QWEN3-1P7B-SIGLIP2-BASE-2N
+        name: "Qwen3 1.7B + SigLIP2 base, two-node search"
+        overrides:
+          model: prism_qwen3_1_7b_image_only
+
+      - id: PRISM-QWEN3-4B-SIGLIP2-BASE-2N
+        name: "Qwen3 4B + SigLIP2 base, two-node search"
+        overrides:
+          model: prism_qwen3_4b_image_only

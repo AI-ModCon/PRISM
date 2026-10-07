@@ -1,0 +1,8 @@
+{
+  "case_targets": {},
+  "extraction": "Exact indexed tar member bytes; header/name/size/image SHA256 verified.",
+  "license": "CC-BY-4.0",
+  "records": [],
+  "source": "Google DOCCI",
+  "source_url": "https://google.github.io/docci/"
+}

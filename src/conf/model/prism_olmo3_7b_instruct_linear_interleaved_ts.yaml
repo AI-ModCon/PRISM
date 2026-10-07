@@ -1,0 +1,28 @@
+backbone_id: allenai/Olmo-3-7B-Instruct
+# Custom tokenizer with interleaving tokens added.
+# Placeholder path — set to wherever you've built/copied this tokenizer.
+tokenizer_id: "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-3-7b-instruct-interleaved"
+
+modalities: [text,time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+d_model: 4096
+d_text: 4096
+# Olmo-3 base vocab (100278) + 12 modality tokens added by the custom tokenizer:
+# <ts>, <ts/>, <image>, <image/>, <table>, <table/>, <graph>, <graph/>, <geometry>, <geometry/>, <num>, <num/>
+vocab_size: 100290
+
+is_timeseries: true
+ts_variates: 1
+max_ts_length: 256
+is_interleaved_qa: true
+normalize_ts_in_encoder: false
+ts_projector: "linear"
+modality_start_end_token_indices: {"time_series": [100278,100279]}
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

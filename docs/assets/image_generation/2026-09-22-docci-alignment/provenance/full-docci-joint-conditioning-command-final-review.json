@@ -1,0 +1,135 @@
+{
+  "changed_argv": {
+    "--joint-checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-3epochs-01/connector-diffusion-pilot-step-001809.pt",
+    "--joint-checkpoint-sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+    "--model-config": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components/src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json",
+    "--output-dir": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-conditioning-01"
+  },
+  "changed_argv_from_prepared_full_candidate": {
+    "--joint-checkpoint-sha256": {
+      "after": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+      "before": "REQUIRES_VERIFIED_COMPLETED_FULL_DOCCI_STEP001809_SHA256"
+    }
+  },
+  "checkpoint_admission": {
+    "alignment_lineage_indirect_through_full_joint_source_report": true,
+    "digest_validation": "Strict restore compares streamed checkpoint SHA256 before torch.load, validates completed terminal report, parent/generator/frozen identities and full FP32 masters/buffers. No optimizer is created by the diagnostic.",
+    "no_six_step_constraint": true,
+    "optimizer_not_created_or_restored": true,
+    "ordinary_diagnostic_supports_arbitrary_positive_completed_joint_step": true,
+    "parent_generator_frozen_scope_and_full_fp32_master_validation": true,
+    "terminal_step_must_match_completed_source_report": true
+  },
+  "cloned_actual_submission": "8848734.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "cohorts": {
+    "heldout_cohort_comparability": "Same first 8 heldout captions, flow timesteps and index-based noise seeds as earlier ordinary diagnostics.",
+    "train_cohort_limitation": "Differs from previous tiny-set diagnostic and full-training seeded fixed 32 probe cohort; do not compare their aggregate train losses as a matched cohort.",
+    "train_pool": 9647,
+    "train_selection_policy": "Source full-stage train_selection is the full ordered pool; use its first 8 indices 0..7.",
+    "train_targets": 8,
+    "validation_selection_policy": "Indices 0..7; wrong captions drawn from the 100-example heldout split.",
+    "validation_targets": 8,
+    "wrong_training_captions": "Selected from the full source training pool, not only the 8 diagnostic targets."
+  },
+  "command_file": "full-docci-joint-conditioning-command.json",
+  "command_sha256": "96a7fa50708d39803b31f43350b17b9f9af3a63ec96d9f640d1e8ab225a93966",
+  "flow": {
+    "actual_paired_noisy_input_and_timestep_hashes_required": true,
+    "both_routes_use": "Completed adapted DiT",
+    "matched_wrong_forwards": 192,
+    "paired_rows": 48,
+    "routes": [
+      "native_adapted_diffusion",
+      "prism_chat"
+    ],
+    "routes_per_row": 2,
+    "timesteps": [
+      0.1,
+      0.5,
+      0.9
+    ]
+  },
+  "images": {
+    "after_restore": [
+      "adapted native CFG5",
+      "adapted native CFG1",
+      "PRISM positive/native negative CFG5",
+      "PRISM CFG1",
+      "PRISM positive/PRISM negative CFG5"
+    ],
+    "before_restore": [
+      "original native CFG5",
+      "original native CFG1"
+    ],
+    "cases": 2,
+    "image_guidance_limitation": "Ordinary diagnostic fixes image guidance to 1; full training used 2. No source image is supplied in these caption-to-image routes, so that knob is inactive. This preserves the actual earlier ordinary diagnostic behavior.",
+    "image_guidance_scale": 1.0,
+    "native_negative_is_frozen": true,
+    "ordinary_gallery_references": "Renderer uses adapted-native references; original-native images are separately saved.",
+    "planned_images": 14,
+    "prism_negative_anchor": "Untrained ablation; not a trained unconditional context.",
+    "same_initial_noise_per_case": true,
+    "sampling_steps": 50,
+    "seeds": [
+      200042,
+      200043
+    ]
+  },
+  "limitations": [
+    "These are 16 captions and 2 image cases, not a comprehensive benchmark.",
+    "Ordinary diagnostic records actual flow noise/timestep hashes, image hashes and initial sampling latents; do not claim the stronger factorial CFG-branch/final-latent trace audit.",
+    "Low denoising loss alone does not establish requested-object fidelity."
+  ],
+  "observed_terminal_checkpoint_sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+  "original_proposal_sha256": "b23576946c8541ea581667d04024b524855ce45256c694c7629f1381d0ff0f11",
+  "pending_terminal_acceptance": true,
+  "purpose": "Evaluate the completed full-data learning experiment; this does not introduce a new training gate.",
+  "recommended_allocation": {
+    "cpu32_caveat": "The immutable launcher emits OMP_NUM_THREADS=32, MKL_NUM_THREADS=32 and CPU depth-32 binding only for the training entry point. They are absent for this ordinary diagnostic, as in the actual prior diagnostic. The unchanged launcher does not promise a CPU32 cap or binding. Do not claim one without an explicitly reviewed runtime wrapper or launcher change.",
+    "local_rendered_pbs_sha256": "dfea5dc7c286d8f787e00b543e8709ff40cc4a2b0514e5c7af7bd482fa47c9d1",
+    "local_rendered_worker_sha256": "3ae662b0abe5bc58823797bb1882bf9d155914418835bcc2b6815b21e6401346",
+    "minutes": 20,
+    "nodes": 1,
+    "prior_actual_diagnostic_job": "8848734.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+    "prior_matching_diagnostic_runtime_seconds": 485.92084174000775,
+    "processes": 1,
+    "project": "ModCon",
+    "queue": "capacity",
+    "xpu_tiles": 1
+  },
+  "requires_before_launch": [
+    "Root must accept the completed full-stage evidence: 1809 updates, exact 28944 exposures over 9647 IDs, both groups changed, frozen weights unchanged, source identities and finite losses.",
+    "Root must independently stream-hash terminal checkpoint to 14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4 and bind it to the completed source report.",
+    "Root must confirm immutable remote source hashes, new output/job directories and remote launcher dry-run plus PBS/worker syntax checks before submission."
+  ],
+  "review_checks": {
+    "budget_validation_passed": true,
+    "current_parser_passed": true,
+    "exact_single_digest_value_delta_from_prepared_full_candidate": true,
+    "immutable_source_hash_matches_archived_executed_runner": true,
+    "local_launcher_render_passed": true,
+    "local_pbs_bash_n_passed": true,
+    "local_worker_bash_n_passed": true,
+    "model_execution_performed": false,
+    "remote_calls_performed": false,
+    "submitted": false
+  },
+  "runner": "tools/diagnose_prism_image_conditioning.py",
+  "runner_sha256": "e45ee0227bcb57291cef30118f31870275986d7f2cbc85d40c0710fcc2cd27c4",
+  "source_reuse": "The ordinary runner hash matches the archived executed prism-joint-components source; launcher, joint restore and conditioning helper hashes match source-preparation provenance. No source files were edited. Root must still check live immutable source hashes before submission.",
+  "source_snapshot": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components",
+  "status": "not_submitted_pending_terminal_acceptance",
+  "submitted": false,
+  "terminal_digest_independently_verified_by_this_review": false,
+  "terminal_digest_note": "Root provided the observed terminal SHA256 while independent stream verification and terminal evidence acceptance are in progress. No remote access or checkpoint bytes were read by this review.",
+  "verified_local_source_sha256": {
+    "tools/diagnose_prism_image_conditioning.py": "e45ee0227bcb57291cef30118f31870275986d7f2cbc85d40c0710fcc2cd27c4",
+    "tools/launch_aurora_image_experiment.py": "49ade754feb3acada3cf7a74acd0551d420bcd8d91854b28e16dd7c1654dbccf",
+    "tools/prism_image_conditioning.py": "81845528a13b99e42df197eb11d853b520381de97f48acb350bcd1c17e20f03d",
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7"
+  },
+  "writes": [
+    "full-docci-joint-conditioning-command.json",
+    "full-docci-joint-conditioning-command-final-review.json"
+  ]
+}

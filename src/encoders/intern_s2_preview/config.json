@@ -1,0 +1,26 @@
+{
+  "activation_dropout": 0.0,
+  "activation_function": "gelu",
+  "architectures": [
+    "InternS2PreviewTimeSeriesModel"
+  ],
+  "attention_dropout": 0.0,
+  "auto_map": {
+    "AutoConfig": "configuration_interns2_preview.InternS2PreviewTimeSeriesConfig",
+    "AutoModel": "modeling_interns2_preview.InternS2PreviewTimeSeriesModel"
+  },
+  "d_model": 768,
+  "dropout": 0.0,
+  "encoder_attention_heads": 8,
+  "encoder_ffn_dim": 3072,
+  "encoder_layerdrop": 0.0,
+  "encoder_layers": 17,
+  "max_source_positions": 1500,
+  "model_type": "interns2_preview_time_series",
+  "num_mel_bins": 80,
+  "out_hidden_size": 2048,
+  "scale_embedding": false,
+  "ts_adapt_in_dim": 256,
+  "ts_adapt_out_dim": 1024,
+  "ts_hidden_dim": 1024
+}

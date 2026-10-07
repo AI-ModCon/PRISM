@@ -1,0 +1,626 @@
+{
+  "kind": "independent_matched_seed_joint_diagnostic_interpretation",
+  "run_name": "conditioning-aligned-joint6-01",
+  "job_id": "8848734.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "report_sha256": "127a399abf3276805213fa0101a169324ac2b5e75e089b300ec0febc89907f8e",
+  "before_run_name": "conditioning-regions1000-01",
+  "before_report_sha256": "1c7796ec8414fc80db975cc780741bd03295af16a1049ebf9361753611c3c7e7",
+  "duration_seconds": 485.92084174000775,
+  "audit_scope": "Local metadata/source/image audit. No models or checkpoint tensors loaded. The joint digest is verified by the completed diagnostic strict restore and prior remote metadata collection; checkpoint bytes stay on Aurora.",
+  "checks": {
+    "completed": true,
+    "collector_acceptance": true,
+    "collection_report_hash": true,
+    "joint_report_hash_bound": true,
+    "joint_checkpoint_digest_matches_strict_restore_and_source_terminal_record": true,
+    "joint_checkpoint": {
+      "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01/connector-diffusion-pilot-step-000006.pt",
+      "fresh_optimizer": true,
+      "fresh_rng": true,
+      "fresh_sampler": true,
+      "policy": "completed_joint_checkpoint_fp32_masters_fresh_stage",
+      "report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590",
+      "restored_connector_tensors": 4,
+      "restored_diffusion_buffers": 0,
+      "restored_master_parameters": 3971361848,
+      "restored_master_tensors": 586,
+      "returned_optimizer_masters": false,
+      "sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+      "source_data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+      "step": 6
+    },
+    "frozen_tensor_count": 2220,
+    "all_frozen_hashes_equal": true,
+    "native_pretrained_state_unchanged": true,
+    "source_checks": {
+      "src/decoders/conditioning.py": true,
+      "src/decoders/image.py": true,
+      "src/decoders/loading.py": true,
+      "src/decoders/omnigen2_backend.py": true,
+      "src/model.py": true,
+      "tools/prism_image_conditioning.py": true,
+      "tools/train_prism_image_diffusion.py": true,
+      "tools/diagnose_prism_image_conditioning.py": true
+    },
+    "selection_indexes_fingerprint_match_prior": true,
+    "flow_rows": 48,
+    "actual_noise_timestep_id_wrong_id_seed_exact_replay_across_all_48_rows": true,
+    "native_condition_and_prism_input_audits": [
+      {
+        "id": "train_04996",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_08983",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_05538",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_03445",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_05049",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_01677",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_06344",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "train_01062",
+        "split": "train",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00000",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00001",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00002",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00003",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00004",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00005",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00006",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      },
+      {
+        "id": "qual_dev_00007",
+        "split": "validation",
+        "native_condition_metadata_equal": true,
+        "prism_input_tokens_masks_format_equal": true
+      }
+    ],
+    "all_14_image_hashes_valid": true,
+    "all_four_original_native_images_byte_identical_to_prior_diagnostic": true
+  },
+  "quantitative_comparison": {
+    "train": {
+      "native_original": {
+        "matched_loss": 0.4536604086558024,
+        "wrong_loss": 0.4785098787397146,
+        "wrong_minus_matched": 0.024849470083912212,
+        "matched_wins": 24,
+        "paired_evaluations": 24
+      },
+      "native_adapted": {
+        "matched_loss": 0.4529455689092477,
+        "wrong_loss": 0.47794891707599163,
+        "wrong_minus_matched": 0.025003348166743915,
+        "matched_wins": 24,
+        "paired_evaluations": 24
+      },
+      "prism_before": {
+        "matched_loss": 0.4554043480505546,
+        "wrong_loss": 0.47767141088843346,
+        "wrong_minus_matched": 0.022267062837878864,
+        "matched_wins": 23,
+        "paired_evaluations": 24
+      },
+      "prism_after": {
+        "matched_loss": 0.4568016454577446,
+        "wrong_loss": 0.47659333671132725,
+        "wrong_minus_matched": 0.019791691253582638,
+        "matched_wins": 23,
+        "paired_evaluations": 24
+      },
+      "prism_matched_mse_change_percent": 0.306825662330934,
+      "prism_caption_gap_change_percent": -11.11674046244362,
+      "prism_matched_mse_excess_vs_adapted_native_percent": 0.8513333197591066,
+      "prism_caption_gap_relative_to_adapted_native_percent": 79.15616389290966,
+      "by_timestep": {
+        "0.1": {
+          "native_original": {
+            "matched_mse": 0.32029619812965393,
+            "wrong_minus_matched": 0.054930469021201134,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.31893644109368324,
+            "wrong_minus_matched": 0.05524108372628689,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.3244291450828314,
+            "wrong_minus_matched": 0.0496609453111887,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.3281192034482956,
+            "wrong_minus_matched": 0.04548037424683571,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.5": {
+          "native_original": {
+            "matched_mse": 0.45261457562446594,
+            "wrong_minus_matched": 0.01844780519604683,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.4521353282034397,
+            "wrong_minus_matched": 0.018535565584897995,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.453607015311718,
+            "wrong_minus_matched": 0.016121987253427505,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.45421896129846573,
+            "wrong_minus_matched": 0.013127822428941727,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.9": {
+          "native_original": {
+            "matched_mse": 0.5880704522132874,
+            "wrong_minus_matched": 0.001170136034488678,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.5877649374306202,
+            "wrong_minus_matched": 0.0012333951890468597,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.5881768837571144,
+            "wrong_minus_matched": 0.0010182559490203857,
+            "matched_wins": 7,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.5880667716264725,
+            "wrong_minus_matched": 0.0007668770849704742,
+            "matched_wins": 7,
+            "cases": 8
+          }
+        }
+      }
+    },
+    "validation": {
+      "native_original": {
+        "matched_loss": 0.485446959733963,
+        "wrong_loss": 0.512051947414875,
+        "wrong_minus_matched": 0.026604987680912018,
+        "matched_wins": 24,
+        "paired_evaluations": 24
+      },
+      "native_adapted": {
+        "matched_loss": 0.4850107791523139,
+        "wrong_loss": 0.5117699106534322,
+        "wrong_minus_matched": 0.026759131501118343,
+        "matched_wins": 24,
+        "paired_evaluations": 24
+      },
+      "prism_before": {
+        "matched_loss": 0.4931487888097763,
+        "wrong_loss": 0.5091523205240568,
+        "wrong_minus_matched": 0.016003531714280445,
+        "matched_wins": 20,
+        "paired_evaluations": 24
+      },
+      "prism_after": {
+        "matched_loss": 0.4931649714708328,
+        "wrong_loss": 0.5073461905121803,
+        "wrong_minus_matched": 0.014181219041347504,
+        "matched_wins": 21,
+        "paired_evaluations": 24
+      },
+      "prism_matched_mse_change_percent": 0.0032814966646421695,
+      "prism_caption_gap_change_percent": -11.38694074200407,
+      "prism_matched_mse_excess_vs_adapted_native_percent": 1.6812394010645715,
+      "prism_caption_gap_relative_to_adapted_native_percent": 52.99581206794708,
+      "by_timestep": {
+        "0.1": {
+          "native_original": {
+            "matched_mse": 0.3832806497812271,
+            "wrong_minus_matched": 0.059516362845897675,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.38252755627036095,
+            "wrong_minus_matched": 0.05994074419140816,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.4002753309905529,
+            "wrong_minus_matched": 0.03906000405550003,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.4000888206064701,
+            "wrong_minus_matched": 0.035244956612586975,
+            "matched_wins": 8,
+            "cases": 8
+          }
+        },
+        "0.5": {
+          "native_original": {
+            "matched_mse": 0.48097240179777145,
+            "wrong_minus_matched": 0.01900477334856987,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.4805712029337883,
+            "wrong_minus_matched": 0.019020535051822662,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.48711274936795235,
+            "wrong_minus_matched": 0.008091580122709274,
+            "matched_wins": 6,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.48717159777879715,
+            "wrong_minus_matched": 0.006700865924358368,
+            "matched_wins": 7,
+            "cases": 8
+          }
+        },
+        "0.9": {
+          "native_original": {
+            "matched_mse": 0.5920878276228905,
+            "wrong_minus_matched": 0.001293826848268509,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "native_adapted": {
+            "matched_mse": 0.5919335782527924,
+            "wrong_minus_matched": 0.0013161152601242065,
+            "matched_wins": 8,
+            "cases": 8
+          },
+          "prism_before": {
+            "matched_mse": 0.5920582860708237,
+            "wrong_minus_matched": 0.0008590109646320343,
+            "matched_wins": 6,
+            "cases": 8
+          },
+          "prism_after": {
+            "matched_mse": 0.5922344960272312,
+            "wrong_minus_matched": 0.000597834587097168,
+            "matched_wins": 6,
+            "cases": 8
+          }
+        }
+      }
+    }
+  },
+  "sampling_audits": {
+    "validation-00": {
+      "seed": 200042,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "seven_routes_share_identical_actual_initial_latents": true,
+      "native_cfg5": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 2.7110087871551514,
+        "pixel_rmse_0_to_255": 6.135170936584473
+      },
+      "native_cfg1": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 2.869537353515625,
+        "pixel_rmse_0_to_255": 4.623582363128662
+      },
+      "prism_native_negative_cfg5": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 52.146759033203125,
+        "pixel_rmse_0_to_255": 61.10569381713867
+      }
+    },
+    "validation-01": {
+      "seed": 200043,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "seven_routes_share_identical_actual_initial_latents": true,
+      "native_cfg5": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 2.4059345722198486,
+        "pixel_rmse_0_to_255": 4.722800254821777
+      },
+      "native_cfg1": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 2.1182048320770264,
+        "pixel_rmse_0_to_255": 3.5858922004699707
+      },
+      "prism_native_negative_cfg5": {
+        "identical_image_bytes": false,
+        "pixel_mae_0_to_255": 21.392969131469727,
+        "pixel_rmse_0_to_255": 33.698787689208984
+      }
+    }
+  },
+  "samples": [
+    {
+      "case_id": "validation-00",
+      "route": "native_pretrained",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-native_pretrained.png",
+      "before_sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7",
+      "identical_image_bytes": true
+    },
+    {
+      "case_id": "validation-00",
+      "route": "native_pretrained_cfg1",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "3440216724c280bdfbfa045340086345d2a2b95170ab6f9f2363131c27664569",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-native_pretrained_cfg1.png",
+      "before_sha256": "3440216724c280bdfbfa045340086345d2a2b95170ab6f9f2363131c27664569",
+      "identical_image_bytes": true
+    },
+    {
+      "case_id": "validation-01",
+      "route": "native_pretrained",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-native_pretrained.png",
+      "before_sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf",
+      "identical_image_bytes": true
+    },
+    {
+      "case_id": "validation-01",
+      "route": "native_pretrained_cfg1",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "a9c543739a5face9ff7664272112c8de3bda5b69209307df8262313d7635d54c",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-native_pretrained_cfg1.png",
+      "before_sha256": "a9c543739a5face9ff7664272112c8de3bda5b69209307df8262313d7635d54c",
+      "identical_image_bytes": true
+    },
+    {
+      "case_id": "validation-00",
+      "route": "native_adapted_diffusion",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "0273a28408707d5ac904c438f0c1b4a7548c3c2e318f15e69f00d1b5041e95b3",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-native_adapted_diffusion.png"
+    },
+    {
+      "case_id": "validation-00",
+      "route": "native_adapted_diffusion_cfg1",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "523ab20330c08058afa22527bd0fc661b7f55e5fc6633315a6b0a3a3de4ad9cb",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-native_adapted_diffusion_cfg1.png"
+    },
+    {
+      "case_id": "validation-00",
+      "route": "prism_chat_native_negative_cfg5",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "6dbb58e6099a80cc4c99a96293f2d3b00d2fadea435ab9fd0747867380d038ca",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-prism_chat_native_negative_cfg5.png",
+      "before_sha256": "311f13838b196b0c82b5fbdb3c9da73aced0dd78bd4a695c4b3d9f146ee76fc3",
+      "identical_image_bytes": false
+    },
+    {
+      "case_id": "validation-00",
+      "route": "prism_chat_cfg1",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "60b635b70cc56cb9d9a0b6b78b4f786e26cdfcf2ba35f98a3bac6298e889fb92",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-prism_chat_cfg1.png",
+      "before_sha256": "9b9437e47f40ada1f13480891ad91bb8c1bac8dcf5a95ff1088cf7a2c7987a56",
+      "identical_image_bytes": false
+    },
+    {
+      "case_id": "validation-00",
+      "route": "prism_chat_prism_negative_cfg5",
+      "seed": 200042,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "sha256": "d40b6e72c815cbb091e15d83892087b23657448280972af58fa19a33bb7fc0dd",
+      "case_target_id": "qual_dev_00000",
+      "local_file": "sample-validation-00-prism_chat_prism_negative_cfg5.png",
+      "before_sha256": "a767e8f7332e013fad8fef1f97ccf59e1473586b0fcbf99e29932be5db65a1c3",
+      "identical_image_bytes": false
+    },
+    {
+      "case_id": "validation-01",
+      "route": "native_adapted_diffusion",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "6468b9aba0cb553eecdeda7061b1d311d3d4b7ed2c55e2364478996761340ce7",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-native_adapted_diffusion.png"
+    },
+    {
+      "case_id": "validation-01",
+      "route": "native_adapted_diffusion_cfg1",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "d276d316b01c35d055369518a8b7f4e022b74ff87d1f15d3a4e669b61dbe0867",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-native_adapted_diffusion_cfg1.png"
+    },
+    {
+      "case_id": "validation-01",
+      "route": "prism_chat_native_negative_cfg5",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "3c11347d5d5e7de6dcac894336e376db0935bb80c77f347f8b243fd1b64bdb52",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-prism_chat_native_negative_cfg5.png",
+      "before_sha256": "3dab2bddce4a5159d8b45ae30e93dd70edc051ad73146d17dea1b7c4f0b89877",
+      "identical_image_bytes": false
+    },
+    {
+      "case_id": "validation-01",
+      "route": "prism_chat_cfg1",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 1.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "2d90153767f28337d51960c96bc8243cf9427f524d86a300b87717163ce490ee",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-prism_chat_cfg1.png",
+      "before_sha256": "f58abc49c2fc3a98829e7fd2044095ea4fe5305fb5204e49dc071da267614e50",
+      "identical_image_bytes": false
+    },
+    {
+      "case_id": "validation-01",
+      "route": "prism_chat_prism_negative_cfg5",
+      "seed": 200043,
+      "sampling_steps": 50,
+      "text_guidance_scale": 5.0,
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "sha256": "43dd172c269e7d65baef2f619b2cdb1670b3dc38f422832ce92db77a638a6b5a",
+      "case_target_id": "qual_dev_00001",
+      "local_file": "sample-validation-01-prism_chat_prism_negative_cfg5.png",
+      "before_sha256": "d4ae1b77c395f897a9ce2f778fcc7769f35f0f890e2483e7d311787bb3b737e9",
+      "identical_image_bytes": false
+    }
+  ],
+  "visual_assessment": {
+    "method": "Direct inspection of matched-seed-before-after.png at CFG5, with original native, adapted native, PRISM before and after, and DOCCI reference. Two held-out captions, one matched seed each; 256x256 and 50 steps.",
+    "comparison_sha256": "3703b9f2b5fa4e0769bdd92a2baa8d1674e93b84c648809b7b853b19c532b8fb",
+    "dog_penguin": {
+      "original_native": "Recognizable dog and penguin with blue helmets; approximate relation retained.",
+      "adapted_native": "Almost identical scene and subjects to original native; slight image details change.",
+      "prism_before": "Coherent room/window and partially recognizable stuffed dog, separate helmet-like object; penguin missing.",
+      "prism_after": "Tall distorted white figure with a helmet-like blue head; recognizable dog facial detail is lost and penguin remains missing. This paired seed shows qualitative degradation."
+    },
+    "airplanes": {
+      "original_native": "Two recognizable aircraft, one airborne despite caption specifying both on runway.",
+      "adapted_native": "Almost identical two aircraft and runway scene, preserving prior relational error.",
+      "prism_before": "Two aircraft-like objects with wrong colors/geometry/placement; second small blue/purple lower object is visible.",
+      "prism_after": "Flat cartoon-like runway/sky with one malformed yellow aircraft-like object; lower aircraft disappears. This paired seed shows qualitative degradation."
+    }
+  },
+  "limits": [
+    "The before/after matched-noise comparison establishes changes under combined connector and DiT updates, not which component causes them. Native adapted references remain visually stable, but connector drift and connector-DiT interactions need separate ablations.",
+    "Aggregate held-out matched MSE is almost unchanged while caption gap falls and these two CFG5 scenes worsen; flow loss alone is not a semantic quality gate.",
+    "Eight captions per split at three correlated timesteps are 24 paired probes, not 24 independent examples. Two qualitative images do not establish population-wide degradation.",
+    "The diagnostic main gallery uses adapted-native references; original native references were separately generated before restoring the joint checkpoint and replay byte-for-byte from the prior region diagnostic.",
+    "All routes record actual initial latent hashes and all flow calls enforce actual noisy-input/timestep equality; ordinary diagnostics do not record every forward conditioning tensor hash or final latent hash.",
+    "PRISM negative-anchor CFG5 is untrained and is an ablation, not the primary comparison.",
+    "Checkpoint hashes and full FP32 restoration are recorded by strict real-checkpoint execution and prior remote collector; local audit did not independently reread the 47.7 GB checkpoint."
+  ],
+  "recommendation": {
+    "full_data_training_supported": false,
+    "next_step": "Bounded component-level checkpoint swap on matched captions/noise: aligned connector plus adapted DiT, updated connector plus original DiT, and joint checkpoint versus aligned baseline. Verify exact weight lineage and actual conditioning/noise inputs; use feature drift or explicit retention analysis if connector-side degradation is isolated. Avoid another longer joint run before this distinguishes the cause."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "artifact_audit_passed": true,
+  "cases": [
+    {
+      "case_id": "validation-00",
+      "id": "qual_dev_00000",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad"
+    },
+    {
+      "case_id": "validation-01",
+      "id": "qual_dev_00001",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0"
+    }
+  ],
+  "checkpoint_sha256": {
+    "joint": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+    "region": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d"
+  },
+  "final_acceptance_evaluated": true,
+  "flow_rows_checked": 12,
+  "gallery": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/joint-components-01/component-comparison.png",
+  "gallery_sha256": "d6c0a45ca91a8cfc2b2d3d13d7ca027fef4054f3cc1e33f7336d1192570f5c2b",
+  "images_checked": 12,
+  "real_checkpoint_evidence": true,
+  "report_sha256": "6651dc7cf67b554aa8217928b2501089ab56f9c4cb6b6b6f525a5d4edf941526",
+  "routes": [
+    "native_original",
+    "aligned_original",
+    "joint_original",
+    "native_joint",
+    "aligned_joint",
+    "joint_joint"
+  ],
+  "schema_version": 1,
+  "scope": "Audits recorded factorial controls and artifact integrity; does not establish semantic image quality or authorize scaling."
+}

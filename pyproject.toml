@@ -1,0 +1,282 @@
+[project]
+# `prism` is taken on PyPI; `prism-mm` is the distribution name. The import
+# package (`src`) and the console script (`prism`) are deliberately unchanged.
+name = "prism-mm"
+version = "0.1.0"
+description = "PRISM: Foundational Multimodal Training Framework"
+authors = [
+  { name = "Sandeep Madireddy", email = "smadireddy@anl.gov" },
+  { name = "Patrick Emami", email = "patrick.emami@nlr.gov" },
+  { name = "Adarsha Balaji", email = "abalaji@anl.gov" },
+  { name = "Guojing Cong", email = "congg@ornl.gov" },
+  { name = "Ben Erichson", email = "erichson@icsi.berkeley.edu" },
+  { name = "FangFang Xia", email = "fangfang@anl.gov" },
+  { name = "Jared Willard", email = "Jared.Willard@nlr.gov" },
+  { name = "Neil Getty", email = "ngetty@anl.gov" },
+  { name = "Huu Binh Ta", email = "nzj6jt@virginia.edu" },
+  { name = "Samuel Wheeler", email = "swheeler@anl.gov" },
+]
+readme = "README.md"
+keywords = ["multimodal", "machine learning", "scientific computing", "transformers"]
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+# Only the two interpreters CI actually exercises are advertised: 3.10 is the
+# floor declared by requires-python, 3.12 is Aurora's frameworks module.
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# Torch-free core: everything src/ imports regardless of platform or backend.
+# torch and the per-platform stacks are not resolvable here — they come from
+# requirements/*.txt plus tools/setup_*.sh and are installed --no-deps, because
+# a PyPI torch wheel shadowing the system build breaks the XPU/CUDA runtime.
+dependencies = [
+    "typer>=0.9.0",
+    "hydra-core>=1.3",
+    "omegaconf",
+    "einops",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "wandb",
+    "tqdm",
+    "pydantic",
+]
+
+# Capability extras, grouped by what a user wants to DO. Every one must stay
+# torch-free. Check that after any edit here, under BOTH resolvers -- uv
+# ignores system site-packages even with --system-site-packages, so a pip-only
+# check is not proof:
+#     pip install --dry-run --ignore-installed '.[serve]'
+#     uv pip install --dry-run '.[serve]'
+# Neither resolution may contain torch, torchvision, torchaudio, nvidia-*, or
+# the PyG C++ extensions (pyg_lib, torch_scatter/sparse/cluster/spline_conv).
+#
+# Platform installs are deliberately NOT expressible here. requirements/*.txt
+# plus tools/setup_*.sh stay canonical for those: a PEP 621 extra cannot say
+# --no-deps, and --no-deps is the whole mechanism that keeps a resolved PyPI
+# torch wheel from shadowing the platform's accelerator-aware build. So no
+# base/aurora/deepspeed/perlmutter/polaris extras, under any name.
+#
+# There is no `dev` extra either -- requirements/ci.txt already owns the tool
+# versions, exactly pinned, and CI installs from it directly. A second list
+# here would be a second source of truth for the ruff/mypy/pytest versions,
+# which is how "green locally, red in CI" starts.
+#
+# Both extras cover only the PyPI-resolvable imports. `torch` and
+# `torchvision` are module-scope imports in src/api/server.py too, and they
+# are deliberately absent here for the reason above: they come from the
+# platform, never from a resolver. So an extra makes the serving and dataset
+# layers *installable*, not *runnable* on its own -- the platform torch stack
+# is still a prerequisite. See docs/getting-started.md.
+[project.optional-dependencies]
+# `prism serve api` -> src/api/server.py: fastapi, uvicorn, PIL (pillow),
+# transformers. `prism serve ui` -> src/ui/app.py: gradio.
+# (src/ui/aurora_showcase.py is a standalone `streamlit run` script, not a
+# subcommand, and documents its own install line in its module docstring.)
+serve = [
+    "fastapi",
+    "uvicorn",
+    "gradio",
+    "pillow",
+    "transformers",
+]
+# src/data/multimodal.py:10-19 imports datasets, h5py, requests,
+# huggingface_hub and transformers at module scope, so the dataset layer is
+# unimportable without all five; webdataset is the guarded TAR-shard
+# streaming path (HAS_WEBDATASET).
+data = [
+    "datasets",
+    "h5py",
+    "requests",
+    "huggingface-hub",
+    "transformers",
+    "webdataset",
+]
+
+[project.urls]
+Homepage = "https://github.com/AI-ModCon/BaseMM_PRISM"
+Repository = "https://github.com/AI-ModCon/BaseMM_PRISM"
+Issues = "https://github.com/AI-ModCon/BaseMM_PRISM/issues"
+Documentation = "https://github.com/AI-ModCon/BaseMM_PRISM/tree/main/docs"
+
+[project.scripts]
+prism = "src.cli:app"
+
+# vLLM looks up plugins via the standard setuptools entry-point group at
+# engine boot time (vllm/plugins/__init__.py:load_plugins_by_group). Wiring
+# the PRISM registrar here means every spawn worker re-imports it
+# automatically — no PYTHONPATH-side-effect dance, no `tools/vllm_serve.py`
+# / `tools/vllm_parity.py` workaround.
+#
+# Aurora runs from a git clone, so the dist-info has to be present for the
+# entry-point loader to find this. Install with:
+#     bash tools/install_prism_entry_point.sh
+# The imperative `src.vllm_plugin.register()` calls in tools/vllm_serve.py
+# and tools/vllm_parity.py stay as a safety net (idempotency guard).
+[project.entry-points."vllm.general_plugins"]
+prism = "src.vllm_plugin:register"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# include-package-data defaults to true, which makes the wheel contents depend
+# on the building interpreter: any environment registering a
+# setuptools.file_finders entry point (the Aurora frameworks python registers
+# setuptools_scm, a clean venv does not) sweeps in every tracked file under the
+# package — here ~20MB, mostly src/ui/pixmo_samples. The same `python -m build`
+# then yields a 20MB wheel on one host and a wheel with no configs at all on
+# another. Declare the data explicitly instead.
+[tool.setuptools]
+include-package-data = false
+
+# `namespaces` stays at its default of TRUE -- src/api, src/data, src/ui and
+# src/utils have no `__init__.py`, so turning it off silently drops real
+# modules from the wheel. But namespace discovery also sweeps in
+# `src/libs/walrus`, the MIT-licensed Polymathic AI submodule, which made the
+# wheel depend on submodule state rather than on the tree: an unpopulated
+# src/libs/walrus produced 194 entries, and the `git clone --recursive` that
+# docs/getting-started.md prescribes produced 334 -- redistributing 140
+# third-party files without their LICENSE. Exclude the submodule by name.
+# Vendoring walrus into the distribution is a third-party redistribution
+# decision (Gate 1), not something a packaging default should make silently.
+[tool.setuptools.packages.find]
+include = ["src*"]
+exclude = ["src.libs", "src.libs.*"]
+
+# src/train.py uses Hydra `config_path="conf"` and
+# src/data/dataset_manager.py resolves datasets_config.json relative to
+# __file__; both dirs are plain data directories, not import packages, so the
+# files only reach the wheel as package data of `src`. The globs must be
+# recursive -- a flat "*.yaml" on this package matches nothing.
+#
+# They must also be ANCHORED. A bare `**/*.yaml` on `src` walks into
+# src/libs/walrus and picks up 88 of the submodule's Hydra configs even though
+# packages.find excludes it -- package-data globs are evaluated against the
+# directory, not against the discovered package list, so excluding the package
+# is not enough on its own. Naming the four directories PRISM actually reads
+# from keeps the wheel identical whether or not the submodule is checked out.
+[tool.setuptools.package-data]
+src = [
+    "conf/**/*.yaml",
+    "conf/**/*.yml",
+    "conf/**/*.json",
+    "data/*.json",
+    "encoders/intern_s2_preview/*.json",
+    "encoders/intern_s2_preview_397b/*.json",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests", "tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "D1"]
+# D105 (magic methods) and D107 (__init__) are intentionally exempt: the class
+# docstring documents construction, so a separate __init__ docstring is noise.
+ignore = ["E402", "E501", "D105", "D107"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+[tool.ruff.lint.per-file-ignores]
+# D1 is enforced only on the public API surface documented in docs/api/.
+# Everything else is exempt so the rule stays actionable rather than emitting
+# thousands of findings; drop entries here as areas get documented.
+#
+# Vendored third-party model code, redistributed verbatim under Apache-2.0, is
+# kept byte-identical to upstream so it can be re-synced -- CONTRIBUTING.md
+# forbids annotating it -- so findings inside it are suppressed, not fixed.
+# This entry is the UNION of the D1 exemption this branch adds and the five
+# rules main already suppressed. Both halves are load-bearing: with D1 alone
+# the file reports 21 findings, with the five alone it reports 39.
+"src/encoders/intern_s2_preview*/**" = ["B007", "B905", "D1", "E711", "F841", "I001"]
+"src/decoders/omnigen2_backend.py" = ["D1"]
+"src/libs/**" = ["D1"]
+# Not yet documented.
+"src/api/**" = ["D1"]
+"src/connectors/**" = ["D1"]
+"src/data/**" = ["D1"]
+"src/eval/**" = ["D1"]
+"src/materials/**" = ["D1"]
+"src/training/**" = ["D1"]
+"src/ui/**" = ["D1"]
+"src/utils/**" = ["D1"]
+"src/vllm_plugin/**" = ["D1"]
+"src/__init__.py" = ["D1"]
+"src/hf_cache.py" = ["D1"]
+"src/train.py" = ["D1"]
+"tests/**" = ["D1"]
+"tools/**" = ["D1"]
+"scripts/**" = ["D1"]
+"docs/**" = ["D1"]
+"examples/**" = ["D1"]
+
+[tool.ruff.format]
+# per-file-ignores above suppresses LINT findings in the vendored trees but
+# does not stop the formatter rewriting them, and `ruff format` would reflow
+# 7 of those files. They are redistributed verbatim so they can be re-synced
+# from upstream, so exclude them from formatting too -- this also closes the
+# same gap in the ruff-format pre-commit hook, which reads this config.
+exclude = [
+    "src/encoders/intern_s2_preview*/**",
+    "src/decoders/omnigen2_backend.py",
+]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src"]
+ignore_missing_imports = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+check_untyped_defs = true
+no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = [
+  "src.api.*",
+  "src.config",
+  "src.data.*",
+  "src.encoders.*",
+  "src.eval.*",
+  "src.materials.*",
+  "src.model",
+  "src.modules.*",
+  "src.training.*",
+  "src.ui.*",
+  "src.utils.batch_viz",
+  "src.utils.scheduler",
+]
+ignore_errors = true
+
+[tool.coverage.run]
+# Hydra entry point exercised on compute nodes; excluded to match pre-reorg coverage scope.
+omit = ["src/train.py"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = [
+  "unit: fast unit tests",
+  "multimodal: multimodal processing and tensor contract tests",
+  "launcher: launcher dry-run and script generation tests",
+  "integration: integration tests requiring larger setup",
+  "network: tests that may require external network/model downloads",
+  "slow: tests that are expected to run slowly",
+  "gpu: tests requiring a GPU runtime",
+  "aurora: tests specific to Aurora/XPU workflows",
+  "perlmutter: tests specific to Perlmutter/CUDA workflows",
+  "timeseries: tests specific to timeseries modality"
+]

@@ -1,0 +1,56 @@
+{
+  "status": "metadata_only_no_images_downloaded",
+  "purpose": "Public image-caption sources for future PRISM connector alignment; not the exact OmniGen2 training mixture.",
+  "units": "GB and TB are decimal (10^9 and 10^12 bytes); bytes are authoritative.",
+  "starter": {
+    "sources": [
+      "DOCCI train",
+      "BLIP3o-60k"
+    ],
+    "nominal_training_pairs": 69647,
+    "count_basis": "9647 directly verified unique DOCCI train images plus approximately 60000 publisher-advertised BLIP3o pairs; cross-source deduplication pending.",
+    "download_bytes_including_source_annotations": 115772495251,
+    "image_archive_bytes": 115753942288,
+    "optional_512px_jpeg_planning_estimate": {
+      "assumption_bytes_per_image": [
+        100000,
+        300000
+      ],
+      "estimated_image_payload_bytes": [
+        6964700000,
+        20894100000
+      ],
+      "status": "Planning scenario only; not measured or a promise of image quality/retained resolution."
+    }
+  },
+  "extended": {
+    "sources": [
+      "DOCCI train",
+      "BLIP3o-60k",
+      "DenseFusion-4V-100K"
+    ],
+    "nominal_training_pairs": 186408,
+    "count_basis": "Starter plus 116761 directly parsed DenseFusion caption records with unique image IDs, URLs and paths; image-content and cross-source deduplication pending.",
+    "download_bytes_including_source_annotations": 211990242443,
+    "image_archive_bytes": 211798048600,
+    "optional_512px_jpeg_planning_estimate": {
+      "assumption_bytes_per_image": [
+        100000,
+        300000
+      ],
+      "estimated_image_payload_bytes": [
+        18640800000,
+        55922400000
+      ],
+      "status": "Planning scenario only; not measured or a promise of image quality/retained resolution."
+    }
+  },
+  "storage_limitations": [
+    "Download bytes are verified archive/annotation object sizes, not extracted disk footprints.",
+    "The DOCCI archive includes 5200 held-out images; their captions are excluded from the selected training records.",
+    "DenseFusion extension uses original JSONL in the future download plan; downloaded converted Parquet is an alternative, not additional required training data.",
+    "Do not add DenseFusion 4V and 1M as distinct images: 4V is drawn from the parent pool.",
+    "BLIP3o prompt text files do not establish image-to-prompt correspondence; archive validation is deferred until image acquisition.",
+    "No author-reviewed semantic or visual quality filtering has been performed on these proposed pools."
+  ]
+}

@@ -1,0 +1,3 @@
+[submodule "src/libs/walrus"]
+	path = src/libs/walrus
+	url = https://github.com/PolymathicAI/walrus.git

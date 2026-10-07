@@ -1,0 +1,47 @@
+experiments:
+  - id: PRISM-QWEN3-SIGLIP-SMOKE
+    name: "Smoke: dense Qwen3 backbones with SigLIP image encoders"
+    resources:
+      ngpus: 1
+      walltime: "00:30:00"
+    common_overrides:
+      training.task: "vlm"
+      training.batch_size: 1
+      training.max_steps: 5
+      training.eval_every_n_steps: 5
+      training.save_every_n_steps: 1000
+      training.data_num_workers: 0
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+    variants:
+      - id: PRISM-QWEN3-0P6B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_0_6b_image_only
+
+      - id: PRISM-QWEN3-1P7B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_1_7b_image_only
+
+      - id: PRISM-QWEN3-4B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_4b_image_only
+
+      - id: PRISM-QWEN3-8B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_8b_image_only
+
+      - id: PRISM-QWEN3-14B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_14b_image_only
+
+      - id: PRISM-QWEN3-32B-SIGLIP2-BASE-SMOKE
+        overrides:
+          model: prism_qwen3_32b_image_only
+
+      - id: PRISM-QWEN3-0P6B-SIGLIP2-SO400M-SMOKE
+        overrides:
+          model: prism_qwen3_0_6b_image_only
+          model.image_encoder_id: "google/siglip2-so400m-patch14-384"
+          model.image_processor_id: "google/siglip2-so400m-patch14-384"
+          model.d_img: 1152
+          model.image_size: 384

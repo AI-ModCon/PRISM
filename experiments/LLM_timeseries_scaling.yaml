@@ -1,0 +1,287 @@
+# Experiment configuration for Qwen3/OLMo + TS encoder scaling studies
+experiments:
+
+  - id: PRISM-OLMO-1B-TSQA
+    name: "OLMo-1B TS_QA Alignment (Interleaved TS)"
+    default_dataset_groups: ts_qa
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config includes custom tokenizer + interleaving token indices
+      # for text/time_series training with a linear TS projector.
+      model: prism_olmo1b_linear_interleaved_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 2
+      training.gradient_accumulation_steps: 2
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      training.lr_connector: 1e-4
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-OLMO-1B-TSQA-DEFAULT
+        overrides: {}
+
+      - id: PRISM-OLMO-1B-TSQA-SMOKE
+        name: "OLMo-1B TS_QA smoke"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 0
+  - id: PRISM-OLMO-1B-TIMEOMNI
+    name: "OLMo-1B TS TIMEOMNI"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config includes custom tokenizer + interleaving token indices
+      # for text/time_series training with a linear TS projector.
+      model: prism_olmo1b_timeomni_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      
+      # Differential LRs
+      training.lr_connector: 1e-3
+      training.lr_vit: 1e-4
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+  - id: PRISM-OLMO-1B-INTERN-S2
+    name: "OLMo-1B TS Intern-S2"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config uses the extracted Intern-S2 time-series encoder.
+      model: prism_olmo1b_intern_s2_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      training.lr_connector: 1e-3
+
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+
+  - id: PRISM-OLMO-1B-INTERN-S2-397B
+    name: "OLMo-1B TS Intern-S2 397B"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config uses the extracted Intern-S2 Preview 397B time-series encoder.
+      model: prism_olmo1b_intern_s2_397b_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: projector_only
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      training.lr_connector: 1e-3
+
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-OLMO-1B-INTERN-S2-397B-DEFAULT
+        overrides: {}
+
+      - id: PRISM-OLMO-1B-INTERN-S2-397B-SMOKE
+        name: "OLMo-1B TS Intern-S2 397B smoke"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+
+      - id: PRISM-OLMO-1B-INTERN-S2-397B-SCRATCH
+        name: "OLMo-1B TS Intern-S2 397B: encoder trained from scratch (no pretrained weights)"
+        overrides:
+          training: encoder_projector
+          model.ts_load_pretrained: false
+
+  - id: PRISM-QWEN3-0-6B-INTERN-S2
+    name: "QWEN3-0.6B TS Intern-S2"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config uses the extracted Intern-S2 time-series encoder.
+      model: prism_qwen3_0_6b_intern_s2_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      training.lr_connector: 1e-3
+
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+  - id: PRISM-QWEN3-0-6B-INTERN-S2-397B
+    name: "QWEN3-0.6B TS Intern-S2 397B"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config uses the extracted Intern-S2 Preview 397B time-series encoder.
+      model: prism_qwen3_0_6b_intern_s2_397b_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: projector_only
+      training.eval_enabled: true
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      training.lr_connector: 1e-3
+
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "DEBUG"
+    variants:
+      - id: PRISM-QWEN3-0-6B-INTERN-S2-397B-DEFAULT
+        overrides: {}
+
+      - id: PRISM-QWEN3-0-6B-INTERN-S2-397B-SMOKE
+        name: "QWEN3-0.6B TS Intern-S2 397B smoke"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+      - id: PRISM-QWEN3-0-6B-INTERN-S2-397B-ENCODER-PROJECTOR
+        name: "QWEN3-0.6B TS Intern-S2 397B encoder + projector"
+        overrides:
+          training: encoder_projector
+
+      - id: PRISM-QWEN3-0-6B-INTERN-S2-397B-SCRATCH
+        name: "QWEN3-0.6B TS Intern-S2 397B: encoder trained from scratch (no pretrained weights)"
+        overrides:
+          training: encoder_projector
+          model.ts_load_pretrained: false
+
+      - id: PRISM-QWEN3-0-6B-INTERN-S2-397B-UNFROZEN
+        name: "QWEN3-0.6B TS Intern-S2 397B unfrozen backbone"
+        overrides:
+          training: encoder_projector
+          training.freeze_llm: false
+          model.freeze_backbone: false
+          model.freeze_encoders: false
+          model.freeze_vit: false
+          model.mask_padded_modality_tokens: true
+
+
+  - id: PRISM-QWEN3-0-6B-TIMEOMNI
+    name: "QWEN3-0-6B TS TIMEOMNI"
+    default_dataset_groups: scits
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config includes custom tokenizer + interleaving token indices
+      # for text/time_series training with a linear TS projector.
+      model: prism_qwen3_0_6b_timeomni_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+      
+      # Differential LRs
+      training.lr_connector: 1e-3
+      training.lr_vit: 1e-4
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+  - id: PRISM-OLMO3-7B-INSTRUCT-TSQA
+    name: "OLMo-3-7B-Instruct TS_QA Alignment (Interleaved TS)"
+    default_dataset_groups: ts_qa
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model config includes custom tokenizer + interleaving token indices
+      # for text/time_series training with a linear TS projector.
+      model: prism_olmo3_7b_instruct_linear_interleaved_ts
+
+      # Alignment phase: frozen LLM backbone; train TS encoder + projector.
+      training: encoder_projector
+      training.batch_size: 1
+      training.gradient_accumulation_steps: 16
+      training.max_steps: 5000
+      training.weight_decay: 0.0
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-OLMO3-7B-INSTRUCT-TSQA-DEFAULT
+        overrides: {}
+
+      - id: PRISM-OLMO3-7B-INSTRUCT-TSQA-SMOKE
+        name: "OLMo-3-7B-Instruct TS_QA smoke"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 0

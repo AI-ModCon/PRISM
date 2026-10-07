@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "ea17ef2f682913e83e99d068a6d8c05c1e44f0855e5c053681f8ad4f28f631d6",
+  "archive_bytes": 2366174,
+  "members": 75,
+  "relocated_source_root": "provenance/source-snapshots/full-docci-joint-conditioning-01",
+  "preserved_provenance_conflicts": [
+    "provenance/render_conditioning.py"
+  ]
+}

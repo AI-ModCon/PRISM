@@ -1,0 +1,40 @@
+{
+  "llm_backbone_id": "${PRISM_HF_HUB}/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "llm_tokenizer_id": "${PRISM_HF_HUB}/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+  "freeze_backbone": true,
+  "freeze_encoders": true,
+  "d_text": 2048,
+  "d_img": 768,
+  "image_encoder_id": "${PRISM_HF_HUB}/models--google--siglip2-base-patch16-224/snapshots/75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+  "image_processor_id": "${PRISM_HF_HUB}/models--google--siglip2-base-patch16-224/snapshots/75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+  "image_processor_strict": true,
+  "image_size": 224,
+  "attn_implementation": "sdpa",
+  "modalities": [
+    "text",
+    "image"
+  ],
+  "projector_hidden_mult": 1,
+  "projector_num_layers": 2,
+  "d_model": 2048,
+  "is_interleaved_qa": false,
+  "max_merged_seq_length": 1024,
+  "projector_norm_mode": "layernorm",
+  "projector_modality_embed_pos": "after_norm",
+  "projector_modality_embed_scale": 0.02,
+  "output_decoders": [
+    "text",
+    "image"
+  ],
+  "decoder_loss_weights": {
+    "image": 1.0
+  },
+  "decoder_configs": {
+    "image": {
+      "model_id": "${PRISM_ASSETS}/OmniGen2",
+      "revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+      "local_files_only": true,
+      "conditioning_dim": 2048
+    }
+  }
+}

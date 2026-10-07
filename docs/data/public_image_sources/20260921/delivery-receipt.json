@@ -1,0 +1,13 @@
+{
+  "status": "staged_and_sha256_verified",
+  "verified_utc": "2026-09-21T17:30:14.781548+00:00",
+  "host": "aaurora-alcf",
+  "metadata_destination": "/lus/flare/projects/ModCon/sandeep/prism-public-image-data-20260921/metadata",
+  "archive_bytes": 107684305,
+  "archive_sha256": "cc42fb8e1fc6cb8d24afe40a86453276b8be7b476696186062cd91bfa4ba414f",
+  "metadata_files": 134,
+  "hashed_metadata_files": 133,
+  "hashed_payload_bytes": 149670254,
+  "all_metadata_bytes": 149693911,
+  "scope": "Metadata and manifests only; no image payloads or image archives downloaded."
+}

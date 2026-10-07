@@ -1,0 +1,346 @@
+{
+  "schema_version": 1,
+  "kind": "independent_terminal_full_data_metadata_audit",
+  "run_name": "full-docci-joint-3epochs-01",
+  "job_id": "8848858",
+  "report_sha256": "0da348d96788ab928ceb8d22dc51a6f9ebb84fdb84d7c7c7f04a10773af2114c",
+  "acceptance_checks_sha256": "f47a8446a408cdc04495cba72a576982fe5c650b8895de440b2afd03dc5f8d1b",
+  "audit_passed": true,
+  "scope": "Independent local metadata, log, source, cohort and image-hash audit. No model or checkpoint loaded. Terminal bytes were streamed and verified by the remote metadata collector. Only this JSON is written.",
+  "checks": {
+    "terminal_report_identity": true,
+    "completed_real_joint_run": true,
+    "collector_final_acceptance": true,
+    "independently_streamed_terminal_digest": true,
+    "frozen_1634_unchanged": true,
+    "audited_source_checkpoint_report": true,
+    "fresh_complete_fp32_master_restore": true,
+    "starting_runtime_and_master_hashes_match_source_terminal": true,
+    "indirect_region_alignment_lineage": true,
+    "both_groups_master_and_runtime_changed": true,
+    "connector_float32_and_fp32_masters": true,
+    "scope_and_source_free_t2i": true,
+    "full_pool_batch_lr_prompt_contract": true,
+    "all_9647_training_records_selected_once": true,
+    "1809_steps_in_exact_order": true,
+    "finite_losses_and_both_groups_nonzero_every_step": true,
+    "exposure_report_matches_all_logged_ids": true,
+    "exact_histogram_9644_times_three_plus_three_times_four": true,
+    "three_complete_epochs_from_logged_order": true,
+    "three_extra_samples_and_final_sampler": true,
+    "evaluation_jsonl_exact_report_replay": true,
+    "all_100_final_validation_ids_independently_verified": true,
+    "validation_never_in_optimizer": true,
+    "fixed_32_slices_keep_ids_indices_seeds_and_wrong_ids": true,
+    "all_14_executed_source_hashes": true,
+    "both_interim_logs_and_protocol_unchanged": true,
+    "20_image_hashes_and_per_case_starting_noise": true
+  },
+  "checkpoint": {
+    "bytes": 47674885973,
+    "independently_verified": true,
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-3epochs-01/connector-diffusion-pilot-step-001809.pt",
+    "qualification": "unqualified",
+    "sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+    "step": 1809
+  },
+  "initialization": {
+    "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01/connector-diffusion-pilot-step-000006.pt",
+    "fresh_optimizer": true,
+    "fresh_rng": true,
+    "fresh_sampler": true,
+    "policy": "completed_joint_checkpoint_fp32_masters_fresh_stage",
+    "report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590",
+    "restored_connector_tensors": 4,
+    "restored_diffusion_buffers": 0,
+    "restored_master_parameters": 3971361848,
+    "restored_master_tensors": 586,
+    "returned_optimizer_masters": true,
+    "sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+    "source_data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+    "step": 6
+  },
+  "exposure": {
+    "updates": 1809,
+    "microbatches_per_update": 4,
+    "batch_size": 4,
+    "examples": 28944,
+    "unique_training_ids": 9647,
+    "histogram_uses_to_id_count": {
+      "3": 9644,
+      "4": 3
+    },
+    "fourth_pass_extra_ids_in_order": [
+      "train_04584",
+      "train_08697",
+      "train_04576"
+    ],
+    "three_complete_epochs_verified": true,
+    "validation_optimizer_exposures": 0
+  },
+  "optimizer": {
+    "connector_learning_rate": 0.0001,
+    "diffusion_compute_dtype": "bfloat16",
+    "diffusion_learning_rate": 2e-06,
+    "master_dtype": "torch.float32",
+    "max_grad_norm": 1.0,
+    "name": "CPUMasterAdamW",
+    "state_device": "cpu",
+    "weight_decay": 0.0
+  },
+  "gradient_audit": {
+    "finite_scalar_values_checked": 24090,
+    "both_groups_finite_nonzero_every_update": true,
+    "missing_gradient_tensors": 0,
+    "changed_runtime_tensors_range": {
+      "connector": [
+        4,
+        4
+      ],
+      "diffusion": [
+        393,
+        403
+      ]
+    },
+    "gradient_norm_range": {
+      "connector": [
+        0.03292546421289444,
+        1.152916431427002
+      ],
+      "diffusion": [
+        0.06504577398300171,
+        0.5598983764648438
+      ]
+    },
+    "reference_branch_zero_gradient_tensor_count": 33,
+    "reference_branch_note": "Reference-image-only parameters can have zero gradients in source-free T2I; both complete groups have finite nonzero gradients."
+  },
+  "frozen_tensors": 1634,
+  "source_identity_checks": {
+    "src/data/image_generation.py": true,
+    "src/data/image_generation_webdataset.py": true,
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/decoders/types.py": true,
+    "src/model.py": true,
+    "src/training/cpu_master_adamw.py": true,
+    "tools/overfit_prism_image_connector.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_image_decoder.py": true,
+    "tools/train_prism_image_connector.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "fixed_cohort_losses": {
+    "train": {
+      "count": 32,
+      "initial": 0.43971599685028195,
+      "final": 0.436507913749665,
+      "relative_change_percent": -0.729580712004263,
+      "same_id_index_seed_wrong_caption_id": true
+    },
+    "validation": {
+      "count": 32,
+      "initial": 0.4550941502675414,
+      "final": 0.44945628102868795,
+      "relative_change_percent": -1.2388357959642105,
+      "same_id_index_seed_wrong_caption_id": true
+    }
+  },
+  "fixed_cohort_series": {
+    "train": [
+      {
+        "step": 0,
+        "count": 32,
+        "mean_loss": 0.43971599685028195,
+        "provisional_wrong_minus_matched": -0.0030714687891304493
+      },
+      {
+        "step": 200,
+        "count": 32,
+        "mean_loss": 0.4381462689489126,
+        "provisional_wrong_minus_matched": 0.00024013034999370575
+      },
+      {
+        "step": 400,
+        "count": 32,
+        "mean_loss": 0.4386187521740794,
+        "provisional_wrong_minus_matched": 0.00039846915751695633
+      },
+      {
+        "step": 600,
+        "count": 32,
+        "mean_loss": 0.43866381142288446,
+        "provisional_wrong_minus_matched": 0.0003111260011792183
+      },
+      {
+        "step": 800,
+        "count": 32,
+        "mean_loss": 0.4380160216242075,
+        "provisional_wrong_minus_matched": 0.0028395457193255424
+      },
+      {
+        "step": 1000,
+        "count": 32,
+        "mean_loss": 0.43747413996607065,
+        "provisional_wrong_minus_matched": 0.004633327014744282
+      },
+      {
+        "step": 1200,
+        "count": 32,
+        "mean_loss": 0.43684329465031624,
+        "provisional_wrong_minus_matched": 0.004789525642991066
+      },
+      {
+        "step": 1400,
+        "count": 32,
+        "mean_loss": 0.4366683354601264,
+        "provisional_wrong_minus_matched": 0.004947429522871971
+      },
+      {
+        "step": 1600,
+        "count": 32,
+        "mean_loss": 0.4366560988128185,
+        "provisional_wrong_minus_matched": 0.003346463665366173
+      },
+      {
+        "step": 1800,
+        "count": 32,
+        "mean_loss": 0.43656037002801895,
+        "provisional_wrong_minus_matched": 0.0036343317478895187
+      },
+      {
+        "step": 1809,
+        "count": 32,
+        "mean_loss": 0.436507913749665,
+        "provisional_wrong_minus_matched": 0.003881190437823534
+      }
+    ],
+    "validation": [
+      {
+        "step": 0,
+        "count": 32,
+        "mean_loss": 0.4550941502675414,
+        "provisional_wrong_minus_matched": 0.017826818861067295
+      },
+      {
+        "step": 200,
+        "count": 32,
+        "mean_loss": 0.45352056808769703,
+        "provisional_wrong_minus_matched": 0.02068227995187044
+      },
+      {
+        "step": 400,
+        "count": 32,
+        "mean_loss": 0.4528198139742017,
+        "provisional_wrong_minus_matched": 0.01754869520664215
+      },
+      {
+        "step": 600,
+        "count": 32,
+        "mean_loss": 0.4523663269355893,
+        "provisional_wrong_minus_matched": 0.020455687306821346
+      },
+      {
+        "step": 800,
+        "count": 32,
+        "mean_loss": 0.45142191648483276,
+        "provisional_wrong_minus_matched": 0.021662704646587372
+      },
+      {
+        "step": 1000,
+        "count": 32,
+        "mean_loss": 0.45145629718899727,
+        "provisional_wrong_minus_matched": 0.023774820379912853
+      },
+      {
+        "step": 1200,
+        "count": 32,
+        "mean_loss": 0.45070705097168684,
+        "provisional_wrong_minus_matched": 0.025198656134307384
+      },
+      {
+        "step": 1400,
+        "count": 32,
+        "mean_loss": 0.4508842322975397,
+        "provisional_wrong_minus_matched": 0.023829884827136993
+      },
+      {
+        "step": 1600,
+        "count": 32,
+        "mean_loss": 0.45051119662821293,
+        "provisional_wrong_minus_matched": 0.02433776669204235
+      },
+      {
+        "step": 1800,
+        "count": 32,
+        "mean_loss": 0.4493583748117089,
+        "provisional_wrong_minus_matched": 0.02424405887722969
+      },
+      {
+        "step": 1809,
+        "count": 32,
+        "mean_loss": 0.44945628102868795,
+        "provisional_wrong_minus_matched": 0.02420552633702755
+      }
+    ]
+  },
+  "final_full_validation": {
+    "count": 100,
+    "all_expected_ids_verified": true,
+    "index_range": [
+      0,
+      99
+    ],
+    "mean_loss": 0.45153753146529196,
+    "provisional_wrong_minus_matched": 0.0005998121201992035,
+    "comparison_note": "No initial100 counterpart exists; compare final fixed32 slice with initial32."
+  },
+  "interim_preservation": {
+    "files_hashed_before_and_after_collection": 132,
+    "changed_files": [],
+    "added_files": [],
+    "independent_hash_inventory_check_performed": true,
+    "log_prefix_checks": [
+      {
+        "directory": "interim-eval0200-20260922T0823Z",
+        "exact_optimizer_prefix_rows": 213,
+        "exact_evaluation_prefix_steps": [
+          0,
+          200
+        ],
+        "asynchronous_report_completed_steps": 210,
+        "report_sha256": "0052bdb55af3f60e0629b88053f82806ae20e93e436ddfb8ff9e16e16ffe88d0"
+      },
+      {
+        "directory": "interim-eval0400-20260922T0901Z",
+        "exact_optimizer_prefix_rows": 425,
+        "exact_evaluation_prefix_steps": [
+          0,
+          200,
+          400
+        ],
+        "asynchronous_report_completed_steps": 420,
+        "report_sha256": "a142267c8b663ddc295f1c56aed18977c073b280bd1fb0eff53868091041a378"
+      }
+    ]
+  },
+  "timing": {
+    "duration_seconds": 19522.59109109617,
+    "duration_hours": 5.422941969748936,
+    "mean_update_seconds": 10.19355259147988,
+    "median_update_seconds": 10.111114108934999,
+    "mean_after_first": 10.192105213440831,
+    "peak_allocated_GiB": 28.53638982772827,
+    "peak_reserved_GiB": 31.9296875
+  },
+  "limits": [
+    "Execution and integrity acceptance do not establish generation quality; root separately inspects galleries.",
+    "The full100 validation mean and initial32 mean cover different cohorts.",
+    "Training-run wrong-caption controls reset RNG but lack actual noisy-input/timestep hashes, so their gaps remain provisional.",
+    "ValidationIDs were never optimized in this stage; DOCCI official splits can share related subjects, and DOCCI overlaps OmniGen2 pretraining sources.",
+    "This stage used fresh optimizer/sampler from an audited joint checkpoint, with indirect region-alignment lineage; it was not a direct feature restore or exact optimizer resume.",
+    "The user explicitly authorized full-data training; this audit does not retroactively claim earlier qualitative diagnostics passed."
+  ]
+}

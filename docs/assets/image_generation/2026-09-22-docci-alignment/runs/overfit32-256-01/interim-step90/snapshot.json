@@ -1,0 +1,40 @@
+{
+  "interim": true,
+  "terminal_acceptance": false,
+  "scheduler_job_id": "8848017",
+  "report_sha256": "224917a6efd430649e29c5124fc1c2de6dd5d40b8eade52d3e07149e48d488d1",
+  "collected_at_utc": "2026-09-22T02:03:15.870955+00:00",
+  "status": "running",
+  "phase": "training",
+  "completed_steps_at_snapshot": 90,
+  "caption_control_gaps_verified": false,
+  "note": "Use audited paired-flow diagnostic after completion; this snapshot is not a completed run.",
+  "fixed_evaluations": [
+    {
+      "step": 0,
+      "splits": {
+        "train": {
+          "count": 32,
+          "mean_loss": 0.4328586421906948
+        },
+        "validation": {
+          "count": 32,
+          "mean_loss": 0.4570643249899149
+        }
+      }
+    },
+    {
+      "step": 64,
+      "splits": {
+        "train": {
+          "count": 32,
+          "mean_loss": 0.41977851931005716
+        },
+        "validation": {
+          "count": 32,
+          "mean_loss": 0.45797947235405445
+        }
+      }
+    }
+  ]
+}

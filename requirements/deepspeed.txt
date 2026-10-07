@@ -1,0 +1,40 @@
+# DeepSpeed Environment Requirements
+# Based on environment.yml but adapted for pip/venv
+torch>=2.1.0
+torchvision
+torchaudio
+# NOTE: transformers is installed separately with --no-deps in setup_deepspeed_env.sh
+# to avoid pulling in a torch version that ABI-conflicts with Aurora's patched torch.
+# Minimum 4.57.6 required for OLMo-3 support.
+# transformers>=4.57.6
+accelerate
+deepspeed
+einops
+numpy
+pandas
+scikit-learn
+wandb
+hydra-core
+omegaconf
+tqdm
+pydantic
+gradio
+triton
+safetensors
+pillow
+sentencepiece
+protobuf
+# Data Loading
+webdataset
+h5py
+# typer-slim is a transformers CLI dependency; annotated-doc is required by typer>=0.24
+typer-slim
+annotated-doc
+# Graph Dependencies
+# Pure-Python PyG is enough for GraphEncoder (uses only torch_geometric.nn.GATConv).
+# DO NOT add pyg_lib / torch_scatter / torch_sparse / torch_cluster — their C++
+# wheels are not built for Aurora's XPU-patched torch and fail at runtime
+# with "undefined symbol: __kmpc_fork_call". The setup script installs
+# torch_geometric explicitly with a pinned range; this requirements file is
+# kept in sync.
+torch_geometric>=2.7,<3.0
