@@ -1,0 +1,44 @@
+# Qwen3-4B + TimeOmni time-series encoder (SciTS scaling study).
+#
+# Width rung 3 of 4: d_model = 2560.
+# Non-interleaved (prefix) mode, so NO custom tokenizer and no <ts>/</ts>
+# tokens are required — modality_start_end_token_indices is only consulted
+# when is_interleaved_qa=true (src/data/multimodal.py:1397).
+
+backbone_id: "Qwen/Qwen3-4B"
+tokenizer_id: "Qwen/Qwen3-4B"
+
+modalities: [text, time_series]
+
+# End-to-end, matching the image scaling study: connector, encoder and LLM
+# all train. `freeze_backbone` here is the authoritative freeze decision:
+# the training config's `freeze_llm` can only ever UNFREEZE (src/train.py:611
+# acts only on `not freeze_llm`), so both this flag AND training.freeze_llm /
+# training.freeze_vit must be false for the backbone to actually train.
+freeze_backbone: false
+freeze_encoders: false
+
+d_text: 2560
+
+is_timeseries: true
+ts_variates: 1
+# Auto-computed by train.py for timeomni as
+#   max_stride * (timeomni_max_patches - 1) = 2048 * 199 = 407552
+max_ts_length: 0
+is_interleaved_qa: false
+normalize_ts_in_encoder: true
+ts_projector: "timeomni"
+attn_implementation: "sdpa"
+
+# TimeOmni dynamic patching. Kept identical across all four rungs so the only
+# variable across the ladder is the LLM width.
+timeomni_patch_len: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_stride: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_d_model: 512       # encoder output dim -> ModalityProjector input
+timeomni_dropout: 0.1
+timeomni_ts_tokens: 100     # target tokens/series for patch-size selection
+timeomni_max_patches: 200   # hard token budget per sample
+
+# Connector: 2-layer MLP, matching the image study's projector settings.
+projector_hidden_mult: 1
+projector_num_layers: 2

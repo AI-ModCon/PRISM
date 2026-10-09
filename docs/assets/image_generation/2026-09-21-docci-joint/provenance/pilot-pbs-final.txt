@@ -1,0 +1,13 @@
+Selected fields from qstat -xf 8847769; full scheduler output remains on Aurora.
+Job Id: 8847769.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov
+    Job_Name = prism-joint-pilot
+    resources_used.walltime = 00:16:41
+    job_state = F
+    queue = capacity
+    Account_Name = ModCon
+    exec_host = x4305c7s0b0n0/0*208
+    Resource_List.nodect = 1
+    Resource_List.walltime = 00:35:00
+    stime = Tue Sep 22 00:10:48 2026
+    comment = Job run at Tue Sep 22 at 00:10 on (x4305c7s0b0n0:ncpus=208) and f
+    Exit_status = 0

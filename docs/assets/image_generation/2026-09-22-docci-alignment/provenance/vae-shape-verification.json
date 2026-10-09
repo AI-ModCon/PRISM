@@ -1,0 +1,35 @@
+{
+  "config_sha256": "932d26c5e92f1db6ea7d04bf27d748fa2258bd66a3d26a69ab8f9b473e65ce29",
+  "latent_channels": 16,
+  "block_out_channels": [
+    128,
+    256,
+    512,
+    512
+  ],
+  "scale_definition": [
+    {
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/OmniGen2/omnigen2/pipelines/omnigen2/pipeline_omnigen2_chat.py",
+      "line": 167,
+      "text": "self.vae_scale_factor = ("
+    },
+    {
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/OmniGen2/omnigen2/pipelines/omnigen2/pipeline_omnigen2.py",
+      "line": 173,
+      "text": "self.vae_scale_factor = ("
+    }
+  ],
+  "verified_scale_expression": "2 ** (len(self.vae.config.block_out_channels) - 1)",
+  "pipeline_expression_line": 174,
+  "spatial_downsampling_factor": 8,
+  "image_shape_chw": [
+    3,
+    256,
+    256
+  ],
+  "latent_shape_chw": [
+    16,
+    32,
+    32
+  ]
+}

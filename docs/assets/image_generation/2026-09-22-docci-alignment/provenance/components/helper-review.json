@@ -1,0 +1,17 @@
+{
+  "helper_sha256": {
+    "pack_joint_components.py": "5bce4497aecf2892fe93c66db1f6a6e652789afb8aa4c1aed486efec2825510b",
+    "render_joint_components.py": "93577a0ab0f5583352c66289fead839df3b9912c299e5b7e05490d5089fec655",
+    "test_joint_component_artifacts.py": "24281cbeb18ca358f1332706ffcabe1396b2134ea892896e20bd451b4a9fea86",
+    "pack_run.py": "f8975af66e07d80bebc3817a239ffbcf95396709b4891d486ce4f104bb6eb55a"
+  },
+  "validation": {
+    "test_methods": 5,
+    "negative_cases": 32,
+    "full_archive_round_trip": true,
+    "corrupted_checkpoint_rejected": true,
+    "ruff_passed": true,
+    "fixture_gallery_inspected": true,
+    "accelerator_acceptance": false
+  }
+}

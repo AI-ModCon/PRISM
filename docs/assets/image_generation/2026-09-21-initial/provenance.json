@@ -1,0 +1,382 @@
+{
+  "source_commit": "07686f1e29ee78ebb3efb145086326d758023b4f",
+  "status": "archived_initial_diagnostic_results",
+  "qualification": "unqualified",
+  "sampling_is_target_free": true,
+  "generated_samples_verified": 33,
+  "image_decode_verification": {
+    "png_files": 37,
+    "status": "all_decoded_successfully"
+  },
+  "excluded_large_artifacts": [
+    "model and connector checkpoints",
+    "full dataset images",
+    "captured activation tensors",
+    "scheduler logs"
+  ],
+  "source_records": [
+    {
+      "path": "matched-gallery.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/matched-gallery.png",
+      "role": "rendered_figure",
+      "bytes": 2996998,
+      "sha256": "6f6b078f16fc7320efed1e88c5ee1b6ab0f7700e26741d7d8719f09dbc982d5b"
+    },
+    {
+      "path": "fixed-probe-curves.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/fixed-probe-curves.png",
+      "role": "rendered_figure",
+      "bytes": 104111,
+      "sha256": "69e823a03472a8a1e9a2030762694355227bdad642745fadae801fe18cf16e52"
+    },
+    {
+      "path": "train-validation-loss.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/train-validation-loss.png",
+      "role": "rendered_figure",
+      "bytes": 181212,
+      "sha256": "ca89688f82071264ffb5d731cf899b2d151403fb0395b82d3dc346fd9f337aca"
+    },
+    {
+      "path": "training-step-loss.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/training-step-loss.png",
+      "role": "rendered_figure",
+      "bytes": 307246,
+      "sha256": "543362324537d0d1a5329b613273dbff3d68d8cb23debd32598cb60dad582755"
+    },
+    {
+      "path": "fixed-probe-history.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/fixed-probe-history.json",
+      "role": "measurements_or_review",
+      "bytes": 149356,
+      "sha256": "0f97135c77e887fbf49bbee525696f77d0055a7189b46526d694aed2beedfb49"
+    },
+    {
+      "path": "training-loss-data.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/training-loss-data.json",
+      "role": "measurements_or_review",
+      "bytes": 33668,
+      "sha256": "86d9acdff64bd8d4090d136af96f7af91eb6d0cc9e3a3b754998f5e359aee986"
+    },
+    {
+      "path": "verified-final-summary.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/verified-final-summary.json",
+      "role": "measurements_or_review",
+      "bytes": 1240,
+      "sha256": "58eca8f1bc2d11fb4900b71a803ebcc7e0c2b977fffbe98647e3b37d8304f8e2"
+    },
+    {
+      "path": "final-qualitative-review.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/final-qualitative-review.json",
+      "role": "measurements_or_review",
+      "bytes": 679,
+      "sha256": "a591a4b625b7d5d6d98b0234483df1c6b6a9b44c236a061ef2f54808b881666c"
+    },
+    {
+      "path": "plot_training_losses.py",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/plot_training_losses.py",
+      "role": "archived_plot_renderer",
+      "bytes": 5455,
+      "sha256": "cf7627adfbf74498fd37fda7ce58888dcdb6348c84d7098b480f16d2822cef4b"
+    },
+    {
+      "path": "pilot/report.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/report.json",
+      "role": "original_run_report",
+      "bytes": 740719,
+      "sha256": "0f5bd7b9253b84c77cb83bf5e28d3f1a86c572bfbd61d927b20c82a3a6f2c8be"
+    },
+    {
+      "path": "pilot/steps.jsonl",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/steps.jsonl",
+      "role": "optimizer_step_log",
+      "bytes": 8445,
+      "sha256": "4ccb8e1a56a9d80eccef47d37a596bb86022c4fb18e27525d669bb1d440fe9a7"
+    },
+    {
+      "path": "pilot/sample-native-000000-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-native-000000-00.png",
+      "role": "generated_sample",
+      "bytes": 96917,
+      "sha256": "d60e06d3a97c44d1f136a166970ff512b48e70fb6556ce2001d4615128c4d5e2"
+    },
+    {
+      "path": "pilot/sample-native-000000-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-native-000000-01.png",
+      "role": "generated_sample",
+      "bytes": 22822,
+      "sha256": "8505f99d9745ebc69d9605bca9b9010bd9df3a61cbc00c2f3e88c5f1901717f7"
+    },
+    {
+      "path": "pilot/sample-native-000000-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-native-000000-02.png",
+      "role": "generated_sample",
+      "bytes": 53164,
+      "sha256": "2997a6471a35431e89960a3e254383bfcca7e32b5b7608f232d0de5eea4a2ce0"
+    },
+    {
+      "path": "pilot/sample-native-000000-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-native-000000-03.png",
+      "role": "generated_sample",
+      "bytes": 97022,
+      "sha256": "d969a9dfcb0379c0252593c192c541be4960968843c848ac68538e71c641966d"
+    },
+    {
+      "path": "pilot/sample-untrained-000000-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-untrained-000000-00.png",
+      "role": "generated_sample",
+      "bytes": 62740,
+      "sha256": "467e8c1612e46b0628ef393b5f56ce80ea664503cd0107c15b572d979df0c14e"
+    },
+    {
+      "path": "pilot/sample-untrained-000000-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-untrained-000000-01.png",
+      "role": "generated_sample",
+      "bytes": 74652,
+      "sha256": "43861fe078f1ff65032829734d4b251bac8000fc878b5ad1e1849ec0b67bbc9e"
+    },
+    {
+      "path": "pilot/sample-untrained-000000-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-untrained-000000-02.png",
+      "role": "generated_sample",
+      "bytes": 66580,
+      "sha256": "1928dc7913aa4a5665b1e05140f10980a2cc8f12446904390f77e9353c02e107"
+    },
+    {
+      "path": "pilot/sample-untrained-000000-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-untrained-000000-03.png",
+      "role": "generated_sample",
+      "bytes": 60376,
+      "sha256": "7daa18fbb570d6dca0b5c500fb57b23a53f1847dc3daa3f3d606da6dc0c84669"
+    },
+    {
+      "path": "pilot/sample-trained-000020-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-trained-000020-00.png",
+      "role": "generated_sample",
+      "bytes": 35458,
+      "sha256": "312d3bd76374a264ce567a8f7ee54be326e0508ea493965814abe01597268069"
+    },
+    {
+      "path": "pilot/sample-trained-000020-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-trained-000020-01.png",
+      "role": "generated_sample",
+      "bytes": 31437,
+      "sha256": "5142f93122237f0d127b397d3f0ac534b9648eba6e6d00de7ef2b424ba38196a"
+    },
+    {
+      "path": "pilot/sample-trained-000020-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-trained-000020-02.png",
+      "role": "generated_sample",
+      "bytes": 13790,
+      "sha256": "6ca95bd0b3191a1b50eded7a9687dfe822ea8bfc9947e82fcc7b6f6959871065"
+    },
+    {
+      "path": "pilot/sample-trained-000020-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/pilot/sample-trained-000020-03.png",
+      "role": "generated_sample",
+      "bytes": 74099,
+      "sha256": "4549286183c14c81f676f992855aaa51c8ed0e1ab2c446e2addc8ac32c28f1a9"
+    },
+    {
+      "path": "overfit-500/report.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/report.json",
+      "role": "original_run_report",
+      "bytes": 815979,
+      "sha256": "5aae96d2062fd4510ac8e4811c55f6af7d601bacefb466b648a3c28f81896111"
+    },
+    {
+      "path": "overfit-500/steps.jsonl",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/steps.jsonl",
+      "role": "optimizer_step_log",
+      "bytes": 205029,
+      "sha256": "4a16186e6010021e29be04fa10fadc8e5addeb57017ea400d50c1278a55b8762"
+    },
+    {
+      "path": "overfit-500/sample-trained-000100-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000100-00.png",
+      "role": "generated_sample",
+      "bytes": 65494,
+      "sha256": "9bf17d937a9ec548e54b3c3c16fb930fc708661ad53f477ddcc053cfe3f56fde"
+    },
+    {
+      "path": "overfit-500/sample-trained-000100-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000100-01.png",
+      "role": "generated_sample",
+      "bytes": 22042,
+      "sha256": "28ce0ed1018bfde861eb4a3ce5b1fc10f9c5181f3383fd8347a590ff576c5d06"
+    },
+    {
+      "path": "overfit-500/sample-trained-000100-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000100-02.png",
+      "role": "generated_sample",
+      "bytes": 23147,
+      "sha256": "2ee3fd5d3754aaf8db6f288c42b01eec26de4012c14c5babe1a285d72f2fb325"
+    },
+    {
+      "path": "overfit-500/sample-trained-000100-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000100-03.png",
+      "role": "generated_sample",
+      "bytes": 86791,
+      "sha256": "de84752f8f0377fa7455878df2995e1ab035a9cddf22f105366a789b29a58384"
+    },
+    {
+      "path": "overfit-500/sample-trained-000200-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000200-00.png",
+      "role": "generated_sample",
+      "bytes": 43571,
+      "sha256": "96b59aa8cceb7005147c345aaafd6f020e0f6648471ba04de41a83cba5df7b06"
+    },
+    {
+      "path": "overfit-500/sample-trained-000200-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000200-01.png",
+      "role": "generated_sample",
+      "bytes": 31458,
+      "sha256": "7ac9bf0017a88025fcca2a598aa536155ead09ccc643abb6d334e6e94f885580"
+    },
+    {
+      "path": "overfit-500/sample-trained-000200-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000200-02.png",
+      "role": "generated_sample",
+      "bytes": 47695,
+      "sha256": "1680451017e99666938434788ea759c7123844dc80ad08c673078bf8c01b3619"
+    },
+    {
+      "path": "overfit-500/sample-trained-000200-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000200-03.png",
+      "role": "generated_sample",
+      "bytes": 133967,
+      "sha256": "feb3d6f088cd6c1b0de23098888db6452c9293b5ca3a92d9fc7c616998999da2"
+    },
+    {
+      "path": "overfit-500/sample-trained-000300-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000300-00.png",
+      "role": "generated_sample",
+      "bytes": 116675,
+      "sha256": "694457d25695b3edafebe5b81c7c17e6bf53effed9734c00191bf56af068de6f"
+    },
+    {
+      "path": "overfit-500/sample-trained-000300-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000300-01.png",
+      "role": "generated_sample",
+      "bytes": 77927,
+      "sha256": "b54848f2a9b6f07a6447537d1420037b1927bc4ea0dffa59c57939b284af2d58"
+    },
+    {
+      "path": "overfit-500/sample-trained-000300-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000300-02.png",
+      "role": "generated_sample",
+      "bytes": 77860,
+      "sha256": "0695f02222aa0777d675ae6c7675c62b327f28ff57c36913a1b2fc3d2fbe7602"
+    },
+    {
+      "path": "overfit-500/sample-trained-000300-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000300-03.png",
+      "role": "generated_sample",
+      "bytes": 97744,
+      "sha256": "52886183e1d67552992599c1389adadf5b745217d6674a74b9ff9dd87091932a"
+    },
+    {
+      "path": "overfit-500/sample-trained-000400-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000400-00.png",
+      "role": "generated_sample",
+      "bytes": 123661,
+      "sha256": "e430b19d2fc3f9aba17d8231aced3c20148d2c999764aab33cceafd86d88e230"
+    },
+    {
+      "path": "overfit-500/sample-trained-000400-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000400-01.png",
+      "role": "generated_sample",
+      "bytes": 75894,
+      "sha256": "1ff3c71dda8e69b146b6f4446004236d355a636ab0720474783244c175850065"
+    },
+    {
+      "path": "overfit-500/sample-trained-000400-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000400-02.png",
+      "role": "generated_sample",
+      "bytes": 68736,
+      "sha256": "be0ea35ba10ec1a147f5b505ef3c3eae63b299cda3f5da6e958818e266b31352"
+    },
+    {
+      "path": "overfit-500/sample-trained-000400-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000400-03.png",
+      "role": "generated_sample",
+      "bytes": 131399,
+      "sha256": "edbafaa31f7e1c74574b989c7eb061e8ee2cbb74c610db5d418aab9bd2d26063"
+    },
+    {
+      "path": "overfit-500/sample-trained-000500-00.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000500-00.png",
+      "role": "generated_sample",
+      "bytes": 93861,
+      "sha256": "bcc00bc7a774e046a2132cc059628c13a410987ed853cc966b34ad6a931fc773"
+    },
+    {
+      "path": "overfit-500/sample-trained-000500-01.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000500-01.png",
+      "role": "generated_sample",
+      "bytes": 75538,
+      "sha256": "d4185b09036d498ee734241d69fd78935205e837c02e8e433f77afe739cefe8c"
+    },
+    {
+      "path": "overfit-500/sample-trained-000500-02.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000500-02.png",
+      "role": "generated_sample",
+      "bytes": 65347,
+      "sha256": "c1a653ba68ac64a0318b583805acc384177400e7bee0ab5d9c25e0cf2c1558d0"
+    },
+    {
+      "path": "overfit-500/sample-trained-000500-03.png",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/overfit-500/sample-trained-000500-03.png",
+      "role": "generated_sample",
+      "bytes": 88384,
+      "sha256": "856b0ea13b85c19bed6e95bdad28672789aaba13bd774addec196c75e1cd7f75"
+    },
+    {
+      "path": "smoke/report.json",
+      "source_path": "outputs/image_decoder_validation/20260921-prism-parent/connector-report.json",
+      "role": "original_run_report",
+      "bytes": 640295,
+      "sha256": "07859bc8a5b5b539d3f4fada1df3c92e6790e90c5488442a37ba86055ebbbe09"
+    },
+    {
+      "path": "smoke/after-smoke.png",
+      "source_path": "outputs/image_decoder_validation/20260921-prism-parent/after-smoke.png",
+      "role": "generated_sample",
+      "bytes": 98637,
+      "sha256": "9b07ebb13069b6a7ca7d4e8cb2b9bb7c0fc0759eab825d38592c568fac925c4e"
+    },
+    {
+      "path": "data-reviewed/train.jsonl",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/data-reviewed/train.jsonl",
+      "role": "reviewed_data_provenance_only",
+      "bytes": 13222,
+      "sha256": "e60043f3077d5c0201973959815855368e83b0107f42a4e069a3c6b060d0e5c6"
+    },
+    {
+      "path": "data-reviewed/validation.jsonl",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/data-reviewed/validation.jsonl",
+      "role": "reviewed_data_provenance_only",
+      "bytes": 6286,
+      "sha256": "546a8c522340b76a1f27858bad6113518526adbc0346cd615e42be7a4ce720a3"
+    },
+    {
+      "path": "data-reviewed/manifest.jsonl",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/data-reviewed/manifest.jsonl",
+      "role": "reviewed_data_provenance_only",
+      "bytes": 19508,
+      "sha256": "1a0b6e2cdc1545f901ffae604f4334c9d15198549a7ece161ba42a230905fcfb"
+    },
+    {
+      "path": "data-reviewed/provenance.json",
+      "source_path": "outputs/image_decoder_validation/20260921-connector-overfit/data-reviewed/provenance.json",
+      "role": "reviewed_data_provenance_only",
+      "bytes": 30827,
+      "sha256": "08b88606c219a70787aad22068d67e691803a75ae62b7c14920c9fb50f324eda"
+    }
+  ],
+  "notes": [
+    "Existing images, plots, measurements and reports are byte-identical copies of saved artifacts; no model inference or training was rerun.",
+    "Absolute paths inside original reports refer to the original Aurora runs. Use sample-index.json for paths inside this bundle.",
+    "The separate smoke has two denoising steps and different prompts; the 16/8-pair overfit experiment uses 50 denoising steps.",
+    "Held-out refers only to the connector training split; parent/generator pretraining membership is unknown."
+  ]
+}

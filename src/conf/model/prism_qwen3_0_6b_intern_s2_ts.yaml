@@ -1,0 +1,24 @@
+# Qwen3-0.6B + Intern-S2 Preview time-series encoder.
+
+backbone_id: "Qwen/Qwen3-0.6B"
+tokenizer_id: "Qwen/Qwen3-0.6B"
+
+modalities: [text, time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+d_text: 1024
+
+is_timeseries: true
+ts_variates: 1
+ts_projector: "intern_s2"
+ts_encoder_id: "${oc.env:HF_HOME}/intern-s2-preview-timeseries/model.safetensors"
+intern_s2_sampling_rate: 1.0
+d_ts: 2048
+max_ts_length: 512
+is_interleaved_qa: false
+normalize_ts_in_encoder: false
+
+projector_hidden_mult: 1
+projector_num_layers: 2

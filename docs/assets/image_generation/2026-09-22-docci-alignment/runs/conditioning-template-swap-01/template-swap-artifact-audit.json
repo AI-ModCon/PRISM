@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_audit_passed": true,
+  "real_checkpoint_evidence": true,
+  "report_sha256": "7a4efa65a4d22d7e2c7b261e85de8c350e57d8eacacc988658b3efcbd553774b",
+  "cases": [
+    {
+      "case_id": "validation-00",
+      "id": "qual_dev_00000",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad"
+    },
+    {
+      "case_id": "validation-01",
+      "id": "qual_dev_00001",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0"
+    }
+  ],
+  "routes": [
+    "native_pretrained",
+    "prism_aligned",
+    "prism_native_prefix",
+    "prism_native_suffix",
+    "prism_native_template"
+  ],
+  "text_guidance_scale": 1.0,
+  "swap_stage": "unnormalized_before_dit_rmsnorm",
+  "teacher_assisted_hybrids": [
+    "prism_native_prefix",
+    "prism_native_suffix",
+    "prism_native_template"
+  ],
+  "template_audits_checked": 8,
+  "saved_image_hashes_checked": 12,
+  "paired_flow_controls_checked": 12,
+  "unique_target_caption_pairs": 4,
+  "timesteps_per_target": 3,
+  "conditioning_boundary_hashes_verified": true,
+  "frozen_tensor_hashes_compared": 2220,
+  "alignment_checkpoint_sha256": "431938ef0fe99e480a28a71fd8eb716d067050cdde7388dd0ed33a2af794a642",
+  "original_generator_manifest_sha256": "46ad5c24af04baef2c5b6d365ee0ccfdc24eb626d98d56c017470b1f19f37d09",
+  "scope": "Artifact validation of recorded runtime proofs. Does not re-run teacher tokenization or model activations; teacher-assisted hybrids are not deployable PRISM-only generation or an accuracy benchmark.",
+  "render": {
+    "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/conditioning-template-swap-01/template-swap-comparison.png",
+    "sha256": "ff6a931e0279cec1bf6751c4536410a40b4339903749ebd2432ba9bed7f01166"
+  }
+}

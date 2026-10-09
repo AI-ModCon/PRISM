@@ -1,0 +1,104 @@
+{
+  "report_status": "completed",
+  "report_phase": "completed",
+  "report_completed_steps": 1809,
+  "selected_gallery_step": 1809,
+  "gallery_is_final": true,
+  "all_image_hashes_verified": true,
+  "all_case_initial_latents_identical": true,
+  "report_sha256": "0da348d96788ab928ceb8d22dc51a6f9ebb84fdb84d7c7c7f04a10773af2114c",
+  "outputs": {
+    "train": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/train-comparison-step-001809.png",
+      "sha256": "c734eb302fafd4db038a9316bfd3f5af3a0c60714a300d69d70f48d6255011d3",
+      "cases": [
+        "train_04996",
+        "train_08983"
+      ],
+      "samples": [
+        {
+          "id": "train_04996",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "7b52ea01ad5873aca7d7c838a0971fee9dc4a3023603bb3f6107977cddc3c295",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_04996",
+          "stage": "trained",
+          "step": 1809,
+          "sha256": "65a73796f2224bf3463861d47ec0fe0fda4922a536f16de197bad4fbdd2f93cd",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_08983",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "0f70bd870fc68b809a7c070fc4ad24c2af61019db2f61e991e49d53d433618e5",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_08983",
+          "stage": "trained",
+          "step": 1809,
+          "sha256": "d16b9158667f2139ad8d57179b5adcbb09ebb1d89e3905b0f42c0145dde2f4f6",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        }
+      ]
+    },
+    "validation": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/full-docci-joint-3epochs-01/validation-comparison-step-001809.png",
+      "sha256": "356cad5dbe4a1c45a77d5435f0c2a3147f6396264e909d25f30168f938f3bcb9",
+      "cases": [
+        "qual_dev_00000",
+        "qual_dev_00001"
+      ],
+      "samples": [
+        {
+          "id": "qual_dev_00000",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "53185c3d6ffe184d0d9adb877b8d85fb862f744d2be4f853a0f7c43da934df80",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "trained",
+          "step": 1809,
+          "sha256": "baacd2e4daa8baf7da57f7cfa04b7672b0e6c6369edf63d8a2b857ead2fcec8d",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "a50d2df8d1bcfc1583ecc937e8e1e80f1b5f8f96def547fc7487f29bbfd1ea1c",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "trained",
+          "step": 1809,
+          "sha256": "da03b3124c3b8ed55710d4b1218b2da7cc93f4ce82160c07b28fcb984c4eaa10",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        }
+      ]
+    }
+  }
+}

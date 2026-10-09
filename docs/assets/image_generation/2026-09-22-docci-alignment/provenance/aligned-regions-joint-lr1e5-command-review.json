@@ -1,0 +1,33 @@
+{
+  "baseline_job": "8848651",
+  "baseline_command_sha256": "fc58e0f060f17a539d322c8e12dc8e86d08e81756d6ad6a3ac0418e9871cd7bf",
+  "candidate_file_sha256": "f13e4635a0acc22ba4b9398445fab24c6f71606ada897bae799855a54c6fc8d6",
+  "argv_delta": [
+    {
+      "option": "--model-config",
+      "before": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-aligned-joint-smoke/src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json",
+      "after": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components/src/conf/image_generation/qwen3_1_7b_prism_harness_omnigen2.json"
+    },
+    {
+      "option": "--learning-rate",
+      "before": "1e-4",
+      "after": "1e-5"
+    },
+    {
+      "option": "--output-dir",
+      "before": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01",
+      "after": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-lr1e5-smoke-01"
+    }
+  ],
+  "unchanged_trainable_groups": [
+    "connector",
+    "diffusion"
+  ],
+  "updates": 6,
+  "batch_size": 4,
+  "gradient_accumulation": 4,
+  "exact_planned_exposures": 96,
+  "expected_uses_per_selected_pair": 3,
+  "source_reuse": "immutable prism-joint-components; no source changes",
+  "allocation_minutes": 20
+}

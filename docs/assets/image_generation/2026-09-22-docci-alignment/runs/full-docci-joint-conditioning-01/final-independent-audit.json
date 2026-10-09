@@ -1,0 +1,482 @@
+{
+  "actual_input_verification": "Archived runner captures actual DiT noisy latent and timestep on each of four native/PRISM matched/wrong forwards, rejects inequality, and records the common hash. Duplicate hashes and actual conditioning hashes are not saved in this non-template run.",
+  "archive_sha256": "ea17ef2f682913e83e99d068a6d8c05c1e44f0855e5c053681f8ad4f28f631d6",
+  "audit_kind": "independent_collected_metadata_and_matched_input_replay",
+  "checkpoint_digest_evidence": {
+    "method": "Diagnostic strict restore plus previously independently streamed terminal collector digest; no local checkpoint bytes or model execution.",
+    "terminal_collector_observation": {
+      "bytes": 47674885973,
+      "independently_verified": true,
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-3epochs-01/connector-diffusion-pilot-step-001809.pt",
+      "qualification": "unqualified",
+      "sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+      "step": 1809
+    }
+  },
+  "checkpoint_lineage": {
+    "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/full-docci-joint-3epochs-01/connector-diffusion-pilot-step-001809.pt",
+    "fresh_optimizer": true,
+    "fresh_rng": true,
+    "fresh_sampler": true,
+    "policy": "completed_joint_checkpoint_fp32_masters_fresh_stage",
+    "report_sha256": "0da348d96788ab928ceb8d22dc51a6f9ebb84fdb84d7c7c7f04a10773af2114c",
+    "restored_connector_tensors": 4,
+    "restored_diffusion_buffers": 0,
+    "restored_master_parameters": 3971361848,
+    "restored_master_tensors": 586,
+    "returned_optimizer_masters": false,
+    "sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+    "source_data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+    "step": 1809
+  },
+  "checks": {
+    "14_images_route_coverage": true,
+    "1634_invariant_hashes_match_training": true,
+    "2220_frozen_hashes_unchanged": true,
+    "48_unique_rows": true,
+    "actual_input_hashes_finite": true,
+    "collector_acceptance": true,
+    "completed_frozen_real_diagnostic": true,
+    "eight_source_hashes": true,
+    "exact_eight_plus_eight_selection": true,
+    "finite_consistent_route_losses": true,
+    "fixed_protocol": true,
+    "full_fp32_weights_restore": true,
+    "heldout_replay_conditioning-aligned-joint6-01": true,
+    "heldout_replay_conditioning-regions1000-01": true,
+    "image_hashes_and_protocol": true,
+    "parent_generator_data_identity": true,
+    "report_sha256": true,
+    "terminal_checkpoint_and_report_identity": true,
+    "train_0_times_caption_control_seed": true,
+    "train_1_times_caption_control_seed": true,
+    "train_2_times_caption_control_seed": true,
+    "train_3_times_caption_control_seed": true,
+    "train_4_times_caption_control_seed": true,
+    "train_5_times_caption_control_seed": true,
+    "train_6_times_caption_control_seed": true,
+    "train_7_times_caption_control_seed": true,
+    "train_native_adapted_diffusion_summary": true,
+    "train_prism_chat_summary": true,
+    "validation-00_initial_noise_replayed": true,
+    "validation-00_native_pretrained_cfg1_replay_conditioning-aligned-joint6-01": true,
+    "validation-00_native_pretrained_cfg1_replay_conditioning-regions1000-01": true,
+    "validation-00_native_pretrained_replay_conditioning-aligned-joint6-01": true,
+    "validation-00_native_pretrained_replay_conditioning-regions1000-01": true,
+    "validation-00_prior_sampling_inputs_conditioning-aligned-joint6-01": true,
+    "validation-00_prior_sampling_inputs_conditioning-regions1000-01": true,
+    "validation-01_initial_noise_replayed": true,
+    "validation-01_native_pretrained_cfg1_replay_conditioning-aligned-joint6-01": true,
+    "validation-01_native_pretrained_cfg1_replay_conditioning-regions1000-01": true,
+    "validation-01_native_pretrained_replay_conditioning-aligned-joint6-01": true,
+    "validation-01_native_pretrained_replay_conditioning-regions1000-01": true,
+    "validation-01_prior_sampling_inputs_conditioning-aligned-joint6-01": true,
+    "validation-01_prior_sampling_inputs_conditioning-regions1000-01": true,
+    "validation_0_times_caption_control_seed": true,
+    "validation_1_times_caption_control_seed": true,
+    "validation_2_times_caption_control_seed": true,
+    "validation_3_times_caption_control_seed": true,
+    "validation_4_times_caption_control_seed": true,
+    "validation_5_times_caption_control_seed": true,
+    "validation_6_times_caption_control_seed": true,
+    "validation_7_times_caption_control_seed": true,
+    "validation_native_adapted_diffusion_summary": true,
+    "validation_not_optimized": true,
+    "validation_prism_chat_summary": true
+  },
+  "current_heldout_prism_vs_native": {
+    "caption_gap_deficit_percent": 12.838438311641909,
+    "caption_gap_fraction_of_native": 0.8716156168835809,
+    "correct_caption_wins_native": 24,
+    "correct_caption_wins_prism": 22,
+    "matched_loss_excess_percent": 0.3486392858124132,
+    "probes_per_route": 24
+  },
+  "flow_forwards_total": 192,
+  "flow_rows": 48,
+  "flow_summary_recomputed": {
+    "train": {
+      "native_adapted_diffusion": {
+        "matched_loss": 0.4817630685865879,
+        "matched_wins": 22,
+        "paired_evaluations": 24,
+        "prediction_change_mse": 0.01627498177549569,
+        "wrong_loss": 0.4980364715059598,
+        "wrong_minus_matched": 0.01627340291937192
+      },
+      "prism_chat": {
+        "matched_loss": 0.48335325469573337,
+        "matched_wins": 20,
+        "paired_evaluations": 24,
+        "prediction_change_mse": 0.013786312600132078,
+        "wrong_loss": 0.49580197719236213,
+        "wrong_minus_matched": 0.012448722496628761
+      }
+    },
+    "validation": {
+      "native_adapted_diffusion": {
+        "matched_loss": 0.48115047936638194,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "prediction_change_mse": 0.028711669423501007,
+        "wrong_loss": 0.5105128971238931,
+        "wrong_minus_matched": 0.02936241775751114
+      },
+      "prism_chat": {
+        "matched_loss": 0.48282795896132785,
+        "matched_wins": 22,
+        "paired_evaluations": 24,
+        "prediction_change_mse": 0.027023164426888496,
+        "wrong_loss": 0.5084207008282343,
+        "wrong_minus_matched": 0.025592741866906483
+      }
+    }
+  },
+  "frozen_tensor_count": 2220,
+  "heldout_comparisons": {
+    "conditioning-aligned-joint6-01": {
+      "native_gap_percent_change": 9.728590243237134,
+      "native_matched_loss_percent_change": -0.7959204108161977,
+      "native_prior": {
+        "matched_loss": 0.4850107791523139,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5117699106534322,
+        "wrong_minus_matched": 0.026759131501118343
+      },
+      "native_prior_dit": "joint-six adapted",
+      "prism_gap_percent_change": 80.46926566952352,
+      "prism_matched_loss_percent_change": -2.0960557029578775,
+      "prism_prior": {
+        "matched_loss": 0.4931649714708328,
+        "matched_wins": 21,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5073461905121803,
+        "wrong_minus_matched": 0.014181219041347504
+      },
+      "prism_win_change": 1
+    },
+    "conditioning-regions1000-01": {
+      "native_gap_percent_change": 10.364335100134102,
+      "native_matched_loss_percent_change": -0.8850566022569506,
+      "native_prior": {
+        "matched_loss": 0.485446959733963,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.512051947414875,
+        "wrong_minus_matched": 0.026604987680912018
+      },
+      "native_prior_dit": "original pretrained",
+      "prism_gap_percent_change": 59.91933733020498,
+      "prism_matched_loss_percent_change": -2.0928429882912103,
+      "prism_prior": {
+        "matched_loss": 0.4931487888097763,
+        "matched_wins": 20,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5091523205240568,
+        "wrong_minus_matched": 0.016003531714280445
+      },
+      "prism_win_change": 2
+    }
+  },
+  "heldout_input_replay": {
+    "conditioning-aligned-joint6-01": {
+      "identical_fields": [
+        "split",
+        "id",
+        "index",
+        "wrong_id",
+        "seed",
+        "repeat",
+        "requested_timestep",
+        "actual_inputs"
+      ],
+      "rows": 24,
+      "training_cohort_same": false
+    },
+    "conditioning-regions1000-01": {
+      "identical_fields": [
+        "split",
+        "id",
+        "index",
+        "wrong_id",
+        "seed",
+        "repeat",
+        "requested_timestep",
+        "actual_inputs"
+      ],
+      "rows": 24,
+      "training_cohort_same": false
+    }
+  },
+  "images": [
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "native_pretrained",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "native_pretrained_cfg1",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "3440216724c280bdfbfa045340086345d2a2b95170ab6f9f2363131c27664569",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "native_pretrained",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "native_pretrained_cfg1",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "a9c543739a5face9ff7664272112c8de3bda5b69209307df8262313d7635d54c",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "native_adapted_diffusion",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "5a51c241db8cd1f04bc8b77d3da1e7f48ec4284d120a163ccdc474c2a71d1fa3",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "native_adapted_diffusion_cfg1",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "8eb524cff674d73ce156e819506dc6cd5135bdfbcfc922fa42ed89c47ff57c84",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "prism_chat_native_negative_cfg5",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "b663e2b3e83cbf057e4af7ec67f0e07305b5a1e1dcebb20cdf9805fcc900c1b8",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "prism_chat_cfg1",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "197d0e02ed863f904a844ad38b95668c3a2455ffee2ae75f7e94201202fbf7c6",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-00",
+      "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad",
+      "route": "prism_chat_prism_negative_cfg5",
+      "sampling_steps": 50,
+      "seed": 200042,
+      "sha256": "2acaa850e4efbd4708394545896259b904a1c8b022f9b3ad88fab6171dd25d05",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "native_adapted_diffusion",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "7fd5d69e899676cf68e965aa825d1b74a201d81b800f133d0463d767d75bfd15",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "native_adapted_diffusion_cfg1",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "8b846a3a43b9353a4b05baf1fa26ec396a8ddf77b1116ff9215cf864d664ae0d",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "prism_chat_native_negative_cfg5",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "ed151a197b34c3449f087f02ac01a28d01b69104679c14716f459b3cda06544f",
+      "text_guidance_scale": 5.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "prism_chat_cfg1",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "3d2a1fe6af59c57f6795ccb8f540599a2586e2851fef194ca905bc45a4f9a58c",
+      "text_guidance_scale": 1.0
+    },
+    {
+      "case_id": "validation-01",
+      "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0",
+      "route": "prism_chat_prism_negative_cfg5",
+      "sampling_steps": 50,
+      "seed": 200043,
+      "sha256": "cb31b0b36b85bce4cb35007db8e86be324c49561ae93c0cd813b7e58936ac75a",
+      "text_guidance_scale": 5.0
+    }
+  ],
+  "interpretation_limits": [
+    "Acceptance and improved flow caption sensitivity do not establish generation quality; root separately inspects two generated heldout cases.",
+    "Eight heldout targets at three times are 24 correlated probes, not 24 independent examples. Last target uses qual_dev_00008 as wrong caption. Training target cohort changed to train_00000 through train_00007, with train_00008 as its last wrong caption; earlier training means are not longitudinally comparable.",
+    "Current native flow and native_adapted_diffusion images use the full-training adapted DiT. Original-native CFG1/CFG5 images were generated before restore and exactly replay previous baseline bytes. No original-native flow route is measured here.",
+    "PRISM-positive/native-negative CFG5 is the primary guided comparison; PRISM-negative CFG5 uses an untrained negative anchor. CFG1 and CFG5 remain distinct.",
+    "Frozen inference only. Restore-helper fresh optimizer/sampler/RNG fields do not imply any diagnostic optimizer or training.",
+    "Sampling checks verify common initial latent hashes and image bytes, not final latent hashes or every per-step input/conditioning trace.",
+    "Legacy training-run caption gaps remain separate provisional evidence; actual-input checks here validate this diagnostic only."
+  ],
+  "original_native_byte_replay": {
+    "conditioning-aligned-joint6-01": [
+      {
+        "case_id": "validation-00",
+        "route": "native_pretrained",
+        "sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7"
+      },
+      {
+        "case_id": "validation-00",
+        "route": "native_pretrained_cfg1",
+        "sha256": "3440216724c280bdfbfa045340086345d2a2b95170ab6f9f2363131c27664569"
+      },
+      {
+        "case_id": "validation-01",
+        "route": "native_pretrained",
+        "sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf"
+      },
+      {
+        "case_id": "validation-01",
+        "route": "native_pretrained_cfg1",
+        "sha256": "a9c543739a5face9ff7664272112c8de3bda5b69209307df8262313d7635d54c"
+      }
+    ],
+    "conditioning-regions1000-01": [
+      {
+        "case_id": "validation-00",
+        "route": "native_pretrained",
+        "sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7"
+      },
+      {
+        "case_id": "validation-00",
+        "route": "native_pretrained_cfg1",
+        "sha256": "3440216724c280bdfbfa045340086345d2a2b95170ab6f9f2363131c27664569"
+      },
+      {
+        "case_id": "validation-01",
+        "route": "native_pretrained",
+        "sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf"
+      },
+      {
+        "case_id": "validation-01",
+        "route": "native_pretrained_cfg1",
+        "sha256": "a9c543739a5face9ff7664272112c8de3bda5b69209307df8262313d7635d54c"
+      }
+    ]
+  },
+  "passed": true,
+  "pbs_job_id": "8854234.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "report_sha256": "896ffae828c792b6e3735b9a2b1efff37620ffe6e56800401b56bbec6be83606",
+  "run": "full-docci-joint-conditioning-01",
+  "runtime_seconds": 521.1522057559341,
+  "schema_version": 1,
+  "selection": {
+    "train": [
+      {
+        "id": "train_00000",
+        "index": 0
+      },
+      {
+        "id": "train_00001",
+        "index": 1
+      },
+      {
+        "id": "train_00002",
+        "index": 2
+      },
+      {
+        "id": "train_00003",
+        "index": 3
+      },
+      {
+        "id": "train_00004",
+        "index": 4
+      },
+      {
+        "id": "train_00005",
+        "index": 5
+      },
+      {
+        "id": "train_00006",
+        "index": 6
+      },
+      {
+        "id": "train_00007",
+        "index": 7
+      }
+    ],
+    "validation": [
+      {
+        "id": "qual_dev_00000",
+        "index": 0
+      },
+      {
+        "id": "qual_dev_00001",
+        "index": 1
+      },
+      {
+        "id": "qual_dev_00002",
+        "index": 2
+      },
+      {
+        "id": "qual_dev_00003",
+        "index": 3
+      },
+      {
+        "id": "qual_dev_00004",
+        "index": 4
+      },
+      {
+        "id": "qual_dev_00005",
+        "index": 5
+      },
+      {
+        "id": "qual_dev_00006",
+        "index": 6
+      },
+      {
+        "id": "qual_dev_00007",
+        "index": 7
+      }
+    ]
+  },
+  "source_checks": {
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/model.py": true,
+    "tools/diagnose_prism_image_conditioning.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "unchanged_invariant_PRISM_VAE_native_tensor_count": 1634
+}

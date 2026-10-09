@@ -1,0 +1,19 @@
+# Phase 3.4: graph shards built by tools/shard_modality.py
+# (initial target: ChEBI-20-MM / graph_captioning, ~30K samples).
+
+daos:
+  pool: AuroraGPT
+  container: prism_training_data
+  mount_base: /tmp/${USER}/AuroraGPT/prism_training_data
+
+groups:
+  graph:
+    description: "Graph WebDataset shards (Phase 3 tier 1)"
+    datasets:
+      graph_captioning_wds:
+        path: modality/graph/graph_captioning
+        samples: 30000
+        shards: 0
+        weight: 1.0
+        proportion: 1.0
+        description: "ChEBI-20-MM (~30K) — sharded by tools/shard_modality.py"

@@ -1,0 +1,9 @@
+{
+  "archive_sha256": "c77af49007db54dd2bf14af87c8c666389c397c3e1eaa58e4a0c38b9d44c83d1",
+  "archive_bytes": 2876004,
+  "members": 81,
+  "relocated_source_root": "provenance/source-snapshots/aligned-regions-joint-lr1e5-smoke-01",
+  "preserved_provenance_conflicts": [
+    "provenance/render_conditioning.py"
+  ]
+}

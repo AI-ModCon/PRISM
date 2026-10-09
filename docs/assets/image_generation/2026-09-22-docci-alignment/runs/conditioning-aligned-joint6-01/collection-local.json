@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "6d26bdf08ad180fac929867d3643681e3059b492d7d2da958655ee3b489124f0",
+  "relocated_provenance": [
+    {
+      "archive_path": "provenance/render_conditioning.py",
+      "saved_path": "runs/conditioning-aligned-joint6-01/archived-provenance/render_conditioning.py",
+      "sha256": "b4b3683ad5a0286f39f6647fab1e42e7c056e553588da432d9161c89a5c5d604"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T05:57:35.107882+00:00",
+  "completed_steps": 6,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": 548.7386455568485,
+  "final_acceptance_passed": true,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "completed",
+  "report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590",
+  "report_status": "completed",
+  "run_name": "aligned-regions-joint-smoke-01",
+  "samples": 10,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-aligned-joint-smoke",
+  "target_count": 4
+}

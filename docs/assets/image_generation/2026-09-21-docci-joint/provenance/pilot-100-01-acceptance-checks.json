@@ -1,0 +1,22 @@
+{
+  "completed_real_run": true,
+  "all_requested_updates": true,
+  "training_ids_only": true,
+  "finite_losses_and_group_gradients": true,
+  "complete_dense_scope": true,
+  "both_groups_changed": true,
+  "frozen_unchanged": true,
+  "sampler_progress": true,
+  "sample_noise_replayed": true,
+  "sampling_target_free": true,
+  "native_baseline_precedes_updates": true,
+  "full_validation": true,
+  "final_checkpoint_verified": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-joint-20260921/runs/pilot-100-01/connector-diffusion-pilot-step-000100.pt",
+    "bytes": 47674409749,
+    "sha256": "ed02656d8601e4602ee4980bc8764a44018abb973f5cc5b392a08f7b03777066"
+  },
+  "sampling_exercised": true,
+  "examples_consumed": 100,
+  "unique_training_examples": 100
+}

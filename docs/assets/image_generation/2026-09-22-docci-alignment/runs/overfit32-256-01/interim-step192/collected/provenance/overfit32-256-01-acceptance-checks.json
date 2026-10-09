@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "complete_dense_scope": true,
+    "finite_losses_and_group_gradients": true,
+    "gallery_initial_noise_replayed": true,
+    "generation_target_free": true,
+    "real_checkpoint_evidence": true,
+    "recorded_source_files_unchanged": true,
+    "report_completed": false,
+    "train_validation_ids_disjoint": true,
+    "training_ids_only": true,
+    "training_within_selected_pool": true
+  },
+  "final_acceptance_evaluated": false,
+  "final_acceptance_passed": null,
+  "interpretation": "Artifact integrity and execution checks only; no generation quality or benchmark qualification.",
+  "observations": {
+    "completed_steps": 192,
+    "examples_consumed": 784,
+    "phase": "fixed_probes",
+    "samples_collected": 10,
+    "selected_example_count": 32,
+    "status": "running",
+    "step_log_rows": 196,
+    "unique_training_examples": 32
+  },
+  "schema_version": 1,
+  "source_identity_checks": {
+    "src/data/image_generation.py": true,
+    "src/data/image_generation_webdataset.py": true,
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/decoders/types.py": true,
+    "src/model.py": true,
+    "src/training/cpu_master_adamw.py": true,
+    "tools/overfit_prism_image_connector.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_image_decoder.py": true,
+    "tools/train_prism_image_connector.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism"
+}

@@ -1,0 +1,376 @@
+{
+  "actual_noisy_input_timestep_hashes_present": false,
+  "audit_status": "passed_interim_metadata_checks_only",
+  "cohort_checks": {
+    "arithmetic_means_recomputed": true,
+    "fixed_ids_indices_seeds_and_wrong_caption_ids_match_steps0_200": true,
+    "fixed_train_validation_probe_ids_disjoint": true,
+    "optimized_flags": "False at step 0 for both splits; true for all train probes at 200 and false for every validation probe.",
+    "train_probe": [
+      {
+        "id": "train_04996",
+        "index": 4996
+      },
+      {
+        "id": "train_08983",
+        "index": 8983
+      },
+      {
+        "id": "train_05538",
+        "index": 5538
+      },
+      {
+        "id": "train_03445",
+        "index": 3445
+      },
+      {
+        "id": "train_05049",
+        "index": 5049
+      },
+      {
+        "id": "train_01677",
+        "index": 1677
+      },
+      {
+        "id": "train_06344",
+        "index": 6344
+      },
+      {
+        "id": "train_01062",
+        "index": 1062
+      },
+      {
+        "id": "train_00191",
+        "index": 191
+      },
+      {
+        "id": "train_00198",
+        "index": 198
+      },
+      {
+        "id": "train_04809",
+        "index": 4809
+      },
+      {
+        "id": "train_00530",
+        "index": 530
+      },
+      {
+        "id": "train_08304",
+        "index": 8304
+      },
+      {
+        "id": "train_06979",
+        "index": 6979
+      },
+      {
+        "id": "train_01044",
+        "index": 1044
+      },
+      {
+        "id": "train_02443",
+        "index": 2443
+      },
+      {
+        "id": "train_06900",
+        "index": 6900
+      },
+      {
+        "id": "train_03496",
+        "index": 3496
+      },
+      {
+        "id": "train_00019",
+        "index": 19
+      },
+      {
+        "id": "train_00640",
+        "index": 640
+      },
+      {
+        "id": "train_01736",
+        "index": 1736
+      },
+      {
+        "id": "train_04382",
+        "index": 4382
+      },
+      {
+        "id": "train_08767",
+        "index": 8767
+      },
+      {
+        "id": "train_00896",
+        "index": 896
+      },
+      {
+        "id": "train_06800",
+        "index": 6800
+      },
+      {
+        "id": "train_03042",
+        "index": 3042
+      },
+      {
+        "id": "train_02098",
+        "index": 2098
+      },
+      {
+        "id": "train_02054",
+        "index": 2054
+      },
+      {
+        "id": "train_01459",
+        "index": 1459
+      },
+      {
+        "id": "train_02193",
+        "index": 2193
+      },
+      {
+        "id": "train_01072",
+        "index": 1072
+      },
+      {
+        "id": "train_03350",
+        "index": 3350
+      }
+    ],
+    "train_probe_policy": "First 32 IDs in fresh full-pool seeded epoch order; their source-stage history is not reset by the new optimizer.",
+    "train_seed_range": [
+      100042,
+      100073
+    ],
+    "validation_probe": [
+      {
+        "id": "qual_dev_00000",
+        "index": 0
+      },
+      {
+        "id": "qual_dev_00001",
+        "index": 1
+      },
+      {
+        "id": "qual_dev_00002",
+        "index": 2
+      },
+      {
+        "id": "qual_dev_00003",
+        "index": 3
+      },
+      {
+        "id": "qual_dev_00004",
+        "index": 4
+      },
+      {
+        "id": "qual_dev_00005",
+        "index": 5
+      },
+      {
+        "id": "qual_dev_00006",
+        "index": 6
+      },
+      {
+        "id": "qual_dev_00007",
+        "index": 7
+      },
+      {
+        "id": "qual_dev_00008",
+        "index": 8
+      },
+      {
+        "id": "qual_dev_00009",
+        "index": 9
+      },
+      {
+        "id": "qual_dev_00010",
+        "index": 10
+      },
+      {
+        "id": "qual_dev_00011",
+        "index": 11
+      },
+      {
+        "id": "qual_dev_00012",
+        "index": 12
+      },
+      {
+        "id": "qual_dev_00013",
+        "index": 13
+      },
+      {
+        "id": "qual_dev_00014",
+        "index": 14
+      },
+      {
+        "id": "qual_dev_00015",
+        "index": 15
+      },
+      {
+        "id": "qual_dev_00016",
+        "index": 16
+      },
+      {
+        "id": "qual_dev_00017",
+        "index": 17
+      },
+      {
+        "id": "qual_dev_00018",
+        "index": 18
+      },
+      {
+        "id": "qual_dev_00019",
+        "index": 19
+      },
+      {
+        "id": "qual_dev_00020",
+        "index": 20
+      },
+      {
+        "id": "qual_dev_00021",
+        "index": 21
+      },
+      {
+        "id": "qual_dev_00022",
+        "index": 22
+      },
+      {
+        "id": "qual_dev_00023",
+        "index": 23
+      },
+      {
+        "id": "qual_dev_00024",
+        "index": 24
+      },
+      {
+        "id": "qual_dev_00025",
+        "index": 25
+      },
+      {
+        "id": "qual_dev_00026",
+        "index": 26
+      },
+      {
+        "id": "qual_dev_00027",
+        "index": 27
+      },
+      {
+        "id": "qual_dev_00028",
+        "index": 28
+      },
+      {
+        "id": "qual_dev_00029",
+        "index": 29
+      },
+      {
+        "id": "qual_dev_00030",
+        "index": 30
+      },
+      {
+        "id": "qual_dev_00031",
+        "index": 31
+      }
+    ],
+    "validation_seed_range": [
+      101051,
+      101082
+    ]
+  },
+  "executed_source_sha256": {
+    "src/data/image_generation.py": "04e90b93f9dd61055a95f03739b4437ea93f283907cc73d0cc68cc0f66b6dcdd",
+    "src/data/image_generation_webdataset.py": "50e9da2a5fa951fd56ecd78a9f77fccd7883fba1efc1dfaa6b2ffaa71188b40d",
+    "src/decoders/conditioning.py": "3d8209d620466e53d273997cd4bf33e969d06425d5c644a6ccc3c7194c6adfb6",
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/loading.py": "73915e73f381ba3734da7ee2c8807efa25e95f17b94c34d04dcccfe92b80a381",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/decoders/types.py": "882f2c3e84da6a6843d9c929bbae501371526bcdf5f146eacca366659cee6555",
+    "src/model.py": "765484238537b07c80f0470ccadb27258e1d15d112a9a3237a55b73819a5377c",
+    "src/training/cpu_master_adamw.py": "ad81e003fe1db35dbc69d7b9df46f47c9cd4b3a13dee58b734b9be2d68c9adaf",
+    "tools/overfit_prism_image_connector.py": "939989c18a8397ff2b13309a047a14253312a79e3399488385687ff9f6f7a3c5",
+    "tools/prism_image_conditioning.py": "81845528a13b99e42df197eb11d853b520381de97f48acb350bcd1c17e20f03d",
+    "tools/train_image_decoder.py": "e3e36a62743ee64f7f8944ab2de77d535bd4c55e00baf528668d15bb35d0c61d",
+    "tools/train_prism_image_connector.py": "e67ea9f3f697a9839c8e4f300b7691e7a6a8f4809ed4956293d60888784a25f5",
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7"
+  },
+  "exposure_checks": {
+    "all_logged_ids_used_once_current_stage": true,
+    "contiguous_logged_updates": 213,
+    "exact_seeded_sampler_and_microbatch_seed_replay": true,
+    "full_train_pool_count": 9647,
+    "logged_exposures": 3408,
+    "logged_unique_training_ids": 3408,
+    "microbatches_per_update": 4,
+    "pairs_per_microbatch": 4,
+    "selected_full_pool_indices_match_0_through9646": true,
+    "step200_exposures": 3200
+  },
+  "initial_gallery_image_sha256": {
+    "sample-warm-start-000000-00.png": "7b52ea01ad5873aca7d7c838a0971fee9dc4a3023603bb3f6107977cddc3c295",
+    "sample-warm-start-000000-01.png": "53185c3d6ffe184d0d9adb877b8d85fb862f744d2be4f853a0f7c43da934df80",
+    "sample-warm-start-000000-02.png": "0f70bd870fc68b809a7c070fc4ad24c2af61019db2f61e991e49d53d433618e5",
+    "sample-warm-start-000000-03.png": "a50d2df8d1bcfc1583ecc937e8e1e80f1b5f8f96def547fc7487f29bbfd1ea1c"
+  },
+  "last_complete_evaluation_step": 200,
+  "last_complete_log_step": 213,
+  "limitations": [
+    "Interim metadata and source audit only; full frozen-weight and terminal-checkpoint digest audits are pending.",
+    "Only four step 0 images exist in this snapshot; no post-training generation images or new checkpoints yet.",
+    "Wrong-caption gaps remain provisional: this training evaluator resets RNG but does not save actual paired noisy-input/timestep hashes.",
+    "Losses are 32-example fixed-cohort flow MSE, not image accuracy or a generalization benchmark.",
+    "Final 100 validation must be compared using its first 32 slice to retain the same cohort."
+  ],
+  "loss_changes": {
+    "train": {
+      "absolute_change": -0.0015697279013693333,
+      "caption_gap_step0_provisional": -0.0030714687891304493,
+      "caption_gap_step200_provisional": 0.00024013034999370575,
+      "examples": 32,
+      "examples_with_lower_loss": 23,
+      "percent_change": -0.3569867625042966,
+      "step0_mean": 0.43971599685028195,
+      "step200_mean": 0.4381462689489126
+    },
+    "validation": {
+      "absolute_change": -0.0015735821798443794,
+      "caption_gap_step0_provisional": 0.017826818861067295,
+      "caption_gap_step200_provisional": 0.02068227995187044,
+      "examples": 32,
+      "examples_with_lower_loss": 23,
+      "percent_change": -0.3457706891902057,
+      "step0_mean": 0.4550941502675414,
+      "step200_mean": 0.45352056808769703
+    }
+  },
+  "optimizer_checks": {
+    "all_logged_losses_and_gradients_finite": true,
+    "both_groups_nonzero_gradients_every_update": true,
+    "both_groups_report_runtime_weight_changes_every_update": true,
+    "last50_logged_update_seconds_mean": 10.42418822560925,
+    "runtime_changed_tensor_count_range": {
+      "connector": [
+        4,
+        4
+      ],
+      "diffusion": [
+        394,
+        402
+      ]
+    }
+  },
+  "raw_input_file_sha256": {
+    "archived-provenance/provenance/full-docci-joint-3epochs-01-acceptance-checks.json": "f5d7eaa4f2f1e148193a78b6b7491296b62f49561941971c0cb064e8c348c953",
+    "collection-summary.json": "b0dbf589ad974bce6fc49999960140f62c2cb1dcd66c99414d64fc243d6b88f2",
+    "evaluations.jsonl": "1e0766b90cf31685c1bb6aa858eb501c4384374ca83cf66ba6a26ac41aec028f",
+    "report.json": "0052bdb55af3f60e0629b88053f82806ae20e93e436ddfb8ff9e16e16ffe88d0",
+    "steps.jsonl": "04bb4d1695fa9b3991ec7565c01c7f3b0d7c10993517bace601ee85202794a7f"
+  },
+  "recorded_report_digest_verified": true,
+  "report_step": 210,
+  "run_status": "running",
+  "schema_version": 1,
+  "snapshot": "interim-eval0200-20260922T0823Z",
+  "snapshot_consistency": "Report and logs are collected sequentially. Report step 210 and complete log step 213 are both retained; evaluation metrics describe step 200.",
+  "source_file_count_verified": 14,
+  "terminal_acceptance": false,
+  "writes": "Only this new independent audit JSON; collected evidence and executed source bytes unchanged."
+}

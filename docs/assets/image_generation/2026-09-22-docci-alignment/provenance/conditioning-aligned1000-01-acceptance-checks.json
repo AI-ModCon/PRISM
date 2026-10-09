@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "all_requested_flow_controls": true,
+    "finite_flow_controls": true,
+    "frozen_state_unchanged": true,
+    "gallery_initial_noise_replayed": true,
+    "generation_target_free": true,
+    "native_pretrained_state_unchanged": true,
+    "no_training_performed": true,
+    "real_checkpoint_evidence": true,
+    "recorded_flow_inputs_present": true,
+    "recorded_source_files_unchanged": true,
+    "report_completed": true,
+    "train_validation_ids_disjoint": true
+  },
+  "final_acceptance_evaluated": true,
+  "final_acceptance_passed": true,
+  "interpretation": "Artifact integrity and execution checks only; no generation quality or benchmark qualification.",
+  "observations": {
+    "flow_evaluations_collected": 48,
+    "phase": "completed",
+    "samples_collected": 8,
+    "status": "completed"
+  },
+  "schema_version": 1,
+  "source_identity_checks": {
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/model.py": true,
+    "tools/align_prism_image_conditioning.py": true,
+    "tools/diagnose_prism_image_conditioning.py": true,
+    "tools/prism_image_alignment_checkpoint.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-alignment-validation"
+}

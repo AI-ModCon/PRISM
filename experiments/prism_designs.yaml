@@ -1,0 +1,1305 @@
+experiments:
+  - id: PRISM-ZONE-A-BASELINE
+    name: "Zone A Baseline: 4-GPU NVLink, OLMo-7B, All Modalities"
+    resources:
+      ngpus: 4
+      topology: "4gpu_nvlink"
+      walltime: "48:00:00"
+    common_overrides:
+      training.batch_size: 16
+      training.max_steps: 5000
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      training.eval_every_n_steps: 500
+      training.save_every_n_steps: 100
+      training.learning_rate: 5e-5
+      training.warmup_steps: 100
+      training.viz_every_n_steps: 500
+      training.gradient_accumulation_steps: 4
+      training.verbosity: "INFO"
+      training.resume_from_checkpoint: "/raid/smadireddy/PRISM/outputs/PRISM-ZONE-A-BASELINE/2026-01-05/11-35-16/checkpoints/step_700"
+    
+    variants:
+      - id: PRISM-ZONE-A-01-DEFAULT
+        overrides: {}
+
+      - id: PRISM-ZONE-A-02-SHORT
+        overrides:
+          training.max_steps: 10
+
+  - id: PRISM-ZONE-A-FSDP
+    name: "Zone A FSDP: 4-GPU NVLink, OLMo-7B, Full Shard"
+    resources:
+      ngpus: 4
+      topology: "4gpu_fsdp"
+      walltime: "04:00:00"
+    common_overrides:
+      training.batch_size: 4
+      training.max_steps: 10
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+    variants:
+      - id: PRISM-ZONE-A-FSDP-DEFAULT
+        overrides: {}
+
+  - id: PRISM-ZONE-A-SCALED
+    name: "Zone A Scaled: 8-GPU Pinned, OLMo-7B"
+    resources:
+      ngpus: 8
+      topology: "8gpu_pinned"
+      walltime: "08:00:00"
+    common_overrides:
+      training.batch_size: 4
+      training.max_steps: 10
+    variants:
+      - id: PRISM-ZONE-A-03-FULL
+        overrides: {}
+      - id: PRISM-ZONE-A-04-SHORT
+        overrides:
+          training.max_steps: 10
+
+  - id: PRISM-DEBUG-1GPU
+    name: "Debug: 1-GPU NVLink (Device 4)"
+    resources:
+      ngpus: 1
+      topology: "1gpu_debug"
+      walltime: "01:00:00"
+    common_overrides:
+      training.batch_size: 4
+      training.max_steps: 10
+      training.eval_every_n_steps: 2
+      training.debug_mode: true
+    variants:
+      - id: PRISM-DEBUG-DEFAULT
+        overrides: {}
+
+  - id: PRISM-ZONE-A-BEST-CASE
+    name: "Zone A Best Case: 4-GPU, LR 1e-3, Batch 256, No WD"
+    resources:
+      ngpus: 4
+      topology: "4gpu_nvlink"
+      walltime: "48:00:00"
+    common_overrides:
+      training.batch_size: 16
+      training.max_steps: 5000
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      # Optimized Hparams for Projector Alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 150
+      training.gradient_accumulation_steps: 4
+      training.verbosity: "INFO"
+      
+    variants:
+      - id: PRISM-ZONE-A-BEST-CASE-DEFAULT
+        overrides: {}
+
+  - id: PRISM-ZONE-A-VLM-TEST
+    name: "Zone A Best Case: 4-GPU, LR 1e-3, Batch 256, No WD"
+    resources:
+      ngpus: 4
+      topology: "4gpu_nvlink"
+      walltime: "48:00:00"
+    common_overrides:
+      training.batch_size: 16
+      training.max_steps: 5000
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      # Optimized Hparams for Projector Alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 150
+      training.gradient_accumulation_steps: 4
+      training.verbosity: "INFO"
+
+  - id: PRISM-ZONE-A-DEEPSPEED
+    name: "Zone A DeepSpeed (Tier 3): 4-GPU, ZeRO-2"
+    resources:
+      ngpus: 4
+      topology: "4gpu_deepspeed"
+      walltime: "48:00:00"
+    common_overrides:
+      training.batch_size: 32  # Doubled from 16 thanks to ZeRO-2
+      training.max_steps: 100  # Short verifiction run
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 10
+      training.gradient_accumulation_steps: 1 # Adjusted for larger batch
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-ZONE-A-DEEPSPEED-TEST
+        overrides: {}
+
+  # -------------------------------------------------------------------------
+  # DeepSpeed Parallelism Roadmap (Tier 3)
+  # -------------------------------------------------------------------------
+  # 1D Parallelism (Data Parallel):
+  #   - DeepSpeed ZeRO-1: Optimizer State Partitioning (4x Mem savings).
+  #   - DeepSpeed ZeRO-2: + Gradient Partitioning (8x Mem savings).
+  #   - DeepSpeed ZeRO-3: + Parameter Partitioning (Linear Mem scaling with GPUs).
+  #   Status: NATIVE in Accelerate. Used for PRISM-ZONE-A-DEEPSPEED.
+  #
+  # 2D Parallelism (Tensor Parallel - TP):
+  #   - Splits individual layers (Attention heads, MLP) across GPUs.
+  #   - Critical for models where a single layer > GPU Mem.
+  #   - Status: Requires DeepSpeed-Inference or Megatron-DeepSpeed backend.
+  #
+  # 3D Parallelism (TP + Pipeline Parallel - PP):
+  #   - Splits model layers into "stages" (Depth).
+  #   - Reduces bubble overhead compared to pure PP.
+  #   - Status: Future target for >100B models.
+  # -------------------------------------------------------------------------
+
+  - id: PRISM-ZONE-A-DEEPSPEED-ZERO3
+    name: "Zone A DeepSpeed (Tier 3): 4-GPU, ZeRO-3 (Full Shard)"
+    resources:
+      ngpus: 4
+      topology: "4gpu_deepspeed_zero3"
+      walltime: "48:00:00"
+    common_overrides:
+      training.batch_size: 64 # Massive batch size enabled by ZeRO-3
+      training.max_steps: 100
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+    variants:
+      - id: PRISM-ZONE-A-DEEPSPEED-ZERO3-TEST
+        overrides: {}
+
+  - id: PRISM-FUTURE-TIER3-TP
+    name: "[FUTURE] Zone A Tensor Parallel (2D)"
+    resources:
+      ngpus: 8
+      topology: "8gpu_pinned"
+    common_overrides:
+      description: "Requires integration with DeepSpeed-MII or Megatron"
+
+  - id: PRISM-AURORA-ZONE-A
+    name: "Aurora Zone A: 12-XPU, ZeRO-2, Optimized"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "06:00:00"
+    common_overrides:
+      # Batch Configuration
+      # Per-device batch: 8, Global: 12 * 8 = 96 samples/step
+      # With grad accum 4: Effective batch = 96 * 4 = 384
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+
+      # Training Duration
+      # PixMo-Cap has ~712k images
+      # At effective batch 384: ~1854 steps per epoch
+      # ~5k steps = ~2.7 epochs (good for alignment)
+      training.max_steps: 5000
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 500
+
+      # Device & Model
+      training.device: "xpu"
+      model.backbone_id: "allenai/OLMo-7B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.modalities: ["text", "image"]   # PixMo-Cap needs the image projector
+      model.d_img: 768 # Match siglip2-base (768) to prevent random projection
+      
+      # Optimized LR for Projector Alignment
+      # Higher LR is common for frozen encoder/backbone alignment
+      training.learning_rate: 5e-4
+      training.weight_decay: 0.0  # Often disabled for alignment phase
+      training.warmup_steps: 200  # ~5% of total steps
+
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-AURORA-ZONE-A-DEFAULT
+        overrides: {}
+      - id: PRISM-AURORA-ZONE-A-LARGE-BATCH
+        overrides:
+          training.batch_size: 16
+          training.gradient_accumulation_steps: 2
+      - id: PRISM-AURORA-ZONE-A-8NODE
+        name: "8-Node Linear Scaling"
+        overrides:
+          # Linear LR scaling: 5e-4 × 8 = 4e-3
+          training.learning_rate: 4e-3
+          training.warmup_steps: 500
+          training.weight_decay: 0.01
+          training.max_steps: 5000
+      - id: PRISM-AURORA-ZONE-A-2NODE-OPT
+        name: "2-Node Sqrt Scaling (Optimized)"
+        overrides:
+          # Lower LR for stability with faster iteration
+          training.learning_rate: 5e-4
+          training.warmup_steps: 300
+          training.weight_decay: 0.0
+          training.max_steps: 5000
+      - id: PRISM-AURORA-ZONE-A-4NODE-OPT
+        name: "4-Node Sqrt Scaling (Optimized)"
+        overrides:
+          # Sqrt LR scaling from 2-node: 5e-4 × sqrt(2) ≈ 7e-4
+          # Gradient clipping now enabled by default (max_norm=1.0)
+          training.learning_rate: 7e-4
+          training.warmup_steps: 400
+          training.weight_decay: 0.0
+          training.max_steps: 5000
+      - id: PRISM-AURORA-ZONE-A-4NODE-WEAK
+        name: "4-Node Weak Scaling Test"
+        overrides:
+          # WEAK SCALING: Double batch to maintain per-GPU work
+          # 2-node: batch=8, grad_accum=4 → 768 samples/step
+          # 4-node weak: batch=8, grad_accum=8 → 1536 samples/step (same per-GPU)
+          # If step time matches 2-node, confirms memory bandwidth bound
+          training.batch_size: 8
+          training.gradient_accumulation_steps: 8  # Doubled from 4
+          training.learning_rate: 1e-3  # Linear scale with 2× effective batch
+          training.warmup_steps: 200
+          training.weight_decay: 0.0
+          training.max_steps: 2500  # Half steps (same total samples)
+      - id: PRISM-AURORA-ZONE-A-1B
+        name: "Aurora Zone A: 12-XPU, OLMo-1B"
+        overrides:
+          model.backbone_id: "allenai/OLMo-1B-0724-hf"
+          # Scale batch size for smaller model? 
+          # 1B fits more per GPU. 
+          # Current baseline: 8 per GPU (7B). 
+          # 1B can likely do 32 per GPU -> Caused OOM on 4 nodes.
+          # Reducing to 16 and doubling accum to 8.
+          training.batch_size: 16 
+          training.gradient_accumulation_steps: 8 # Increased to reduce comm overhead & Fix OOM
+          # keep d_img=768 from common overrides or ensure it propagates.
+          # (It propagates from common overrides, but good to double check implicit behavior)
+      - id: PRISM-PROJECTOR-ONLY-4NODE
+        name: "4-Node Projector-Only (Zone A Revisited)"
+        overrides:
+          training: projector_only
+          model: prism_image_only  # Use image-only config (avoids 540M unused projector params)
+          model.backbone_id: "allenai/OLMo-1B-0724-hf"  # Override parent's 7B default
+          # User requested default WandB project (prism-zone-a-alignment) for this run
+
+      - id: PRISM-ENCODER-PROJECTOR-4NODE
+        name: "4-Node Encoder+Projector (LLM Frozen)"
+        overrides:
+          training: encoder_projector
+          model.backbone_id: "allenai/OLMo-1B-0724-hf"
+          model.d_img: 768
+          wandb.project: "ModCon-PRISM"
+
+  # -------------------------------------------------------------------------
+  # Image-Only Training (Optimized for pixmo datasets)
+  # Uses prism_image_only config to enable DDP static_graph optimization
+  # -------------------------------------------------------------------------
+  - id: PRISM-IMAGE-ONLY
+    name: "Aurora Image-Only: 12-XPU, OLMo-1B, DDP Optimized"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "06:00:00"
+    common_overrides:
+      # Use image-only model config (only text+image modalities)
+      # This enables DDP static_graph=True for 5-10% faster training
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.d_img: 768  # SigLIP-base
+      
+      # Only load text + image modalities
+      model.modalities: [text, image]
+      
+      # Batch Configuration
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 5000
+      
+      # Optimized LR for Projector Alignment
+      training.learning_rate: 5e-4
+      training.weight_decay: 0.0
+      training.warmup_steps: 200
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 500
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-IMAGE-ONLY-1N
+        name: "1-Node Image-Only"
+        overrides: {}
+      - id: PRISM-IMAGE-ONLY-2N
+        name: "2-Node Image-Only"
+        overrides:
+          training.learning_rate: 5e-4
+          training.warmup_steps: 300
+      - id: PRISM-IMAGE-ONLY-4N
+        name: "4-Node Image-Only"
+        overrides:
+          training.learning_rate: 7e-4
+          training.warmup_steps: 400
+      - id: PRISM-IMAGE-ONLY-7B
+        name: "7B Model Image-Only (BS=3 optimal)"
+        overrides:
+          model.backbone_id: "allenai/OLMo-7B-0724-hf"
+          training.batch_size: 3  # Max stable batch size (BS=4 OOMs on mixed datasets)
+          training.gradient_accumulation_steps: 16
+      - id: PRISM-IMAGE-ONLY-7B-CONSERVATIVE
+        name: "7B Model Image-Only (Conservative BS=2)"
+        overrides:
+          model.backbone_id: "allenai/OLMo-7B-0724-hf"
+          training.batch_size: 2
+          training.gradient_accumulation_steps: 16
+
+  - id: PRISM-AURORA-ZONE-A-VLA-CALVIN
+    name: "Aurora Zone A VLA: CALVIN (top+wrist+pose+language -> next action)"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      training.task: "vla_calvin"
+      training.device: "xpu"
+      training.batch_size: 1
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 2000
+      training.learning_rate: 3e-4
+      training.weight_decay: 0.0
+      training.warmup_steps: 100
+      training.eval_every_n_steps: 1000
+      training.save_every_n_steps: 250
+      training.viz_every_n_steps: 1000
+      training.verbosity: "INFO"
+      training.data_num_workers: 2
+      training.calvin_root: "/flare/ModCon/sww/vla_training/calvin_dataset"
+      training.calvin_split: "train"
+      training.calvin_max_chunk: 20
+      training.calvin_text_max_length: 64
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.modalities: ["text", "image"]
+      model.d_img: 768
+      model.is_vla: true
+      model.pose_dim: 15
+      model.action_dim: 7
+    variants:
+      - id: PRISM-AURORA-ZONE-A-VLA-CALVIN-DEFAULT
+        overrides: {}
+      - id: PRISM-AURORA-ZONE-A-VLA-CALVIN-SMOKE
+        overrides:
+          training.max_steps: 30
+      # WebDataset-loader variants. Same trainer + model as DEFAULT/SMOKE;
+      # only the CALVIN data path changes
+      # (CalvinVLADataset → ModalityAwareWebDatasetWrapper).
+      - id: PRISM-AURORA-ZONE-A-VLA-CALVIN-WEB
+        overrides:
+          training.calvin_loader: "webdataset"
+          training.calvin_webdataset_storage: "lustre"
+      - id: PRISM-AURORA-ZONE-A-VLA-CALVIN-WEB-SMOKE
+        overrides:
+          training.max_steps: 30
+          training.calvin_loader: "webdataset"
+          training.calvin_webdataset_storage: "lustre"
+
+  # -------------------------------------------------------------------------
+  # Molmo-Style End-to-End Training (Encoder + LLM + Projector)
+  # -------------------------------------------------------------------------
+  - id: PRISM-MOLMO-E2E
+    name: "Molmo E2E: 12-XPU, OLMo-1B, Differential LR, Layered Warmup"
+    # Dataset: Use --dataset-groups projector (same as projector pretraining).
+    # The projector preset uses Molmo-inspired weight rebalancing:
+    #   ~32% caption / ~32% pointing / ~30% scientific / ~5% wiki_en
+    # For broader coverage, use --dataset-groups all (adds non-English wiki, more scientific).
+    #
+    # Example launch (E2E from projector checkpoint):
+    #   python tools/launch_aurora_daos.py \
+    #     --id E2E-STAGE2 --design PRISM-MOLMO-E2E-2NODE \
+    #     --nodes 2 --batch --queue debug --walltime 01:00:00 \
+    #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs \
+    #     --resume-weights-only outputs/PROJECTOR-STAGE1/.../checkpoints/step_500
+    default_dataset_groups: projector
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "06:00:00"
+    common_overrides:
+      # Model
+      model: prism_image_only
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.d_img: 768  # Match siglip2-base
+      
+      # Training: Molmo Stage 1 E2E recipe
+      # Sets: freeze_llm=false, freeze_vit=false
+      # Differential LRs: Connector=2e-4, ViT=6e-6, LLM=2e-5
+      # Layered warmup: Connector=200 steps, Main=2000 steps
+      training: molmo_stage1
+      
+      # Batch Configuration (Conservative for E2E memory)
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      
+      # Training Duration
+      training.max_steps: 5000
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 500
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-MOLMO-E2E-2NODE
+        name: "2-Node E2E Training"
+        overrides: {}
+      - id: PRISM-MOLMO-E2E-4NODE
+        name: "4-Node E2E Training"
+        overrides:
+          training.max_steps: 5000
+      - id: PRISM-MOLMO-E2E-DEBUG
+        name: "Debug: Short E2E Run"
+        overrides:
+          training.max_steps: 100
+      - id: PRISM-MOLMO-TUNED-DEBUG
+        name: "Debug: Tuned Param Config"
+        overrides:
+          training.debug_mode: true
+
+  # -------------------------------------------------------------------------
+  # Projector Normalization Ablations (OLMo-1B, Image-Only)
+  # -------------------------------------------------------------------------
+  # These experiments test different projector normalization strategies
+  # to find the optimal configuration for vision-language alignment.
+  # All use 4 nodes, OLMo-1B backbone, frozen encoder/LLM (projector-only training)
+  
+  - id: PRISM-PROJ-ABLATION
+    name: "Projector Normalization Ablation Study"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      # Use image-only model config (OLMo-1B, text+image only)
+      model: prism_image_only
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      training: projector_only
+      
+      # Batch configuration
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 2000
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 500
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    
+    variants:
+      # --- Baseline: LayerNorm (Original Behavior) ---
+      - id: PRISM-PROJ-ABLATION-LAYERNORM
+        name: "Ablation: LayerNorm (Baseline)"
+        overrides:
+          model.projector_norm_mode: "layernorm"
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- No Normalization (Raw MLP Output) ---
+      - id: PRISM-PROJ-ABLATION-NONE
+        name: "Ablation: No Normalization"
+        overrides:
+          model.projector_norm_mode: "none"
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- RMSNorm (LLaMA/OLMo Style) ---
+      - id: PRISM-PROJ-ABLATION-RMSNORM
+        name: "Ablation: RMSNorm"
+        overrides:
+          model.projector_norm_mode: "rmsnorm"
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- L2 Per-Token Normalization ---
+      - id: PRISM-PROJ-ABLATION-L2TOKEN
+        name: "Ablation: L2 Per-Token Norm"
+        overrides:
+          model.projector_norm_mode: "l2_token"
+          model.projector_target_norm: 0.25
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- L2 Sequence-Level Normalization ---
+      - id: PRISM-PROJ-ABLATION-L2SEQ
+        name: "Ablation: L2 Sequence-Level Norm"
+        overrides:
+          model.projector_norm_mode: "l2_sequence"
+          model.projector_target_norm: 0.25
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- Scale Only (No Normalization, Learned Scale) ---
+      - id: PRISM-PROJ-ABLATION-SCALE
+        name: "Ablation: Scale Only"
+        overrides:
+          model.projector_norm_mode: "scale_only"
+          model.projector_target_norm: 0.25
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- LayerNorm + Embed Before Norm ---
+      - id: PRISM-PROJ-ABLATION-LN-EMBED-BEFORE
+        name: "Ablation: LayerNorm + Embed Before"
+        overrides:
+          model.projector_norm_mode: "layernorm"
+          model.projector_modality_embed_pos: "before_norm"
+      
+      # --- No Normalization + No Modality Embed ---
+      - id: PRISM-PROJ-ABLATION-NONE-NOEMBED
+        name: "Ablation: No Norm, No Embed"
+        overrides:
+          model.projector_norm_mode: "none"
+          model.projector_modality_embed_pos: "none"
+      
+      # --- Match Text Stats (Token Norm Distribution Matching) ---
+      # Preserves relative token differences while matching overall norm distribution to text
+      - id: PRISM-PROJ-ABLATION-MATCH-TEXT
+        name: "Ablation: Match Text Stats"
+        overrides:
+          model.projector_norm_mode: "match_text_stats"
+          model.projector_text_norm_mean: 0.25
+          model.projector_text_norm_std: 0.05
+          model.projector_norm_clip_min: 0.1
+          model.projector_norm_clip_max: 0.5
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- Match Text Elemstats (Element-wise Distribution Matching) ---
+      # Like LayerNorm but scales to match text element-wise statistics
+      - id: PRISM-PROJ-ABLATION-MATCH-ELEMSTATS
+        name: "Ablation: Match Text Elemstats"
+        overrides:
+          model.projector_norm_mode: "match_text_elemstats"
+          model.projector_text_elem_mean: 0.0
+          model.projector_text_elem_std: 0.006
+          model.projector_norm_clip_min: 0.1
+          model.projector_norm_clip_max: 0.5
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # =========================================================================
+      # Modality Embedding Scale Ablations (Option A & C from analysis)
+      # =========================================================================
+      # The modality embedding was found to have norm ~0.9, which is 3.5x larger
+      # than text embedding norms (~0.25). This may be causing the loss floor.
+      
+      # --- Option A: Fix Modality Embedding Scale to Match Text ---
+      # Scale = 0.25 / sqrt(2048) ≈ 0.0055 gives embedding norm ~0.25
+      - id: PRISM-PROJ-ABLATION-EMBED-SCALED
+        name: "Ablation: Scaled Embed (0.0055)"
+        overrides:
+          model.projector_norm_mode: "l2_token"
+          model.projector_target_norm: 0.25
+          model.projector_modality_embed_pos: "after_norm"
+          model.projector_modality_embed_scale: 0.0055  # Matches text norm
+      
+      # --- Option A Variant: L2Token + Scaled Embed + Match Text Stats ---
+      - id: PRISM-PROJ-ABLATION-L2TOKEN-SCALED
+        name: "Ablation: L2Token + Scaled Embed"
+        overrides:
+          model.projector_norm_mode: "match_text_stats"
+          model.projector_text_norm_mean: 0.25
+          model.projector_text_norm_std: 0.05
+          model.projector_modality_embed_pos: "after_norm"
+          model.projector_modality_embed_scale: 0.0055
+      
+      # --- Option C: No Modality Embedding (Already exists as NONE-NOEMBED) ---
+      # But let's also try: L2Token normalization WITHOUT modality embedding
+      - id: PRISM-PROJ-ABLATION-L2TOKEN-NOEMBED
+        name: "Ablation: L2Token, No Embed"
+        overrides:
+          model.projector_norm_mode: "l2_token"
+          model.projector_target_norm: 0.25
+          model.projector_modality_embed_pos: "none"
+      
+      # --- LayerNorm + No Modality Embedding ---
+      - id: PRISM-PROJ-ABLATION-LAYERNORM-NOEMBED
+        name: "Ablation: LayerNorm, No Embed"
+        overrides:
+          model.projector_norm_mode: "layernorm"
+          model.projector_modality_embed_pos: "none"
+      
+      # --- Match Text Stats + No Modality Embedding ---
+      - id: PRISM-PROJ-ABLATION-MATCH-TEXT-NOEMBED
+        name: "Ablation: Match Text, No Embed"
+        overrides:
+          model.projector_norm_mode: "match_text_stats"
+          model.projector_text_norm_mean: 0.25
+          model.projector_text_norm_std: 0.05
+          model.projector_norm_clip_min: 0.1
+          model.projector_norm_clip_max: 0.5
+          model.projector_modality_embed_pos: "none"
+
+  # -------------------------------------------------------------------------
+  # Encoder + Projector Ablations (LLM Frozen)
+  # -------------------------------------------------------------------------
+  # Tests projector normalization strategies with TRAINABLE encoder (SigLIP)
+  # Uses differential LR (connector: 2e-4, encoder: 6e-6) and layered warmup
+  # Based on best performers from projector-only ablations:
+  #   - NONE-NOEMBED: 3.575 (best)
+  #   - LAYERNORM: 3.631 (standard baseline)
+  #   - MATCH-TEXT-NOEMBED: 3.768 (perfect norm matching)
+  
+  - id: PRISM-ENCODER-PROJ-ABLATION
+    name: "Encoder + Projector Ablation Study"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      # Model: OLMo-1B + SigLIP, image+text only
+      model: prism_image_only
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      
+      # Training: Uses differential LR and layered warmup
+      # - lr_connector: 2e-4, lr_vit: 6e-6
+      # - warmup_connector: 200, warmup_main: 1000
+      # - freeze_llm: true, freeze_vit: false
+      training: encoder_projector
+      
+      # Batch configuration
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 4
+      training.max_steps: 2000
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 200
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    
+    variants:
+      # --- Best Projector-Only Performer (3.575) ---
+      - id: PRISM-EP-ABLATION-NONE-NOEMBED
+        name: "EP: No Norm, No Embed (Best Proj-Only)"
+        overrides:
+          model.projector_norm_mode: "none"
+          model.projector_modality_embed_pos: "none"
+      
+      # --- Test Modality Embed with Trainable Encoder ---
+      - id: PRISM-EP-ABLATION-NONE-EMBED
+        name: "EP: No Norm, With Embed"
+        overrides:
+          model.projector_norm_mode: "none"
+          model.projector_modality_embed_pos: "after_norm"
+          model.projector_modality_embed_scale: 0.02
+      
+      # --- Standard Baseline (3.631) ---
+      - id: PRISM-EP-ABLATION-LAYERNORM
+        name: "EP: LayerNorm (Baseline)"
+        overrides:
+          model.projector_norm_mode: "layernorm"
+          model.projector_modality_embed_pos: "after_norm"
+      
+      # --- LayerNorm No Embed (3.637) ---
+      - id: PRISM-EP-ABLATION-LAYERNORM-NOEMBED
+        name: "EP: LayerNorm, No Embed"
+        overrides:
+          model.projector_norm_mode: "layernorm"
+          model.projector_modality_embed_pos: "none"
+      
+      # --- Perfect Norm Matching (may improve with trainable encoder) ---
+      - id: PRISM-EP-ABLATION-MATCH-TEXT-NOEMBED
+        name: "EP: Match Text Stats, No Embed"
+        overrides:
+          model.projector_norm_mode: "match_text_stats"
+          model.projector_text_norm_mean: 0.25
+          model.projector_text_norm_std: 0.05
+          model.projector_norm_clip_min: 0.1
+          model.projector_norm_clip_max: 0.5
+          model.projector_modality_embed_pos: "none"
+
+  # -------------------------------------------------------------------------
+  # OLMo-3 7B Multi-Dataset Training (DAOS)
+  # -------------------------------------------------------------------------
+  # Training with the latest OLMo-3 7B model using multi-dataset WebDataset
+  # loading from DAOS. Uses ~6.9M samples across 25 datasets.
+  
+  - id: PRISM-OLMO3-MULTI-DATASET
+    name: "OLMo-3 7B Multi-Dataset Training (DAOS)"
+    default_dataset_groups: projector  # Molmo-inspired rebalanced mix; override with --dataset-groups all
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "02:00:00"
+    common_overrides:
+      # Model: OLMo-3 7B (latest) + SigLIP, image+text only
+      model: prism_image_only
+      model.backbone_id: "allenai/Olmo-3-1025-7B"
+      model.d_img: 768  # Match siglip2-base
+
+      # Best projector config from ablations
+      model.projector_norm_mode: "none"
+      model.projector_modality_embed_pos: "none"
+      
+      # Training configuration
+      training: projector_only
+      training.batch_size: 2  # Reduced from 4 to avoid OOM on 7B model
+      training.gradient_accumulation_steps: 16  # Doubled to maintain effective batch size
+      training.max_steps: 5000
+      
+      # Optimized learning rate for projector alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 200
+      
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    
+    variants:
+      # --- Debug: 2-Node Short Run ---
+      - id: PRISM-OLMO3-DEBUG-2NODE
+        name: "OLMo-3 Debug: 2-Node, 100 steps"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+      
+      # --- Throughput Optimized: Larger Batch Size ---
+      # Benchmark shows 7B backbone handles BS=8 with ~19GB memory
+      # Full model with SigLIP adds ~1GB, so BS=4 should be safe
+      - id: PRISM-OLMO3-THROUGHPUT-OPT
+        name: "OLMo-3 Throughput Optimized: BS=4, accum=8"
+        overrides:
+          training.batch_size: 4  # Doubled from 2
+          training.gradient_accumulation_steps: 8  # Halved to maintain effective batch
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.viz_every_n_steps: 50
+      
+      # --- Max Throughput Test: BS=8 ---
+      - id: PRISM-OLMO3-MAX-THROUGHPUT
+        name: "OLMo-3 Max Throughput Test: BS=8, accum=4"
+        overrides:
+          training.batch_size: 8  # Quadrupled from 2
+          training.gradient_accumulation_steps: 4  # Quartered
+          training.max_steps: 50
+          training.eval_every_n_steps: 10
+          training.viz_every_n_steps: 25
+      
+      # --- Moderate Throughput Test: BS=3 ---
+      # BS=4 OOM'd (tried to allocate 3.35 GiB with 60.26 GiB already allocated)
+      # BS=3 should use ~45-50 GiB, leaving headroom
+      - id: PRISM-OLMO3-BS3-TEST
+        name: "OLMo-3 Moderate Throughput: BS=3, accum=10"
+        overrides:
+          training.batch_size: 3  # Between OOM'd BS=4 and working BS=2
+          training.gradient_accumulation_steps: 10  # Adjusted to maintain similar effective batch
+          training.max_steps: 100
+          training.eval_every_n_steps: 20
+          training.viz_every_n_steps: 50
+      
+      # --- 2-Node Projector Training ---
+      - id: PRISM-OLMO3-PROJ-2NODE
+        name: "OLMo-3 Projector: 2-Node"
+        overrides:
+          training.max_steps: 2000
+      
+      # --- 4-Node Projector Training ---
+      - id: PRISM-OLMO3-PROJ-4NODE
+        name: "OLMo-3 Projector: 4-Node"
+        overrides:
+          training.max_steps: 5000
+          training.learning_rate: 1.4e-3  # sqrt(2) scaling
+      
+      # --- 4-Node Encoder + Projector ---
+      - id: PRISM-OLMO3-EP-4NODE
+        name: "OLMo-3 Encoder+Projector: 4-Node"
+        overrides:
+          training: encoder_projector
+          training.max_steps: 5000
+      
+      # --- All Data Groups ---
+      - id: PRISM-OLMO3-ALL-DATA
+        name: "OLMo-3 All Datasets"
+        overrides:
+          training.max_steps: 10000  # More steps for larger data
+      
+      # --- 1-Hour E2E Test: All Datasets ---
+      # At ~53 samp/s with BS=2, accum=16, eff_batch=384:
+      # 1 hour = 3600s, ~7.2s per step = ~500 steps
+      - id: PRISM-OLMO3-1HR-E2E-TEST
+        name: "OLMo-3 1-Hour E2E Test: All Datasets"
+        overrides:
+          training.max_steps: 500
+          training.eval_every_n_steps: 50
+          training.save_every_n_steps: 100
+          training.viz_every_n_steps: 100
+      
+      # --- Pixmo Only (Caption + Pointing) ---
+      - id: PRISM-OLMO3-PIXMO
+        name: "OLMo-3 Pixmo Only"
+        overrides:
+          # dataset_groups set via --dataset-groups flag
+          training.max_steps: 5000
+      
+      # --- Scientific Papers (S1-MMAlign) ---
+      - id: PRISM-OLMO3-SCIENTIFIC
+        name: "OLMo-3 Scientific Papers"
+        overrides:
+          training.max_steps: 5000
+      
+      # --- E2E Training (Unfreeze Encoder + LLM) ---
+      # Molmo-style: differential LRs (Connector=2e-4, ViT=6e-6, LLM=2e-5)
+      # with layered warmup (Connector=200 steps, Main=2000 steps).
+      #
+      # MEMORY: DDP cannot fit 7B E2E on 64GB tiles (model 14GB + DDP grad
+      # buffers 14GB + activations during backward = OOM).
+      # FSDP SHARD_GRAD_OP with top-level-only wrapping (no auto_wrap_policy):
+      #   - Shards gradients + optimizer states across 12 tiles
+      #   - Keeps full model params on each rank (no AllGather overhead)
+      #   - Single ReduceScatter per backward (like DDP AllReduce)
+      #
+      # Launch (from projector checkpoint):
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-E2E --design PRISM-OLMO3-E2E-2NODE \
+      #     --nodes 2 --batch --queue debug --walltime 01:00:00 \
+      #     --dist-strategy fsdp --fsdp-sharding shard_grad_op \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs \
+      #     --resume-weights-only outputs/PROJECTOR-RUN/.../checkpoints/step_500
+      - id: PRISM-OLMO3-E2E-2NODE
+        name: "OLMo-3 E2E: 2-Node, FSDP shard_grad_op (top-level), Differential LR"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 32
+          training.max_steps: 5000
+          training.save_every_n_steps: 500
+          training.viz_every_n_steps: 250
+          # Override parent common_overrides that are projector-specific
+          training.learning_rate: 2e-5  # Molmo E2E global/LLM LR (parent has 1e-3)
+          training.weight_decay: 0.01   # Molmo E2E regularization (parent has 0.0)
+      
+      - id: PRISM-OLMO3-E2E-4NODE
+        name: "OLMo-3 E2E: 4-Node, FSDP shard_grad_op (top-level), Differential LR"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 32
+          training.max_steps: 5000
+          training.save_every_n_steps: 500
+          training.viz_every_n_steps: 250
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+      
+      - id: PRISM-OLMO3-E2E-DEBUG
+        name: "OLMo-3 E2E Debug: FSDP full_shard + transformer_auto_wrap, 20 steps"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 1
+          training.max_steps: 20
+          training.eval_every_n_steps: 10
+          training.save_every_n_steps: 10
+          training.viz_every_n_steps: 10
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+      # 2-node throughput test results:
+      # BS=16 + ckpt/2: 42.18GB peak, 13.5 samples/sec — best config
+      # BS=20 + ckpt/2: OOM | BS=12 no ckpt: 32.67GB, 10.3 s/s
+      - id: PRISM-OLMO3-E2E-THROUGHPUT
+        name: "OLMo-3 E2E: FSDP throughput test, BS=16 + selective ckpt"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 16
+          training.gradient_accumulation_steps: 1
+          training.max_steps: 20
+          training.eval_every_n_steps: 10
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 50
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+      # Production E2E: 8 nodes, BS=16 + GRAD_CKPT_FREQ=2
+      # 96 tiles × BS=16 = 1536 effective batch
+      # Est ~54 samples/sec, ~28s/step, ~1500 steps in 12h
+      - id: PRISM-OLMO3-E2E-PROD
+        name: "OLMo-3 7B E2E Production: 8-Node FSDP, Molmo recipe"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 16
+          training.gradient_accumulation_steps: 1
+          training.max_steps: 1500
+          training.eval_every_n_steps: 100
+          training.save_every_n_steps: 200
+          training.viz_every_n_steps: 500
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+      
+      # --- HSDP E2E (Multi-Node Comparison) ---
+      # HSDP = shard_grad_op within node + DDP across nodes
+      # With BF16 optimizer states, DDP alone fits in HBM. HSDP is primarily
+      # useful if we need to scale BS or use FP32 optimizer states in the future.
+      #
+      # Launch:
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-E2E-HSDP --design PRISM-OLMO3-E2E-HSDP-2NODE \
+      #     --nodes 2 --batch --queue demand --walltime 01:00:00 \
+      #     --dist-strategy hsdp --fsdp-sharding shard_grad_op \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs
+      - id: PRISM-OLMO3-E2E-HSDP-2NODE
+        name: "OLMo-3 E2E: 2-Node, HSDP, Differential LR"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 32
+          training.max_steps: 5000
+          training.save_every_n_steps: 500
+          training.viz_every_n_steps: 250
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+      
+      - id: PRISM-OLMO3-E2E-HSDP-DEBUG
+        name: "OLMo-3 E2E Debug: HSDP, 100 steps"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 32
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+      # --- HSDP shard_grad_op batch size sweep ---
+      # shard_grad_op keeps params gathered after forward (~31GB reserved vs
+      # ~16GB for full_shard), so BS=16 OOMs on 69GB tiles.
+      # These designs sweep BS to find the max that fits with shard_grad_op.
+      # Grad accum compensates to keep effective per-rank batch constant at 16.
+      #
+      # Launch (BS=8, 2N):
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-HSDP-SGO-BS8 --design PRISM-OLMO3-E2E-HSDP-SGO-BS8 \
+      #     --nodes 2 --batch --queue demand --walltime 01:00:00 \
+      #     --dist-strategy hsdp --fsdp-sharding shard_grad_op \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs
+      - id: PRISM-OLMO3-E2E-HSDP-SGO-BS8
+        name: "HSDP shard_grad_op BS=8 (sweep)"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 8
+          training.gradient_accumulation_steps: 2
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 50
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+      # Launch (BS=4, 2N):
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-HSDP-SGO-BS4 --design PRISM-OLMO3-E2E-HSDP-SGO-BS4 \
+      #     --nodes 2 --batch --queue demand --walltime 01:00:00 \
+      #     --dist-strategy hsdp --fsdp-sharding shard_grad_op \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs
+      - id: PRISM-OLMO3-E2E-HSDP-SGO-BS4
+        name: "HSDP shard_grad_op BS=4 (sweep)"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 4
+          training.gradient_accumulation_steps: 4
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 50
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+      
+      # FSDP full_shard baseline for comparison with HSDP shard_grad_op sweep.
+      # Same 100-step, 2-node config with timing instrumentation.
+      #
+      # Launch (FSDP baseline, 2N):
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-FSDP-BASELINE --design PRISM-OLMO3-E2E-FSDP-BASELINE \
+      #     --nodes 2 --batch --queue demand --walltime 01:00:00 \
+      #     --dist-strategy fsdp --fsdp-sharding full_shard \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs
+      - id: PRISM-OLMO3-E2E-FSDP-BASELINE
+        name: "FSDP full_shard BS=16 baseline (100 steps)"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 16
+          training.gradient_accumulation_steps: 1
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 50
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+      # --- COMPOSITE DDP E2E (Alternative to FSDP) ---
+      # Uses COMPOSITE GPU hierarchy: 2 tiles per card = 1 device with 128GB HBM.
+      # 6 ranks/node instead of 12. Plain DDP (no FSDP sharding needed).
+      # OLMo-7B BF16: ~14GB params + ~14GB grads + ~28GB optimizer = ~56GB < 128GB.
+      # Avoids FSDP communication overhead and hang issues.
+      #
+      # Launch (1-node debug, 20min):
+      #   python tools/launch_aurora_daos.py \
+      #     --id OLMO3-E2E-COMPOSITE --design PRISM-OLMO3-E2E-COMPOSITE-DEBUG \
+      #     --nodes 1 --composite --batch --queue debug --walltime 00:20:00 \
+      #     --grad-ckpt-freq 0 \
+      #     --dataset-groups projector --use-bucketing --max-seq-length 1024 --no-pil4dfs
+      #
+      # MEMORY: 128GB HBM per device. 7B BF16 model+grads+optimizer = ~56GB.
+      # Activations at BS=1/seq=1024 = ~6GB. No gradient checkpointing needed.
+      # --grad-ckpt-freq 0 disables it for ~30% faster backward pass.
+      - id: PRISM-OLMO3-E2E-COMPOSITE-DEBUG
+        name: "OLMo-3 E2E Debug: COMPOSITE DDP (128GB/device), 20 steps"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 1
+          training.gradient_accumulation_steps: 6  # 6 ranks * BS=1 * accum=6 = 36 effective batch
+          training.max_steps: 20
+          training.eval_every_n_steps: 10
+          training.save_every_n_steps: 20
+          training.viz_every_n_steps: 10
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+      
+      - id: PRISM-OLMO3-E2E-COMPOSITE-1NODE
+        name: "OLMo-3 E2E: 1-Node COMPOSITE DDP, Differential LR"
+        overrides:
+          training: molmo_stage1
+          training.batch_size: 2  # 128GB HBM fits BS=2 without grad ckpt (~68GB / 128GB)
+          training.gradient_accumulation_steps: 16  # 6 ranks * BS=2 * accum=16 = 192 effective batch
+          training.max_steps: 5000
+          training.save_every_n_steps: 500
+          training.viz_every_n_steps: 250
+          training.learning_rate: 2e-5
+          training.weight_decay: 0.01
+
+  # -------------------------------------------------------------------------
+  # Pointing Dataset Test (pixmo_points + cosyn_point)
+  # -------------------------------------------------------------------------
+  - id: PRISM-POINTING-TEST
+    name: "Pointing Dataset Test: 12-XPU, OLMo-1B, 15min"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "00:15:00"
+    common_overrides:
+      # Model: Use smaller 1B for fast iteration
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.d_img: 768
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      
+      # Batch Configuration
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 2
+      
+      # Short training duration for testing
+      training.max_steps: 200
+      
+      # Frequent logging to verify pointing format
+      training.eval_every_n_steps: 50
+      training.save_every_n_steps: 100
+      training.viz_every_n_steps: 25
+      
+      # Optimized LR for projector alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 20
+      
+      training.device: "xpu"
+      training.verbosity: "DEBUG"  # Extra logging for test
+    variants:
+      - id: PRISM-POINTING-TEST-DEFAULT
+        name: "Pointing Test: Default"
+        overrides: {}
+
+  # ============================================================================
+  # AuroraGPT-2B Backbone Experiments
+  # ============================================================================
+  # AuroraGPT-2B: Llama architecture (~2B params), pretrained from scratch on 7T+
+  # tokens via Megatron-DeepSpeed. Uses Gemma tokenizer (256K vocab).
+  # Checkpoint is on Lustre (not DAOS), loaded directly via local path.
+  - id: PRISM-AGPT2B
+    name: "AuroraGPT-2B Projector Alignment (DAOS Data, Image+Text)"
+    default_dataset_groups: pixmo
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      # Model: AuroraGPT-2B backbone + SigLIP, text+image only
+      # CRITICAL: ZE_AFFINITY_MASK=$LOCAL_RANK must be set in FLAT mode launch scripts.
+      # Without it, UR_RESULT_ERROR_OUT_OF_RESOURCES from 144 L0 contexts (Issue 9).
+      # BS=4 is the max stable batch size for FLAT mode (12 ranks/node).
+      # BS>=8 crashes with UR error even with affinity mask (kernel dispatch limit).
+      # SDPA: 134 samp/s, 27GB peak. Eager: 62-121 samp/s, 32GB peak. Use SDPA.
+      model: prism_auroragpt_2b
+      model.backbone_id: "/lus/flare/projects/AuroraGPT/evaluation/models/safetensors/AuroraGPT-2B-ws3072-ds-stage0-nl12-hs2048-mb1-seq8192-gb6144-sp1-pp1-tp1-bf16-optsophiag-lr2.17e-5-lwf0.05_ntok7064B_tokHF_tmgoogle_gemma-7b_flash/global_step140300"
+      model.d_img: 768
+
+      # Projector-only training (frozen backbone + frozen encoders)
+      # BS=4 max for FLAT mode (12 ranks/node, ~27GB peak with SDPA)
+      training: projector_only
+      training.batch_size: 4
+      training.gradient_accumulation_steps: 2
+      training.max_steps: 5000
+
+      # Optimized for projector alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 200
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+    variants:
+      - id: PRISM-AGPT2B-PROJ
+        name: "AuroraGPT-2B Projector: 1-Node"
+        overrides: {}
+
+      - id: PRISM-AGPT2B-PROJ-DEBUG
+        name: "AuroraGPT-2B Projector: Debug (100 steps)"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+
+      - id: PRISM-AGPT2B-PROJ-TINY
+        name: "AuroraGPT-2B Projector: Tiny Batch (BS=2, stress test)"
+        overrides:
+          training.batch_size: 2
+          training.gradient_accumulation_steps: 4
+
+      - id: PRISM-AGPT2B-PROJ-2NODE
+        name: "AuroraGPT-2B Projector: 2-Node (BS=4)"
+        overrides:
+          training.batch_size: 4
+          training.gradient_accumulation_steps: 2
+          training.max_steps: 5000
+
+  # ============================================================================
+  # Timeseries experiments
+  # ============================================================================
+  - id: PRISM-TIMESERIES
+    name: "Timeseries Modality Tests"
+    resources:
+      ngpus: 4
+      topology: "12xpu_aurora"
+      walltime: "00:15:00"
+    common_overrides:
+      model: prism_timeseries
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.d_img: 768
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+
+    # Projector-only training (frozen backbone + frozen encoders)
+      # BS=4 required: 256K vocab logits (BS*seq*vocab*4B) = 8.4GB at BS=4/seq=2048
+      training: projector_only
+      training.batch_size: 4
+      training.gradient_accumulation_steps: 8
+      training.max_steps: 5000
+
+      # Optimized for projector alignment
+      training.learning_rate: 1e-3
+      training.weight_decay: 0.0
+      training.warmup_steps: 200
+
+      # Logging & Checkpointing
+      training.eval_every_n_steps: 250
+      training.save_every_n_steps: 500
+      training.viz_every_n_steps: 250
+      training.device: "xpu"
+      training.verbosity: "INFO"
+
+    variants:
+      - id: PRISM-AGPT2B-PROJ
+        name: "AuroraGPT-2B Projector: 1-Node"
+        overrides: {}
+
+      - id: PRISM-AGPT2B-PROJ-DEBUG
+        name: "AuroraGPT-2B Projector: Debug (100 steps)"
+        overrides:
+          training.max_steps: 100
+          training.eval_every_n_steps: 25
+          training.save_every_n_steps: 50
+          training.viz_every_n_steps: 25
+  
+  # ============================================================================
+  # Per-modality smoke sweep (Phase 2 plan)
+  # 1 node / 12 XPUs, OLMo-1B, DDP, BS=8. 50 steps = ~30 post-warmup rolling
+  # window. Eval + checkpointing disabled — only perf.jsonl matters. Paired
+  # with experiments/modality_presets.yaml (text_image, text_ts, text_graph,
+  # text_table, text_geometry) and per-preset skip-overrides at
+  # src/conf/data/per_modality_smoke/<preset>.yaml via tools/run_sweep.py.
+  #
+  # NOTE: the `text_only` preset is NOT compatible with this design — backbone
+  # and encoders are frozen, so a text-only cell has zero trainable params and
+  # DDP refuses with a hard error. Sweep drivers must skip it (or run a
+  # variant that unfreezes the backbone).
+  # ============================================================================
+  - id: PRISM-MODALITY-SMOKE
+    name: "Per-modality smoke: 1N, OLMo-1B, DDP, BS=8, 50 steps"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "00:30:00"
+    common_overrides:
+      model.backbone_id: "allenai/OLMo-1B-0724-hf"
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.d_img: 768
+      training.batch_size: 8
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 50
+      training.learning_rate: 5e-4
+      training.weight_decay: 0.0
+      training.warmup_steps: 10
+      training.eval_every_n_steps: 0
+      training.save_every_n_steps: 0
+      training.viz_every_n_steps: 0
+      training.device: "xpu"
+      training.verbosity: "INFO"
+    variants:
+      - id: PRISM-MODALITY-SMOKE-1N
+        name: "1-node per-modality smoke"
+        overrides: {}
+      - id: PRISM-MODALITY-SMOKE-SCITS-1N
+        name: "2-node SciTS smoke (text+time_series)"
+        overrides:
+          model.modalities: [text, time_series]
+          model.modality_start_end_token_indices.time_series: [50280, 50281]
+      - id: PRISM-MODALITY-SMOKE-TEXTONLY-1N
+        name: "1-node text-only smoke (backbone unfrozen)"
+        # Parent freezes backbone+encoders, which leaves the text_only cell
+        # with zero trainable params and DDP fails hard. This variant
+        # unfreezes the backbone so the text_only sweep cell can train.
+        # Both model.freeze_backbone AND training.freeze_llm must be false —
+        # the trainer reads training.freeze_llm as authoritative
+        # (src/training/trainer_zone_a.py:245).
+        overrides:
+          model.freeze_backbone: false
+          "+training.freeze_llm": false

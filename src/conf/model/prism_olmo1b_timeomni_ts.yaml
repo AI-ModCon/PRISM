@@ -1,0 +1,32 @@
+backbone_id: allenai/OLMo-1B-0724-hf
+tokenizer_id: "${oc.env:PRISM_TOKENIZERS}/prism-olmo-1b-interleaved"  # Custom tokenizer with interleaving tokens added
+
+modalities: [text,time_series]
+
+freeze_backbone: true
+freeze_encoders: false
+
+is_timeseries: true
+ts_variates: 1
+# max_ts_length is auto-computed by train.py for timeomni:
+#   max_ts_length = max(timeomni_patch_len) * (timeomni_max_patches - 1)
+# Set to a sentinel here; train.py will override.
+max_ts_length: 0
+is_interleaved_qa: false
+normalize_ts_in_encoder: true
+ts_projector: "timeomni"
+modality_start_end_token_indices: {"time_series": [50280,50281]}
+
+# TimeOmni dynamic patching knobs
+# Candidate patch lengths (and matching strides) tried per sample; the
+# largest that keeps num_patches <= timeomni_max_patches is chosen.
+timeomni_patch_len: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_stride: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_d_model: 512       # Patch embedding hidden dimension
+timeomni_dropout: 0.1
+timeomni_ts_tokens: 100     # Target tokens-per-series for patch-size selection
+timeomni_max_patches: 200   # Hard budget: tokens per variate in merged sequence
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+projector_hidden_mult: 1
+projector_num_layers: 2

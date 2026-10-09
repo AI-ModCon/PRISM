@@ -1,0 +1,20 @@
+{
+  "unchanged_source_sha256": {
+    "tools/diagnose_prism_image_conditioning.py": "e45ee0227bcb57291cef30118f31870275986d7f2cbc85d40c0710fcc2cd27c4",
+    "tools/prism_image_conditioning.py": "81845528a13b99e42df197eb11d853b520381de97f48acb350bcd1c17e20f03d",
+    "tools/align_prism_image_conditioning.py": "902f32a073f78bda054c93df4ef5fd94fef928e2901900ad7eb1305b1f3813f5",
+    "tools/prism_image_alignment_checkpoint.py": "040d20b7b2c356d8a90b692d40b3fcf7190a121f8821def68be81bd2c07bdfe3",
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7",
+    "src/model.py": "765484238537b07c80f0470ccadb27258e1d15d112a9a3237a55b73819a5377c",
+    "src/decoders/conditioning.py": "3d8209d620466e53d273997cd4bf33e969d06425d5c644a6ccc3c7194c6adfb6",
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/decoders/loading.py": "73915e73f381ba3734da7ee2c8807efa25e95f17b94c34d04dcccfe92b80a381",
+    "tools/diagnose_prism_joint_components.py": "fcdcf6769e09834e678d2abc7d39a9142fed2c5457b7cb163d81c0250fbede3c",
+    "tests/test_prism_joint_components.py": "c9360ffd3acf348b0422552f0074cf951f5e0e2341895e4b7f254a19a02e92e9",
+    "tools/launch_aurora_image_experiment.py": "49ade754feb3acada3cf7a74acd0551d420bcd8d91854b28e16dd7c1654dbccf",
+    "tests/test_image_experiment_launcher.py": "413b39f239a264265fe8239effb120b197a205e4a0e1ce5a68eb45c6eb990800"
+  },
+  "config_sha256": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf",
+  "config_matches_original_smoke": true
+}

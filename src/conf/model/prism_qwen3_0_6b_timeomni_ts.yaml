@@ -1,0 +1,51 @@
+# Qwen3-0.6B + TimeOmni time-series encoder (SciTS scaling study).
+#
+# Width rung 1 of 4: d_model = 1024 (the LR-transfer reference width).
+# Non-interleaved (prefix) mode, so NO custom tokenizer and no <ts>/</ts>
+# tokens are required — modality_start_end_token_indices is only consulted
+# when is_interleaved_qa=true (src/data/multimodal.py:1397).
+
+# Hub ID, matching rungs 2-4 (prism_qwen3_{1_7b,4b,8b}_timeomni_ts.yaml).
+# Compute nodes are offline, so the launcher stages this from the shared
+# hub (--shared-hf-home); pinning one user's snapshot path here made the
+# rung unrunnable for anyone whose HF home is elsewhere.
+backbone_id: "Qwen/Qwen3-0.6B"
+tokenizer_id: "Qwen/Qwen3-0.6B"
+
+modalities: [text, time_series]
+
+# Alignment phase: frozen LLM backbone, trainable TS encoder + projector.
+# Matches PRISM-QWEN3-0-6B-TIMEOMNI in experiments/prism_designs.yaml.
+#
+# `freeze_backbone` here is the authoritative freeze decision. The training
+# config's `freeze_llm` can only ever UNFREEZE (src/train.py:611 acts only
+# on `not freeze_llm`) — there is no code path that freezes the backbone
+# from the training config. So to train the backbone end-to-end you must
+# set BOTH freeze_backbone=false here AND training.freeze_llm=false.
+freeze_backbone: true
+freeze_encoders: false
+
+d_text: 1024
+
+is_timeseries: true
+ts_variates: 1
+# Auto-computed by train.py for timeomni as
+#   max_stride * (timeomni_max_patches - 1) = 2048 * 199 = 407552
+max_ts_length: 0
+is_interleaved_qa: false
+normalize_ts_in_encoder: true
+ts_projector: "timeomni"
+attn_implementation: "sdpa"
+
+# TimeOmni dynamic patching. Kept identical across all four rungs so the only
+# variable across the ladder is the LLM width.
+timeomni_patch_len: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_stride: [16, 32, 64, 128, 256, 512, 1024, 2048]
+timeomni_d_model: 512       # encoder output dim -> ModalityProjector input
+timeomni_dropout: 0.1
+timeomni_ts_tokens: 100     # target tokens/series for patch-size selection
+timeomni_max_patches: 200   # hard token budget per sample
+
+# Connector: 2-layer MLP, matching the image study's projector settings.
+projector_hidden_mult: 1
+projector_num_layers: 2

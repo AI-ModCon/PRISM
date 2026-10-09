@@ -1,0 +1,47 @@
+{
+  "steps": 1000,
+  "train_captions": 32,
+  "validation_captions": 8,
+  "exposures": 4000,
+  "uses_per_training_caption": 125,
+  "audited_captions": 40,
+  "frozen_state_unchanged": true,
+  "connector_state_changed": true,
+  "image_quality_established": false,
+  "target_images_read": false,
+  "feature_metrics": {
+    "initial": {
+      "train": {
+        "content_cosine": 0.032037009310442954,
+        "content_mse": 0.888033464550972,
+        "count": 32,
+        "template_cosine": 0.042474290006794035,
+        "template_mse": 1.1064539216458797
+      },
+      "validation": {
+        "content_cosine": 0.033475287491455674,
+        "content_mse": 0.8887597993016243,
+        "count": 8,
+        "template_cosine": 0.042367640882730484,
+        "template_mse": 1.106581762433052
+      }
+    },
+    "final": {
+      "train": {
+        "content_cosine": 0.9381728190928698,
+        "content_mse": 0.026439730485435575,
+        "count": 32,
+        "template_cosine": 0.25946719106286764,
+        "template_mse": 0.6803009454160929
+      },
+      "validation": {
+        "content_cosine": 0.8605414927005768,
+        "content_mse": 0.06322396965697408,
+        "count": 8,
+        "template_cosine": 0.25941530987620354,
+        "template_mse": 0.6801612377166748
+      }
+    }
+  },
+  "limitation": "Caption-content features align strongly; unoptimized template positions remain substantially less aligned. Real flow and caption-only generation validation pending."
+}

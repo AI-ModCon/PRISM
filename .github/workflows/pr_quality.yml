@@ -1,0 +1,205 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+# No `cache: "pip"` on the setup-python steps here, deliberately -- see #240.
+#
+# requirements/ci.txt pulls unpinned torch/torchvision, so the resolved wheel
+# set is ~2.9 GB. With the cache on, each of these six jobs restored *and*
+# re-saved its own ~3 GB copy (17.7 GB of near-identical entries across the
+# repo's cache), and the save ran in the post-job step after the real work had
+# already passed. On a runner near capacity that step died with "No space left
+# on device", marking a green job red: 7 such failures on 2026-10-07 across
+# four PRs and main, each needing a manual rerun of work that had succeeded.
+#
+# Cold installs cost ~1 min per job. A required check that fails at random for
+# reasons unrelated to the change costs more. If the cache is reinstated, pin
+# torch to a CPU wheel first so the entry is a fraction of the size.
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Ruff
+        run: ruff check src tests tools scripts applications examples
+
+  doc_links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.10"
+      - name: Check relative Markdown links
+        run: python tools/ci/check_doc_links.py
+
+  types:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.10 is the floor declared by requires-python; 3.12 is what Aurora's
+        # current frameworks module ships, i.e. the deployment interpreter.
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Mypy
+        # python_version is pinned to 3.10 in pyproject.toml. Left alone, mypy
+        # parses the installed stubs under 3.10 rules on every matrix leg and
+        # aborts on numpy's PEP 695 `type` statements before reaching src.
+        run: mypy --python-version ${{ matrix.python-version }} src
+
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Unit tests
+        run: |
+          pytest -q \
+            -m "not multimodal and not launcher and not integration and not network and not slow and not gpu and not aurora and not perlmutter" \
+            tests
+
+  multimodal_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Multimodal contracts
+        # `-m "not network"` matches the other pytest jobs. No test carries the
+        # marker today -- the `offline_hf` fixture replaced them -- but naming a
+        # file on the command line does not apply a marker filter, so without
+        # this the job would silently run any future `network` test.
+        run: pytest -q -m "not network" tests/multimodal/test_modality_contracts.py
+
+  launcher_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Launcher contracts
+        run: |
+          pytest -q \
+            tests/test_launch_aurora_web_vla.py \
+            tests/platform/test_perlmutter_launch_contract.py \
+            tests/platform/test_hpc_bridge_contract.py \
+            tests/platform/test_launcher_secrets_policy.py
+
+  coverage_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    # Codecov authenticates by OIDC rather than a stored token, so this one job
+    # needs id-token: write. The workflow-level default stays contents: read.
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/ci.txt
+      - name: Coverage gate
+        run: |
+          pytest \
+            -m "not integration and not network and not slow and not gpu and not aurora and not perlmutter" \
+            --cov=src --cov-report=xml --cov-fail-under=34 tests
+      - name: Upload coverage report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: coverage-xml
+          path: coverage.xml
+      # `continue-on-error`, not just `fail_ci_if_error`. At this pinned SHA
+      # `fail_ci_if_error` reaches only the final upload step (action.yml:334);
+      # the composite's earlier steps have no `continue-on-error` at all, and
+      # two of them can hard-fail before the upload is ever attempted: `Get
+      # OIDC token` (action.yml:238) throws when no id-token is issued, and the
+      # dependency check (action.yml:195) `exit 1`s when gpg is absent. Either
+      # would redden `coverage_gate`, which is a required context under
+      # `enforce_admins: true` -- i.e. it would block every PR, admins included.
+      # Coverage is already enforced by the --cov-fail-under gate in the step
+      # above; this upload is for the badge and the report, so it must never be
+      # what blocks a merge.
+      - name: Upload coverage to Codecov
+        continue-on-error: true
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
+        with:
+          files: coverage.xml
+          flags: ci
+          name: prism-coverage
+          fail_ci_if_error: false
+          use_oidc: true

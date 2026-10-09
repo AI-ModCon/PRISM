@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "job_id": "8846391",
+  "completed_steps": 500,
+  "duration_seconds": 663.6160303559154,
+  "step_mean_seconds": 0.3230148264299108,
+  "step_max_seconds": 2.4367375599686056,
+  "peak_allocated_gib": 32.266366481781006,
+  "frozen_tensors_verified": 2305,
+  "downloaded_samples_verified": 20,
+  "checkpoint": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-connector-overfit-20260921/runs/overfit-500/connector-diagnostic-step-000500.pt",
+    "qualification": "unqualified",
+    "sha256": "0afa7539a45308a4ae1d1442d1ac7e3db75f87c02da10234ba7ff386164b69b8",
+    "step": 500
+  },
+  "trainable_parameter_count": 8398848,
+  "nonzero_gradient_parameters": [
+    "decoders.image.connector.0.bias",
+    "decoders.image.connector.0.weight",
+    "decoders.image.connector.1.bias",
+    "decoders.image.connector.1.weight"
+  ],
+  "loss": {
+    "train": {
+      "initial": 0.6638357490301132,
+      "final": 0.3898263331502676,
+      "relative_decrease": 0.41276688741180745,
+      "caption_gap": 0.08731497451663017
+    },
+    "validation": {
+      "initial": 0.6544723138213158,
+      "final": 0.41668812930583954,
+      "relative_decrease": 0.36332199161658674,
+      "caption_gap": -0.05049258377403021
+    }
+  }
+}

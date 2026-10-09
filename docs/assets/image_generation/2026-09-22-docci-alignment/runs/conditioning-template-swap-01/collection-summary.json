@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T03:51:37.599184+00:00",
+  "completed_steps": 0,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": 414.6896699630306,
+  "final_acceptance_passed": true,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "completed",
+  "report_sha256": "7a4efa65a4d22d7e2c7b261e85de8c350e57d8eacacc988658b3efcbd553774b",
+  "report_status": "completed",
+  "run_name": "conditioning-template-swap-01",
+  "samples": 12,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-template-swap-diagnostic",
+  "target_count": 2
+}

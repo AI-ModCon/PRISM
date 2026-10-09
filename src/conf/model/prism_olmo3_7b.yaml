@@ -1,0 +1,41 @@
+# Model Configuration
+backbone_id: "allenai/OLMo-7B-0724-hf"
+freeze_backbone: true
+freeze_encoders: true
+is_vla: false
+pose_dim: 15
+action_dim: 7
+
+# Dimensions (Explicitly defined to allow overrides)
+d_text: 4096
+d_img: 768    # SigLIP2-base native hidden size (use 1152 only for SigLIP-large)
+d_ts: 512
+d_geo: 512
+d_table: 768
+d_graph: 768
+image_encoder_id: "google/siglip2-base-patch16-224"
+image_processor_id: "google/siglip2-base-patch16-224"
+image_processor_strict: false
+image_size: 224
+
+modalities:
+  - "text"
+#  - "image"
+#  - "table"
+#  - "time_series"
+#  - "geometry"
+#  - "graph"
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2
+
+# Output decoders.
+# Names resolve via src/decoders/__init__.py DECODERS. ["text"] is the
+# legacy text-only behavior. is_vla: true is auto-mapped to ["text","action"]
+# in ModelConfig.__post_init__, so VLA configs need not set this.
+output_decoders:
+  - "text"
+# decoder_configs: per-decoder kwargs, e.g. {time_series: {horizon: 96}}.

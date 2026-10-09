@@ -1,0 +1,195 @@
+{
+  "alternate_final_validation": [],
+  "cohorts": {
+    "train": [
+      {
+        "id": "train_02098",
+        "seed": 100042,
+        "shuffled_prompt_id": "train_02054"
+      },
+      {
+        "id": "train_01677",
+        "seed": 100043,
+        "shuffled_prompt_id": "train_06344"
+      },
+      {
+        "id": "train_04809",
+        "seed": 100044,
+        "shuffled_prompt_id": "train_00530"
+      },
+      {
+        "id": "train_02443",
+        "seed": 100045,
+        "shuffled_prompt_id": "train_06900"
+      },
+      {
+        "id": "train_03042",
+        "seed": 100046,
+        "shuffled_prompt_id": "train_02098"
+      },
+      {
+        "id": "train_00530",
+        "seed": 100047,
+        "shuffled_prompt_id": "train_08304"
+      },
+      {
+        "id": "train_08767",
+        "seed": 100048,
+        "shuffled_prompt_id": "train_00896"
+      },
+      {
+        "id": "train_06344",
+        "seed": 100049,
+        "shuffled_prompt_id": "train_01062"
+      }
+    ],
+    "validation": [
+      {
+        "id": "qual_dev_00000",
+        "seed": 101051,
+        "shuffled_prompt_id": "qual_dev_00001"
+      },
+      {
+        "id": "qual_dev_00001",
+        "seed": 101052,
+        "shuffled_prompt_id": "qual_dev_00002"
+      },
+      {
+        "id": "qual_dev_00002",
+        "seed": 101053,
+        "shuffled_prompt_id": "qual_dev_00003"
+      },
+      {
+        "id": "qual_dev_00003",
+        "seed": 101054,
+        "shuffled_prompt_id": "qual_dev_00004"
+      },
+      {
+        "id": "qual_dev_00004",
+        "seed": 101055,
+        "shuffled_prompt_id": "qual_dev_00005"
+      },
+      {
+        "id": "qual_dev_00005",
+        "seed": 101056,
+        "shuffled_prompt_id": "qual_dev_00006"
+      },
+      {
+        "id": "qual_dev_00006",
+        "seed": 101057,
+        "shuffled_prompt_id": "qual_dev_00007"
+      },
+      {
+        "id": "qual_dev_00007",
+        "seed": 101058,
+        "shuffled_prompt_id": "qual_dev_00008"
+      }
+    ]
+  },
+  "coverage": {
+    "cumulative_examples_seen": 96,
+    "first_logged_step": 1,
+    "last_logged_step": 6,
+    "logged_optimizer_steps": 6,
+    "observed_unique_train_ids": 32
+  },
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "fixed_probes": {
+    "train": [
+      {
+        "count": 8,
+        "mean_loss": 0.37544530257582664,
+        "mean_shuffled_loss": 0.431379035115242,
+        "mean_shuffled_minus_correct": 0.05593373253941536,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 8,
+        "mean_loss": 0.37401987984776497,
+        "mean_shuffled_loss": 0.4287046939134598,
+        "mean_shuffled_minus_correct": 0.05468481406569481,
+        "optimized_count": 8,
+        "step": 6
+      }
+    ],
+    "validation": [
+      {
+        "count": 8,
+        "mean_loss": 0.5263295397162437,
+        "mean_shuffled_loss": 0.48170753195881844,
+        "mean_shuffled_minus_correct": -0.04462200775742531,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 8,
+        "mean_loss": 0.52585319429636,
+        "mean_shuffled_loss": 0.48211782425642014,
+        "mean_shuffled_minus_correct": -0.04373537003993988,
+        "optimized_count": 0,
+        "step": 6
+      }
+    ]
+  },
+  "full_validation": [],
+  "interpretation": {
+    "fixed_cohort": "Each curve retains initial IDs, seeds and wrong-caption IDs; the same subset is recomputed from larger final evaluations.",
+    "full_validation": "Separate markers use every final validation example; the fixed probe curve retains its original cohort.",
+    "gap": "Wrong-caption loss minus matched-caption loss with RNG reset. Actual paired noise and timesteps are unverified by these logs; positive values nominally favor the matched caption. This is not a visual-quality benchmark.",
+    "optimization": "Stochastic timestep/noise losses are plotted separately from fixed-cohort probes with RNG reset."
+  },
+  "missing_fixed_cohorts": [],
+  "optimizer": [
+    {
+      "examples_seen": 16,
+      "loss": 0.3832647204399109,
+      "step": 1
+    },
+    {
+      "examples_seen": 32,
+      "loss": 0.3925767317414284,
+      "step": 2
+    },
+    {
+      "examples_seen": 48,
+      "loss": 0.4584542289376259,
+      "step": 3
+    },
+    {
+      "examples_seen": 64,
+      "loss": 0.4007139131426811,
+      "step": 4
+    },
+    {
+      "examples_seen": 80,
+      "loss": 0.437426894903183,
+      "step": 5
+    },
+    {
+      "examples_seen": 96,
+      "loss": 0.4302588701248169,
+      "step": 6
+    }
+  ],
+  "plotter_sha256": "e927e0098043bac56f6be304cdadbeda0caf2246514f52176f3807903f3572fe",
+  "qualification": "unqualified",
+  "runs": [
+    {
+      "completed_steps": 6,
+      "evidence_kind": "real_checkpoint_connector_diffusion_webdataset_pilot",
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01",
+      "status": "completed"
+    }
+  ],
+  "schema_version": 1,
+  "selected_train_count": 32,
+  "source_sha256": {
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/evaluations.jsonl": "df979f215f3a01e1bd2256a64f3ab4d15e5ce3781864df988d3d3e4855000fb1",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/report.json": "66b38f33f7ab3719d621a8988e779d2ff90d07d2b4741862a76179d87ba52b7c",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/steps.jsonl": "6d055711b3fe8f2b920efdf186ab6f7a4d727bc1e3204e509007372ad92efdfa"
+  },
+  "train_count": 9647,
+  "training_scope": "connector_and_diffusion",
+  "validation_count": 100
+}

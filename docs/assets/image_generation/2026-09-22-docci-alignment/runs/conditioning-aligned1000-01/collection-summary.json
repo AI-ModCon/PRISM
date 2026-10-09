@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T03:18:55.047075+00:00",
+  "completed_steps": 0,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": 381.6394193598535,
+  "final_acceptance_passed": true,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "completed",
+  "report_sha256": "48d72be2c097e1a7d0e9bbdaa4feb2c222ad5ccf8d383e7e516b49f96b24a06f",
+  "report_status": "completed",
+  "run_name": "conditioning-aligned1000-01",
+  "samples": 8,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-alignment-validation",
+  "target_count": 2
+}

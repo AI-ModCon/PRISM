@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T06:19:14.166404+00:00",
+  "completed_steps": 0,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": 485.92084174000775,
+  "final_acceptance_passed": true,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "completed",
+  "report_sha256": "127a399abf3276805213fa0101a169324ac2b5e75e089b300ec0febc89907f8e",
+  "report_status": "completed",
+  "run_name": "conditioning-aligned-joint6-01",
+  "samples": 14,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-aligned-joint-smoke",
+  "target_count": 2
+}

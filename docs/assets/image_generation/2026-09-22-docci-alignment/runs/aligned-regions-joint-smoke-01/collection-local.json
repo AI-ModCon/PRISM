@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "346e8ac2182e0feb4917fd7410b94f927d51e738c4c4441a514891966089ae67",
+  "relocated_provenance": [
+    {
+      "archive_path": "provenance/render_conditioning.py",
+      "saved_path": "runs/aligned-regions-joint-smoke-01/archived-provenance/render_conditioning.py",
+      "sha256": "b4b3683ad5a0286f39f6647fab1e42e7c056e553588da432d9161c89a5c5d604"
+    }
+  ]
+}

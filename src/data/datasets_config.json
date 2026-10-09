@@ -1,0 +1,870 @@
+{
+    "zone_a": {
+        "description": "Projector Alignment (Pretraining Encoders Frozen)",
+        "datasets": {
+            "pixmo_cap": {
+                "name": "PixMo-Cap",
+                "hf_id": "allenai/pixmo-cap",
+                "split": "train",
+                "weight": 0.3,
+                "handler": "image_pixmo",
+                "modality": "image",
+                "local_path": "/flare/<project>/<user>/data/zone_a/pixmo_cap_webdataset",
+                "preferred_source": "local",
+                "required_keys": [
+                    "image",
+                    "caption"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~712k images"
+            },
+            "molmo_cap": {
+                "name": "Molmo2-Cap",
+                "hf_id": "allenai/Molmo2-Cap",
+                "split": "train",
+                "weight": 0.3,
+                "handler": "image_pixmo",
+                "modality": "image",
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/molmo_cap",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~108k videos"
+            },
+            "pixmo_points": {
+                "name": "PixMo-Points",
+                "hf_id": "allenai/pixmo-points",
+                "split": "train",
+                "weight": 0.15,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/pixmo_points",
+                "preferred_source": "remote",
+                "handler": "image_points",
+                "modality": "image",
+                "required_keys": [
+                    "image",
+                    "points",
+                    "label"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~223k images"
+            },
+            "pixmo_count": {
+                "name": "PixMo-Count",
+                "hf_id": "allenai/pixmo-count",
+                "split": "train",
+                "weight": 0.15,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/pixmo_count",
+                "preferred_source": "remote",
+                "handler": "image_points",
+                "modality": "image",
+                "required_keys": [
+                    "image",
+                    "points",
+                    "label"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~Unknown"
+            },
+            "molmo_videopoint": {
+                "name": "Molmo2-VideoPoint",
+                "hf_id": "allenai/Molmo2-VideoPoint",
+                "split": "train",
+                "weight": 0.15,
+                "handler": "image_points",
+                "modality": "image",
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/molmo_videopoint",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~9M points"
+            },
+            "geo_physics_turb": {
+                "name": "The Well (Turbulence)",
+                "hf_id": "polymathic-ai/turbulence_gravity_cooling",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "geo_physics_turb",
+                "modality": "geometry",
+                "required_keys": [
+                    "h5_direct"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/geo_physics_turb",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~135k snapshots"
+            },
+            "geo_physics_mhd": {
+                "name": "The Well (MHD 64^3)",
+                "hf_id": "polymathic-ai/MHD_64",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "geo_physics_mhd",
+                "modality": "geometry",
+                "required_keys": [
+                    "h5_direct"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/geo_physics_mhd",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~10k snapshots"
+            },
+            "geo_physics_astro": {
+                "name": "The Well (Supernova)",
+                "hf_id": "polymathic-ai/supernova_explosion_128",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "geo_physics_astro",
+                "modality": "geometry",
+                "required_keys": [
+                    "h5_direct"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/geo_physics_astro",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~15k snapshots"
+            },
+            "geo_mat_tomo": {
+                "name": "Berea Sandstone (Real)",
+                "hf_id": "PMEAL/OpenPNM/berea_200",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "geo_mat_tomo",
+                "modality": "geometry",
+                "required_keys": [
+                    "real_microct"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/geo_mat_tomo",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~1 sample"
+            },
+            "geo_pde": {
+                "name": "PDEBench (Problem Statements)",
+                "hf_id": "erbacher/PDEBench-1D",
+                "split": "train",
+                "weight": 0.2,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/geo_pde",
+                "preferred_source": "remote",
+                "handler": "geo_pde",
+                "modality": "geometry",
+                "required_keys": [
+                    "tensor",
+                    "parameters"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~100k"
+            },
+            "tulu_sft": {
+                "name": "Tulu 3 SFT",
+                "hf_id": "allenai/tulu-3-sft-mixture",
+                "split": "train",
+                "weight": 0.1,
+                "handler": "text_sft",
+                "modality": "text",
+                "required_keys": [
+                    "messages"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/tulu_sft",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~300k samples"
+            },
+            "ts_qa": {
+                "name": "ChatTS Align (Synthetic)",
+                "hf_id": "ChatTSRepo/ChatTS-Training-Dataset",
+                "split": "train",
+                "kwargs": {
+                    "name": "align_256"
+                },
+                "local_path": "",
+                "preferred_source": "remote",
+                "weight": 1,
+                "handler": "ts_qa",
+                "modality": "time_series",
+                "required_keys": [
+                    "input",
+                    "timeseries",
+                    "output"
+                ],
+                "fallback_dummy": false,
+                "skip": false,
+                "size_formatted": "~105K samples"
+            },
+            "ts_instruction": {
+                "name": "TS Reasoning (Proxy)",
+                "hf_id": "mikeam/time-series-reasoning",
+                "split": "train",
+                "weight": 0.4,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/ts_instruction",
+                "preferred_source": "local",
+                "handler": "ts_instruction",
+                "modality": "time_series",
+                "required_keys": [
+                    "description",
+                    "characteristics",
+                    "series"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~16k samples"
+            },
+            "ts_caption": {
+                "name": "ChatTime",
+                "hf_id": "ChengsenWang/TSQA",
+                "split": "train",
+                "weight": 1,
+                "handler": "ts_caption",
+                "modality": "time_series",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "required_keys": [
+                    "Task",
+                    "Question",
+                    "Answer",
+                    "Label",
+                    "Series"
+                ],
+                "size_bytes": null,
+                "num_examples": 48000,
+                "size_formatted": "~300 MB",
+                "num_examples_formatted": "48,000"
+            },
+            "ts_weak": {
+                "name": "Time-MMD (Economy)",
+                "hf_id": "lamblamb/time-mmd-economy",
+                "split": "train",
+                "weight": 1,
+                "local_path": "/raid/<user>/PRISM/data/zone_a/ts_weak",
+                "preferred_source": "local",
+                "handler": "ts_time_mmd",
+                "modality": "time_series",
+                "required_keys": [
+                    "start_date",
+                    "fact",
+                    "preds"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~3k samples"
+            },
+            "table_reasoning": {
+                "name": "TableLLM (Reasoning)",
+                "hf_id": "RUCKBReasoning/TableLLM-SFT",
+                "split": "spider",
+                "weight": 0.4,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/table_reasoning",
+                "preferred_source": "remote",
+                "handler": "table_reasoning",
+                "modality": "table",
+                "required_keys": [
+                    "question",
+                    "response"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~Varies"
+            },
+            "table_instruction": {
+                "name": "TableInstruct (Gen)",
+                "hf_id": "osunlp/TableInstruct",
+                "split": "train",
+                "weight": 0.4,
+                "handler": "table_instruction",
+                "modality": "table",
+                "required_keys": [
+                    "instruction",
+                    "output"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/table_instruction",
+                "preferred_source": "remote",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~Varies"
+            },
+            "table_structure": {
+                "name": "UniTabE (Structure)",
+                "hf_id": "wikitablequestions",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "table_structure",
+                "modality": "table",
+                "required_keys": [
+                    "table"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/table_structure",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~2k samples"
+            },
+            "graph_captioning": {
+                "name": "ChEBI-20 (Global)",
+                "hf_id": "OpenBioML/chebi_20",
+                "split": "train",
+                "weight": 0.4,
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/graph_captioning",
+                "preferred_source": "local",
+                "handler": "graph_captioning",
+                "modality": "graph",
+                "required_keys": [
+                    "SMILES",
+                    "description"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~30k samples"
+            },
+            "graph_grounding": {
+                "name": "ChEBI-20-MM (Grounding)",
+                "hf_id": "liupf/ChEBI-20-MM",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "graph_grounding",
+                "modality": "graph",
+                "required_keys": [
+                    "SMILES",
+                    "SELFIES"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/graph_grounding",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~30k samples"
+            },
+            "graph_instruction": {
+                "name": "GraphInstruct",
+                "hf_id": "GraphWiz/GraphInstruct",
+                "split": "train",
+                "weight": 0.2,
+                "handler": "graph_instruction",
+                "modality": "graph",
+                "required_keys": [
+                    "query",
+                    "answer"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/graph_instruction",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~10k samples"
+            },
+            "graph_crystal": {
+                "name": "Matbench (Crystal)",
+                "hf_id": "nimashoghi/matbench_jdft2d_fold0",
+                "split": "train",
+                "weight": 0.1,
+                "handler": "graph_crystal",
+                "modality": "graph",
+                "required_keys": [
+                    "atomic_numbers",
+                    "positions"
+                ],
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/graph_crystal",
+                "preferred_source": "local",
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~600 samples"
+            },
+            "graph_circuit": {
+                "name": "Verilog (Circuit)",
+                "hf_id": "shailja/Verilog_GitHub",
+                "split": "train",
+                "weight": 0.1,
+                "handler": "graph_circuit",
+                "modality": "graph",
+                "local_path": "/flare/<project>/<user>/PRISM/data/zone_a/graph_circuit",
+                "preferred_source": "local",
+                "required_keys": [
+                    "verilog_code",
+                    "circuit_graph"
+                ],
+                "fallback_dummy": false,
+                "skip": true,
+                "size_formatted": "~10k samples"
+            },
+            "dna_bioreason": {
+                "name": "DNA sequences",
+                "hf_id": "wanglab/kegg",
+                "split": "train",
+                "weight": 0.50,
+                "handler": "dna_bioreason",
+                "modality": "dna",
+                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/kegg",
+                "preferred_source": "local",
+                "required_keys": [
+                    "question",
+                    "answer",
+                    "reasoning",
+                    "reference_sequence",
+                    "variant_sequence"
+                ],
+                "fallback_dummy": false,
+                "skip": false,
+                "size_formatted": "1,159 samples (train split)"
+            },
+            "dna_bioreason_variant_effect_coding": {
+                "name": "Variant Effect (Coding)",
+                "hf_id": "wanglab/variant_effect_coding",
+                "split": "train",
+                "weight": 0.25,
+                "handler": "dna_bioreason_variant_effect_coding",
+                "modality": "dna",
+                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_coding",
+                "preferred_source": "local",
+                "required_keys": [
+                    "question",
+                    "answer",
+                    "reference_sequence",
+                    "variant_sequence"
+                ],
+                "fallback_dummy": false,
+                "skip": false,
+                "size_formatted": "48,850 samples (train split)"
+            },
+            "dna_bioreason_variant_effect_non_snv": {
+                "name": "Variant Effect (Non-SNV)",
+                "hf_id": "wanglab/variant_effect_non_snv",
+                "split": "train",
+                "weight": 0.25,
+                "handler": "dna_bioreason_variant_effect_non_snv",
+                "modality": "dna",
+                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_non_snv",
+                "preferred_source": "local",
+                "required_keys": [
+                        "question",
+                        "answer",
+                    "reference_sequence",
+                    "mutated_sequence"
+                ],
+                "fallback_dummy": false,
+                "skip": false,
+                "size_formatted": "35,215 samples (train split)"
+            }
+        }
+    },
+    "zone_b": {
+        "description": "Encoder Fine-Tuning (Pretraining)",
+        "datasets": {
+            "scienceqa": {
+                "name": "ScienceQA",
+                "hf_id": "derek-thomas/ScienceQA",
+                "local_path": "data/zone_b/scienceqa",
+                "split": "train",
+                "handler": "instruction_sqa",
+                "modality": "text",
+                "size_bytes": null,
+                "num_examples": 21208,
+                "size_formatted": "~622 MB",
+                "num_examples_formatted": "21,208"
+            }
+        }
+    },
+    "zone_c": {
+        "description": "Instruction Tuning (SFT)",
+        "datasets": {
+            "ultrafeedback": {
+                "name": "UltraFeedback",
+                "hf_id": "HuggingFaceH4/ultrafeedback_binarized",
+                "local_path": "data/zone_c/ultrafeedback",
+                "split": "train_prefs",
+                "handler": "preference_ultra",
+                "modality": "text",
+                "size_bytes": null,
+                "num_examples": 187405,
+                "size_formatted": "~650 MB",
+                "num_examples_formatted": "187,405"
+            }
+        }
+    },
+    "zone_catalog": {
+        "description": "Catalog of potential datasets from open_datasets.json",
+        "datasets": {
+            "image_laion_5b": {
+                "name": "LAION-5B (EN 2B)",
+                "hf_id": "laion/laion2B-en",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 5850000000,
+                "size_formatted": "~240 TB (links)",
+                "num_examples_formatted": "5,850,000,000"
+            },
+            "image_sciol_18m": {
+                "name": "SciOL-18M (Ref: SciOL-CI)",
+                "hf_id": "Timbrt/SciOL-CI",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 18000000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "18,000,000"
+            },
+            "image_coyo_700m": {
+                "name": "COYO-700M",
+                "hf_id": "kakaobrain/coyo-700m",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 747000000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "747,000,000"
+            },
+            "image_datacomp_1b": {
+                "name": "DataComp-1B",
+                "hf_id": "mlfoundations/datacomp_1b",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 1400000000,
+                "size_formatted": "~340 GB (metadata)",
+                "num_examples_formatted": "1,400,000,000"
+            },
+            "image_arxivcap": {
+                "name": "ArXivCap",
+                "hf_id": "MMInstruction/ArxivCap",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 6400000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "6,400,000"
+            },
+            "image_pmc_15m": {
+                "name": "PMC-15M",
+                "hf_id": "Check BioMedCLIP (Not on HF)",
+                "split": "train",
+                "handler": "image_generic",
+                "modality": "image",
+                "skip": true,
+                "skip_reason": "Not on HuggingFace",
+                "size_bytes": null,
+                "num_examples": 15000000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "15,000,000"
+            },
+            "table_pubtables_1m": {
+                "name": "PubTables-1M",
+                "hf_id": "bsmock/pubtables-1m",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 947000,
+                "size_formatted": "~40 GB",
+                "num_examples_formatted": "947,000"
+            },
+            "table_spiqa": {
+                "name": "SPIQA",
+                "hf_id": "TODO: Search 'SPIQA' on Hub",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Not yet configured/verified",
+                "size_bytes": null,
+                "num_examples": 0,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "Unknown"
+            },
+            "table_scitsr": {
+                "name": "SciTSR",
+                "hf_id": "dwbm/scitsr",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 15000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "15,000"
+            },
+            "table_wikitablequestions": {
+                "name": "WikiTableQuestions",
+                "hf_id": "wikitablequestions",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 22033,
+                "size_formatted": "~48 MB",
+                "num_examples_formatted": "22,033"
+            },
+            "table_fetaqa": {
+                "name": "FeTaQA",
+                "hf_id": "Yale-LILY/FeTaQA",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 10330,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "10,330"
+            },
+            "table_tabfact": {
+                "name": "TabFact",
+                "hf_id": "tab_fact",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 118000,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "118,000"
+            },
+            "table_wikisql": {
+                "name": "WikiSQL",
+                "hf_id": "wikisql",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 80654,
+                "size_formatted": "~155 MB",
+                "num_examples_formatted": "80,654"
+            },
+            "table_common_crawl_web_tables": {
+                "name": "Common Crawl web tables",
+                "hf_id": "commoncrawl/statistics",
+                "split": "train",
+                "handler": "table_generic",
+                "modality": "table",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 0,
+                "size_formatted": "PB Scale",
+                "num_examples_formatted": "Unknown"
+            },
+            "time_series_mimic_iv": {
+                "name": "MIMIC-IV",
+                "hf_id": "Restricted (See PhysioNet)",
+                "split": "train",
+                "handler": "time_series_generic",
+                "modality": "time_series",
+                "skip": true,
+                "skip_reason": "Restricted Access",
+                "size_bytes": null,
+                "num_examples": 364627,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "364,627"
+            },
+            "time_series_physionet_clinical_text_signals": {
+                "name": "PhysioNet clinical text + signals",
+                "hf_id": "Restricted (Use PhysioNet directly)",
+                "split": "train",
+                "handler": "time_series_generic",
+                "modality": "time_series",
+                "skip": true,
+                "skip_reason": "Restricted / No direct HF mirror",
+                "size_bytes": null,
+                "num_examples": 0,
+                "size_formatted": "Varies",
+                "num_examples_formatted": "Unknown"
+            },
+            "time_series_financial_reports_stock_data": {
+                "name": "Financial reports + stock data",
+                "hf_id": "tickers_finance (See specialized sets)",
+                "split": "train",
+                "handler": "time_series_generic",
+                "modality": "time_series",
+                "skip": true,
+                "skip_reason": "Requires assembling multiple sources",
+                "size_bytes": null,
+                "num_examples": 0,
+                "size_formatted": "Varies",
+                "num_examples_formatted": "Unknown"
+            },
+            "geometry_shapenet_with_captions": {
+                "name": "ShapeNet (with captions)",
+                "hf_id": "Rohan3/ShapeNetCore_Captions",
+                "split": "train",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 51300,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "51,300"
+            },
+            "geometry_any_text_cfddata": {
+                "name": "Any text+CFDdata",
+                "hf_id": "Drakkar-Software/Octree-CFD (Example)",
+                "split": "train",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 250000,
+                "size_formatted": ">20 TB",
+                "num_examples_formatted": "250,000"
+            },
+            "geometry_protein_data_bank_pdb": {
+                "name": "Protein Data Bank (PDB)",
+                "hf_id": "Rostlab/PDB",
+                "split": "train",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 229564,
+                "size_formatted": "~1.4 TB",
+                "num_examples_formatted": "229,564"
+            },
+            "geometry_objaverse_with_generated_captions": {
+                "name": "Objaverse (with generated captions)",
+                "hf_id": "tiange/Cap3D",
+                "split": "test",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Verified (Split: test)",
+                "size_bytes": null,
+                "num_examples": 785150,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "785,150"
+            },
+            "geometry_textbooks_with_diagrams_descriptions": {
+                "name": "Textbooks with diagrams & descriptions",
+                "hf_id": "nielsr/docvqa_1200_examples",
+                "split": "train",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Verified (Proxy: DocVQA)",
+                "size_bytes": null,
+                "num_examples": 1000,
+                "size_formatted": "Small",
+                "num_examples_formatted": "1,000"
+            },
+            "geometry_ogb_molecule": {
+                "name": "OGB Molecule",
+                "hf_id": "Use 'ogb' python package",
+                "split": "train",
+                "handler": "geometry_generic",
+                "modality": "geometry",
+                "skip": true,
+                "skip_reason": "Not a standard HF dataset",
+                "size_bytes": null,
+                "num_examples": 0,
+                "size_formatted": "Varies",
+                "num_examples_formatted": "Unknown"
+            },
+            "graph_pubchem_molecules_descriptions": {
+                "name": "PubChem (Molecules + descriptions)",
+                "hf_id": "mteb/PubChemSMILESPC",
+                "split": "test",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Verified Available (Split: test)",
+                "size_bytes": null,
+                "num_examples": 2048,
+                "size_formatted": "~158 KB",
+                "num_examples_formatted": "2,048"
+            },
+            "graph_wikidata_subsets": {
+                "name": "Wikidata subsets",
+                "hf_id": "TODO: Search HuggingFace",
+                "split": "train",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Verification Failed (No suitable HF dataset found)",
+                "size_bytes": null,
+                "num_examples": 49202,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "49,202"
+            },
+            "graph_amr_abstract_meaning_representation_to_text": {
+                "name": "AMR (Abstract Meaning Representation) to Text",
+                "hf_id": "hoshuhan/amr-3-parsed",
+                "split": "train",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 59255,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "59,255"
+            },
+            "graph_ogb_molpcba": {
+                "name": "OGB-MolPCBA",
+                "hf_id": "Use 'ogb' package",
+                "split": "train",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Not on HF",
+                "size_bytes": null,
+                "num_examples": 437929,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "437,929"
+            },
+            "graph_pcqm4m": {
+                "name": "PCQM4M",
+                "hf_id": "Use 'ogb' package (PCQM4Mv2)",
+                "split": "train",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Not on HF",
+                "size_bytes": null,
+                "num_examples": 3803453,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "3,803,453"
+            },
+            "graph_chembl": {
+                "name": "ChEMBL",
+                "hf_id": "antoinebcx/smiles-molecules-chembl",
+                "split": "train",
+                "handler": "graph_generic",
+                "modality": "graph",
+                "skip": true,
+                "skip_reason": "Verified Available",
+                "size_bytes": null,
+                "num_examples": 2878135,
+                "size_formatted": "Unknown",
+                "num_examples_formatted": "2,878,135"
+            }
+        }
+    }
+}

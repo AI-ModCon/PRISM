@@ -1,0 +1,39 @@
+# Projector-Only Pretraining (Zone A Revisited)
+# Strategy: Frozen Encoder + Frozen LLM, high LR projector
+
+batch_size: 8
+max_steps: 5000
+finite_epoch_steps: 0
+learning_rate: 1e-3           # Aggressive projector LR
+lr_connector: 1e-3
+
+freeze_llm: true
+freeze_vit: true
+text_dropout: 0.1 # Text-Only Dropout (Input Masking) per Molmo paper
+
+scheduler_type: "cosine"
+min_lr_ratio: 0.1
+wsd_decay_ratio: 0.1
+wsd_decay_steps: null
+warmup_steps: 500
+weight_decay: 0.0
+gradient_accumulation_steps: 4
+
+# Checkpointing & Logging (Required to match struct)
+save_every_n_steps: 1000
+eval_every_n_steps: 500
+viz_every_n_steps: 500
+resume_from_checkpoint: null
+resume_weights_only: null
+wandb_run_id: null
+device: "auto"
+output_dir: ${hydra:run.dir}
+
+# Debugging
+verbosity: "INFO"
+
+# IsoFLOP eval gate (default false → existing runs bit-identical)
+# Defaults to false so non-IsoFLOP runs are bit-identical to today.
+# IsoFLOP launches flip this to true to emit per-family eval-loss perf records.
+eval_enabled: false
+validation_batches: 8

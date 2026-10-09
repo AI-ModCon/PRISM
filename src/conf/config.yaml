@@ -1,0 +1,30 @@
+defaults:
+  - _self_
+  - model: prism_olmo3_7b
+  - training: zone_a
+  - exp: defaults
+
+hydra:
+  run:
+    dir: outputs/${exp.id}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+# Top-level experiment info
+exp:
+  id: "DEBUG-RUN"
+  variant: "DEFAULT"
+  campaign: "prism-v1"
+
+# WANDB
+# entity: your W&B username or team entity (null uses your default entity).
+# Placeholder below matches this project's original team entity; override
+# with `wandb.entity=<your-entity>` or leave null for personal runs.
+wandb:
+  project: "prism-zone-a-alignment"
+  entity: null
+  mode: "online"
+
+# System
+system:
+  seed: 42
+  num_workers: 4
+  pinned_memory: true

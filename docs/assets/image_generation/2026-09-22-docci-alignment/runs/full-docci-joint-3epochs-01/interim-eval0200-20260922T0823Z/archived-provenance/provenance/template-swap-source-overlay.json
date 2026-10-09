@@ -1,0 +1,14 @@
+{
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-template-swap-diagnostic",
+  "baseline_source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-alignment-validation",
+  "archive_sha256": "15cb73d15b3f4bcb326178a022144c65be53b3a996020138b5179896e0d09d0e",
+  "sha256": {
+    "tools/diagnose_prism_image_conditioning.py": "98fee4c939ef9554cf5a72aac78992caf66e0affccf4625134c9c0f2b0c243b4",
+    "tools/prism_image_template_swap.py": "f58acb9484c03637eb18af554c7d7ab4d50cd4968904640bddfc6f0bdd349df7",
+    "tests/test_prism_image_template_swap.py": "ac075d02acc920d02e69475dc7333b21f5b1c0b48df47fe1ed2d9e727c60a27f",
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7",
+    "tests/test_train_prism_image_diffusion.py": "7fcdab78f19c73db3f3508193814de816d9997932120bfca1f39a5d157335004",
+    "tools/launch_aurora_image_experiment.py": "45783dbd96dc415b9b3ab389bcae0df22e912f86d7650bf509fdf224619320cc",
+    "tests/test_image_experiment_launcher.py": "be6d92f3257a971ee9920a9ea701d95eb0e82608f4d9ccccfbee0f45c1480b49"
+  }
+}

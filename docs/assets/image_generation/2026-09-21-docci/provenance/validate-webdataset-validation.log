@@ -1,0 +1,13 @@
+Validating 1 shards from /lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/webdataset/shards/validation
+Extra checks: ['image', 'text']
+============================================================
+
+============================================================
+SUMMARY
+============================================================
+Total samples:  100
+Valid samples:  100
+Missing text:   0
+Empty text:     0
+Missing image:  0
+Problem shards: 0

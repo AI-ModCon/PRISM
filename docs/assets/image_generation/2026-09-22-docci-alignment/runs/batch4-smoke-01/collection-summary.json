@@ -1,0 +1,17 @@
+{
+  "checkpoint_bytes_included": false,
+  "collected_at_utc": "2026-09-22T01:47:57.381019+00:00",
+  "completed_steps": 6,
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "duration_seconds": 384.79409665986896,
+  "final_acceptance_passed": true,
+  "ignored_oversize_files": [],
+  "partial_jsonl_lines_skipped_for_checks": 0,
+  "report_phase": "completed",
+  "report_sha256": "9048b94439229ab987cd9d9eca1a973ac668d2a10daf14f2d7628bc5a3a95a13",
+  "report_status": "completed",
+  "run_name": "batch4-smoke-01",
+  "samples": 0,
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-joint-20260921/prism",
+  "target_count": 0
+}

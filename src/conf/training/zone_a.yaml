@@ -1,0 +1,95 @@
+# Training Configuration
+task: "vlm"
+batch_size: 4
+max_steps: 100
+finite_epoch_steps: 0
+device: "auto"
+learning_rate: 1e-4
+eval_every_n_steps: 500 # Default eval interval
+viz_every_n_steps: 500 # Default visualization interval
+gradient_accumulation_steps: 1 # Default
+
+# Checkpointing
+save_interval: 50 # Legacy
+save_every_n_steps: 1000 # Default save interval
+resume_from_checkpoint: null # Default: Start fresh
+resume_weights_only: null # Model-only resume for stage transitions (projector -> E2E)
+wandb_run_id: null
+output_dir: ${hydra:run.dir}
+
+# Debugging
+debug_mode: false
+verbosity: "INFO"
+
+# Optimization
+scheduler_type: "cosine"
+min_lr_ratio: 0.1
+wsd_decay_ratio: 0.1
+wsd_decay_steps: null
+warmup_steps: 10
+weight_decay: 0.01
+lr_connector: null
+lr_vit: null
+lr_llm: null
+
+# Freezing
+freeze_llm: true
+freeze_vit: true
+
+# Data
+data_num_workers: 4
+
+# CALVIN VLA (used when task=vla_calvin)
+# Placeholder path — override with PRISM_CALVIN_ROOT env var or set this
+# to your own CALVIN dataset location (see calvin_root in src/config.py).
+calvin_root: "/flare/<project>/<user>/vla_training/calvin_dataset"
+calvin_split: "train"
+calvin_max_chunk: 20
+calvin_text_max_length: 128
+# CALVIN data path selector: "map" (legacy CalvinVLADataset) or
+# "webdataset" (ModalityAwareWebDatasetWrapper). Hydra struct mode
+# requires the field to exist here, not just in TrainingConfig.
+calvin_loader: "map"
+calvin_webdataset_root: null
+calvin_webdataset_storage: "lustre"
+
+# === Distributed Training Strategy ===
+# Options: "ddp" (default), "fsdp", "hsdp"
+# - ddp: Standard DistributedDataParallel (best for small models <2B params)
+# - fsdp: Fully Sharded Data Parallel (better scaling for 7B+ models)
+# - hsdp: Hybrid Sharded (FSDP within node, DDP across nodes - best for multi-node 7B+)
+distribution_strategy: "ddp"
+
+# FSDP Configuration (only used when distribution_strategy is "fsdp" or "hsdp")
+fsdp:
+  # Sharding strategy: "full_shard", "shard_grad_op", "no_shard", "hybrid_shard"
+  sharding_strategy: "full_shard"
+  # CPU offloading for optimizer states (saves GPU memory, slower)
+  cpu_offload: false
+  # Backward prefetch: "backward_pre" (default, faster), "backward_post", null
+  backward_prefetch: "backward_pre"
+  # Forward prefetch (experimental)
+  forward_prefetch: false
+  # Limit all-gather memory usage (fraction of GPU memory, 0 = unlimited)
+  limit_all_gathers: 0.0
+  # Use original params (required for some optimizers like AdamW)
+  use_orig_params: true
+  # Mixed precision for communication: "fp16", "bf16", "fp32"
+  mixed_precision: "bf16"
+
+# DDP Optimization (for ddp mode)
+ddp:
+  # Gradient bucket size in MB (larger = fewer AllReduces but more memory)
+  bucket_cap_mb: 25
+  # Find unused parameters (slower but required if model has unused params)
+  find_unused_parameters: false
+  # Static graph optimization (faster if computation graph doesn't change)
+  static_graph: true
+  # Gradient as bucket view (reduces memory copy overhead)
+  gradient_as_bucket_view: true
+
+# IsoFLOP eval gate (default false → existing runs bit-identical)
+# Defaults to false so non-IsoFLOP runs are bit-identical to today.
+# IsoFLOP launches flip this to true to emit per-family eval-loss perf records.
+eval_enabled: false
+validation_batches: 8

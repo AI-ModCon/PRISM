@@ -1,0 +1,401 @@
+{
+  "actual_noisy_input_timestep_hashes_present": false,
+  "audit_status": "passed_interim_metadata_checks_only",
+  "cohort_checks": {
+    "all_arithmetic_means_recomputed": true,
+    "examples_per_split": 32,
+    "full_train_pool_and_validation_probe_ids_disjoint": true,
+    "identical_ids_indices_seeds_wrong_caption_ids_at_steps": [
+      0,
+      200,
+      400
+    ],
+    "optimized_flags": "All false at step 0; train flags true after updates, validation flags remain false.",
+    "train_probe": [
+      {
+        "id": "train_04996",
+        "index": 4996
+      },
+      {
+        "id": "train_08983",
+        "index": 8983
+      },
+      {
+        "id": "train_05538",
+        "index": 5538
+      },
+      {
+        "id": "train_03445",
+        "index": 3445
+      },
+      {
+        "id": "train_05049",
+        "index": 5049
+      },
+      {
+        "id": "train_01677",
+        "index": 1677
+      },
+      {
+        "id": "train_06344",
+        "index": 6344
+      },
+      {
+        "id": "train_01062",
+        "index": 1062
+      },
+      {
+        "id": "train_00191",
+        "index": 191
+      },
+      {
+        "id": "train_00198",
+        "index": 198
+      },
+      {
+        "id": "train_04809",
+        "index": 4809
+      },
+      {
+        "id": "train_00530",
+        "index": 530
+      },
+      {
+        "id": "train_08304",
+        "index": 8304
+      },
+      {
+        "id": "train_06979",
+        "index": 6979
+      },
+      {
+        "id": "train_01044",
+        "index": 1044
+      },
+      {
+        "id": "train_02443",
+        "index": 2443
+      },
+      {
+        "id": "train_06900",
+        "index": 6900
+      },
+      {
+        "id": "train_03496",
+        "index": 3496
+      },
+      {
+        "id": "train_00019",
+        "index": 19
+      },
+      {
+        "id": "train_00640",
+        "index": 640
+      },
+      {
+        "id": "train_01736",
+        "index": 1736
+      },
+      {
+        "id": "train_04382",
+        "index": 4382
+      },
+      {
+        "id": "train_08767",
+        "index": 8767
+      },
+      {
+        "id": "train_00896",
+        "index": 896
+      },
+      {
+        "id": "train_06800",
+        "index": 6800
+      },
+      {
+        "id": "train_03042",
+        "index": 3042
+      },
+      {
+        "id": "train_02098",
+        "index": 2098
+      },
+      {
+        "id": "train_02054",
+        "index": 2054
+      },
+      {
+        "id": "train_01459",
+        "index": 1459
+      },
+      {
+        "id": "train_02193",
+        "index": 2193
+      },
+      {
+        "id": "train_01072",
+        "index": 1072
+      },
+      {
+        "id": "train_03350",
+        "index": 3350
+      }
+    ],
+    "train_probe_policy": "First 32 IDs of the seeded full-pool sampler; these IDs have earlier-stage training history.",
+    "train_seeds": [
+      100042,
+      100073
+    ],
+    "validation_probe": [
+      {
+        "id": "qual_dev_00000",
+        "index": 0
+      },
+      {
+        "id": "qual_dev_00001",
+        "index": 1
+      },
+      {
+        "id": "qual_dev_00002",
+        "index": 2
+      },
+      {
+        "id": "qual_dev_00003",
+        "index": 3
+      },
+      {
+        "id": "qual_dev_00004",
+        "index": 4
+      },
+      {
+        "id": "qual_dev_00005",
+        "index": 5
+      },
+      {
+        "id": "qual_dev_00006",
+        "index": 6
+      },
+      {
+        "id": "qual_dev_00007",
+        "index": 7
+      },
+      {
+        "id": "qual_dev_00008",
+        "index": 8
+      },
+      {
+        "id": "qual_dev_00009",
+        "index": 9
+      },
+      {
+        "id": "qual_dev_00010",
+        "index": 10
+      },
+      {
+        "id": "qual_dev_00011",
+        "index": 11
+      },
+      {
+        "id": "qual_dev_00012",
+        "index": 12
+      },
+      {
+        "id": "qual_dev_00013",
+        "index": 13
+      },
+      {
+        "id": "qual_dev_00014",
+        "index": 14
+      },
+      {
+        "id": "qual_dev_00015",
+        "index": 15
+      },
+      {
+        "id": "qual_dev_00016",
+        "index": 16
+      },
+      {
+        "id": "qual_dev_00017",
+        "index": 17
+      },
+      {
+        "id": "qual_dev_00018",
+        "index": 18
+      },
+      {
+        "id": "qual_dev_00019",
+        "index": 19
+      },
+      {
+        "id": "qual_dev_00020",
+        "index": 20
+      },
+      {
+        "id": "qual_dev_00021",
+        "index": 21
+      },
+      {
+        "id": "qual_dev_00022",
+        "index": 22
+      },
+      {
+        "id": "qual_dev_00023",
+        "index": 23
+      },
+      {
+        "id": "qual_dev_00024",
+        "index": 24
+      },
+      {
+        "id": "qual_dev_00025",
+        "index": 25
+      },
+      {
+        "id": "qual_dev_00026",
+        "index": 26
+      },
+      {
+        "id": "qual_dev_00027",
+        "index": 27
+      },
+      {
+        "id": "qual_dev_00028",
+        "index": 28
+      },
+      {
+        "id": "qual_dev_00029",
+        "index": 29
+      },
+      {
+        "id": "qual_dev_00030",
+        "index": 30
+      },
+      {
+        "id": "qual_dev_00031",
+        "index": 31
+      }
+    ],
+    "validation_seeds": [
+      101051,
+      101082
+    ]
+  },
+  "collector_recorded_archive_sha256": "44979fe8defdff242a49135aa018976703dbd64ae88c604d9fb630339024f91b",
+  "cross_snapshot_checks": {
+    "initial_images_unchanged": true,
+    "prior_complete_step_rows_unchanged": 213,
+    "prior_evaluations_unchanged": [
+      0,
+      200
+    ],
+    "probe_cohorts_unchanged": true,
+    "source_data_settings_parent_and_initialization_unchanged": true
+  },
+  "executed_source_sha256": {
+    "src/data/image_generation.py": "04e90b93f9dd61055a95f03739b4437ea93f283907cc73d0cc68cc0f66b6dcdd",
+    "src/data/image_generation_webdataset.py": "50e9da2a5fa951fd56ecd78a9f77fccd7883fba1efc1dfaa6b2ffaa71188b40d",
+    "src/decoders/conditioning.py": "3d8209d620466e53d273997cd4bf33e969d06425d5c644a6ccc3c7194c6adfb6",
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/loading.py": "73915e73f381ba3734da7ee2c8807efa25e95f17b94c34d04dcccfe92b80a381",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/decoders/types.py": "882f2c3e84da6a6843d9c929bbae501371526bcdf5f146eacca366659cee6555",
+    "src/model.py": "765484238537b07c80f0470ccadb27258e1d15d112a9a3237a55b73819a5377c",
+    "src/training/cpu_master_adamw.py": "ad81e003fe1db35dbc69d7b9df46f47c9cd4b3a13dee58b734b9be2d68c9adaf",
+    "tools/overfit_prism_image_connector.py": "939989c18a8397ff2b13309a047a14253312a79e3399488385687ff9f6f7a3c5",
+    "tools/prism_image_conditioning.py": "81845528a13b99e42df197eb11d853b520381de97f48acb350bcd1c17e20f03d",
+    "tools/train_image_decoder.py": "e3e36a62743ee64f7f8944ab2de77d535bd4c55e00baf528668d15bb35d0c61d",
+    "tools/train_prism_image_connector.py": "e67ea9f3f697a9839c8e4f300b7691e7a6a8f4809ed4956293d60888784a25f5",
+    "tools/train_prism_image_diffusion.py": "9b0bbd05483d4f7442ff221482a488105f0ca2f97027f05c9f66c18bcf9e90b7"
+  },
+  "exposure_checks": {
+    "all_logged_ids_once_current_stage": true,
+    "contiguous_log_updates": 425,
+    "epoch_and_cursor_match_replayed_sampler": true,
+    "exact_sampler_microbatch_and_seed_replay": true,
+    "logged_exposures": 6800,
+    "logged_unique_ids": 6800,
+    "microbatches_per_update": 4,
+    "pairs_per_microbatch": 4,
+    "pool_size": 9647,
+    "step400_exposures": 6400,
+    "step400_unique_training_ids": 6400
+  },
+  "initial_gallery_image_sha256": {
+    "sample-warm-start-000000-00.png": "7b52ea01ad5873aca7d7c838a0971fee9dc4a3023603bb3f6107977cddc3c295",
+    "sample-warm-start-000000-01.png": "53185c3d6ffe184d0d9adb877b8d85fb862f744d2be4f853a0f7c43da934df80",
+    "sample-warm-start-000000-02.png": "0f70bd870fc68b809a7c070fc4ad24c2af61019db2f61e991e49d53d433618e5",
+    "sample-warm-start-000000-03.png": "a50d2df8d1bcfc1583ecc937e8e1e80f1b5f8f96def547fc7487f29bbfd1ea1c"
+  },
+  "last_complete_evaluation_step": 400,
+  "last_complete_log_step": 425,
+  "limitations": [
+    "Running-stage audit; terminal checkpoint identity and final frozen-weight audits remain pending.",
+    "Only initial images exist; no new gallery or checkpoint is due before step 600.",
+    "These fixed 32-example flow losses are not image accuracy. Training loss is not monotonically improving.",
+    "Wrong-caption gaps remain provisional because the training evaluator records seeds but no actual paired noisy-input/timestep hashes.",
+    "Use the first 32 entries of final 100-example validation for a comparable loss curve."
+  ],
+  "loss_changes": {
+    "train": {
+      "absolute_change_from_initial": -0.0010972446762025356,
+      "caption_gap_step0_PROVISIONAL": -0.0030714687891304493,
+      "caption_gap_step400_PROVISIONAL": 0.00039846915751695633,
+      "examples_improved_from_initial": 20,
+      "examples_improved_from_step200": 11,
+      "percent_change_from_initial": -0.24953485523887542,
+      "percent_change_from_step200": 0.10783687061863834,
+      "step0_mean": 0.43971599685028195,
+      "step200_mean": 0.4381462689489126,
+      "step400_mean": 0.4386187521740794
+    },
+    "validation": {
+      "absolute_change_from_initial": -0.0022743362933397293,
+      "caption_gap_step0_PROVISIONAL": 0.017826818861067295,
+      "caption_gap_step400_PROVISIONAL": 0.01754869520664215,
+      "examples_improved_from_initial": 23,
+      "examples_improved_from_step200": 21,
+      "percent_change_from_initial": -0.49975072015376876,
+      "percent_change_from_step200": -0.1545142961101309,
+      "step0_mean": 0.4550941502675414,
+      "step200_mean": 0.45352056808769703,
+      "step400_mean": 0.4528198139742017
+    }
+  },
+  "optimizer_checks": {
+    "changed_runtime_tensor_count_range": {
+      "connector": [
+        4,
+        4
+      ],
+      "diffusion": [
+        394,
+        403
+      ]
+    },
+    "finite_losses_and_nonzero_gradients_both_groups_each_logged_update": true,
+    "last50_update_seconds_mean": 10.613273586197757,
+    "reported_runtime_weight_changes_both_groups_each_logged_update": true
+  },
+  "prior_snapshot_input_sha256": {
+    "evaluations.jsonl": "1e0766b90cf31685c1bb6aa858eb501c4384374ca83cf66ba6a26ac41aec028f",
+    "report.json": "0052bdb55af3f60e0629b88053f82806ae20e93e436ddfb8ff9e16e16ffe88d0",
+    "steps.jsonl": "04bb4d1695fa9b3991ec7565c01c7f3b0d7c10993517bace601ee85202794a7f"
+  },
+  "raw_input_file_sha256": {
+    "archived-provenance/provenance/full-docci-joint-3epochs-01-acceptance-checks.json": "ce464c6bb5ce6c7034dd9e16b87337681d67259aa11dff4760ff1b0479d2ec78",
+    "collection-local.json": "14b8d10abb0c289bee7dcdd66e7c48ccc6b8fb9c167c71e4f77520d6e5bfdcf0",
+    "collection-summary.json": "08a0842b4c83191e86b513f30f4cc17928c7f0b0b0b055ab24788701db2ff5f1",
+    "evaluations.jsonl": "235e20061c5aae5c96a5a82a077e3f328870db9ac369c6eb6d0911c53d3b479e",
+    "report.json": "a142267c8b663ddc295f1c56aed18977c073b280bd1fb0eff53868091041a378",
+    "steps.jsonl": "0045034956bf66777135452f6e25a2a6b74d5e448af7ac53f4de3bab528f0f8d"
+  },
+  "report_step": 420,
+  "run_status": "running",
+  "schema_version": 1,
+  "snapshot": "interim-eval0400-20260922T0901Z",
+  "snapshot_consistency": "Report and append-only logs are collected sequentially; evaluation statistics describe step 400 separately from the later log progress.",
+  "source_file_count_verified": 14,
+  "terminal_acceptance": false,
+  "writes": "Only this independent audit JSON; no collected evidence, executed source, or remote state changed."
+}

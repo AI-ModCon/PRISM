@@ -1,0 +1,7 @@
+{
+  "tools/align_prism_image_conditioning.py": "c2b290595fd9d2893d405cf7a70f61f9b2758eb7f78e6f6e0dca13c9c030d9ca",
+  "tools/launch_aurora_image_experiment.py": "3c3636daa2924569d5946967799140ad7f9f5714433faef7164bc8d30e1f3480",
+  "new_snapshot": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-feature-alignment",
+  "baseline_snapshot": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism",
+  "execution": "not submitted"
+}

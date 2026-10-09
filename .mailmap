@@ -1,0 +1,54 @@
+# Canonical identities for PRISM contributors.
+#
+# Maps the aliases that appear in this repository's history to the authors
+# ratified in pyproject.toml. Most entries exist because `user.email` was
+# unset on a cluster node, so Git fell back to `user@<hostname>` -- Aurora
+# UANs and compute nodes, Polaris logins, and so on. Others are GitHub
+# noreply addresses or a misconfigured `Your Name <you@example.com>`.
+#
+# Generated from `git log --all`, so it covers every ref, not just main.
+# `GitHub <noreply@github.com>` is deliberately absent: that is the web-UI
+# committer on squash merges, not a person.
+#
+# Two consumers:
+#   * `git shortlog -sne`, `git log --use-mailmap` and GitHub's contributor
+#     views in this repository, which is where the aliased commits live.
+#   * The AI-ModCon/PRISM release snapshot, which copies this file verbatim
+#     (see tools/make_release_snapshot.sh). That repo has no history of its
+#     own, so there the file records who the work came from rather than
+#     something git resolves against.
+
+Adarsha Balaji <abalaji@anl.gov> Adarsha <abalaji@anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0009.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0010.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@aurora-uan-0012.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@polaris-login-01.hsn.cm.polaris.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@polaris-login-02.hsn.cm.polaris.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@polaris-login-04.hsn.cm.polaris.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x3001c0s13b0n0.hsn.cm.polaris.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x3005c0s37b0n0.hsn.cm.polaris.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x4217c5s4b0n0.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x4311c6s4b0n0.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x4311c6s7b0n0.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> <abalaji@x4502c7s0b0n0.hostmgmt.cm.aurora.alcf.anl.gov>
+Adarsha Balaji <abalaji@anl.gov> balajiadarsha <130686874+balajiadarsha@users.noreply.github.com>
+Guojing Cong <congg@ornl.gov> <congg@polaris-login-04.hsn.cm.polaris.alcf.anl.gov>
+Guojing Cong <congg@ornl.gov> goooopy <guojingcong@yahoo.com>
+Huu Binh Ta <nzj6jt@virginia.edu> <hta@aurora-uan-0012.hostmgmt.cm.aurora.alcf.anl.gov>
+Jared Willard <Jared.Willard@nlr.gov> <jared.willard@nlr.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0009.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0010.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <ngetty@aurora-uan-0012.hostmgmt.cm.aurora.alcf.anl.gov>
+Neil Getty <ngetty@anl.gov> <nygfee@gmail.com>
+Neil Getty <ngetty@anl.gov> n-getty <nygfee@gmail.com>
+Patrick Emami <patrick.emami@nlr.gov> Patrick <pemami@aurora-uan-0009.hostmgmt.cm.aurora.alcf.anl.gov>
+Patrick Emami <patrick.emami@nlr.gov> Patrick <pemami@aurora-uan-0011.hostmgmt.cm.aurora.alcf.anl.gov>
+Patrick Emami <patrick.emami@nlr.gov> <patrickemami@gmail.com>
+Patrick Emami <patrick.emami@nlr.gov> <pemami4911@users.noreply.github.com>
+Samuel Wheeler <swheeler@anl.gov> Your Name <you@example.com>
+Samuel Wheeler <swheeler@anl.gov> samuelwheeler <91495954+samuelwheeler@users.noreply.github.com>
+Sandeep Madireddy <smadireddy@anl.gov> Sande33p <sandeep@users.noreply.github.com>
+Sandeep Madireddy <smadireddy@anl.gov> Sande33p <smadireddy@anl.gov>
+Sandeep Madireddy <smadireddy@anl.gov> <38361704+Sande33p@users.noreply.github.com>

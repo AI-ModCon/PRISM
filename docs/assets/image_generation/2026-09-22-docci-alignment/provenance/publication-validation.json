@@ -1,0 +1,52 @@
+{
+  "kind": "publication_validation",
+  "date": "2026-09-22",
+  "branch": "feat/decoder-extension-plan",
+  "pull_request": "https://github.com/AI-ModCon/BaseMM_PRISM/pull/175",
+  "scope": "Owned DOCCI implementation, execution reports, plots, images and immutable source evidence; unrelated edits excluded.",
+  "tests": {
+    "prism_env_primary": {
+      "passed": 324,
+      "skipped": 4,
+      "skips": "matplotlib unavailable"
+    },
+    "prism_env_backend_regressions": {
+      "passed": 89
+    },
+    "base_env_plotting": {
+      "passed": 14,
+      "overlap_with_primary_passed": 10,
+      "resolves_primary_skips": 4
+    },
+    "distinct_tests_passed": 417,
+    "after_test_import_order_cleanup": {
+      "passed": 170
+    }
+  },
+  "ruff": {
+    "active_python_files": 28,
+    "passed": true,
+    "change": "Import ordering in five test modules only; executed source snapshots preserved."
+  },
+  "artifact_checks": {
+    "json_files_parsed": 339,
+    "jsonl_files_parsed": 28,
+    "images_decoded": 285,
+    "demo_hash_checks": 9,
+    "demo_relative_links": 3,
+    "independent_review_passed": true
+  },
+  "whitespace": {
+    "active_source_tests_tools_docs_passed": true,
+    "archived_findings_preserved": 56,
+    "reason": "Executed source snapshots and two original launcher stdout JSON captures retain exact original bytes."
+  },
+  "excluded": [
+    "unrelated AstroPrism edits and .gitignore",
+    "slides, output and unrelated figures",
+    "three Python cache files",
+    "large weights and datasets remain on Aurora"
+  ],
+  "final_demo": "runs/full-docci-joint-conditioning-01/matched-seed-before-after.png",
+  "final_demo_sha256": "a2167f682158b8c56556304e0920ea3b11648acf9a7027c1f319e764eff43dac"
+}

@@ -1,0 +1,48 @@
+# Molmo Stage 1 Alignment
+# Strategy: Unfrozen E2E, Differential LRs/Clipping/Warmups
+
+# Base Global (LLM) Settings
+batch_size: 4
+max_steps: 5000 # Short run for verification usually, but users can override
+finite_epoch_steps: 0
+device: "auto"
+learning_rate: 2e-5 # Global Base / LLM LR
+
+# Differential LRs
+lr_connector: 2e-4
+lr_vit: 6e-6
+lr_llm: 2e-5 # Specific alias
+
+# Optimization
+scheduler_type: "molmo_layered"
+min_lr_ratio: 0.1 # Decay to 10%
+wsd_decay_ratio: 0.1
+wsd_decay_steps: null
+warmup_steps: 200  # Fallback for non-layered schedulers; molmo_layered uses the two below
+warmup_steps_connector: 200
+warmup_steps_main: 2000
+weight_decay: 0.01
+gradient_accumulation_steps: 1
+
+# Freezing (E2E = False)
+freeze_llm: false
+freeze_vit: false
+
+# Checkpointing & Logging
+save_every_n_steps: 500
+eval_every_n_steps: 250
+viz_every_n_steps: 500
+output_dir: ${hydra:run.dir}
+resume_from_checkpoint: null
+resume_weights_only: null  # Model-only resume for stage transitions (projector -> E2E)
+wandb_run_id: null
+
+# Debugging
+debug_mode: false
+verbosity: "INFO"
+
+# IsoFLOP eval gate (default false → existing runs bit-identical)
+# Defaults to false so non-IsoFLOP runs are bit-identical to today.
+# IsoFLOP launches flip this to true to emit per-family eval-loss perf records.
+eval_enabled: false
+validation_batches: 8

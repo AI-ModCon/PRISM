@@ -1,0 +1,922 @@
+{
+  "backend_load_count": 1,
+  "backend_provenance": {
+    "backend": "official_omnigen2",
+    "checkpoint_acceptance": "not_run",
+    "checkpoint_revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+    "conditioning_dim": 2048,
+    "dependency_pins": {
+      "diffusers": "0.33.1",
+      "transformers": "4.51.3"
+    },
+    "device_type": "xpu",
+    "gradient_checkpointing": false,
+    "kernel_policy": {
+      "attention": "torch_sdpa",
+      "conditioner_attention": "sdpa",
+      "cross_kernel_parity": "not_run",
+      "detected_packages": {
+        "flash_attn": false,
+        "triton": true
+      },
+      "flash_attn_enabled": false,
+      "policy": "upstream_torch_fallback",
+      "rms_norm": "torch.nn.RMSNorm",
+      "scope": "omnigen2_optional_kernel_flags_for_process",
+      "swiglu": "upstream_components.swiglu",
+      "triton_enabled": false
+    },
+    "local_files_only": true,
+    "model_id": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/assets/OmniGen2",
+    "objective": "linear_flow_velocity_data_minus_noise",
+    "time_sampling": "lognormal_dynamic_shift_v1_options_ft_yml",
+    "training_scope": "connector_only",
+    "upstream_revision": "18e6f9d5271b517fcb32e999f10df943ae9b8f20"
+  },
+  "calls": [
+    {
+      "duration_seconds": 2.1479611648246646,
+      "execution_settings_unchanged": true,
+      "image": "N0.png",
+      "image_sha256": "ba10574a456d11e6b7c51e19fa0440a642c85cb90f0c642a78a9c1fe1ab17a34",
+      "initial_latent_sha256": "b5abcd49f7704c516f84d0bb5280dc0047829517f20f43bb35c93b614df90a43",
+      "name": "N0",
+      "seed": 42,
+      "settings_after_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "settings_before_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "status": "completed"
+    },
+    {
+      "duration_seconds": 0.6100859129801393,
+      "execution_settings_unchanged": true,
+      "image": "N1.png",
+      "image_sha256": "ba10574a456d11e6b7c51e19fa0440a642c85cb90f0c642a78a9c1fe1ab17a34",
+      "initial_latent_sha256": "b5abcd49f7704c516f84d0bb5280dc0047829517f20f43bb35c93b614df90a43",
+      "name": "N1",
+      "seed": 42,
+      "settings_after_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "settings_before_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "status": "completed"
+    },
+    {
+      "duration_seconds": 0.6181108788587153,
+      "execution_settings_unchanged": true,
+      "image": "A0.png",
+      "image_sha256": "ba10574a456d11e6b7c51e19fa0440a642c85cb90f0c642a78a9c1fe1ab17a34",
+      "initial_latent_sha256": "b5abcd49f7704c516f84d0bb5280dc0047829517f20f43bb35c93b614df90a43",
+      "name": "A0",
+      "seed": 42,
+      "settings_after_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "settings_before_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "status": "completed"
+    },
+    {
+      "duration_seconds": 0.6072779770474881,
+      "execution_settings_unchanged": true,
+      "image": "N2.png",
+      "image_sha256": "ba10574a456d11e6b7c51e19fa0440a642c85cb90f0c642a78a9c1fe1ab17a34",
+      "initial_latent_sha256": "b5abcd49f7704c516f84d0bb5280dc0047829517f20f43bb35c93b614df90a43",
+      "name": "N2",
+      "seed": 42,
+      "settings_after_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "settings_before_sha256": "0a1023d1cc14adabc014e5ef81734859229b60ad2369bf7fb5ca54817cd8b051",
+      "status": "completed"
+    }
+  ],
+  "case": {
+    "case_id": "t2i-smoke",
+    "group": "smoke-mug",
+    "height": 256,
+    "prompt": "A red ceramic mug on a white table, soft daylight, plain background.",
+    "reference_paths": [],
+    "seeds": [
+      42
+    ],
+    "split": "smoke",
+    "stratum": "unspecified",
+    "task": "text_to_image",
+    "width": 256
+  },
+  "checkpoint_hash_seconds": 24.568008000962436,
+  "comparisons": {
+    "adapter_vs_native": {
+      "boundaries": {
+        "condition.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.final": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.initial": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.vae_input": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels.vae_output": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "schedule.timesteps": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        }
+      },
+      "failures": [],
+      "left": "N1",
+      "passed": true,
+      "right": "A0"
+    },
+    "native_after_adapter": {
+      "boundaries": {
+        "condition.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.final": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.initial": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.vae_input": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels.vae_output": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "schedule.timesteps": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        }
+      },
+      "failures": [],
+      "left": "N1",
+      "passed": true,
+      "right": "N2"
+    },
+    "native_repeat": {
+      "boundaries": {
+        "condition.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "condition.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.final": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.initial": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.vae_input": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels.vae_output": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "schedule.timesteps": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        }
+      },
+      "failures": [],
+      "left": "N0",
+      "passed": true,
+      "right": "N1"
+    },
+    "original_reference": {
+      "boundaries": {
+        "condition.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 4.5,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "condition.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 4.5,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "condition.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 4.5,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "condition.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 4.5,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "latents.final": {
+          "atol": 0.0,
+          "max_absolute_error": 0.3125,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "latents.initial": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "latents.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.15625,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "latents.vae_input": {
+          "atol": 0.0,
+          "max_absolute_error": 0.859375,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "mask.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "pixels": {
+          "atol": 0.0,
+          "max_absolute_error": 4.0,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "pixels.vae_output": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0234375,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "position_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "position_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "prediction.branch0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.03125,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "prediction.branch1": {
+          "atol": 0.0,
+          "max_absolute_error": 0.03125,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "prediction.step0": {
+          "atol": 0.0,
+          "max_absolute_error": 0.03125,
+          "passed": false,
+          "rtol": 0.0
+        },
+        "rope_deltas.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "rope_deltas.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "schedule.timesteps": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_ids.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.negative": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        },
+        "token_mask.positive": {
+          "atol": 0.0,
+          "max_absolute_error": 0.0,
+          "passed": true,
+          "rtol": 0.0
+        }
+      },
+      "failures": [
+        "numerical mismatch: condition.branch0",
+        "numerical mismatch: condition.branch1",
+        "numerical mismatch: condition.negative",
+        "numerical mismatch: condition.positive",
+        "numerical mismatch: latents.final",
+        "numerical mismatch: latents.step0",
+        "numerical mismatch: latents.vae_input",
+        "numerical mismatch: pixels",
+        "numerical mismatch: pixels.vae_output",
+        "numerical mismatch: prediction.branch0",
+        "numerical mismatch: prediction.branch1",
+        "numerical mismatch: prediction.step0"
+      ],
+      "passed": false
+    }
+  },
+  "duration_seconds": 106.53343010204844,
+  "errors": [],
+  "evidence_kind": "real_checkpoint_diagnostic",
+  "findings": [
+    "All four calls matched exactly within this process for this fixed case and latent.",
+    "The original archived run differs despite this within-process agreement; cross-process or runtime variation remains unresolved.",
+    "No tolerances were changed. This diagnostic supplies no P0/P1 acceptance or image-quality claim.",
+    "Comparison to the archived reference changes precision and/or numerical policy; it is exploratory, not parity qualification. Within-process calls share one policy."
+  ],
+  "fixture": false,
+  "hostname": "x4405c5s3b0n0",
+  "identity": {
+    "case_manifest_sha256": "5aa88e57d382277b186b44ef1d9629493d895b98c7fe52dfd598a23c88b2ff44",
+    "checkpoint_manifest_sha256": "46ad5c24af04baef2c5b6d365ee0ccfdc24eb626d98d56c017470b1f19f37d09",
+    "checkpoint_revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+    "device_name": "Intel(R) Data Center GPU Max 1550",
+    "device_type": "xpu",
+    "dtype": "bfloat16",
+    "initial_latent_sha256": "b5abcd49f7704c516f84d0bb5280dc0047829517f20f43bb35c93b614df90a43",
+    "kernel_policy": {
+      "attention": "torch_sdpa",
+      "conditioner_attention": "sdpa",
+      "cross_kernel_parity": "not_run",
+      "detected_packages": {
+        "flash_attn": false,
+        "triton": true
+      },
+      "flash_attn_enabled": false,
+      "policy": "upstream_torch_fallback",
+      "rms_norm": "torch.nn.RMSNorm",
+      "scope": "omnigen2_optional_kernel_flags_for_process",
+      "swiglu": "upstream_components.swiglu",
+      "triton_enabled": false
+    },
+    "numerical_policy": {
+      "attention_backend": "math",
+      "deterministic_algorithms": true
+    },
+    "reference_manifest_sha256": "4a12f69513dac03f5e1993a91a89a4fc88a7246554e0b1c43594fec326a95d70",
+    "sampling": {
+      "height": 256,
+      "image_guidance_scale": 2.0,
+      "negative_prompt": "",
+      "seed": 42,
+      "steps": 2,
+      "text_guidance_scale": 5.0,
+      "width": 256
+    },
+    "torch_version": "2.10.0a0+git449b176",
+    "upstream_revision": "18e6f9d5271b517fcb32e999f10df943ae9b8f20"
+  },
+  "load_seconds": 77.0358722419478,
+  "mode": "repeatability_diagnostic",
+  "p0_p1_acceptance": "not_evaluated",
+  "peak_memory": {
+    "allocated_bytes": 15984962560,
+    "reserved_bytes": 16494100480
+  },
+  "preflight": {
+    "checkpoint": {
+      "configs": [
+        "mllm/config.json",
+        "mllm/generation_config.json",
+        "mllm/model.safetensors.index.json",
+        "mllm_processor/added_tokens.json",
+        "mllm_processor/chat_template.json",
+        "mllm_processor/preprocessor_config.json",
+        "mllm_processor/special_tokens_map.json",
+        "mllm_processor/tokenizer.json",
+        "mllm_processor/tokenizer_config.json",
+        "mllm_processor/vocab.json",
+        "model_index.json",
+        "prism_checkpoint_provenance.json",
+        "processor/added_tokens.json",
+        "processor/chat_template.json",
+        "processor/preprocessor_config.json",
+        "processor/special_tokens_map.json",
+        "processor/tokenizer.json",
+        "processor/tokenizer_config.json",
+        "processor/vocab.json",
+        "scheduler/scheduler_config.json",
+        "transformer/config.json",
+        "transformer/diffusion_pytorch_model.safetensors.index.json",
+        "vae/config.json"
+      ],
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/assets/OmniGen2",
+      "revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+      "revision_verified": true,
+      "weights": [
+        "mllm/model-00001-of-00004.safetensors",
+        "mllm/model-00002-of-00004.safetensors",
+        "mllm/model-00003-of-00004.safetensors",
+        "mllm/model-00004-of-00004.safetensors",
+        "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+        "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+        "vae/diffusion_pytorch_model.safetensors"
+      ]
+    },
+    "downloads_allowed": false,
+    "errors": [],
+    "model_loaded": false,
+    "packages": {
+      "Pillow": "12.1.0",
+      "accelerate": "1.12.0",
+      "diffusers": "0.33.1",
+      "numpy": "2.2.6",
+      "omegaconf": "2.3.0",
+      "safetensors": "0.7.0",
+      "timm": "1.0.24",
+      "torch": "2.10.0a0+git449b176",
+      "transformers": "4.51.3"
+    },
+    "platform": "Linux-5.14.21-150400.24.235-default-x86_64-with-glibc2.31",
+    "python": "3.12.12",
+    "status": "ready",
+    "upstream": {
+      "actual_revision": "18e6f9d5271b517fcb32e999f10df943ae9b8f20",
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/OmniGen2",
+      "revision": "18e6f9d5271b517fcb32e999f10df943ae9b8f20",
+      "tracked_changes": false
+    }
+  },
+  "reference_comparison_scope": "precision_policy_exploratory",
+  "reference_dtype": "bfloat16",
+  "reference_numerical_policy": {
+    "attention_backend": "current",
+    "deterministic_algorithms": false
+  },
+  "runtime": {
+    "cuda_runtime": null,
+    "device_index": 0,
+    "device_name": "Intel(R) Data Center GPU Max 1550",
+    "device_type": "xpu",
+    "hip_runtime": null,
+    "requested_device": "xpu",
+    "torch_git_version": "449b1768410104d3ed79d3bcfe4ba1d65c7f22c0",
+    "torch_version": "2.10.0a0+git449b176",
+    "total_memory_bytes": 68702699520,
+    "visible_device_count": 1,
+    "xpu_runtime": "20250302"
+  },
+  "schema_version": 1,
+  "source_hashes": {
+    "src/decoders/image.py": "b0596c603f7fe511d63648ea783379cedaa6f8b480f5bbb963965243494158d0",
+    "src/decoders/omnigen2_backend.py": "689c4561888d169720e05a86607fe76bc31690a487a690e03eafcb69ea683d03",
+    "src/decoders/types.py": "882f2c3e84da6a6843d9c929bbae501371526bcdf5f146eacca366659cee6555",
+    "src/eval/image_generation.py": "fd15fa85131be38a15856959f9c80d557a5a4d18c93bd203b5cf578b6278b4a7",
+    "tools/diagnose_image_decoder_repeatability.py": "da4583a6dff650d047874f8f4398713fb64ecd3194f997ff6b5f75e4836018c9",
+    "tools/validate_image_decoder.py": "4e0f0dffc5d7ed8b892eccc7c95304dce48eb0ec81d3ec42fff5703145b2aaa8"
+  },
+  "status": "completed",
+  "tolerances": {}
+}

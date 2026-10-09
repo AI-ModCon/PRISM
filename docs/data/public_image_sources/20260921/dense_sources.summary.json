@@ -1,0 +1,421 @@
+{
+  "audit_date": "2026-09-21",
+  "scope": "Read-only public metadata, file trees, small README/scripts/terms, two single-row schema previews, and one 96,356,158-byte DenseFusion-4V caption/URL Parquet table (four string columns, no embedded images). No images, image archives, or DenseFusion-1M full annotations downloaded.",
+  "measurement_policy": "Exact sizes are sums of HF main-revision file metadata; values describe compressed/download bytes, not unpacked storage. Counts are labeled exact viewer count, source-reported, or estimated. No content-hash image deduplication performed.",
+  "datasets": [
+    {
+      "name": "DenseFusion",
+      "source": {
+        "repo_id": "BAAI/DenseFusion-1M",
+        "revision": "b935d5ad34311e351bc2f3eb33667451e331e167",
+        "gated": false,
+        "page_url": "https://huggingface.co/datasets/BAAI/DenseFusion-1M",
+        "tree_api_url": "https://huggingface.co/api/datasets/BAAI/DenseFusion-1M/tree/main?recursive=true&limit=1000",
+        "snapshot_file": "densefusion_tree.json"
+      },
+      "project_url": "https://github.com/baaivision/DenseFusion",
+      "paper_url": "https://arxiv.org/html/2407.08303v2",
+      "subsets": [
+        {
+          "config": "DenseFusion-1M",
+          "split": "train",
+          "caption_records": 1058790,
+          "caption_records_status": "exact_dataset_viewer_full_count",
+          "unique_images_verified": false,
+          "captioner": "authors caption engine",
+          "schema": [
+            "image_id",
+            "caption",
+            "url",
+            "image_path"
+          ],
+          "annotation_file": "DenseFusion-1M/DenseFusion-1M.jsonl",
+          "annotation_download": {
+            "bytes": 1438136482,
+            "GB_decimal": 1.438136,
+            "GiB_binary": 1.339369,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "annotation_parquet_download": {
+            "bytes": 748786778,
+            "GB_decimal": 0.748787,
+            "GiB_binary": 0.697362,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "image_archive_count": 110,
+          "image_archive_download": {
+            "bytes": 797846074868,
+            "GB_decimal": 797.846075,
+            "GiB_binary": 743.052061,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "images_plus_original_annotations": {
+            "bytes": 799284211350,
+            "GB_decimal": 799.284211,
+            "GiB_binary": 744.39143,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "smallest_image_archive": {
+            "path": "images/DenseFusion-1M/000047.zip",
+            "bytes": 5233270366
+          },
+          "evaluation_rows_in_this_config": 0
+        },
+        {
+          "config": "DenseFusion-4V-100K",
+          "split": "train",
+          "caption_records": 116761,
+          "caption_records_status": "exact_dataset_viewer_full_count",
+          "unique_images_verified": false,
+          "captioner": "GPT-4V",
+          "schema": [
+            "image_id",
+            "caption",
+            "url",
+            "image_path"
+          ],
+          "annotation_file": "DenseFusion-4V-100k/DenseFusion-4V-100k.jsonl",
+          "annotation_download": {
+            "bytes": 173640880,
+            "GB_decimal": 0.173641,
+            "GiB_binary": 0.161716,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "annotation_parquet_download": {
+            "bytes": 96356158,
+            "GB_decimal": 0.096356,
+            "GiB_binary": 0.089739,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "image_archive_count": 48,
+          "image_archive_download": {
+            "bytes": 96044106312,
+            "GB_decimal": 96.044106,
+            "GiB_binary": 89.448044,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "images_plus_original_annotations": {
+            "bytes": 96217747192,
+            "GB_decimal": 96.217747,
+            "GiB_binary": 89.60976,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "smallest_image_archive": {
+            "path": "images/DenseFusion-4V-100K/000045.zip",
+            "bytes": 273936910
+          },
+          "evaluation_rows_in_this_config": 0,
+          "content_verification": "densefusion4v_content_verification.json",
+          "unique_image_ids": 116761,
+          "unique_image_paths": 116761,
+          "unique_source_urls": 116761,
+          "blank_caption_rows": 0,
+          "id_uniqueness_verified": true,
+          "images_plus_preferred_parquet_annotations": {
+            "bytes": 96140462470,
+            "GB_decimal": 96.14046247,
+            "GiB_binary": 89.53778303228319,
+            "status": "exact_image_manifest_sum_plus_verified_parquet_download",
+            "unpacked_bytes": null
+          },
+          "training_manifest": "densefusion4v_training_manifest.jsonl.gz"
+        }
+      ],
+      "hosting": "Images hosted as zip shards; annotation URL field also supports upstream web fetches. Hosted copies avoid depending on current upstream URL availability.",
+      "counts_caveat": "116,761 + 1,058,790 = 1,175,551 caption records, not distinct images. 4V alone has verified 116,761 unique image IDs/paths/URLs. Paper section 4.1 says GPT-4V images were sampled from the picked 1M set; exact released cross-set overlap was not measured.",
+      "license": "HF dataset metadata: CC BY 4.0. Card prose calls project MIT; official GitHub requires image use to comply with LAION license. Underlying web-image rights are not established by the dataset metadata.",
+      "recommendation": "DenseFusion-4V-100K is a practical dense-caption extension: 116,761 verified unique image IDs and nonempty captions; 96.140 GB compressed image archives plus preferred Parquet metadata. Deduplicate image content against other sources when images are available.",
+      "sources": [
+        "https://huggingface.co/datasets/BAAI/DenseFusion-1M",
+        "https://datasets-server.huggingface.co/size?dataset=BAAI/DenseFusion-1M",
+        "https://github.com/baaivision/DenseFusion",
+        "https://arxiv.org/html/2407.08303v2#S4.SS1"
+      ]
+    },
+    {
+      "name": "ALLaVA-4V",
+      "source": {
+        "repo_id": "FreedomIntelligence/ALLaVA-4V",
+        "revision": "0fd42fce5c047d387a4bb5318d588eae9a9797f0",
+        "gated": false,
+        "page_url": "https://huggingface.co/datasets/FreedomIntelligence/ALLaVA-4V",
+        "tree_api_url": "https://huggingface.co/api/datasets/FreedomIntelligence/ALLaVA-4V/tree/main?recursive=true&limit=1000",
+        "snapshot_file": "allava_tree.json"
+      },
+      "project_url": "https://github.com/FreedomIntelligence/ALLaVA",
+      "purpose": "Multimodal training; select Caption subsets for image-text pretraining. Instruct subsets reuse images; Evol-Instruct is text-only.",
+      "caption_subsets": [
+        {
+          "name": "ALLaVA-Caption-LAION-4V",
+          "caption_records": 468670,
+          "count_status": "current_official_hf_card_reported_not_independently_counted",
+          "images_hosted": true,
+          "image_archive_count": 10,
+          "image_archive_download": {
+            "bytes": 92273477347,
+            "GB_decimal": 92.273477,
+            "GiB_binary": 85.936372,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "caption_annotation_download": {
+            "bytes": 1099956911,
+            "GB_decimal": 1.099957,
+            "GiB_binary": 1.024415,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "images_plus_caption_annotations": {
+            "bytes": 93373434258,
+            "GB_decimal": 93.373434,
+            "GiB_binary": 86.960787,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          }
+        },
+        {
+          "name": "ALLaVA-Caption-VFLAN-4V",
+          "caption_records": 194976,
+          "count_status": "current_official_hf_card_reported_not_independently_counted",
+          "image_dependency": {
+            "repo_id": "Vision-Flan/vision-flan_191-task_1k",
+            "revision": "24ba71985e7424afe1262bfe302b022ae1c76ce8",
+            "gated": false,
+            "page_url": "https://huggingface.co/datasets/Vision-Flan/vision-flan_191-task_1k",
+            "tree_api_url": "https://huggingface.co/api/datasets/Vision-Flan/vision-flan_191-task_1k/tree/main?recursive=true&limit=1000",
+            "snapshot_file": "vflan_tree.json"
+          },
+          "image_archive_path": "image_191-task_1k.zip",
+          "image_archive_download": {
+            "bytes": 36315636711,
+            "GB_decimal": 36.315637,
+            "GiB_binary": 33.821572,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "caption_annotation_download": {
+            "bytes": 379544520,
+            "GB_decimal": 0.379545,
+            "GiB_binary": 0.353478,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "images_plus_caption_annotations": {
+            "bytes": 36695181231,
+            "GB_decimal": 36.695181,
+            "GiB_binary": 34.175051,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          }
+        }
+      ],
+      "total_caption_records_reported": 663646,
+      "unique_images_verified": false,
+      "total_caption_source_download": {
+        "bytes": 130068615489,
+        "GB_decimal": 130.068615,
+        "GiB_binary": 121.135838,
+        "status": "exact_hf_file_manifest_sum",
+        "unpacked_bytes": null
+      },
+      "caption_annotation_total": {
+        "bytes": 1479501431,
+        "GB_decimal": 1.479501,
+        "GiB_binary": 1.377893,
+        "status": "exact_hf_file_manifest_sum",
+        "unpacked_bytes": null
+      },
+      "image_download_total": {
+        "bytes": 128589114058,
+        "GB_decimal": 128.589114,
+        "GiB_binary": 119.757945,
+        "status": "exact_hf_file_manifest_sum",
+        "unpacked_bytes": null
+      },
+      "count_caveats": [
+        "Current GitHub README instead reports LAION 505,588 and VFLAN 202,552 caption samples; do not conflate its 708,140 total with the current HF card 663,646.",
+        "Dataset Viewer lists caption/instruct splits but its size endpoint fails for both multimodal configs; 143,000 viewer rows are only text-only Evol-Instruct, not ALLaVA image count.",
+        "Caption and Instruct sets share images within each source; cross-source and within-source unique-image counts were not computed."
+      ],
+      "schema": "LLaVA-style JSON conversations with local image path. Caption text is the assistant/gpt value, not the generic human caption request.",
+      "license": "HF dataset tag CC BY-NC 4.0; authors explicitly disclaim ownership of included images. Vision-FLAN dependency has its own source-dataset terms.",
+      "recommendation": "The LAION caption subset is the simplest ALLaVA training addition: 468,670 reported caption records, 93.373 GB compressed images+caption JSON. Add VFLAN only when its varied upstream task imagery is useful; never treat its instruction counts as new image pairs.",
+      "sources": [
+        "https://huggingface.co/datasets/FreedomIntelligence/ALLaVA-4V",
+        "https://github.com/FreedomIntelligence/ALLaVA",
+        "https://raw.githubusercontent.com/FreedomIntelligence/ALLaVA/main/download/download_laion.sh",
+        "https://raw.githubusercontent.com/FreedomIntelligence/ALLaVA/main/download/download_vflan.sh",
+        "https://huggingface.co/datasets/Vision-Flan/vision-flan_191-task_1k"
+      ]
+    },
+    {
+      "name": "JourneyDB (original)",
+      "source": {
+        "repo_id": "JourneyDB/JourneyDB",
+        "revision": "a86abf299e35be801130aac554d50a4fb60b5cfb",
+        "gated": "auto",
+        "page_url": "https://huggingface.co/datasets/JourneyDB/JourneyDB",
+        "tree_api_url": "https://huggingface.co/api/datasets/JourneyDB/JourneyDB/tree/main?recursive=true&limit=1000",
+        "snapshot_file": "journeydb_tree.json"
+      },
+      "project_url": "https://journeydb.github.io/",
+      "code_url": "https://github.com/JourneyDB/JourneyDB",
+      "counts_status": "official_card_table_reported_not_independently_counted",
+      "splits": [
+        {
+          "split": "train",
+          "images": 4453193,
+          "labeled_images": 4189737,
+          "prompts": 1643375,
+          "labeled_prompts": 1385317,
+          "image_archive_count": 200,
+          "image_archive_download": {
+            "bytes": 3111026518274,
+            "GB_decimal": 3111.026518,
+            "GiB_binary": 2897.369227,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "annotations": [
+            {
+              "path": "data/train/train_anno.jsonl.tgz",
+              "download": {
+                "bytes": 775941090,
+                "GB_decimal": 0.775941,
+                "GiB_binary": 0.722651,
+                "status": "exact_hf_file_manifest_sum",
+                "unpacked_bytes": null
+              }
+            },
+            {
+              "path": "data/train/train_anno_realease_repath.jsonl.tgz",
+              "download": {
+                "bytes": 858689880,
+                "GB_decimal": 0.85869,
+                "GiB_binary": 0.799717,
+                "status": "exact_hf_file_manifest_sum",
+                "unpacked_bytes": null
+              }
+            }
+          ],
+          "images_plus_repath_annotation": {
+            "bytes": 3111885208154,
+            "GB_decimal": 3111.885208,
+            "GiB_binary": 2898.168944,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          }
+        },
+        {
+          "split": "valid",
+          "images": 234156,
+          "labeled_images": 234156,
+          "prompts": 82093,
+          "labeled_prompts": 82093,
+          "image_archive_count": 200,
+          "image_archive_download": {
+            "bytes": 174448673487,
+            "GB_decimal": 174.448673,
+            "GiB_binary": 162.467988,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "annotation_download": {
+            "bytes": 44827409,
+            "GB_decimal": 0.044827,
+            "GiB_binary": 0.041749,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          }
+        },
+        {
+          "split": "test",
+          "images": 5402,
+          "labeled_images": 5402,
+          "prompts": 5171,
+          "labeled_prompts": 5171,
+          "image_archive_count": 1,
+          "image_archive_download": {
+            "bytes": 3979108186,
+            "GB_decimal": 3.979108,
+            "GiB_binary": 3.705833,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          },
+          "annotation_download": {
+            "bytes": 967690,
+            "GB_decimal": 0.000968,
+            "GiB_binary": 0.000901,
+            "status": "exact_hf_file_manifest_sum",
+            "unpacked_bytes": null
+          }
+        }
+      ],
+      "total_labeled_images_reported": 4429295,
+      "total_images_reported": 4692751,
+      "all_image_archives_download": {
+        "bytes": 3289454299947,
+        "GB_decimal": 3289.4543,
+        "GiB_binary": 3063.543048,
+        "status": "exact_hf_file_manifest_sum",
+        "unpacked_bytes": null
+      },
+      "unique_images_verified": false,
+      "count_caveat": "Card prose has 235,156 validation images, whereas table and total imply 234,156; use table with discrepancy disclosed. Multiple images share prompts, so prompt counts are not image counts.",
+      "hosting": "Hosted image tar-gzip shards and compressed JSONL annotation files; access gate requires name, affiliation and terms acceptance. Anonymous file and viewer requests returned HTTP 401, while info/tree metadata are public.",
+      "license": "Custom terms: noncommercial research only; no competitive research against MidJourney or Discord; redistribution restricted; internal copies allowed at one site in the same organization.",
+      "recommendation": "Use train only for training; retain valid/test for evaluation. Original train is over 3.11 TB compressed, so use a shard-selected sample only after terms acceptance and manifest filtering.",
+      "sources": [
+        "https://huggingface.co/datasets/JourneyDB/JourneyDB/blob/main/README.md",
+        "https://github.com/JourneyDB/JourneyDB",
+        "https://journeydb.github.io/assets/Terms_of_Usage.html"
+      ]
+    },
+    {
+      "name": "BLIP3o-Pretrain-JourneyDB (repack)",
+      "source": {
+        "repo_id": "BLIP3o/BLIP3o-Pretrain-JourneyDB",
+        "revision": "734b390be883b2021ae6d6dc1b24e6b97e7253a2",
+        "gated": false,
+        "page_url": "https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-JourneyDB",
+        "tree_api_url": "https://huggingface.co/api/datasets/BLIP3o/BLIP3o-Pretrain-JourneyDB/tree/main?recursive=true&limit=1000",
+        "snapshot_file": "blip3o_journeydb_tree.json"
+      },
+      "advertised_image_count": 4000000,
+      "viewer_estimated_rows": 4277375,
+      "viewer_exact_converted_rows": 6900,
+      "viewer_partial": true,
+      "exact_full_rows": null,
+      "unique_images_verified": false,
+      "image_text_archive_count": 419,
+      "archive_download": {
+        "bytes": 3132047400960,
+        "GB_decimal": 3132.047401,
+        "GiB_binary": 2916.946449,
+        "status": "exact_hf_file_manifest_sum",
+        "unpacked_bytes": null
+      },
+      "separate_annotation_bytes": null,
+      "format": "WebDataset tar shards containing jpg and txt; no upstream image downloads required.",
+      "split": "train",
+      "split_lineage_caveat": "Mirror card labels data train but does not document a mapping to original JourneyDB train/validation/test IDs.",
+      "license": "Mirror tag Apache 2.0 conflicts with restrictive original JourneyDB terms; do not treat the mirror tag as clearing upstream usage restrictions.",
+      "recommendation": "Technically public and streamable, but still about 3.132 TB. Not a lightweight substitute for the original. Verify upstream terms and original split lineage before adopting. Never add this repack count to original JourneyDB as separate images.",
+      "sources": [
+        "https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-JourneyDB",
+        "https://datasets-server.huggingface.co/size?dataset=BLIP3o/BLIP3o-Pretrain-JourneyDB",
+        "https://journeydb.github.io/assets/Terms_of_Usage.html"
+      ]
+    }
+  ],
+  "file_manifest": "file_manifest.json",
+  "archive_note": "Compact tracked audit; detailed file inventories and raw HTTP/API evidence remain in the verified metadata bundle on Aurora."
+}

@@ -1,0 +1,7 @@
+# Default Experiment Metadata
+id: "UNKNOWN"
+variant: "DEFAULT"
+campaign: "default"
+pathway: "default"
+sweep_id: null
+preset: null

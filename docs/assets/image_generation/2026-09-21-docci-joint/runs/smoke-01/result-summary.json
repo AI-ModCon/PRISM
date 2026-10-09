@@ -1,0 +1,23 @@
+{
+  "completed_steps": 2,
+  "duration_seconds": 392.5637295572087,
+  "peak_allocated_bytes": 27758145536,
+  "trainable_parameter_counts": {
+    "connector": 4200448,
+    "diffusion": 3967161400
+  },
+  "trainable_groups_changed": {
+    "connector": true,
+    "diffusion": true
+  },
+  "frozen_state_unchanged": true,
+  "optimizer_step_seconds": [
+    7.962266727117822,
+    6.611708228010684
+  ],
+  "checkpoint": {
+    "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-joint-20260921/runs/smoke-01/connector-diffusion-pilot-step-000002.pt",
+    "bytes": 47674267569,
+    "sha256": "d4cbfa164f07fd48cef7149637213b64b74426164d26904d6ff5bbc7850a7f69"
+  }
+}

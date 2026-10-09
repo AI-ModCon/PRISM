@@ -1,0 +1,20 @@
+{
+  "checkpoint_or_cache_bytes_included": false,
+  "collected_at_utc": "2026-09-22T04:50:27.420596+00:00",
+  "collector_source_sha256": {
+    "pack_feature_alignment.py": "0b7145991784373e5aff5864e4a1e016bde3f6943df786bc7f6788623699c7b0",
+    "pack_run.py": "f8975af66e07d80bebc3817a239ffbcf95396709b4891d486ce4f104bb6eb55a",
+    "plot_feature_alignment.py": "efef76563105b79f024fff88134ebf7c7d8d492221e45b472ca6459020c209e6"
+  },
+  "completed_steps": 1000,
+  "evidence_kind": "real_checkpoint_connector_native_region_feature_alignment",
+  "final_acceptance_passed": true,
+  "heldout_ids": 8,
+  "observed_exposures": 4000,
+  "report_sha256": "90e484d0190091e5fdab5feea33cb65fd33d391aa6a7934125f7744e7d2ca5ad",
+  "report_status": "completed",
+  "run_name": "feature-alignment-regions32-1000-01",
+  "selected_training_ids": 32,
+  "skipped_oversize_files": [],
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-feature-alignment-regions"
+}

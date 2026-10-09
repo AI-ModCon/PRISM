@@ -1,0 +1,55 @@
+{
+  "checkpoint_bytes_included": false,
+  "checkpoint_checks": {
+    "joint": {
+      "actual_sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+      "archived_report": "joint-source-report.json",
+      "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-smoke-01/connector-diffusion-pilot-step-000006.pt",
+      "checkpoint_bytes": 47674392725,
+      "expected_sha256": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+      "independently_verified": true,
+      "report_sha256": "b479d9412b50fbc016b5fb7af872eac83445a29bd8f7d7d59bca20f022f13590"
+    },
+    "region": {
+      "actual_sha256": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d",
+      "archived_report": "region-source-report.json",
+      "checkpoint": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/feature-alignment-regions32-1000-01/connector-region-feature-alignment-step-001000.pt",
+      "checkpoint_bytes": 50797973,
+      "expected_sha256": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d",
+      "independently_verified": true,
+      "report_sha256": "90e484d0190091e5fdab5feea33cb65fd33d391aa6a7934125f7744e7d2ca5ad"
+    }
+  },
+  "collected_at_utc": "2026-09-22T07:02:34.959447+00:00",
+  "collector_sha256": {
+    "pack_joint_components.py": "5bce4497aecf2892fe93c66db1f6a6e652789afb8aa4c1aed486efec2825510b",
+    "pack_run.py": "f8975af66e07d80bebc3817a239ffbcf95396709b4891d486ce4f104bb6eb55a",
+    "render_joint_components.py": "93577a0ab0f5583352c66289fead839df3b9912c299e5b7e05490d5089fec655"
+  },
+  "final_acceptance_passed": true,
+  "recorded_source_files_unchanged": true,
+  "report_sha256": "6651dc7cf67b554aa8217928b2501089ab56f9c4cb6b6b6f525a5d4edf941526",
+  "report_status": "completed",
+  "run_name": "joint-components-01",
+  "samples": 12,
+  "schema_version": 1,
+  "source_identity_checks": {
+    "src/data/image_generation_webdataset.py": true,
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/model.py": true,
+    "tools/align_prism_image_conditioning.py": true,
+    "tools/diagnose_prism_image_conditioning.py": true,
+    "tools/diagnose_prism_joint_components.py": true,
+    "tools/overfit_prism_image_connector.py": true,
+    "tools/prism_image_alignment_checkpoint.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_image_decoder.py": true,
+    "tools/train_prism_image_connector.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-joint-components",
+  "target_count": 2
+}

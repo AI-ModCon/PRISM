@@ -1,0 +1,61 @@
+{
+  "checks": {
+    "all_requested_updates_recorded": true,
+    "both_groups_changed": true,
+    "complete_dense_scope": true,
+    "finite_losses_and_group_gradients": true,
+    "frozen_state_unchanged": true,
+    "full_final_validation": true,
+    "gallery_initial_noise_replayed": true,
+    "generation_target_free": true,
+    "per_id_exposure_matches_steps": true,
+    "real_checkpoint_evidence": true,
+    "recorded_source_files_unchanged": true,
+    "report_completed": true,
+    "sample_exposure_matches_steps": true,
+    "terminal_checkpoint_sha256": true,
+    "terminal_checkpoint_step": true,
+    "train_validation_ids_disjoint": true,
+    "training_ids_only": true,
+    "training_within_selected_pool": true
+  },
+  "final_acceptance_evaluated": true,
+  "final_acceptance_passed": true,
+  "interpretation": "Artifact integrity and execution checks only; no generation quality or benchmark qualification.",
+  "observations": {
+    "checkpoint": {
+      "bytes": 47674386389,
+      "independently_verified": true,
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/overfit32-256-01/connector-diffusion-pilot-step-000256.pt",
+      "qualification": "unqualified",
+      "sha256": "0699fe1c9edb04f816f907da32dec71e5dbc4bdc5103f1e9190a12dd83095ce0",
+      "step": 256
+    },
+    "completed_steps": 256,
+    "examples_consumed": 1024,
+    "phase": "completed",
+    "samples_collected": 14,
+    "selected_example_count": 32,
+    "status": "completed",
+    "step_log_rows": 256,
+    "unique_training_examples": 32
+  },
+  "schema_version": 1,
+  "source_identity_checks": {
+    "src/data/image_generation.py": true,
+    "src/data/image_generation_webdataset.py": true,
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/decoders/types.py": true,
+    "src/model.py": true,
+    "src/training/cpu_master_adamw.py": true,
+    "tools/overfit_prism_image_connector.py": true,
+    "tools/prism_image_conditioning.py": true,
+    "tools/train_image_decoder.py": true,
+    "tools/train_prism_image_connector.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism"
+}

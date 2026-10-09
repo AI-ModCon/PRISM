@@ -1,0 +1,399 @@
+{
+  "schema_version": 1,
+  "kind": "independent_component_factorial_interpretation",
+  "run_name": "joint-components-01",
+  "job_id": "8848800.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "duration_seconds": 1010.6919344898779,
+  "report_sha256": "6651dc7cf67b554aa8217928b2501089ab56f9c4cb6b6b6f525a5d4edf941526",
+  "checks": {
+    "independent_local_artifact_audit_passed": true,
+    "checkpoint_sha256": {
+      "joint": "8525b06bae8a61990ba75bce6604b8963c8d1b4e7f1d692c1d813ac6a524e09d",
+      "region": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d"
+    },
+    "both_digests_independently_streamed_by_remote_collector": true,
+    "source_count": 15,
+    "all_executed_source_hashes_pass": true,
+    "phase_count": 4,
+    "phase_frozen_hashes_pass": true,
+    "invariant_tensor_count": 1634,
+    "full_phase_tensor_count": 2220,
+    "final_original_dit_aligned_connector_restored": true,
+    "flow_rows": 12,
+    "routes_per_flow_row": 6,
+    "actual_condition_checks": 144,
+    "image_count": 12,
+    "all_original_norm_feature_values_independent_of_dit_phase": true,
+    "prior_flow_replay": [
+      {
+        "route": "native_original",
+        "prior_job": "8848573.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+        "prior_route": "native_pretrained",
+        "flow_rows_identical": 12
+      },
+      {
+        "route": "aligned_original",
+        "prior_job": "8848573.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+        "prior_route": "prism_chat",
+        "flow_rows_identical": 12
+      },
+      {
+        "route": "native_joint",
+        "prior_job": "8848734.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+        "prior_route": "native_adapted_diffusion",
+        "flow_rows_identical": 12
+      },
+      {
+        "route": "joint_joint",
+        "prior_job": "8848734.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+        "prior_route": "prism_chat",
+        "flow_rows_identical": 12
+      }
+    ],
+    "prior_image_replay": [
+      {
+        "route": "native_original",
+        "case_id": "validation-00",
+        "prior_run": "conditioning-regions1000-01",
+        "prior_route": "native_pretrained",
+        "sha256": "15d2f24151875059a09bbac0ca714beaccbb292d974c1c71e2de4946432532e7",
+        "byte_identical": true
+      },
+      {
+        "route": "native_original",
+        "case_id": "validation-01",
+        "prior_run": "conditioning-regions1000-01",
+        "prior_route": "native_pretrained",
+        "sha256": "7fb8aa51cdd640febde91c8a490893c56ddf02a090e0f7704d950941164f06cf",
+        "byte_identical": true
+      },
+      {
+        "route": "aligned_original",
+        "case_id": "validation-00",
+        "prior_run": "conditioning-regions1000-01",
+        "prior_route": "prism_chat_native_negative_cfg5",
+        "sha256": "311f13838b196b0c82b5fbdb3c9da73aced0dd78bd4a695c4b3d9f146ee76fc3",
+        "byte_identical": true
+      },
+      {
+        "route": "aligned_original",
+        "case_id": "validation-01",
+        "prior_run": "conditioning-regions1000-01",
+        "prior_route": "prism_chat_native_negative_cfg5",
+        "sha256": "3dab2bddce4a5159d8b45ae30e93dd70edc051ad73146d17dea1b7c4f0b89877",
+        "byte_identical": true
+      },
+      {
+        "route": "native_joint",
+        "case_id": "validation-00",
+        "prior_run": "conditioning-aligned-joint6-01",
+        "prior_route": "native_adapted_diffusion",
+        "sha256": "0273a28408707d5ac904c438f0c1b4a7548c3c2e318f15e69f00d1b5041e95b3",
+        "byte_identical": true
+      },
+      {
+        "route": "native_joint",
+        "case_id": "validation-01",
+        "prior_run": "conditioning-aligned-joint6-01",
+        "prior_route": "native_adapted_diffusion",
+        "sha256": "6468b9aba0cb553eecdeda7061b1d311d3d4b7ed2c55e2364478996761340ce7",
+        "byte_identical": true
+      },
+      {
+        "route": "joint_joint",
+        "case_id": "validation-00",
+        "prior_run": "conditioning-aligned-joint6-01",
+        "prior_route": "prism_chat_native_negative_cfg5",
+        "sha256": "6dbb58e6099a80cc4c99a96293f2d3b00d2fadea435ab9fd0747867380d038ca",
+        "byte_identical": true
+      },
+      {
+        "route": "joint_joint",
+        "case_id": "validation-01",
+        "prior_run": "conditioning-aligned-joint6-01",
+        "prior_route": "prism_chat_native_negative_cfg5",
+        "sha256": "3c11347d5d5e7de6dcac894336e376db0935bb80c77f347f8b243fd1b64bdb52",
+        "byte_identical": true
+      }
+    ]
+  },
+  "factorial_effects": {
+    "train": {
+      "captions": 2,
+      "times_per_caption": 3,
+      "routes": {
+        "aligned_joint": {
+          "matched_loss": 0.4391135374704997,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.4659765462080638,
+          "wrong_minus_matched": 0.026863008737564087
+        },
+        "aligned_original": {
+          "matched_loss": 0.44038381179173786,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.46728062629699707,
+          "wrong_minus_matched": 0.026896814505259197
+        },
+        "joint_joint": {
+          "matched_loss": 0.44339586794376373,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.4604526311159134,
+          "wrong_minus_matched": 0.017056763172149658
+        },
+        "joint_original": {
+          "matched_loss": 0.44431033730506897,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.46159448722998303,
+          "wrong_minus_matched": 0.017284149924914043
+        },
+        "native_joint": {
+          "matched_loss": 0.4383436093727748,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.46482602258523303,
+          "wrong_minus_matched": 0.026482413212458294
+        },
+        "native_original": {
+          "matched_loss": 0.43975954751173657,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.46609774728616077,
+          "wrong_minus_matched": 0.026338199774424236
+        }
+      },
+      "factorial_differences": {
+        "matched_loss": {
+          "baseline": 0.44038381179173786,
+          "connector_effect_at_original_dit": 0.003926525513331114,
+          "dit_effect_at_aligned_connector": -0.0012702743212381629,
+          "interaction_difference_of_differences": 0.00035580495993292605,
+          "combined_difference": 0.003012056152025877,
+          "connector_effect_percent_of_baseline": 0.8916144072952381,
+          "dit_effect_percent_of_baseline": -0.2884470971060371,
+          "combined_change_percent": 0.6839615969921997
+        },
+        "wrong_minus_matched": {
+          "baseline": 0.026896814505259197,
+          "connector_effect_at_original_dit": -0.009612664580345154,
+          "dit_effect_at_aligned_connector": -3.3805767695110206e-05,
+          "interaction_difference_of_differences": -0.0001935809850692749,
+          "combined_difference": -0.009840051333109539,
+          "connector_effect_percent_of_baseline": -35.73904477969154,
+          "dit_effect_percent_of_baseline": -0.1256868826919999,
+          "combined_change_percent": -36.58444880595615
+        }
+      }
+    },
+    "validation": {
+      "captions": 2,
+      "times_per_caption": 3,
+      "routes": {
+        "aligned_joint": {
+          "matched_loss": 0.5106356342633566,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.5307481785615286,
+          "wrong_minus_matched": 0.020112544298171997
+        },
+        "aligned_original": {
+          "matched_loss": 0.5113247583309809,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.5312078595161438,
+          "wrong_minus_matched": 0.01988310118516286
+        },
+        "joint_joint": {
+          "matched_loss": 0.5108610987663269,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.5281821886698405,
+          "wrong_minus_matched": 0.01732108990351359
+        },
+        "joint_original": {
+          "matched_loss": 0.5108508268992106,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.5282869835694631,
+          "wrong_minus_matched": 0.017436156670252483
+        },
+        "native_joint": {
+          "matched_loss": 0.5073071718215942,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.5333388696114222,
+          "wrong_minus_matched": 0.026031697789827984
+        },
+        "native_original": {
+          "matched_loss": 0.5078432708978653,
+          "matched_wins": 6,
+          "paired_evaluations": 6,
+          "wrong_loss": 0.533469001452128,
+          "wrong_minus_matched": 0.025625730554262798
+        }
+      },
+      "factorial_differences": {
+        "matched_loss": {
+          "baseline": 0.5113247583309809,
+          "connector_effect_at_original_dit": -0.0004739314317703247,
+          "dit_effect_at_aligned_connector": -0.000689124067624336,
+          "interaction_difference_of_differences": 0.0006993959347406653,
+          "combined_difference": -0.0004636595646539954,
+          "connector_effect_percent_of_baseline": -0.09268697125429659,
+          "dit_effect_percent_of_baseline": -0.1347722863789591,
+          "combined_change_percent": -0.09067809784283343
+        },
+        "wrong_minus_matched": {
+          "baseline": 0.01988310118516286,
+          "connector_effect_at_original_dit": -0.0024469445149103777,
+          "dit_effect_at_aligned_connector": 0.00022944311300913608,
+          "interaction_difference_of_differences": -0.0003445098797480277,
+          "combined_difference": -0.0025620112816492693,
+          "connector_effect_percent_of_baseline": -12.306654239311188,
+          "dit_effect_percent_of_baseline": 1.1539603951739252,
+          "combined_change_percent": -12.88537063605093
+        }
+      }
+    }
+  },
+  "original_norm_feature_drift": {
+    "train": {
+      "matched_caption_count": 2,
+      "normalization": "captured_original_dit_rmsnorm",
+      "aggregation": "Unweighted mean over the two matched captions; wrong captions are excluded, and duplicate DiT phases are not counted.",
+      "aligned": {
+        "prefix": {
+          "mse": 0.0005659176531480625,
+          "cosine": 0.9988788664340973
+        },
+        "content": {
+          "mse": 0.027825199998915195,
+          "cosine": 0.9337582886219025
+        },
+        "suffix": {
+          "mse": 0.0024685260141268373,
+          "cosine": 0.9979772865772247
+        }
+      },
+      "joint": {
+        "prefix": {
+          "mse": 0.011658171657472849,
+          "cosine": 0.9802053868770599
+        },
+        "content": {
+          "mse": 0.0345497652888298,
+          "cosine": 0.9171365797519684
+        },
+        "suffix": {
+          "mse": 0.006061197258532047,
+          "cosine": 0.9950432777404785
+        }
+      },
+      "change": {
+        "prefix": {
+          "mse_ratio": 20.600473571766617,
+          "mse_change_percent": 1960.0473571766618,
+          "cosine_delta": -0.018673479557037354
+        },
+        "content": {
+          "mse_ratio": 1.2416717684033456,
+          "mse_change_percent": 24.16717684033456,
+          "cosine_delta": -0.016621708869934082
+        },
+        "suffix": {
+          "mse_ratio": 2.4553912836426006,
+          "mse_change_percent": 145.53912836426005,
+          "cosine_delta": -0.002934008836746216
+        }
+      }
+    },
+    "validation": {
+      "matched_caption_count": 2,
+      "normalization": "captured_original_dit_rmsnorm",
+      "aggregation": "Unweighted mean over the two matched captions; wrong captions are excluded, and duplicate DiT phases are not counted.",
+      "aligned": {
+        "prefix": {
+          "mse": 0.0005793714808532968,
+          "cosine": 0.9988437592983246
+        },
+        "content": {
+          "mse": 0.056324807927012444,
+          "cosine": 0.867800772190094
+        },
+        "suffix": {
+          "mse": 0.005306523060426116,
+          "cosine": 0.9956173896789551
+        }
+      },
+      "joint": {
+        "prefix": {
+          "mse": 0.01168900029733777,
+          "cosine": 0.9801250100135803
+        },
+        "content": {
+          "mse": 0.0627135019749403,
+          "cosine": 0.8527671098709106
+        },
+        "suffix": {
+          "mse": 0.008766350569203496,
+          "cosine": 0.9927859008312225
+        }
+      },
+      "change": {
+        "prefix": {
+          "mse_ratio": 20.175311839861777,
+          "mse_change_percent": 1917.5311839861777,
+          "cosine_delta": -0.018718749284744263
+        },
+        "content": {
+          "mse_ratio": 1.1134259358009093,
+          "mse_change_percent": 11.34259358009093,
+          "cosine_delta": -0.01503366231918335
+        },
+        "suffix": {
+          "mse_ratio": 1.6519951895770248,
+          "mse_change_percent": 65.19951895770248,
+          "cosine_delta": -0.002831488847732544
+        }
+      }
+    }
+  },
+  "visual_assessment": {
+    "method": "Direct inspection of component-comparison.png with the four connector/DiT combinations and two native controls. Two held-out captions and one common seed each, CFG5 with original native negative, 50 steps, 256x256.",
+    "gallery_sha256": "d6c0a45ca91a8cfc2b2d3d13d7ca027fef4054f3cc1e33f7336d1192570f5c2b",
+    "animal_scene": {
+      "aligned_original": "Partial plush dog shape under counter and detached blue helmet-like object; penguin already missing.",
+      "joint_original": "With only the updated connector, image changes to elongated largely featureless white animal with blue helmet-like head. This recreates the observed joint degradation.",
+      "aligned_joint": "With only the updated DiT, remains close to aligned-original plush-dog scene, with local helmet/object changes. Existing subject omissions remain.",
+      "joint_joint": "Closely resembles joint-original distorted white animal; same prior joint diagnostic image exactly replays.",
+      "native_original_vs_joint": "Recognizable dog and penguin preserved under both DiTs, with small local differences."
+    },
+    "airplane_scene": {
+      "aligned_original": "Yellow upper aircraft-like form and small blue/purple lower aircraft-like object, though colors and ground relation are wrong.",
+      "joint_original": "Updated connector alone produces the flat stylized one-aircraft/sign-like scene and loses the lower aircraft.",
+      "aligned_joint": "Updated DiT alone stays near aligned-original two-object scene; no clear fidelity improvement.",
+      "joint_joint": "Closely resembles joint-original flat one-object scene; same prior joint diagnostic image exactly replays.",
+      "native_original_vs_joint": "Both retain two recognizable aircraft; caption error of one airborne aircraft remains."
+    }
+  },
+  "interpretation": "For these paired cases, updating the connector is sufficient to reproduce the visible degradation even with the original DiT. Keeping the aligned connector with the adapted DiT largely preserves the pre-joint scene. The factorial flow gaps and original-norm feature drift support connector-side loss of alignment as the primary measured effect. This does not isolate prefix vs content contributions within the connector or establish all future DiT training is safe.",
+  "limits": [
+    "Four distinct matched captions total: two train and two held out. Three timesteps per caption are correlated probes; six observations per split are not six independent examples.",
+    "Only two generated cases, one matched seed each. These local counterfactuals identify causes for these examples, not population-wide performance.",
+    "Caption gap is a controlled denoising sensitivity metric, not caption or image-generation accuracy. All routes win all six small-cohort comparisons despite visible PRISM subject failures.",
+    "The original aligned baseline already missed important subjects. Avoiding additional degradation does not establish readiness for full-data training.",
+    "Prefix MSE grows about twentyfold from a small baseline, but content and suffix also drift; this experiment does not show that prefix alone causes generation degradation.",
+    "Checkpoint bytes were independently hashed remotely and strict restores executed on Aurora. This local audit verified archived evidence and sources without transferring or loading checkpoint tensors."
+  ],
+  "recommendation": {
+    "full_data_training_supported": false,
+    "next_bounded_hypothesis": "Retain the verified region-aligned connector behavior during joint updates, e.g. compare a lower connector learning rate or an explicitly recorded alignment-retention objective, then repeat matched-noise subject checks and caption controls. A frozen-connector DiT-only route can serve as a control, but its six-update counterfactual still lacks full subject recovery. Broader caption alignment from the prepared pool remains a separate hypothesis for the original held-out failures."
+  },
+  "original_norm_feature_plot": {
+    "path": "feature-drift.png",
+    "sha256": "eb0479c8a74bc0812081f6507e729999d5d4f05e54eb78faf3d2670c0acc26b4"
+  }
+}

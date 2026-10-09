@@ -1,0 +1,65 @@
+# BioReason Stage 1: Projector Alignment
+# Trains only the DNA->LLM projection layer. DNA encoder and LLM backbone are frozen.
+# Run this before bioreason_sft.yaml (Stage 2).
+# Based on: https://arxiv.org/abs/2505.23579
+
+task: "bioreason_projector"
+batch_size: 8
+max_steps: 5000  # ~5 epochs over KEGG (1450 samples)
+device: "auto"
+learning_rate: 5e-5
+gradient_accumulation_steps: 8
+eval_enabled: true  # ZoneATrainer's periodic-eval block is opt-in; must be true for the KEGG eval below to fire
+eval_every_n_steps: 200  # Also drives the KEGG validation eval below
+viz_every_n_steps: 1000
+
+# KEGG validation eval (wanglab/kegg 'val' split), run inline during training on
+# the eval_every_n_steps cadence above. See ZoneATrainer.run_kegg_eval /
+# eval_kegg.py for the offline equivalent.
+kegg_eval_max_examples: null  # null = full val split
+
+# Checkpointing
+save_every_n_steps: 500
+resume_from_checkpoint: null
+resume_weights_only: null
+output_dir: ${hydra:run.dir}
+
+# Optimization
+warmup_steps: 500  # 10% of max_steps=5000
+weight_decay: 0.01
+scheduler_type: "cosine"
+min_lr_ratio: 0.0
+
+# Differential Learning Rates
+lr_connector: 5e-5   # Only the projector trains
+
+# Freezing — everything frozen except the projector
+freeze_llm: true       # LLM backbone frozen
+freeze_vit: true       # DNA encoder frozen
+freeze_connector: false  # Projector is the ONLY trainable component
+
+# LoRA OFF — projector-only stage does not touch the LLM
+lora_enabled: false
+
+# Data format: answer only — no reasoning trace during projector alignment.
+# The projector only needs to learn to map DNA embeddings into the LLM embedding
+# space. Chain-of-thought structure is learned in Stage 2 by the LoRA adapters.
+use_reasoning_traces: false
+
+# Data
+data_num_workers: 1
+
+# BioReason-specific
+bioreason_dataset: "wanglab/kegg"  # or variant_effect_coding, variant_effect_non_snv
+max_dna_length: 1024
+max_text_length: 1024
+dna_truncation_per_side: 1024
+
+# Distributed
+distribution_strategy: "ddp"
+
+ddp:
+  bucket_cap_mb: 25
+  find_unused_parameters: false
+  static_graph: true
+  gradient_as_bucket_view: true

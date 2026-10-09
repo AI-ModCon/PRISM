@@ -1,0 +1,21 @@
+# Per-modality smoke: text + time_series.
+# Two real local sources de-risks rate-limit and bug interaction:
+#   - ts_qa points at <data_root>/zone_a/ts_qa/align_256/train.jsonl
+#   - ts_instruction reads <data_root>/zone_a/ts_instruction
+# Both rely on the local-dir JSONL dispatch in src/data/multimodal.py — see
+# the per-modality-sweep dispatch fix (PR following #90).
+#
+# NOTE: ts_qa stores 2D series (16 vars x 256 steps). _process_ts_qa requires
+# model.modality_start_end_token_indices.time_series to be set when the tensor
+# is 2D. The sweep driver (tools/run_sweep.py) adds the Hydra override:
+#   `model.modality_start_end_token_indices.time_series=[50280,50281]`
+# for the text_ts preset.
+#
+# Placeholder path below — point it at your own prepared zone_a data.
+dataset_overrides:
+  ts_qa:
+    skip: false
+    local_path: /flare/<project>/<user>/data/zone_a/ts_qa/align_256
+    preferred_source: local
+  ts_instruction:
+    skip: true

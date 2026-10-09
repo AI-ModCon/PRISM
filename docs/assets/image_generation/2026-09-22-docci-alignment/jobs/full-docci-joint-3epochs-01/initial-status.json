@@ -1,0 +1,8 @@
+{
+  "scheduler": [
+    "job_state = Q",
+    "queue = capacity",
+    "Resource_List.walltime = 12:00:00"
+  ],
+  "scheduler_exit": 0
+}

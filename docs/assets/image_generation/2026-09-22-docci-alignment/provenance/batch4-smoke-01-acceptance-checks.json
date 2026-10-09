@@ -1,0 +1,54 @@
+{
+  "checks": {
+    "all_requested_updates_recorded": true,
+    "both_groups_changed": true,
+    "complete_dense_scope": true,
+    "finite_losses_and_group_gradients": true,
+    "frozen_state_unchanged": true,
+    "real_checkpoint_evidence": true,
+    "recorded_source_files_unchanged": true,
+    "report_completed": true,
+    "sample_exposure_matches_steps": true,
+    "terminal_checkpoint_sha256": true,
+    "terminal_checkpoint_step": true,
+    "train_validation_ids_disjoint": true,
+    "training_ids_only": true
+  },
+  "final_acceptance_evaluated": true,
+  "final_acceptance_passed": true,
+  "interpretation": "Artifact integrity and execution checks only; no generation quality or benchmark qualification.",
+  "observations": {
+    "checkpoint": {
+      "bytes": 47674267569,
+      "independently_verified": true,
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/batch4-smoke-01/connector-diffusion-pilot-step-000006.pt",
+      "qualification": "unqualified",
+      "sha256": "7146d8d27c80039c2056ecb70cd3ea661c35d63d3e58102fb2b5942a9befeaba",
+      "step": 6
+    },
+    "completed_steps": 6,
+    "examples_consumed": 24,
+    "phase": "completed",
+    "samples_collected": 0,
+    "status": "completed",
+    "step_log_rows": 6,
+    "unique_training_examples": 24
+  },
+  "schema_version": 1,
+  "source_identity_checks": {
+    "src/data/image_generation.py": true,
+    "src/data/image_generation_webdataset.py": true,
+    "src/decoders/conditioning.py": true,
+    "src/decoders/image.py": true,
+    "src/decoders/loading.py": true,
+    "src/decoders/omnigen2_backend.py": true,
+    "src/decoders/types.py": true,
+    "src/model.py": true,
+    "src/training/cpu_master_adamw.py": true,
+    "tools/overfit_prism_image_connector.py": true,
+    "tools/train_image_decoder.py": true,
+    "tools/train_prism_image_connector.py": true,
+    "tools/train_prism_image_diffusion.py": true
+  },
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-joint-20260921/prism"
+}

@@ -1,0 +1,133 @@
+ruff==0.16.9
+mypy==2.3.1
+pytest==9.1.1
+pytest-cov==7.1.0
+torch
+torchvision
+
+# Pinned, unlike its neighbours. CI floats the rest of this list, but an
+# unpinned `transformers` resolves to whatever is newest on PyPI, and the 5.x
+# line moved symbols PRISM imports (`no_init_weights` left
+# `transformers.modeling_utils` for `transformers.initialization`, and
+# `from_pretrained`'s signature changed) -- so `mypy src` goes red on a day
+# nobody touched the repo. 4.57.6 is also what Aurora's frameworks/2025.3.1
+# ships, so CI type-checks against the same API surface the cluster runs.
+#
+# This pin deliberately EXCLUDES the Intern-S2 Preview encoder, whose vendored
+# config imports `transformers.modeling_rope_utils.RopeParameters` (5.2.0+).
+# Nothing satisfies both: vLLM 0.15.0+xpu declares `transformers<5,>=4.56.0`,
+# so >=5.2.0 and vLLM have an empty intersection. Aurora resolves this with an
+# opt-in build variant (`tools/build_aurora_env.sh --intern-s2`); CI takes the
+# default side of that same split. Tests that need Intern-S2 are marked
+# `aurora` and are deselected by every CI job.
+transformers==4.57.6
+accelerate
+einops
+hydra-core
+omegaconf
+numpy
+pandas
+pillow
+fastapi
+# tests/test_api_server.py drives the app through fastapi.testclient.TestClient,
+# which imports httpx -- but neither fastapi nor starlette declares it, so it
+# has to be named here. It used to arrive by luck: transformers 5.x pulls
+# huggingface-hub 1.x, which depends on httpx. Pinning transformers to 4.57.6
+# brings huggingface-hub 0.36.2 instead, which does not, and the module then
+# fails to collect with "The starlette.testclient module requires the httpx2
+# package to be installed."
+httpx
+uvicorn
+pyyaml
+h5py
+datasets
+wandb
+
+# Without the first two below, CI's `unit` and `coverage_gate` jobs abort at
+# COLLECTION -- pytest exits 2 with "Interrupted: 3 errors during collection"
+# and not one test runs. A job that never collects reports "fail" identically
+# whether the suite is healthy or broken, which is why the unit gate has been
+# uninformative rather than merely red.
+#
+# Each chain was traced by making the package unimportable and reading the
+# collection traceback, not inferred from a grep:
+#
+# python-dotenv  tests/test_extract_intern_s2_timeseries.py:6
+#                  -> applications/timeseries/extract_intern_s2_timeseries.py:16
+#                     `from dotenv import load_dotenv`
+# nltk           tests/test_model_config_loading.py:2
+#                  -> src/eval/__init__.py:3
+#                     -> src/eval/tasks/modality_tasks.py:8 `import nltk`
+#                (BLEU scoring. tools/universal_evaluator.py and
+#                applications/timeseries/scits_f1.py import nltk lazily and would survive
+#                without it; this one is at module scope, so it does not.)
+#
+# The third collection error was tests/test_vllm_checkpoint_export.py, fixed in
+# the test rather than here: vLLM is an Aurora/XPU build and is not installable
+# on CI's platform at all.
+#
+# matplotlib is a different case -- NOT a collection error. Nothing imports it
+# at module scope; tests/test_isoflop_plot.py runs tools/isoflop_plot.py as a
+# subprocess, and that script does `import matplotlib` + `matplotlib.use("Agg")`
+# at line 37. So its absence costs 3 runtime FAILURES rather than an abort
+# (verified: collection completes cleanly with matplotlib unavailable, and
+# test_isoflop_plot goes 4 passed -> 3 failed, 1 passed). It is listed here
+# because a subprocess dependency cannot be importorskip-ed from the test side.
+python-dotenv
+nltk
+matplotlib
+
+# The shipped console script. `typer` is a real runtime dependency
+# (pyproject.toml:11) -- every `src/cli/*.py` module imports it at module scope --
+# but nothing else in this file pulls it transitively, so without this line
+# tests/test_cli_surface.py cannot import the CLI at all and its whole module is
+# skipped. Verified by resolving this file with `pip install --dry-run`: the
+# closure contains `click` (from wandb and uvicorn) but no `typer`, so a
+# CliRunner test would have looked green while exercising nothing. Unpinned like
+# its neighbours; the CLI uses only the stable Typer/Click surface.
+typer
+
+# Dependabot's pip fetcher reads THIS file and nothing else under requirements/
+# (every other manifest is excluded -- see .github/dependabot.yml). Its
+# `requirements_file?` check accepts a .txt only if EVERY line is blank, a
+# comment, a `-r`/`-c`/`-e`/`--` directive, or a parseable requirement. One
+# unparseable line rejects the whole file, and with no candidate left the
+# fetcher aborts "No files found in /requirements" and CLOSES the open update
+# PRs as though the dependency had vanished. That is what happened to #204 and
+# #205. So: no PEP 508 direct references (`name @ git+...`) in this file.
+# tests/platform/test_dependabot_scope.py enforces it.
+#
+# The line that tripped it was a torchtune requirement, removed here because CI
+# does not use torchtune at all. Only src/training/trainer_grpo.py imports it
+# (`from torchtune.dev.rl.loss import GRPOSimpleLoss`), nothing imports THAT
+# module except a deferred import inside src/train.py, and no test touches
+# either. Verified by making torchtune unimportable and re-running every CI
+# command: all four pytest jobs collect and pass identically, and `mypy src` is
+# unaffected (torchtune ships no py.typed, so mypy already resolved
+# GRPOSimpleLoss to Any with the package installed -- `ignore_missing_imports`
+# does the same without it). Aurora and Polaris still get torchtune; both
+# requirements/base.txt and requirements/polaris.txt document the clone-and-
+# install-editable step, which is where a git dependency belongs.
+#
+# torchao, by contrast, IS required: without it 26 test modules fail to collect,
+# because transformers 4.57.6 imports quantizers/quantizer_torchao.py eagerly.
+# CI's window is narrower than the HPC manifests', so this pin deliberately
+# DIFFERS from the 0.5.0 in requirements/base.txt and requirements/polaris.txt:
+#
+#   >= 0.9.0    transformers 4.57.6 reads torchao.quantization.Float8WeightOnlyConfig
+#               at import time (quantizers/quantizer_torchao.py, guarded only by
+#               `is_torchao_available()`, whose floor is 0.4.0 -- so an older
+#               torchao raises AttributeError there and every `from transformers
+#               import X` surfaces as a misleading "cannot import name 'X'").
+#               transformers 5.x does not touch it, which is why 0.5.0 worked
+#               while this file floated transformers.
+#   <  0.18.0   removes torchao.dtypes.nf4tensor. Nothing in CI imports that
+#               symbol now that torchtune is gone, but Aurora's torchtune fork
+#               does at package-init time, and keeping CI inside the cluster's
+#               window is the point of pinning to what Aurora ships.
+#
+# Both bounds were bisected on py3.10, not guessed: 0.8.0 lacks the symbol and
+# 0.9.0 is the first release to carry it. 0.15.0 sits inside the window and is
+# what Aurora's frameworks/2025.3.1 ships beside transformers 4.57.6, so CI and
+# the cluster agree rather than merely both working.
+torchao==0.15.0

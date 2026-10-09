@@ -1,0 +1,272 @@
+# Reproducible Qwen3 + SigLIP2 scaling designs.
+#
+# Launch with tools/launch_aurora_web.py in --dataset-groups mode using
+# src/conf/data/vlm_diverse_global_shuffle_v1.yaml.
+#
+# These designs intentionally do not enable --use-bucketing. That launcher flag
+# buffers and length-sorts the sample stream, which changes dataset ordering.
+# The default --use-bucketed-collator is still fine: it only sorts within each
+# already-formed batch.
+
+_qwen_siglip_common_16n: &qwen_siglip_common_16n
+  model.freeze_backbone: false
+  model.freeze_encoders: false
+  model.modalities: ["text", "image"]
+  training.task: "vlm"
+  training.batch_size: 4
+  training.gradient_accumulation_steps: 1
+  training.max_steps: 25000
+  training.finite_epoch_steps: 25000
+  training.scheduler_type: "wsd"
+  training.warmup_steps: 500
+  training.wsd_decay_ratio: 0.0
+  training.min_lr_ratio: 0.1
+  training.freeze_llm: false
+  training.freeze_vit: false
+  training.eval_enabled: false
+  training.eval_every_n_steps: 1000
+  training.validation_batches: 8
+  training.save_every_n_steps: 250
+  training.viz_every_n_steps: 0
+  training.data_num_workers: 0
+  training.weight_decay: 0.0
+  training.device: "xpu"
+  wandb.project: "prism-scaling-study"
+  wandb.mode: "online"
+
+experiments:
+  - id: QWEN3-SIGLIP-GLOBALSHUFV1-16N-MUPLR
+    name: "Qwen3 + SigLIP2 global-shuffle v1 scaling, 16 nodes, muP-style LR"
+    default_dataset_groups: vlm_diverse_global_shuffle_v1_train25k_gbs768
+    resources:
+      ngpus: 12
+      topology: "16x12xpu_aurora"
+      walltime: "12:00:00"
+    common_overrides:
+      <<: *qwen_siglip_common_16n
+      model: prism_qwen3_0_6b_image_only
+      exp.sweep_id: "qwen3_siglip_global_shuffle_v1_train25k_gbs768_mup_lr"
+      exp.preset: "global_shuffle_v1_16n_bs4_gbs768_mup_lr"
+    variants:
+      - id: QWEN3-0P6B-SIGLIP2-GLOBALSHUFV1-16N-MUPLR
+        name: "Qwen3 0.6B + SigLIP2 global-shuffle v1, muP-style LR"
+        overrides:
+          model: prism_qwen3_0_6b_image_only
+          training.learning_rate: 0.0001
+          training.lr_connector: 0.0001
+          training.lr_vit: 0.0001
+          training.lr_llm: 0.0001
+
+      - id: QWEN3-1P7B-SIGLIP2-GLOBALSHUFV1-16N-MUPLR
+        name: "Qwen3 1.7B + SigLIP2 global-shuffle v1, muP-style LR"
+        overrides:
+          model: prism_qwen3_1_7b_image_only
+          training.learning_rate: 0.00005
+          training.lr_connector: 0.00005
+          training.lr_vit: 0.00005
+          training.lr_llm: 0.00005
+
+      - id: QWEN3-4B-SIGLIP2-GLOBALSHUFV1-16N-MUPLR
+        name: "Qwen3 4B + SigLIP2 global-shuffle v1, muP-style LR"
+        overrides:
+          model: prism_qwen3_4b_image_only
+          training.learning_rate: 0.00004
+          training.lr_connector: 0.00004
+          training.lr_vit: 0.00004
+          training.lr_llm: 0.00004
+
+      - id: QWEN3-8B-SIGLIP2-GLOBALSHUFV1-16N-MUPLR
+        name: "Qwen3 8B + SigLIP2 global-shuffle v1, muP-style LR"
+        overrides:
+          model: prism_qwen3_8b_image_only
+          training.learning_rate: 0.000025
+          training.lr_connector: 0.000025
+          training.lr_vit: 0.000025
+          training.lr_llm: 0.000025
+
+  - id: QWEN3-SIGLIP-GLOBALSHUFV1-16N-INVSQRTLR
+    name: "Qwen3 + SigLIP2 global-shuffle v1 scaling, 16 nodes, inverse-sqrt LR"
+    default_dataset_groups: vlm_diverse_global_shuffle_v1_train25k_gbs768
+    resources:
+      ngpus: 12
+      topology: "16x12xpu_aurora"
+      walltime: "12:00:00"
+    common_overrides:
+      <<: *qwen_siglip_common_16n
+      model: prism_qwen3_0_6b_image_only
+      exp.sweep_id: "qwen3_siglip_global_shuffle_v1_train25k_gbs768_invsqrt_lr"
+      exp.preset: "global_shuffle_v1_16n_bs4_gbs768_invsqrt_lr"
+    variants:
+      - id: QWEN3-0P6B-SIGLIP2-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 0.6B + SigLIP2 global-shuffle v1, inverse-sqrt LR anchor"
+        overrides:
+          model: prism_qwen3_0_6b_image_only
+          training.learning_rate: 0.0001
+          training.lr_connector: 0.0001
+          training.lr_vit: 0.0001
+          training.lr_llm: 0.0001
+
+      - id: QWEN3-1P7B-SIGLIP2-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 1.7B + SigLIP2 global-shuffle v1, inverse-sqrt LR"
+        overrides:
+          model: prism_qwen3_1_7b_image_only
+          training.learning_rate: 0.00007071
+          training.lr_connector: 0.00007071
+          training.lr_vit: 0.00007071
+          training.lr_llm: 0.00007071
+
+      - id: QWEN3-4B-SIGLIP2-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 4B + SigLIP2 global-shuffle v1, inverse-sqrt LR"
+        overrides:
+          model: prism_qwen3_4b_image_only
+          training.learning_rate: 0.00006325
+          training.lr_connector: 0.00006325
+          training.lr_vit: 0.00006325
+          training.lr_llm: 0.00006325
+
+      - id: QWEN3-8B-SIGLIP2-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 8B + SigLIP2 global-shuffle v1, inverse-sqrt LR"
+        overrides:
+          model: prism_qwen3_8b_image_only
+          training.learning_rate: 0.00005
+          training.lr_connector: 0.00005
+          training.lr_vit: 0.00005
+          training.lr_llm: 0.00005
+
+  - id: QWEN3-0P6B-SIGLIP2-ENCODER-SWEEP-16N
+    name: "Qwen3 0.6B + SigLIP2 patch16-256 encoder-size sweep"
+    default_dataset_groups: vlm_diverse_global_shuffle_v1_train25k_gbs768
+    resources:
+      ngpus: 12
+      topology: "16x12xpu_aurora"
+      walltime: "08:00:00"
+    common_overrides:
+      <<: *qwen_siglip_common_16n
+      model: prism_qwen3_0_6b_image_only
+      model.image_size: 256
+      training.learning_rate: 0.0001
+      training.lr_connector: 0.0001
+      training.lr_vit: 0.0001
+      training.lr_llm: 0.0001
+      exp.sweep_id: "qwen3_0p6b_siglip2_patch16_256_encoder_sweep_global_shuffle_v1"
+      exp.preset: "global_shuffle_v1_16n_bs4_gbs768_encoder_sweep_qwen3_0p6b"
+    variants:
+      - id: QWEN3-0P6B-SIGLIP2-BASE256-GLOBALSHUFV1-16N
+        name: "Qwen3 0.6B + SigLIP2 base patch16-256"
+        overrides:
+          model.d_img: 768
+          model.image_encoder_id: "google/siglip2-base-patch16-256"
+          model.image_processor_id: "google/siglip2-base-patch16-256"
+
+      - id: QWEN3-0P6B-SIGLIP2-LARGE256-GLOBALSHUFV1-16N
+        name: "Qwen3 0.6B + SigLIP2 large patch16-256"
+        overrides:
+          model.d_img: 1024
+          model.image_encoder_id: "google/siglip2-large-patch16-256"
+          model.image_processor_id: "google/siglip2-large-patch16-256"
+
+      - id: QWEN3-0P6B-SIGLIP2-SO400M256-GLOBALSHUFV1-16N
+        name: "Qwen3 0.6B + SigLIP2 so400m patch16-256"
+        overrides:
+          model.d_img: 1152
+          model.image_encoder_id: "google/siglip2-so400m-patch16-256"
+          model.image_processor_id: "google/siglip2-so400m-patch16-256"
+
+      - id: QWEN3-0P6B-SIGLIP2-GIANT256-GLOBALSHUFV1-16N
+        name: "Qwen3 0.6B + SigLIP2 giant-opt patch16-256"
+        overrides:
+          model.d_img: 1536
+          model.image_encoder_id: "google/siglip2-giant-opt-patch16-256"
+          model.image_processor_id: "google/siglip2-giant-opt-patch16-256"
+
+  - id: QWEN3-1P7B-SIGLIP2-ENCODER-SWEEP-16N-INVSQRTLR
+    name: "Qwen3 1.7B + SigLIP2 patch16-256 encoder-size sweep, inverse-sqrt LR"
+    default_dataset_groups: vlm_diverse_global_shuffle_v1_train25k_gbs768
+    resources:
+      ngpus: 12
+      topology: "16x12xpu_aurora"
+      walltime: "08:00:00"
+    common_overrides:
+      <<: *qwen_siglip_common_16n
+      model: prism_qwen3_1_7b_image_only
+      model.image_size: 256
+      training.learning_rate: 0.00007071
+      training.lr_connector: 0.00007071
+      training.lr_vit: 0.00007071
+      training.lr_llm: 0.00007071
+      exp.sweep_id: "qwen3_1p7b_siglip2_patch16_256_encoder_sweep_global_shuffle_v1_invsqrt_lr"
+      exp.preset: "global_shuffle_v1_16n_bs4_gbs768_encoder_sweep_qwen3_1p7b_invsqrt_lr"
+    variants:
+      - id: QWEN3-1P7B-SIGLIP2-BASE256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 1.7B + SigLIP2 base patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 768
+          model.image_encoder_id: "google/siglip2-base-patch16-256"
+          model.image_processor_id: "google/siglip2-base-patch16-256"
+
+      - id: QWEN3-1P7B-SIGLIP2-LARGE256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 1.7B + SigLIP2 large patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1024
+          model.image_encoder_id: "google/siglip2-large-patch16-256"
+          model.image_processor_id: "google/siglip2-large-patch16-256"
+
+      - id: QWEN3-1P7B-SIGLIP2-SO400M256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 1.7B + SigLIP2 so400m patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1152
+          model.image_encoder_id: "google/siglip2-so400m-patch16-256"
+          model.image_processor_id: "google/siglip2-so400m-patch16-256"
+
+      - id: QWEN3-1P7B-SIGLIP2-GIANT256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 1.7B + SigLIP2 giant-opt patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1536
+          model.image_encoder_id: "google/siglip2-giant-opt-patch16-256"
+          model.image_processor_id: "google/siglip2-giant-opt-patch16-256"
+
+  - id: QWEN3-4B-SIGLIP2-ENCODER-SWEEP-16N-INVSQRTLR
+    name: "Qwen3 4B + SigLIP2 patch16-256 encoder-size sweep, inverse-sqrt LR"
+    default_dataset_groups: vlm_diverse_global_shuffle_v1_train25k_gbs768
+    resources:
+      ngpus: 12
+      topology: "16x12xpu_aurora"
+      walltime: "08:00:00"
+    common_overrides:
+      <<: *qwen_siglip_common_16n
+      model: prism_qwen3_4b_image_only
+      model.image_size: 256
+      training.learning_rate: 0.00006325
+      training.lr_connector: 0.00006325
+      training.lr_vit: 0.00006325
+      training.lr_llm: 0.00006325
+      exp.sweep_id: "qwen3_4b_siglip2_patch16_256_encoder_sweep_global_shuffle_v1_invsqrt_lr"
+      exp.preset: "global_shuffle_v1_16n_bs4_gbs768_encoder_sweep_qwen3_4b_invsqrt_lr"
+    variants:
+      - id: QWEN3-4B-SIGLIP2-BASE256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 4B + SigLIP2 base patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 768
+          model.image_encoder_id: "google/siglip2-base-patch16-256"
+          model.image_processor_id: "google/siglip2-base-patch16-256"
+
+      - id: QWEN3-4B-SIGLIP2-LARGE256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 4B + SigLIP2 large patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1024
+          model.image_encoder_id: "google/siglip2-large-patch16-256"
+          model.image_processor_id: "google/siglip2-large-patch16-256"
+
+      - id: QWEN3-4B-SIGLIP2-SO400M256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 4B + SigLIP2 so400m patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1152
+          model.image_encoder_id: "google/siglip2-so400m-patch16-256"
+          model.image_processor_id: "google/siglip2-so400m-patch16-256"
+
+      - id: QWEN3-4B-SIGLIP2-GIANT256-GLOBALSHUFV1-16N-INVSQRTLR
+        name: "Qwen3 4B + SigLIP2 giant-opt patch16-256, inverse-sqrt LR"
+        overrides:
+          model.d_img: 1536
+          model.image_encoder_id: "google/siglip2-giant-opt-patch16-256"
+          model.image_processor_id: "google/siglip2-giant-opt-patch16-256"

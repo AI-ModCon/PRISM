@@ -1,0 +1,42 @@
+# Encoder + Projector Pretraining
+# Strategy: Frozen LLM, train encoder with low LR + projector with high LR
+
+batch_size: 8
+max_steps: 5000
+finite_epoch_steps: 0
+learning_rate: 2e-5           # Base LR (LLM would use this if unfrozen)
+
+lr_connector: 2e-4            # 10x base
+lr_vit: 6e-6                  # Conservative encoder LR
+
+freeze_llm: true
+freeze_vit: false             # Unfreeze encoder
+
+scheduler_type: "molmo_layered"
+warmup_steps: 200  # Fallback for non-layered schedulers; molmo_layered uses the two below
+warmup_steps_connector: 200
+warmup_steps_main: 1000
+min_lr_ratio: 0.1
+wsd_decay_ratio: 0.1
+wsd_decay_steps: null
+weight_decay: 0.01
+gradient_accumulation_steps: 4
+
+# Checkpointing & Logging (Required to match struct)
+save_every_n_steps: 1000
+eval_every_n_steps: 500
+viz_every_n_steps: 500
+resume_from_checkpoint: null
+resume_weights_only: null
+wandb_run_id: null
+device: "auto"
+output_dir: ${hydra:run.dir}
+
+# Debugging
+verbosity: "INFO"
+
+# IsoFLOP eval gate (default false → existing runs bit-identical)
+# Defaults to false so non-IsoFLOP runs are bit-identical to today.
+# IsoFLOP launches flip this to true to emit per-family eval-loss perf records.
+eval_enabled: false
+validation_batches: 8

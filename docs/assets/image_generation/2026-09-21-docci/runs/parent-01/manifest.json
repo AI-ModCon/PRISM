@@ -1,0 +1,658 @@
+{
+  "alignment_gate": "not_evaluated",
+  "cases": [
+    {
+      "component_shapes": {},
+      "connector_shape": [
+        1,
+        35,
+        2048
+      ],
+      "duration_seconds": 2.343263802002184,
+      "hidden_shape": [
+        1,
+        35,
+        2048
+      ],
+      "id": "docci-short-caption",
+      "image_route": "capture_only; pretrained generator not executed",
+      "same_input_repeats": [
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        },
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        }
+      ],
+      "source_sha256": {},
+      "status": "completed",
+      "supplied_counterfactual_sensitivity": {
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          },
+          "inputs_embeds": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          },
+          "position_ids": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          }
+        },
+        "last_valid_exact_match": false,
+        "last_valid_max_absolute_error": 21.0,
+        "last_valid_relative_l2": 0.5528205633163452,
+        "sequence_shapes_equal": false
+      },
+      "target_fields_in_inputs": false,
+      "text": {
+        "exact_route_match": true,
+        "legacy_response": " The tennis ball is positioned in the center of the image, slightly to the left",
+        "legacy_token_ids": [
+          576,
+          31415,
+          4935,
+          374,
+          34228,
+          304,
+          279,
+          4126,
+          315,
+          279,
+          2168,
+          11,
+          10078,
+          311,
+          279,
+          2115
+        ],
+        "new_route_response": " The tennis ball is positioned in the center of the image, slightly to the left",
+        "new_route_token_ids": [
+          576,
+          31415,
+          4935,
+          374,
+          34228,
+          304,
+          279,
+          4126,
+          315,
+          279,
+          2168,
+          11,
+          10078,
+          311,
+          279,
+          2115
+        ]
+      },
+      "text_padding_comparison": {
+        "all_valid_exact_match": true,
+        "all_valid_max_absolute_error": 0.0,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": true,
+        "last_valid_max_absolute_error": 0.0,
+        "last_valid_relative_l2": 0.0,
+        "sequence_shapes_equal": true
+      },
+      "valid_tokens": 35
+    },
+    {
+      "component_shapes": {},
+      "connector_shape": [
+        1,
+        450,
+        2048
+      ],
+      "duration_seconds": 1.955043537018355,
+      "hidden_shape": [
+        1,
+        450,
+        2048
+      ],
+      "id": "docci-long-caption",
+      "image_route": "capture_only; pretrained generator not executed",
+      "same_input_repeats": [
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        },
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        }
+      ],
+      "source_sha256": {},
+      "status": "completed",
+      "supplied_counterfactual_sensitivity": {
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          },
+          "inputs_embeds": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          },
+          "position_ids": {
+            "exact_match": false,
+            "max_absolute_error": null,
+            "shapes_equal": false
+          }
+        },
+        "last_valid_exact_match": false,
+        "last_valid_max_absolute_error": 7.0,
+        "last_valid_relative_l2": 0.3369806110858917,
+        "sequence_shapes_equal": false
+      },
+      "target_fields_in_inputs": false,
+      "text": {
+        "exact_route_match": true,
+        "legacy_response": " The shelter is made of light beige wood. The shelter is oriented with the back",
+        "legacy_token_ids": [
+          576,
+          22906,
+          374,
+          1865,
+          315,
+          3100,
+          78265,
+          7579,
+          13,
+          576,
+          22906,
+          374,
+          41108,
+          448,
+          279,
+          1182
+        ],
+        "new_route_response": " The shelter is made of light beige wood. The shelter is oriented with the back",
+        "new_route_token_ids": [
+          576,
+          22906,
+          374,
+          1865,
+          315,
+          3100,
+          78265,
+          7579,
+          13,
+          576,
+          22906,
+          374,
+          41108,
+          448,
+          279,
+          1182
+        ]
+      },
+      "text_padding_comparison": {
+        "all_valid_exact_match": true,
+        "all_valid_max_absolute_error": 0.0,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": true,
+        "last_valid_max_absolute_error": 0.0,
+        "last_valid_relative_l2": 0.0,
+        "sequence_shapes_equal": true
+      },
+      "valid_tokens": 450
+    },
+    {
+      "component_shapes": {
+        "encoders.image": {
+          "dtype": "torch.bfloat16",
+          "finite": true,
+          "shape": [
+            1,
+            196,
+            768
+          ]
+        },
+        "projectors.image": {
+          "dtype": "torch.bfloat16",
+          "finite": true,
+          "shape": [
+            1,
+            196,
+            2048
+          ]
+        }
+      },
+      "connector_shape": [
+        1,
+        202,
+        2048
+      ],
+      "duration_seconds": 2.6443978879833594,
+      "encoder_zero_pixels_sensitivity": {
+        "all_valid_exact_match": false,
+        "all_valid_max_absolute_error": 52.1875,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": false,
+            "max_absolute_error": 3.953125,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": false,
+        "last_valid_max_absolute_error": 21.609375,
+        "last_valid_relative_l2": 0.7455523610115051,
+        "sequence_shapes_equal": true
+      },
+      "hidden_shape": [
+        1,
+        202,
+        2048
+      ],
+      "id": "vision-parent-check",
+      "image_route": "capture_only; pretrained generator not executed",
+      "masked_source_padding_comparison": {
+        "all_valid_exact_match": true,
+        "all_valid_max_absolute_error": 0.0,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": true,
+        "last_valid_max_absolute_error": 0.0,
+        "last_valid_relative_l2": 0.0,
+        "sequence_shapes_equal": true
+      },
+      "same_input_repeats": [
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        },
+        {
+          "all_valid_exact_match": true,
+          "all_valid_max_absolute_error": 0.0,
+          "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+          "compiled_inputs": {
+            "attention_mask": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "inputs_embeds": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            },
+            "position_ids": {
+              "exact_match": true,
+              "max_absolute_error": 0.0,
+              "shapes_equal": true
+            }
+          },
+          "last_valid_exact_match": true,
+          "last_valid_max_absolute_error": 0.0,
+          "last_valid_relative_l2": 0.0,
+          "sequence_shapes_equal": true
+        }
+      ],
+      "source_sha256": {
+        "/lus/flare/projects/ModCon/sandeep/prism-docci-qwen3-1p7b-20260921/prism/src/ui/pixmo_samples/00000000.jpg": "4f8bee992c537d5048d9dcba8a0d09427d61b404a3b146b132531c0ffa5391d1"
+      },
+      "status": "completed",
+      "supplied_counterfactual_sensitivity": {
+        "all_valid_exact_match": false,
+        "all_valid_max_absolute_error": 69.625,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": false,
+            "max_absolute_error": 3.671875,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": false,
+        "last_valid_max_absolute_error": 10.375,
+        "last_valid_relative_l2": 0.4502113461494446,
+        "sequence_shapes_equal": true
+      },
+      "target_fields_in_inputs": false,
+      "text": {
+        "exact_route_match": true,
+        "legacy_response": " \n\nThe image features a black pen with a silver tip, positioned on a piece",
+        "legacy_token_ids": [
+          4710,
+          785,
+          2168,
+          4419,
+          264,
+          3691,
+          5750,
+          448,
+          264,
+          14961,
+          11552,
+          11,
+          34228,
+          389,
+          264,
+          6573
+        ],
+        "new_route_response": " \n\nThe image features a black pen with a silver tip, positioned on a piece",
+        "new_route_token_ids": [
+          4710,
+          785,
+          2168,
+          4419,
+          264,
+          3691,
+          5750,
+          448,
+          264,
+          14961,
+          11552,
+          11,
+          34228,
+          389,
+          264,
+          6573
+        ]
+      },
+      "text_padding_comparison": {
+        "all_valid_exact_match": true,
+        "all_valid_max_absolute_error": 0.0,
+        "claim": "representation sensitivity only; not semantic correctness or learned alignment",
+        "compiled_inputs": {
+          "attention_mask": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "inputs_embeds": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          },
+          "position_ids": {
+            "exact_match": true,
+            "max_absolute_error": 0.0,
+            "shapes_equal": true
+          }
+        },
+        "last_valid_exact_match": true,
+        "last_valid_max_absolute_error": 0.0,
+        "last_valid_relative_l2": 0.0,
+        "sequence_shapes_equal": true
+      },
+      "valid_tokens": 202
+    }
+  ],
+  "changed_frozen_keys": [],
+  "device": "xpu",
+  "dtype": "bfloat16",
+  "duration_seconds": 13.339778907014988,
+  "errors": [],
+  "evidence_kind": "real_checkpoint_diagnostic",
+  "fixture": false,
+  "frozen_after_sha256": "f05a23e6c783be0e7d411f8af604eb22f367122a46a232ff554e62b4a14ba5c6",
+  "frozen_before_sha256": "f05a23e6c783be0e7d411f8af604eb22f367122a46a232ff554e62b4a14ba5c6",
+  "frozen_parent_unchanged": true,
+  "generator_loaded": false,
+  "mode": "prism_parent_diagnostic",
+  "numerical_policy": {
+    "attention_backend": "math",
+    "deterministic_algorithms": true
+  },
+  "p1_acceptance": "unproven",
+  "parent_provenance": {
+    "model_config_sha256": "9644cdc6dffa7afa6ee413edc548924553301a7ca2beac64adf0e78134418fcf",
+    "new_connector_keys": [
+      "decoders.image.connector.0.bias",
+      "decoders.image.connector.0.weight",
+      "decoders.image.connector.1.bias",
+      "decoders.image.connector.1.weight"
+    ],
+    "parent_checkpoint": "/lus/flare/projects/AuroraGPT/sww/prism_outputs/CODEX_QWEN3_1P7B_SIGLIP_CLEAN_GSHUFV1_INVSQRTLR_TRAIN25K_BS4_HSDP_FULLSHARD_16N_R1/checkpoints/step_19750/model.safetensors",
+    "parent_checkpoint_sha256": "61bf6c9a247d09cf5cd72004fd2c60432c7e922645b266d2c4bd5a568e2d9183",
+    "reference_model_id": "/lus/flare/projects/ModCon/sandeep/prism-image-smoke-20260921/assets/OmniGen2",
+    "reference_revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+    "restoration": {
+      "backbone_vocab_resize": {
+        "checkpoint_rows": 151669,
+        "embedding_key": "backbone.model.embed_tokens.weight",
+        "old_rows": 151936
+      },
+      "checkpoint_tensor_dtypes": {
+        "torch.bfloat16": 526
+      },
+      "dtype_policy": "preserve_checkpoint_tensors",
+      "loaded_key_count": 526,
+      "loaded_keys_by_component": {
+        "backbone": 311,
+        "encoders": 208,
+        "projectors": 7
+      },
+      "missing_parent_keys": [],
+      "new_connector_keys": [
+        "decoders.image.connector.0.bias",
+        "decoders.image.connector.0.weight",
+        "decoders.image.connector.1.bias",
+        "decoders.image.connector.1.weight"
+      ],
+      "normalized_keys": {},
+      "restored_alias_groups": [
+        [
+          "backbone.model.embed_tokens.weight",
+          "backbone.lm_head.weight"
+        ]
+      ],
+      "strict_parent": true,
+      "unexpected_keys": []
+    },
+    "source_processor": "/lus/flare/projects/ModCon/sww/huggingface/hub/models--google--siglip2-base-patch16-224/snapshots/75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+    "source_processor_sha256": "57fe21a12f876712b2a0134975196697fefe91b595514150cc1cbcd1a036ced0",
+    "tokenizer": "/lus/flare/projects/ModCon/sww/huggingface/hub/models--Qwen--Qwen3-1.7B/snapshots/70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "tokenizer_sha256": "8066241361fa8e5fbd88d2c3cdc986d59b976fae2135f47ebaa93ea7136f4d8b"
+  },
+  "sampling": "none; image route is capture-only",
+  "schema_version": 1,
+  "source_sha256": {
+    "src/decoders/conditioning.py": "3d8209d620466e53d273997cd4bf33e969d06425d5c644a6ccc3c7194c6adfb6",
+    "src/decoders/loading.py": "73915e73f381ba3734da7ee2c8807efa25e95f17b94c34d04dcccfe92b80a381",
+    "src/model.py": "765484238537b07c80f0470ccadb27258e1d15d112a9a3237a55b73819a5377c",
+    "tools/diagnose_image_decoder_repeatability.py": "da4583a6dff650d047874f8f4398713fb64ecd3194f997ff6b5f75e4836018c9",
+    "tools/validate_prism_image_parent.py": "72058cff151bba471233740b3c11f7e8d0b153260f0280ceb03c37e4e9d72051"
+  },
+  "status": "completed",
+  "supplied_case_score": {
+    "count": 0,
+    "exact_match_rate": null,
+    "scope": "supplied fixed examples only; not a complete benchmark reproduction"
+  },
+  "torch_version": "2.10.0a0+git449b176"
+}

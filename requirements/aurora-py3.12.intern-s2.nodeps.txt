@@ -1,0 +1,41 @@
+# Intern-S2 Preview overlay — OPT IN ONLY.
+#
+#   bash tools/build_aurora_env.sh --intern-s2
+#
+# The default build does NOT install this file, and an Aurora venv built
+# without it cannot construct the `intern_s2` / `intern_s2_397b` time-series
+# encoders (src/encoders/time_series.py raises a RuntimeError naming the
+# transformers version it found). That is deliberate: the two requirements
+# below are mutually exclusive, so the build has to pick a side.
+#
+#   Intern-S2 Preview  needs transformers >= 5.2.0
+#                      src/encoders/intern_s2_preview/configuration_interns2_preview.py
+#                      imports `RopeParameters` from transformers.modeling_rope_utils,
+#                      which does not exist on 4.57.6. (The `PreTrainedConfig`
+#                      import on the line above is only a rename of 4.x's
+#                      `PretrainedConfig`, so it is NOT what sets the floor.)
+#
+#   vLLM 0.15.0+xpu    declares transformers<5,>=4.56.0
+#                      Ships in frameworks/2025.3.1's system site-packages.
+#
+# The intersection is empty. The default build stays on the system's 4.57.6,
+# which keeps vLLM inside its declared range and still clears OLMo-3's
+# >=4.57.0 floor; this overlay trades vLLM for Intern-S2.
+#
+# Installed with --no-deps, like every other manifest here: letting pip
+# resolve would pull a PyPI torch over Aurora's XPU-patched build.
+#
+# Exact pins, not open floors. --no-deps means nothing re-resolves a working
+# combination later, and a `>=` would let a future build silently pick up an
+# untested trio. Bump only after re-validating all three together.
+#
+#   transformers 5.2.0     requires huggingface-hub's is_offline_mode symbol,
+#                          which does not exist before huggingface-hub 1.x
+#                          (system is 0.36.2).
+#   huggingface-hub 1.32.0 requires hf_xet's newer Xet-storage download API;
+#                          with the system's hf_xet 1.2.0 this fails with a
+#                          misleading "you need to install the hf_xet
+#                          package" OSError even though hf_xet IS installed.
+transformers==5.2.0
+huggingface-hub==1.32.0
+hf_xet==1.6.0

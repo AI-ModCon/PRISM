@@ -1,0 +1,35 @@
+# PRISM modality-tail dependencies for Aurora frameworks/2025.3.1+ (py3.12, torch 2.10).
+#
+# This file lists ONLY packages that are not already in the frameworks
+# system site-packages. The shared venv inherits transformers, deepspeed,
+# accelerate, timm, hydra-core, vllm, omegaconf, datasets, etc. from the
+# loaded frameworks module via --system-site-packages.
+#
+# Naming: keyed on python tag, not frameworks version. A future 2025.4
+# release on the same py3.12 + torch 2.10 ABI keeps the same lockfile.
+#
+# Regenerate the lock with:
+#   module load frameworks/2025.3.1
+#   uv pip compile requirements/aurora-py3.12.in -o requirements/aurora-py3.12.lock.txt
+
+# Data loading
+webdataset
+
+# Graph modality (pure-Python only; DO NOT add pyg_lib / torch_scatter /
+# torch_sparse / torch_cluster — their C++ wheels are not built for Aurora's
+# XPU-patched torch and fail at runtime with undefined symbols).
+torch_geometric>=2.7,<3.0
+
+# Time series (Moirai) deps. uni2ts itself ships in the .nodeps file because
+# it pins torch<2.x. gluonts is also .nodeps because its latest version pins
+# pandas<3 (incompatible with the system pandas 3.0.0 in 2025.3.1).
+torchmetrics
+lightning-utilities
+jaxtyping
+
+# Geometry modality (Walrus + the_well). hydra-core is system-provided.
+the-well
+
+# Miscellaneous runtime utilities not in 2025.3.1
+orjson
+tensorboard

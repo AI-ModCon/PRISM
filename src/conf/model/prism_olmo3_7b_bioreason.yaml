@@ -1,0 +1,53 @@
+# Model Configuration — BioReason DNA/KEGG variant of prism_olmo3_7b.
+#
+# Kept as its own preset rather than modifying prism_olmo3_7b.yaml in place:
+# BioReason repurposes that shared preset as a DNA-only, single-modality
+# config (d_graph: 0, only "text"+"dna" active), which would break every
+# other experiment that composes the shared prism_olmo3_7b.yaml preset.
+backbone_id: "allenai/Olmo-3-7B-Think"  # "Think" variant — BioReason's SFT stage trains on reasoning traces (use_reasoning_traces)
+freeze_backbone: true
+freeze_encoders: true
+is_vla: false
+pose_dim: 15
+action_dim: 7
+
+# Dimensions (explicitly defined to allow overrides). Each modality's own
+# d_* is its encoder's raw output width, fed into that modality's own
+# independent ModalityProjector -> target_dim (d_model); these are not summed
+# anywhere in the architecture.
+d_text: 4096
+d_img: 768    # SigLIP2-base native hidden size (use 1152 only for SigLIP-large)
+d_ts: 512
+d_geo: 512
+d_table: 768
+d_dna: 3328
+d_graph: 0
+image_encoder_id: "google/siglip2-base-patch16-224"
+image_processor_id: "google/siglip2-base-patch16-224"
+image_processor_strict: false
+image_size: 224
+
+modalities:
+  - "text"
+  - "dna"
+#  - "image"
+#  - "table"
+#  - "time_series"
+#  - "geometry"
+#  - "graph"
+
+# Interleaved DNA splice tokens. Authored as literal special-token strings
+# (unlike time_series's pre-baked fixed integer ids) — UnifiedTransformer.__init__
+# registers any missing ones as new special tokens and resolves this to integer
+# ids before the merge path runs. Must match _render_dna_prompt_text
+# (src/data/multimodal.py) and eval_kegg.py's build_prompt() exactly.
+is_interleaved_qa: true
+modality_start_end_token_indices:
+  dna_reference: ["<dna_ref_start>", "<dna_ref_end>"]
+  dna_variant: ["<dna_var_start>", "<dna_var_end>"]
+
+# IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass)
+# Defaults match ModelConfig dataclass; surfaces them to Hydra struct mode
+# so callers can pass `model.projector_hidden_mult=N` without `+` prefix.
+projector_hidden_mult: 1
+projector_num_layers: 2

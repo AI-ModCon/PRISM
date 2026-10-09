@@ -1,0 +1,73 @@
+{
+  "status": "completed",
+  "job_id": "8854234",
+  "duration_seconds": 521.1522057559341,
+  "checkpoint_sha256": "14033752ca0bafa947ffc29d80e044900b64e3253260486854205f706cabaee4",
+  "source_report_sha256": "0da348d96788ab928ceb8d22dc51a6f9ebb84fdb84d7c7c7f04a10773af2114c",
+  "report_sha256": "896ffae828c792b6e3735b9a2b1efff37620ffe6e56800401b56bbec6be83606",
+  "execution_artifact_acceptance": true,
+  "frozen_tensor_count": 2220,
+  "paired_flow_cases": 48,
+  "images": 14,
+  "summary": {
+    "train": {
+      "native_adapted_diffusion": {
+        "matched_loss": 0.4817630685865879,
+        "matched_wins": 22,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.4980364715059598,
+        "wrong_minus_matched": 0.01627340291937192
+      },
+      "prism_chat": {
+        "matched_loss": 0.48335325469573337,
+        "matched_wins": 20,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.49580197719236213,
+        "wrong_minus_matched": 0.012448722496628761
+      }
+    },
+    "validation": {
+      "native_adapted_diffusion": {
+        "matched_loss": 0.48115047936638194,
+        "matched_wins": 24,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5105128971238931,
+        "wrong_minus_matched": 0.02936241775751114
+      },
+      "prism_chat": {
+        "matched_loss": 0.48282795896132785,
+        "matched_wins": 22,
+        "paired_evaluations": 24,
+        "wrong_loss": 0.5084207008282343,
+        "wrong_minus_matched": 0.025592741866906483
+      }
+    }
+  },
+  "heldout_comparison": {
+    "prism_vs_adapted_native_excess_matched_mse_percent": 0.3486392858124132,
+    "prism_matched_mse_change_from_joint6_percent": -2.0960557029578775,
+    "prism_caption_gap_change_from_joint6_percent": 80.46926566952352,
+    "prism_gap_fraction_of_adapted_native": 0.8716156168835809
+  },
+  "qualitative": {
+    "cfg5_prism_native_negative": "Distinct dog and penguin and grounded aircraft recover versus joint-six. Dog hat is conical, penguin is too small and lacks hat, aircraft colors and runway placement remain wrong.",
+    "cfg5_adapted_native": "Similar scene layout to final PRISM; both animals retain blue helmets better. Colors and layout still imperfect.",
+    "cfg1": "PRISM improves over pre-full route and approaches native scene structure, with distorted subjects and missing attributes.",
+    "prism_negative_cfg5": "Untrained empty-chat negative anchor; this is an ablation only."
+  },
+  "limitations": [
+    "Eight held-out captions at three fixed times are 24 paired cases, not 24 independent captions or image accuracy.",
+    "Two generation cases are qualitative evidence, not a broad benchmark.",
+    "Both connector and DiT changed; longitudinal comparisons do not isolate which component caused improvement.",
+    "Training probes differ from earlier subset diagnostics; do not compare their aggregate means longitudinally.",
+    "Ordinary sampler attests initial latents and image files, not every sampling forward/final latent.",
+    "Training-run wrong-caption gaps retain their original provisional status; this separate diagnostic adds actual noisy-input/timestep controls for its own cases."
+  ],
+  "next_action": "Authorized full-data training and bounded evaluation complete. Stop this follow-up; new training or broader benchmarks require separate user direction.",
+  "independent_audit": {
+    "path": "final-independent-audit.json",
+    "sha256": "3807bf6f313600d06694cb74b06a9a1c42673168b34c98e45e2c45923d958b63",
+    "checks_passed": 53
+  },
+  "followup_automation_deleted": true
+}

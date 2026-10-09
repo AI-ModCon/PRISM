@@ -1,0 +1,260 @@
+{
+  "audit_date_utc": "2026-09-21",
+  "scope": "Public primary metadata, small standalone text manifests, repository file listings, and HEAD requests only; no images or image-bearing parquet/tar downloaded.",
+  "units": "Bytes are exact upstream metadata; GB=10^9 bytes, GiB=2^30 bytes. Tar sizes are archive downloads, not decoded pixel-memory sizes.",
+  "DOCCI": {
+    "repo": "google/docci",
+    "url": "https://huggingface.co/datasets/google/docci",
+    "revision": "a0a43eaf34676ffd008fb6565dd8c2ba00d09100",
+    "gated": false,
+    "private": false,
+    "license_from_card": [
+      "cc-by-4.0"
+    ],
+    "repository_file_bytes": 13717,
+    "project_url": "https://google.github.io/docci/",
+    "counts": {
+      "method": "direct parse of official standalone descriptions manifest",
+      "rows": 14847,
+      "unique_image_filenames": 14847,
+      "unique_example_ids": 14847,
+      "empty_captions": 0,
+      "splits": {
+        "qual_dev": 100,
+        "qual_test": 100,
+        "test": 5000,
+        "train": 9647
+      },
+      "recommended_training_rows": 9647,
+      "held_out_rows": 5200
+    },
+    "download_layout": "Images and descriptions are hosted separately by Google Cloud Storage; HF repo itself only contains README/loading code.",
+    "image_payload_downloaded": false,
+    "images_archival_bytes": 7592938768,
+    "descriptions_bytes": 11000214,
+    "optional_rich_metadata_bytes": 162767377,
+    "excluded_aar_bytes": 3838432984,
+    "excluded_aar_reason": "DOCCI-AAR has no captions; do not add its image count to usable image-caption pairs.",
+    "access": "Anonymous public GCS HEAD and annotation GET succeeded; HF API reports ungated.",
+    "full_captioned_archive_download_bytes": 7603938982
+  },
+  "ShareGPT4V": {
+    "repo": "Lin-Chen/ShareGPT4V",
+    "url": "https://huggingface.co/datasets/Lin-Chen/ShareGPT4V",
+    "revision": "55d02b0bc53a2754095a14110dda6daedd95671d",
+    "gated": false,
+    "private": false,
+    "license_from_card": "cc-by-nc-4.0",
+    "repository_file_bytes": 2856769470,
+    "project_url": "https://github.com/ShareGPT4Omni/ShareGPT4V/blob/master/docs/Data.md",
+    "counts": {
+      "method": "HF Dataset Viewer complete size response, partial=false; row counts are not unique-image deduplication",
+      "ShareGPT4V_train_rows": 102025,
+      "ShareGPT4V_PT_train_rows": 1246901,
+      "split_details": [
+        {
+          "dataset": "Lin-Chen/ShareGPT4V",
+          "config": "ShareGPT4V",
+          "split": "train",
+          "num_bytes_parquet_files": 50774875,
+          "num_bytes_memory": 109759862,
+          "num_rows": 102025,
+          "num_columns": 3,
+          "estimated_num_rows": null
+        },
+        {
+          "dataset": "Lin-Chen/ShareGPT4V",
+          "config": "ShareGPT4V-PT",
+          "split": "train",
+          "num_bytes_parquet_files": 507877700,
+          "num_bytes_memory": 1196745231,
+          "num_rows": 1246901,
+          "num_columns": 3,
+          "estimated_num_rows": null
+        }
+      ],
+      "unique_image_counts_verified": false,
+      "cross_config_overlap": "Expected; do not add the 102025 and 1246901 rows as a unique-image total."
+    },
+    "download_layout": "Caption JSONs contain image paths; no image payloads included in this HF repo.",
+    "image_payload_downloaded": false,
+    "large_annotation_payload_downloaded": false,
+    "caption_json_bytes": {
+      "share-captioner_coco_lcs_sam_1246k_1107.json": 1492479912,
+      "sharegpt4v_instruct_gpt4-vision_cap100k.json": 133866626,
+      "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k.json": 1230418359
+    },
+    "source_images": {
+      "LLaVA_LAION_CC_SBU_558K_images_zip_bytes": 27356108382,
+      "LLaVA_images_url": "https://huggingface.co/datasets/liuhaotian/LLaVA-Pretrain/resolve/main/images.zip",
+      "COCO_train2017_zip_bytes": 19336861798,
+      "COCO_url": "http://images.cocodataset.org/zips/train2017.zip",
+      "two_whole_source_archive_bytes": 46692970180,
+      "remaining_sources": [
+        "SAM archives 000000 through 000050",
+        "Web-landmark",
+        "Web-celebrity",
+        "WikiArt",
+        "TextCaps"
+      ],
+      "complete_images_bytes": null,
+      "storage_caveat": "46.69 GB is only two whole source archives, not full ShareGPT4V storage and not the minimum bytes for selected records. SAM/web/TextCaps storage remains unmeasured. Full source archives contain unused images."
+    },
+    "access": "Caption repository API is ungated and public. Image access and licenses follow each upstream source; the author documentation marks the web-image bundle academic-only.",
+    "license_caveat": "CC BY-NC 4.0 is the dataset-card declaration, not a replacement for underlying source-image licenses."
+  },
+  "BLIP3o_60K": {
+    "repo": "BLIP3o/BLIP3o-60k",
+    "url": "https://huggingface.co/datasets/BLIP3o/BLIP3o-60k",
+    "revision": "f7316b0aa446338ee1707484924aa59457b4bbf3",
+    "gated": false,
+    "private": false,
+    "license_from_card": "apache-2.0",
+    "repository_file_bytes": 108168559621,
+    "project_url": "https://github.com/JiuhaiChen/BLIP3o",
+    "counts": {
+      "advertised_image_caption_pairs": 60000,
+      "advertised_count_exactness": "Rounded advertised collection size; actual tar image membership was not enumerated.",
+      "unique_image_counts_verified": false,
+      "standalone_prompt_nonempty_lines": 57561,
+      "standalone_unique_exact_prompt_strings": 57121,
+      "prompt_line_counts_are_image_counts": false,
+      "viewer_7103_warning": "HF viewer reports 7103 one-column text rows; these match geneval_train.txt lines. This is not the number of image-caption pairs in the 11 tar archives.",
+      "splits": "Released as instruction-tuning data; no separate held-out split described by the card. Card says Geneval component has no overlap with test set."
+    },
+    "archive_file_count": 11,
+    "image_caption_archive_bytes": 108161003520,
+    "standalone_prompt_bytes": 7552749,
+    "standalone_prompt_files": [
+      {
+        "path": "dalle3.txt",
+        "bytes": 3498742,
+        "nonempty_lines": 10000,
+        "unique_exact_strings": 10000
+      },
+      {
+        "path": "geneval_train.txt",
+        "bytes": 273597,
+        "nonempty_lines": 7103,
+        "unique_exact_strings": 7103
+      },
+      {
+        "path": "human_gestures.txt",
+        "bytes": 45992,
+        "nonempty_lines": 2196,
+        "unique_exact_strings": 2192
+      },
+      {
+        "path": "journeyDB.txt",
+        "bytes": 1664099,
+        "nonempty_lines": 10784,
+        "unique_exact_strings": 10784
+      },
+      {
+        "path": "mscoco_human.txt",
+        "bytes": 462537,
+        "nonempty_lines": 8604,
+        "unique_exact_strings": 8466
+      },
+      {
+        "path": "object_1.txt",
+        "bytes": 40171,
+        "nonempty_lines": 2921,
+        "unique_exact_strings": 2805
+      },
+      {
+        "path": "object_2.txt",
+        "bytes": 37656,
+        "nonempty_lines": 952,
+        "unique_exact_strings": 913
+      },
+      {
+        "path": "occupation_1.txt",
+        "bytes": 372683,
+        "nonempty_lines": 2501,
+        "unique_exact_strings": 2501
+      },
+      {
+        "path": "occupation_2.txt",
+        "bytes": 408434,
+        "nonempty_lines": 2500,
+        "unique_exact_strings": 2500
+      },
+      {
+        "path": "text_1.txt",
+        "bytes": 379817,
+        "nonempty_lines": 5000,
+        "unique_exact_strings": 4901
+      },
+      {
+        "path": "text_2.txt",
+        "bytes": 369021,
+        "nonempty_lines": 5000,
+        "unique_exact_strings": 4981
+      }
+    ],
+    "download_layout": "WebDataset tar files include images and captions; standalone txt files are prompts and do not provide verified image filename mapping.",
+    "image_payload_downloaded": false,
+    "access": "Anonymous metadata/text downloads succeeded; HF API ungated/public.",
+    "license_caveat": "Apache-2.0 is the HF card declaration. Images are GPT-4o-distilled; upstream source/material terms require separate consideration."
+  },
+  "BLIP3o_pretraining": [
+    {
+      "repo": "BLIP3o/BLIP3o-Pretrain-Long-Caption",
+      "url": "https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Long-Caption",
+      "revision": "e4d07091a466d1a1e35a9b0c61caddc78d14a059",
+      "gated": false,
+      "private": false,
+      "license_from_card": "apache-2.0",
+      "repository_file_bytes": 1374049967306,
+      "advertised_image_caption_pairs_current_card": 27000000,
+      "viewer_estimated_num_rows": 27157092,
+      "viewer_actually_converted_num_rows": 101900,
+      "viewer_partial": true,
+      "unique_image_counts_verified": false,
+      "split": "train",
+      "archive_file_count": 2891,
+      "image_caption_archive_bytes": 1374049964032,
+      "download_layout": "Images and captions included in WebDataset tar archives; read without extraction if desired.",
+      "image_payload_downloaded": false,
+      "count_caveat": "Card values are advertised rounded counts; viewer estimates are extrapolated from partial conversion. Neither proves unique images or cross-dataset non-overlap."
+    },
+    {
+      "repo": "BLIP3o/BLIP3o-Pretrain-Short-Caption",
+      "url": "https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Short-Caption",
+      "revision": "e84d184540a6cc4fc3b1ba5528bb45dcc6b3fb0e",
+      "gated": false,
+      "private": false,
+      "license_from_card": "apache-2.0",
+      "repository_file_bytes": 828119148720,
+      "advertised_image_caption_pairs_current_card": 5000000,
+      "viewer_estimated_num_rows": 4773675,
+      "viewer_actually_converted_num_rows": 29100,
+      "viewer_partial": true,
+      "unique_image_counts_verified": false,
+      "split": "train",
+      "archive_file_count": 1831,
+      "image_caption_archive_bytes": 828119132160,
+      "download_layout": "Images and captions included in WebDataset tar archives; read without extraction if desired.",
+      "image_payload_downloaded": false,
+      "count_caveat": "Card values are advertised rounded counts; viewer estimates are extrapolated from partial conversion. Neither proves unique images or cross-dataset non-overlap."
+    }
+  ],
+  "recommended_initial_subset": {
+    "sources": [
+      "DOCCI train",
+      "BLIP3o-60k"
+    ],
+    "training_pairs_planning_estimate": 69647,
+    "estimate_basis": "9647 verified DOCCI train records plus advertised approximately 60000 BLIP3o images; not deduplicated across datasets.",
+    "minimum_published_archive_download_bytes_including_all_DOCCI_splits_and_BLIP_prompt_txt": 115772495251,
+    "space_note": "Approximately 116 GB of source archives including all DOCCI splits. Plan at least 130 GB if reading BLIP tars directly; allow additional space for DOCCI extraction, caches, or retained extracted copies. Extracted byte totals were not measured.",
+    "reason": "DOCCI provides small, directly verified human-written captions; BLIP3o-60k supplies task-specific generation data with hosted image archives. ShareGPT4V requires assembling images from multiple separate sources."
+  },
+  "known_retrieval_limitations": [
+    "DOCCI viewer size endpoint returns HTTP 501 because the dataset uses a loading script; official manifest provided exact counts.",
+    "COCO HTTPS HEAD failed certificate hostname validation; the authors linked HTTP URL returned valid headers. No certificate-validation bypass was used.",
+    "BLIP3o pretraining tree pagination was followed completely; the first 1000-file page alone underestimates storage."
+  ],
+  "archive_note": "Compact tracked audit; detailed file inventories and raw HTTP/API evidence remain in the verified metadata bundle on Aurora."
+}

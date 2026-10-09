@@ -1,0 +1,1041 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "derived_template_swap_diagnostic_interpretation",
+  "source_report_sha256": "7a4efa65a4d22d7e2c7b261e85de8c350e57d8eacacc988658b3efcbd553774b",
+  "pbs_job_id": "8848325.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "status": "completed",
+  "headline": "Native prefix substitution removes nearly all of the sampled aligned-PRISM excess flow MSE; native suffix substitution alone does not. This is evidence about the conditioning interface, not an image-quality benchmark.",
+  "cohort": {
+    "selection": {
+      "train": [
+        {
+          "id": "train_04996",
+          "index": 4996
+        },
+        {
+          "id": "train_08983",
+          "index": 8983
+        }
+      ],
+      "validation": [
+        {
+          "id": "qual_dev_00000",
+          "index": 0
+        },
+        {
+          "id": "qual_dev_00001",
+          "index": 1
+        }
+      ]
+    },
+    "unique_target_caption_pairs": 4,
+    "train_target_count": 2,
+    "heldout_target_count": 2,
+    "requested_timesteps": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "actual_timesteps": [
+      0.10009765625,
+      0.5,
+      0.8984375
+    ],
+    "paired_target_timestep_cases_per_route": 12,
+    "routes": 5,
+    "matched_wrong_dit_forward_calls": 120,
+    "note": "Each target is reused at three timesteps/noise seeds. The 12 paired evaluations are not 12 independent target images. Wrong captions may come from outside the four-probe subset; training wrong captions remain in the recorded 32-pair training subset."
+  },
+  "flow_metrics": {
+    "train": {
+      "independent_target_count": 2,
+      "routes": {
+        "native_pretrained": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.43975954751173657,
+          "wrong_mse_mean": 0.46609774728616077,
+          "wrong_minus_matched_mean": 0.026338199774424236,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.030904598844548065,
+          "matched_mse_percent_above_native": 0.0,
+          "fraction_of_aligned_excess_mse_removed": 1.0,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.40067046880722046,
+              "wrong_mse_mean": 0.446174755692482,
+              "wrong_minus_matched_mean": 0.045504286885261536,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0578494518995285
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.44343970715999603,
+              "wrong_mse_mean": 0.4759247303009033,
+              "wrong_minus_matched_mean": 0.03248502314090729,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.032187119126319885
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.47516846656799316,
+              "wrong_mse_mean": 0.47619375586509705,
+              "wrong_minus_matched_mean": 0.0010252892971038818,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0026772255077958107
+            }
+          }
+        },
+        "prism_aligned": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.659162849187851,
+          "wrong_mse_mean": 0.6702776551246643,
+          "wrong_minus_matched_mean": 0.011114805936813354,
+          "matched_lower_than_wrong_count": 4,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.05395921296440065,
+          "matched_mse_percent_above_native": 49.891651680458125,
+          "fraction_of_aligned_excess_mse_removed": 0.0,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.5841169059276581,
+              "wrong_mse_mean": 0.5944074988365173,
+              "wrong_minus_matched_mean": 0.010290592908859253,
+              "matched_lower_than_wrong_count": 1,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.09766503050923347
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.7349794507026672,
+              "wrong_mse_mean": 0.7587332427501678,
+              "wrong_minus_matched_mean": 0.02375379204750061,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.05775284394621849
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.6583921909332275,
+              "wrong_mse_mean": 0.6576922237873077,
+              "wrong_minus_matched_mean": -0.0006999671459197998,
+              "matched_lower_than_wrong_count": 1,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.006459764437749982
+            }
+          }
+        },
+        "prism_native_prefix": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.44290095070997876,
+          "wrong_mse_mean": 0.4679166426261266,
+          "wrong_minus_matched_mean": 0.02501569191614787,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.022616772602001827,
+          "matched_mse_percent_above_native": 0.7143456500301015,
+          "fraction_of_aligned_excess_mse_removed": 0.9856820605057277,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4084547609090805,
+              "wrong_mse_mean": 0.45312662422657013,
+              "wrong_minus_matched_mean": 0.044671863317489624,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0385439470410347
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4450944811105728,
+              "wrong_mse_mean": 0.4743386209011078,
+              "wrong_minus_matched_mean": 0.029244139790534973,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.027166225016117096
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4751536101102829,
+              "wrong_mse_mean": 0.4762846827507019,
+              "wrong_minus_matched_mean": 0.0011310726404190063,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0021401457488536835
+            }
+          }
+        },
+        "prism_native_suffix": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.6513218482335409,
+          "wrong_mse_mean": 0.6643203596274058,
+          "wrong_minus_matched_mean": 0.01299851139386495,
+          "matched_lower_than_wrong_count": 4,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.05459518916904926,
+          "matched_mse_percent_above_native": 48.108631619000384,
+          "fraction_of_aligned_excess_mse_removed": 0.03573784393584485,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.5751733183860779,
+              "wrong_mse_mean": 0.5925042927265167,
+              "wrong_minus_matched_mean": 0.017330974340438843,
+              "matched_lower_than_wrong_count": 1,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.10329284891486168
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.7256190776824951,
+              "wrong_mse_mean": 0.7472118139266968,
+              "wrong_minus_matched_mean": 0.02159273624420166,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.054656704887747765
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.6531731486320496,
+              "wrong_mse_mean": 0.6532449722290039,
+              "wrong_minus_matched_mean": 7.18235969543457e-05,
+              "matched_lower_than_wrong_count": 1,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.005836013704538345
+            }
+          }
+        },
+        "prism_native_template": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.441779688000679,
+          "wrong_mse_mean": 0.4678469697634379,
+          "wrong_minus_matched_mean": 0.026067281762758892,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.02359444157142813,
+          "matched_mse_percent_above_native": 0.45937387837804433,
+          "fraction_of_aligned_excess_mse_removed": 0.9907925702416065,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.40524935722351074,
+              "wrong_mse_mean": 0.4532103091478348,
+              "wrong_minus_matched_mean": 0.047960951924324036,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.041323957964777946
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4449365735054016,
+              "wrong_mse_mean": 0.47402484714984894,
+              "wrong_minus_matched_mean": 0.029088273644447327,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.02730316575616598
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4751531332731247,
+              "wrong_mse_mean": 0.47630575299263,
+              "wrong_minus_matched_mean": 0.00115261971950531,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0021562009933404624
+            }
+          }
+        }
+      }
+    },
+    "validation": {
+      "independent_target_count": 2,
+      "routes": {
+        "native_pretrained": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.5078432708978653,
+          "wrong_mse_mean": 0.533469001452128,
+          "wrong_minus_matched_mean": 0.025625730554262798,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.03140701656229794,
+          "matched_mse_percent_above_native": 0.0,
+          "fraction_of_aligned_excess_mse_removed": 1.0,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4115765392780304,
+              "wrong_mse_mean": 0.4575723707675934,
+              "wrong_minus_matched_mean": 0.04599583148956299,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.06541221775114536
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4918812960386276,
+              "wrong_mse_mean": 0.5223211646080017,
+              "wrong_minus_matched_mean": 0.030439868569374084,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.025641477666795254
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.6200719773769379,
+              "wrong_mse_mean": 0.6205134689807892,
+              "wrong_minus_matched_mean": 0.00044149160385131836,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.003167354268953204
+            }
+          }
+        },
+        "prism_aligned": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.7257516980171204,
+          "wrong_mse_mean": 0.7658830682436625,
+          "wrong_minus_matched_mean": 0.04013137022654215,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.05037656892091036,
+          "matched_mse_percent_above_native": 42.9085979093498,
+          "fraction_of_aligned_excess_mse_removed": 0.0,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.5934964418411255,
+              "wrong_mse_mean": 0.6434820294380188,
+              "wrong_minus_matched_mean": 0.04998558759689331,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.056067535653710365
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.7955838441848755,
+              "wrong_mse_mean": 0.8481318950653076,
+              "wrong_minus_matched_mean": 0.05254805088043213,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.08275493234395981
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.7881748080253601,
+              "wrong_mse_mean": 0.8060352802276611,
+              "wrong_minus_matched_mean": 0.017860472202301025,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.012307238765060902
+            }
+          }
+        },
+        "prism_native_prefix": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.5119338979323705,
+          "wrong_mse_mean": 0.5300845801830292,
+          "wrong_minus_matched_mean": 0.018150682250658672,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.021249141932154696,
+          "matched_mse_percent_above_native": 0.8054900535106047,
+          "fraction_of_aligned_excess_mse_removed": 0.981227770359397,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.41862429678440094,
+              "wrong_mse_mean": 0.4560052752494812,
+              "wrong_minus_matched_mean": 0.03738097846508026,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.049053650349378586
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4976605772972107,
+              "wrong_mse_mean": 0.5135616064071655,
+              "wrong_minus_matched_mean": 0.015901029109954834,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.013436072040349245
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.6195168197154999,
+              "wrong_mse_mean": 0.6206868588924408,
+              "wrong_minus_matched_mean": 0.001170039176940918,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0012577034067362547
+            }
+          }
+        },
+        "prism_native_suffix": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.7122022906939188,
+          "wrong_mse_mean": 0.7555314302444458,
+          "wrong_minus_matched_mean": 0.04332913955052694,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.04842285493699213,
+          "matched_mse_percent_above_native": 40.24056859801399,
+          "fraction_of_aligned_excess_mse_removed": 0.06217936360848647,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.5694355666637421,
+              "wrong_mse_mean": 0.6297045946121216,
+              "wrong_minus_matched_mean": 0.06026902794837952,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.04946445859968662
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.783336728811264,
+              "wrong_mse_mean": 0.8345162868499756,
+              "wrong_minus_matched_mean": 0.05117955803871155,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.08372174575924873
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.7838345766067505,
+              "wrong_mse_mean": 0.8023734092712402,
+              "wrong_minus_matched_mean": 0.018538832664489746,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.01208236045204103
+            }
+          }
+        },
+        "prism_native_template": {
+          "paired_target_timestep_cases": 6,
+          "matched_mse_mean": 0.5120742917060852,
+          "wrong_mse_mean": 0.5308037102222443,
+          "wrong_minus_matched_mean": 0.018729418516159058,
+          "matched_lower_than_wrong_count": 6,
+          "matched_equal_to_wrong_count": 0,
+          "prediction_change_mse_mean": 0.022177816543262452,
+          "matched_mse_percent_above_native": 0.8331351522566255,
+          "fraction_of_aligned_excess_mse_removed": 0.9805834915879394,
+          "target_mean_gap_positive_count": 2,
+          "by_requested_timestep": {
+            "0.1": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4189116954803467,
+              "wrong_mse_mean": 0.45814958214759827,
+              "wrong_minus_matched_mean": 0.03923788666725159,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.05154432728886604
+            },
+            "0.5": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.4974297285079956,
+              "wrong_mse_mean": 0.5132204592227936,
+              "wrong_minus_matched_mean": 0.015790730714797974,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.013631873298436403
+            },
+            "0.9": {
+              "paired_target_timestep_cases": 2,
+              "matched_mse_mean": 0.6198814511299133,
+              "wrong_mse_mean": 0.6210410892963409,
+              "wrong_minus_matched_mean": 0.0011596381664276123,
+              "matched_lower_than_wrong_count": 2,
+              "matched_equal_to_wrong_count": 0,
+              "prediction_change_mse_mean": 0.0013572490424849093
+            }
+          }
+        }
+      }
+    }
+  },
+  "partition_metrics": {
+    "aggregation": "Equal mean over the two matched captions per split, separately by region; normalized comparisons are after frozen DiT caption RMSNorm. Raw feature scale alone is not a causal interpretation.",
+    "by_split_and_route": {
+      "train": {
+        "native_pretrained": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.045319557189941,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              115,
+              235
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 0.9999999403953552,
+            "unnormalized_feature_rms_mean": 4.659210681915283,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0000000596046448,
+            "unnormalized_feature_rms_mean": 3.636717915534973,
+            "all_finite": true
+          }
+        },
+        "prism_aligned": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.6383348703384399,
+            "normalized_cosine_to_native_mean": 0.2745574712753296,
+            "unnormalized_feature_rms_mean": 0.6972818672657013,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              115,
+              235
+            ],
+            "normalized_mse_to_native_mean": 0.030550801195204258,
+            "normalized_cosine_to_native_mean": 0.9270658791065216,
+            "unnormalized_feature_rms_mean": 1.0781946778297424,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 1.151748776435852,
+            "normalized_cosine_to_native_mean": 0.09299084544181824,
+            "unnormalized_feature_rms_mean": 0.5480870008468628,
+            "all_finite": true
+          }
+        },
+        "prism_native_prefix": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.045319557189941,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              115,
+              235
+            ],
+            "normalized_mse_to_native_mean": 0.030550801195204258,
+            "normalized_cosine_to_native_mean": 0.9270658791065216,
+            "unnormalized_feature_rms_mean": 1.0781946778297424,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 1.151748776435852,
+            "normalized_cosine_to_native_mean": 0.09299084544181824,
+            "unnormalized_feature_rms_mean": 0.5480870008468628,
+            "all_finite": true
+          }
+        },
+        "prism_native_suffix": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.6383348703384399,
+            "normalized_cosine_to_native_mean": 0.2745574712753296,
+            "unnormalized_feature_rms_mean": 0.6972818672657013,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              115,
+              235
+            ],
+            "normalized_mse_to_native_mean": 0.030550801195204258,
+            "normalized_cosine_to_native_mean": 0.9270658791065216,
+            "unnormalized_feature_rms_mean": 1.0781946778297424,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0000000596046448,
+            "unnormalized_feature_rms_mean": 3.636717915534973,
+            "all_finite": true
+          }
+        },
+        "prism_native_template": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.045319557189941,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              115,
+              235
+            ],
+            "normalized_mse_to_native_mean": 0.030550801195204258,
+            "normalized_cosine_to_native_mean": 0.9270658791065216,
+            "unnormalized_feature_rms_mean": 1.0781946778297424,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0000000596046448,
+            "unnormalized_feature_rms_mean": 3.636717915534973,
+            "all_finite": true
+          }
+        }
+      },
+      "validation": {
+        "native_pretrained": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.043945789337158,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              138,
+              185
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.708777189254761,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 3.6352447271347046,
+            "all_finite": true
+          }
+        },
+        "prism_aligned": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.6381831169128418,
+            "normalized_cosine_to_native_mean": 0.27431878447532654,
+            "unnormalized_feature_rms_mean": 0.6977696716785431,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              138,
+              185
+            ],
+            "normalized_mse_to_native_mean": 0.05721503309905529,
+            "normalized_cosine_to_native_mean": 0.8643209040164948,
+            "unnormalized_feature_rms_mean": 1.1112145781517029,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 1.1406319737434387,
+            "normalized_cosine_to_native_mean": 0.09921526163816452,
+            "unnormalized_feature_rms_mean": 0.5487040281295776,
+            "all_finite": true
+          }
+        },
+        "prism_native_prefix": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.043945789337158,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              138,
+              185
+            ],
+            "normalized_mse_to_native_mean": 0.05721503309905529,
+            "normalized_cosine_to_native_mean": 0.8643209040164948,
+            "unnormalized_feature_rms_mean": 1.1112145781517029,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 1.1406319737434387,
+            "normalized_cosine_to_native_mean": 0.09921526163816452,
+            "unnormalized_feature_rms_mean": 0.5487040281295776,
+            "all_finite": true
+          }
+        },
+        "prism_native_suffix": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.6381831169128418,
+            "normalized_cosine_to_native_mean": 0.27431878447532654,
+            "unnormalized_feature_rms_mean": 0.6977696716785431,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              138,
+              185
+            ],
+            "normalized_mse_to_native_mean": 0.05721503309905529,
+            "normalized_cosine_to_native_mean": 0.8643209040164948,
+            "unnormalized_feature_rms_mean": 1.1112145781517029,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 3.6352447271347046,
+            "all_finite": true
+          }
+        },
+        "prism_native_template": {
+          "prefix": {
+            "token_counts": [
+              23,
+              23
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 4.043945789337158,
+            "all_finite": true
+          },
+          "content": {
+            "token_counts": [
+              138,
+              185
+            ],
+            "normalized_mse_to_native_mean": 0.05721503309905529,
+            "normalized_cosine_to_native_mean": 0.8643209040164948,
+            "unnormalized_feature_rms_mean": 1.1112145781517029,
+            "all_finite": true
+          },
+          "suffix": {
+            "token_counts": [
+              2,
+              2
+            ],
+            "normalized_mse_to_native_mean": 0.0,
+            "normalized_cosine_to_native_mean": 1.0,
+            "unnormalized_feature_rms_mean": 3.6352447271347046,
+            "all_finite": true
+          }
+        }
+      }
+    }
+  },
+  "partition_identity_audit": {
+    "caption_audits_checked": 8,
+    "partition_substitutions_checked": 120,
+    "route_region_sources": {
+      "native_pretrained": {
+        "prefix": "native",
+        "content": "native",
+        "suffix": "native"
+      },
+      "prism_aligned": {
+        "prefix": "aligned",
+        "content": "aligned",
+        "suffix": "aligned"
+      },
+      "prism_native_prefix": {
+        "prefix": "native",
+        "content": "aligned",
+        "suffix": "aligned"
+      },
+      "prism_native_suffix": {
+        "prefix": "aligned",
+        "content": "aligned",
+        "suffix": "native"
+      },
+      "prism_native_template": {
+        "prefix": "native",
+        "content": "aligned",
+        "suffix": "native"
+      }
+    },
+    "all_region_hashes_equal_requested_source": true,
+    "actual_native_token_ids_masks_and_formatted_text_verified": true,
+    "conditioning_dtype": [
+      "torch.bfloat16"
+    ],
+    "prefix_tokens": [
+      23
+    ],
+    "suffix_tokens": [
+      2
+    ],
+    "matched_content_token_counts": [
+      {
+        "id": "train_04996",
+        "split": "train",
+        "tokens": 115
+      },
+      {
+        "id": "train_08983",
+        "split": "train",
+        "tokens": 235
+      },
+      {
+        "id": "qual_dev_00000",
+        "split": "validation",
+        "tokens": 138
+      },
+      {
+        "id": "qual_dev_00001",
+        "split": "validation",
+        "tokens": 185
+      }
+    ],
+    "unique_recorded_prefix_tensor_hashes_across_all_caption_audits": {
+      "native_pretrained": 4,
+      "prism_aligned": 5
+    },
+    "note": "The native and aligned prefix tensors are not byte-identical across every audited caption. No constant-prefix equivalence is inferred from this report. Native suffix states can encode caption content; these are teacher-assisted representation substitutions."
+  },
+  "runtime_and_artifact_audit": {
+    "artifact_audit_passed": true,
+    "actual_flow_conditioning_verified_rows": 12,
+    "flow_condition_hash_comparisons": 120,
+    "same_actual_noisy_input_and_timestep_for_all_route_caption_comparisons": true,
+    "evidence_scope": "Shared actual input hashes and successful runtime assertions are recorded in the report; this post-hoc summary checks those records and does not recompute model activations.",
+    "paired_input_hashes": [
+      {
+        "split": "train",
+        "id": "train_04996",
+        "wrong_id": "train_08983",
+        "requested_timestep": 0.1,
+        "actual_timestep": 0.10009765625,
+        "noisy_latent_sha256": "0cbf6249e9623af4418f016463e7f810f497922178fb57a9585671a5bb428b06",
+        "timestep_sha256": "c6e1faf3b9aa8949f382b99a72f913a750c3e4f17038699ad5d35ba412acf134"
+      },
+      {
+        "split": "train",
+        "id": "train_04996",
+        "wrong_id": "train_08983",
+        "requested_timestep": 0.5,
+        "actual_timestep": 0.5,
+        "noisy_latent_sha256": "bc3bc2f61603241f544970f410d569c525676d7baf37c7bed2e17155ab1fc9f7",
+        "timestep_sha256": "268a0cc3473615e3cdc59d145c0aa224ce1d0401aa0daf2f87b7ab7f01fee64b"
+      },
+      {
+        "split": "train",
+        "id": "train_04996",
+        "wrong_id": "train_08983",
+        "requested_timestep": 0.9,
+        "actual_timestep": 0.8984375,
+        "noisy_latent_sha256": "720fed2365728b14043c0a6c64dad14df5e6193b6b8f981734960e3bc0cb48c8",
+        "timestep_sha256": "d6583fb579183b7dffc603de3eedcf2518297e68b20bda45ba112df64e6e5353"
+      },
+      {
+        "split": "train",
+        "id": "train_08983",
+        "wrong_id": "train_05538",
+        "requested_timestep": 0.1,
+        "actual_timestep": 0.10009765625,
+        "noisy_latent_sha256": "36cf5fd18d834fd94e60e0532b74bda436cbba4e1da034e367998b3d5a2e16b7",
+        "timestep_sha256": "c6e1faf3b9aa8949f382b99a72f913a750c3e4f17038699ad5d35ba412acf134"
+      },
+      {
+        "split": "train",
+        "id": "train_08983",
+        "wrong_id": "train_05538",
+        "requested_timestep": 0.5,
+        "actual_timestep": 0.5,
+        "noisy_latent_sha256": "93d92dbf7710802a8ca556d655afe1f9915a9bee02c569e1075e65a2ab03e1d3",
+        "timestep_sha256": "268a0cc3473615e3cdc59d145c0aa224ce1d0401aa0daf2f87b7ab7f01fee64b"
+      },
+      {
+        "split": "train",
+        "id": "train_08983",
+        "wrong_id": "train_05538",
+        "requested_timestep": 0.9,
+        "actual_timestep": 0.8984375,
+        "noisy_latent_sha256": "9acdb258a96283f3d1415784d29ff3621536084c7e9b4d1a3159f43ab6ace8a3",
+        "timestep_sha256": "d6583fb579183b7dffc603de3eedcf2518297e68b20bda45ba112df64e6e5353"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00000",
+        "wrong_id": "qual_dev_00001",
+        "requested_timestep": 0.1,
+        "actual_timestep": 0.10009765625,
+        "noisy_latent_sha256": "d88ad4a5d23e9c3c9e8b9e7be16fff3205746227442074d6ef37d36b429d46c4",
+        "timestep_sha256": "c6e1faf3b9aa8949f382b99a72f913a750c3e4f17038699ad5d35ba412acf134"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00000",
+        "wrong_id": "qual_dev_00001",
+        "requested_timestep": 0.5,
+        "actual_timestep": 0.5,
+        "noisy_latent_sha256": "043dcc7d27bcfdbd449337f5b8033daf7e40d69ac9aaacb65ea31831e72452d2",
+        "timestep_sha256": "268a0cc3473615e3cdc59d145c0aa224ce1d0401aa0daf2f87b7ab7f01fee64b"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00000",
+        "wrong_id": "qual_dev_00001",
+        "requested_timestep": 0.9,
+        "actual_timestep": 0.8984375,
+        "noisy_latent_sha256": "9692b6324ef3b537994beb113a8d549111e5a2c7f07de43eb8c0428ab5c8de98",
+        "timestep_sha256": "d6583fb579183b7dffc603de3eedcf2518297e68b20bda45ba112df64e6e5353"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00001",
+        "wrong_id": "qual_dev_00002",
+        "requested_timestep": 0.1,
+        "actual_timestep": 0.10009765625,
+        "noisy_latent_sha256": "1035bd16426cda5d6797d8fa4f85498c93973d1694f56efcaceb3ea7d1dfb4cc",
+        "timestep_sha256": "c6e1faf3b9aa8949f382b99a72f913a750c3e4f17038699ad5d35ba412acf134"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00001",
+        "wrong_id": "qual_dev_00002",
+        "requested_timestep": 0.5,
+        "actual_timestep": 0.5,
+        "noisy_latent_sha256": "72f71257fc952f9663dd2f3b13ce6356b42573135007e30124d63369f91d0f10",
+        "timestep_sha256": "268a0cc3473615e3cdc59d145c0aa224ce1d0401aa0daf2f87b7ab7f01fee64b"
+      },
+      {
+        "split": "validation",
+        "id": "qual_dev_00001",
+        "wrong_id": "qual_dev_00002",
+        "requested_timestep": 0.9,
+        "actual_timestep": 0.8984375,
+        "noisy_latent_sha256": "dbe6a14f9ced02b18014bad431b99350a3c198e662c6eb3aa640cccbc2616836",
+        "timestep_sha256": "d6583fb579183b7dffc603de3eedcf2518297e68b20bda45ba112df64e6e5353"
+      }
+    ],
+    "frozen_tensor_hashes_compared": 2220,
+    "all_frozen_tensors_unchanged": true,
+    "native_pretrained_state_unchanged": true,
+    "saved_generated_image_hashes_verified": 12,
+    "target_hashes_verified": 2,
+    "same_initial_latent_and_seed_across_all_saved_routes_per_case": true,
+    "saved_cases": [
+      {
+        "case_id": "validation-00",
+        "id": "qual_dev_00000",
+        "initial_latent_sha256": "6ce1d618e96f20ebf88f0aadc82f6d356630850bf6bac0b8dc365bed73769bad"
+      },
+      {
+        "case_id": "validation-01",
+        "id": "qual_dev_00001",
+        "initial_latent_sha256": "0cb7fef0fb5fbd62f1be057da0ecbbb7630dd6387e1590aac29f53563eb4fca0"
+      }
+    ],
+    "original_native_cfg5_reference_images": 2,
+    "primary_cfg1_images": 10,
+    "denoising_steps": 50,
+    "image_resolution": [
+      256,
+      256
+    ]
+  },
+  "prior_aligned_diagnostic_replay": {
+    "source_report_sha256": "48d72be2c097e1a7d0e9bbdaa4feb2c222ad5ccf8d383e7e516b49f96b24a06f",
+    "shared_target_timestep_rows_checked": 12,
+    "native_and_aligned_losses_prediction_changes_wrong_caption_ids_and_actual_input_hashes_exactly_equal": true
+  },
+  "lineage": {
+    "restore_policy": "connector_weights_only_from_native_feature_alignment",
+    "alignment_checkpoint_sha256": "431938ef0fe99e480a28a71fd8eb716d067050cdde7388dd0ed33a2af794a642",
+    "alignment_training_step": 1000,
+    "alignment_training_cohort": {
+      "train": 32,
+      "validation": 8
+    },
+    "warm_500_connector_sha256": "e84b3550304f4cebe56b394e1e1f65dfc333bd9c6ed8e9adbb240c6694c4387f",
+    "original_generator_manifest_sha256": "46ad5c24af04baef2c5b6d365ee0ccfdc24eb626d98d56c017470b1f19f37d09",
+    "parent_checkpoint_sha256": "61bf6c9a247d09cf5cd72004fd2c60432c7e922645b266d2c4bd5a568e2d9183",
+    "strict_parent_tensor_count": 526,
+    "original_dit_used_for_every_route": true,
+    "joint_checkpoint_loaded": false,
+    "optimizer_updates_in_this_diagnostic": 0
+  },
+  "interpretation": [
+    "With caption content retained from aligned PRISM, native-prefix substitution reduces excess mean matched flow MSE over native by 98.57% on training probes and 98.12% on heldout probes. Adding native suffix produces no consistent further improvement over prefix-only.",
+    "Aligned content features are much closer to native after RMSNorm than the unsupervised template regions: training prefix/content/suffix MSE means are approximately 0.6383/0.03055/1.15175; heldout means are 0.63818/0.05722/1.14063. Despite the larger suffix feature MSE, prefix substitution has the dominant measured flow effect.",
+    "Wrong-caption preference and absolute denoising error answer different questions. All heldout routes prefer the correct caption on all six target-timestep cases, while aligned PRISM still has much higher matched loss than native. A larger positive caption gap is not automatically better image quality.",
+    "The evidence supports testing explicit prefix/content/suffix alignment before attributing the gap to dataset size or frozen VLM inadequacy. This is a next-experiment rationale, not a guarantee that such training will match the teacher.",
+    "This run contains only two training and two heldout targets, three timesteps each, and two caption-only generated examples per route. Hybrids use the native teacher and do not establish deployable PRISM-only generation or generalization. No accuracy, FID, reconstruction, or benchmark claim is made."
+  ],
+  "quality_benchmark": false,
+  "training_performed": false
+}

@@ -1,0 +1,83 @@
+# Citation metadata, CFF 1.2.0 (https://citation-file-format.github.io).
+# GitHub reads this file directly and renders a "Cite this repository" button.
+#
+# The author list is kept identical to `[project].authors` in
+# pyproject.toml, which is the ratified list. Edit both together, in the same
+# order, or the package metadata and the citation disagree about who wrote this.
+#
+# Deliberately ABSENT, because inventing any of these would be worse than
+# omitting them:
+#   * `doi:` -- no DOI has been minted. Add one (Zenodo archives a GitHub
+#     release automatically) when v0.1.0 is tagged, and add a matching
+#     `identifiers:` entry here.
+#   * `preferred-citation:` -- there is no paper or preprint yet. When one
+#     exists, add it and citation tools will prefer it over this software
+#     entry.
+#   * `affiliation:` on each author -- the repository states no name-to-
+#     institution mapping. Only a collective sentence exists (CONTRIBUTING.md:
+#     "researchers at Argonne National Laboratory and collaborating
+#     institutions"). Deriving affiliations from email domains would be a
+#     guess published under the authors' names, and two of the domains cannot
+#     be expanded from anything in the repo at all. Authors should add their
+#     own, along with `orcid:`, which is likewise absent everywhere.
+#   * `date-released:` -- nothing has been tagged. CHANGELOG.md has only an
+#     `[Unreleased]` section, and no semantic-version tag exists. Add it with
+#     the v0.1.0 tag.
+#
+# The repository carries two expansions of the acronym: this one, used by
+# README.md, docs/index.md and NOTICE, and "Foundational Multimodal Training
+# Framework", used by pyproject's one-line description and the CLI help. The
+# citation follows NOTICE, since that is the file the copyright line lives in.
+cff-version: 1.2.0
+message: "If you use PRISM in your research, please cite it as below."
+title: "PRISM: Poly-Reasoning Integrated Scientific Multimodal Modeling Framework"
+abstract: >-
+  PRISM is a framework for training and evaluating multimodal transformers over
+  scientific data. A pretrained language backbone is extended with per-modality
+  encoders and trainable projectors, so that text, images, time series, DNA
+  sequences, graphs, tables, and geometry can be represented in one token
+  stream. It targets DOE leadership-class systems, with Intel Max Series GPUs
+  on Aurora as the most exercised system to date. Support for further systems is
+  expected.
+type: software
+version: 0.1.0
+license: Apache-2.0
+repository-code: "https://github.com/AI-ModCon/BaseMM_PRISM"
+url: "https://github.com/AI-ModCon/BaseMM_PRISM"
+keywords:
+  - multimodal
+  - machine learning
+  - scientific computing
+  - transformers
+  - high-performance computing
+authors:
+  - family-names: Madireddy
+    given-names: Sandeep
+    email: smadireddy@anl.gov
+  - family-names: Emami
+    given-names: Patrick
+    email: patrick.emami@nlr.gov
+  - family-names: Balaji
+    given-names: Adarsha
+    email: abalaji@anl.gov
+  - family-names: Cong
+    given-names: Guojing
+    email: congg@ornl.gov
+  - family-names: Erichson
+    given-names: Ben
+    email: erichson@lbl.gov
+  - family-names: Xia
+    given-names: FangFang
+    email: fangfang@anl.gov
+  - family-names: Willard
+    given-names: Jared
+    email: Jared.Willard@nlr.gov
+  - family-names: Getty
+    given-names: Neil
+    email: ngetty@anl.gov
+  - family-names: Ta
+    given-names: Huu Binh
+    email: nzj6jt@virginia.edu
+  - family-names: Wheeler
+    given-names: Samuel
+    email: swheeler@anl.gov

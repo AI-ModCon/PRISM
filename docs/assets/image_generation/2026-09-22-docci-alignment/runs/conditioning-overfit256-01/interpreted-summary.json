@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "derived_from_report_sha256": "fea7a496488905523efc3563dd0a7bf6e406bca85e788f55fb0fdafefb4bd90f",
+  "scope": "Frozen evaluation after restoring the connector and diffusion transformer from the 256-update,32-pair overfit run. No training performed in this diagnostic.",
+  "joint_checkpoint_sha256": "0699fe1c9edb04f816f907da32dec71e5dbc4bdc5103f1e9190a12dd83095ce0",
+  "cohort": {
+    "unique_target_image_caption_pairs": 16,
+    "training_pairs": 8,
+    "heldout_pairs": 8,
+    "fixed_timesteps_per_pair": 3,
+    "paired_evaluations_per_route": 48,
+    "actual_diffusion_forward_calls": 192,
+    "interpretation": "48 repeated caption/timestep evaluations across16 target pairs, not48 independent examples; no confidence interval or benchmark accuracy claim."
+  },
+  "flow_comparison": {
+    "native_adapted_diffusion": "Original frozen native language conditioner feeding the same adapted DiT used by the PRISM route. This is not a flow-loss measurement of the untouched pretrained DiT.",
+    "prism_raw": "Restored PRISM connector with raw caption formatting, feeding the adapted DiT.",
+    "gap_direction": "Positive wrong-minus-matched flow MSE favors the correct caption.",
+    "metrics": {
+      "train": {
+        "native_adapted_diffusion": {
+          "matched_loss": 0.43166661572953063,
+          "matched_wins": 24,
+          "paired_evaluations": 24,
+          "wrong_loss": 0.45724372131129104,
+          "wrong_minus_matched": 0.025577105581760406,
+          "unique_target_captions": 8,
+          "caption_average_gap_positive": 8,
+          "by_requested_timestep": {
+            "0.1": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.06445487216114998
+            },
+            "0.5": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.011500231921672821
+            },
+            "0.9": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.0007762126624584198
+            }
+          }
+        },
+        "prism_raw": {
+          "matched_loss": 0.43668176978826523,
+          "matched_wins": 23,
+          "paired_evaluations": 24,
+          "wrong_loss": 0.446087966983517,
+          "wrong_minus_matched": 0.009406197195251783,
+          "unique_target_captions": 8,
+          "caption_average_gap_positive": 8,
+          "by_requested_timestep": {
+            "0.1": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.025101253762841225
+            },
+            "0.5": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.0022044144570827484
+            },
+            "0.9": {
+              "captions": 8,
+              "matched_wins": 7,
+              "mean_wrong_minus_matched": 0.0009129233658313751
+            }
+          }
+        }
+      },
+      "validation": {
+        "native_adapted_diffusion": {
+          "matched_loss": 0.48771121477087337,
+          "matched_wins": 23,
+          "paired_evaluations": 24,
+          "wrong_loss": 0.5169724747538567,
+          "wrong_minus_matched": 0.029261259982983272,
+          "unique_target_captions": 8,
+          "caption_average_gap_positive": 8,
+          "by_requested_timestep": {
+            "0.1": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.06864029914140701
+            },
+            "0.5": {
+              "captions": 8,
+              "matched_wins": 8,
+              "mean_wrong_minus_matched": 0.017961155623197556
+            },
+            "0.9": {
+              "captions": 8,
+              "matched_wins": 7,
+              "mean_wrong_minus_matched": 0.0011823251843452454
+            }
+          }
+        },
+        "prism_raw": {
+          "matched_loss": 0.50813781345884,
+          "matched_wins": 13,
+          "paired_evaluations": 24,
+          "wrong_loss": 0.5098001112540563,
+          "wrong_minus_matched": 0.0016622977952162425,
+          "unique_target_captions": 8,
+          "caption_average_gap_positive": 6,
+          "by_requested_timestep": {
+            "0.1": {
+              "captions": 8,
+              "matched_wins": 3,
+              "mean_wrong_minus_matched": 0.001222662627696991
+            },
+            "0.5": {
+              "captions": 8,
+              "matched_wins": 6,
+              "mean_wrong_minus_matched": 0.002868153154850006
+            },
+            "0.9": {
+              "captions": 8,
+              "matched_wins": 4,
+              "mean_wrong_minus_matched": 0.0008960776031017303
+            }
+          }
+        }
+      }
+    }
+  },
+  "paired_input_integrity": {
+    "all_expected_caption_timestep_records_present": true,
+    "recorded_noisy_latent_hash_count": 48,
+    "actual_timestep_values": [
+      {
+        "requested": 0.1,
+        "bf16_actual": 0.10009765625
+      },
+      {
+        "requested": 0.5,
+        "bf16_actual": 0.5
+      },
+      {
+        "requested": 0.9,
+        "bf16_actual": 0.8984375
+      }
+    ],
+    "runtime_contract": "For each record the runner hashes actual DiT noisy inputs and timesteps and asserts equality across native/PRISM and matched/wrong forwards; the report stores the shared post-assertion hashes. The artifact reader does not recompute model activations.",
+    "all10_sample_hashes_verified": true,
+    "both_target_hashes_verified": true,
+    "identical_initial_latents_across_all5_sample_routes_per_case": true,
+    "frozen_hashes_before_equal_after": true
+  },
+  "feature_statistics": {
+    "native_adapted_diffusion": {
+      "captions": 16,
+      "all_finite_valid_prefix_masks": true,
+      "conditioning_rms_median": 4.550895690917969,
+      "conditioning_rms_min": 4.4343671798706055,
+      "conditioning_rms_max": 4.64733362197876
+    },
+    "prism_raw": {
+      "captions": 16,
+      "all_finite_valid_prefix_masks": true,
+      "conditioning_rms_median": 1.06425940990448,
+      "conditioning_rms_min": 1.0331525802612305,
+      "conditioning_rms_max": 1.0949255228042603
+    }
+  },
+  "scale_interpretation": "Connector output RMS remains smaller than native features, but this is before the pretrained caption RMSNorm; scale alone is not demonstrated to cause the semantic failure.",
+  "visual_findings": {
+    "cases": 2,
+    "sampling_steps": 50,
+    "resolution": [
+      256,
+      256
+    ],
+    "native_pretrained_cfg5": "Original pretrained DiT sampled before joint weights were restored. Both cases contain the requested dog/penguin with blue hats or yellow/blue-tail airplanes.",
+    "native_adapted_diffusion_cfg5": "Same native conditioner after loading adapted DiT. Both requested object groups remain recognizable; airplane placement differs and full caption fidelity is not established.",
+    "prism_raw_native_negative_cfg5": "Dog/penguin prompt produces unrelated street or cart-like scene; airplane prompt produces a road vehicle. Neither example contains the requested object group.",
+    "prism_raw_cfg1": "Dog/penguin prompt produces an unrelated circular object on a line against green background; airplane prompt produces a rear-view road vehicle. Removing mixed-conditioner guidance does not restore semantics in these two cases.",
+    "prism_raw_prism_negative_cfg5": "Both images become almost uniform saturated purple/blue fields. The raw EOS negative anchor was never trained as unconditional conditioning; this failure does not diagnose PRISM capacity.",
+    "rendered_native_column": "native_adapted_diffusion, explicitly labeled; original native baseline remains in its separate two sample PNGs."
+  },
+  "interpretation": [
+    "The trained raw route distinguishes matched from wrong captions on the selected training pairs more reliably than on the heldout pairs (23/24 vs13/24 repeated evaluations). This is evidence of some training-set caption sensitivity, not successful visual overfit.",
+    "At noisy timestep0.1, native conditioned adapted DiT wins8/8 heldout controls with gap0.06864; PRISM wins3/8 with gap0.00122. The conditioning deficit remains visible while holding the adapted generator fixed.",
+    "The two image cases still fail caption semantics under both current mixed CFG5 and CFG1, while native conditioning works with the adapted DiT. The next aligned-connector diagnostic directly tests the representation interface.",
+    "There is no evidence here that broad data expansion or PRISM unfreezing alone would solve the issue. This diagnostic does not establish the attainable quality of a correctly aligned frozen PRISM route."
+  ],
+  "artifacts": {
+    "comparison": "conditioning-raw-comparison.png",
+    "render_metadata": "conditioning-render.json"
+  }
+}

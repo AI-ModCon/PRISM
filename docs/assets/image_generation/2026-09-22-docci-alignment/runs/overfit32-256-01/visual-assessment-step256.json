@@ -1,0 +1,20 @@
+{
+  "stage": "final",
+  "reviewed_gallery_step": 256,
+  "cases_reviewed": 4,
+  "principal_subjects_visible": {
+    "train_02098": false,
+    "train_01677": true,
+    "qual_dev_00000": false,
+    "qual_dev_00001": false
+  },
+  "case_notes": {
+    "train_02098": "No digital wall clock; unrelated translucent suspended object against grass.",
+    "train_01677": "A small green pine tree is now recognizable, but firewood/tools/fence composition is absent. Partial caption fit.",
+    "qual_dev_00000": "No dog or penguin; furniture/interior-like scene.",
+    "qual_dev_00001": "No airplanes; yard/street with wheeled objects."
+  },
+  "comparison": "Native CFG1 controls retain principal animals/airplanes. All stages share per-case initial latents.",
+  "interpretation": "One of two shown training cases partially learns the subject; reliable tiny-set caption fitting and held-out improvement are not established. These four examples are not a benchmark.",
+  "images_unmodified": true
+}

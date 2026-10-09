@@ -1,0 +1,23 @@
+{
+  "modalities": ["text", "image"],
+  "llm_backbone_id": "Qwen/Qwen3-0.6B",
+  "llm_tokenizer_id": "Qwen/Qwen3-0.6B",
+  "image_encoder_id": "google/siglip2-base-patch16-224",
+  "d_model": 1024,
+  "d_text": 1024,
+  "d_img": 768,
+  "freeze_backbone": true,
+  "freeze_encoders": true,
+  "is_interleaved_qa": false,
+  "max_merged_seq_length": 1024,
+  "output_decoders": ["text", "image"],
+  "decoder_loss_weights": {"image": 1.0},
+  "decoder_configs": {
+    "image": {
+      "model_id": "OmniGen2/OmniGen2",
+      "revision": "df5dca8a981d74e6c3af214c145f5c735fe72367",
+      "local_files_only": true,
+      "conditioning_dim": 2048
+    }
+  }
+}

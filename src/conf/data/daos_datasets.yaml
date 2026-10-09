@@ -1,0 +1,377 @@
+# DAOS WebDataset Configuration
+# Defines all available datasets on DAOS with their paths and sampling weights
+#
+# Sampling weights control the relative frequency of samples from each dataset.
+# Higher weights = more samples from that dataset per epoch.
+# Weights are normalized to sum to 1.0 during training.
+#
+# Proportion controls what fraction of shards to load (0.0-1.0):
+#   proportion: 1.0  -> Use all shards (default)
+#   proportion: 0.1  -> Use only 10% of shards (faster startup, less data)
+# Useful for large datasets (e.g., 3.4TB arxiv) when testing or when
+# you want to balance dataset sizes without changing sampling weights.
+#
+# IMPORTANT: Sample/shard counts below are for TRAINING data only.
+# Each dataset also has validation shards (typically 1% of data) stored in
+# val_shards/ directory. Validation shard info is read from manifest.json
+# at runtime. The manifest contains:
+#   - "shards": list of training shard info
+#   - "val_shards": list of validation shard info
+#   - "num_train_shards", "num_val_shards": counts
+#   - "train_samples", "val_samples": sample counts
+#
+# Usage:
+#   training.datasets=all          # Use all datasets
+#   training.datasets=pixmo        # Use only pixmo group
+#   training.datasets=s1mmalign,nemotron  # Use specific groups
+
+# DAOS mount configuration
+daos:
+  pool: AuroraGPT
+  container: prism_training_data
+  mount_base: /tmp/${USER}/AuroraGPT/prism_training_data
+
+# Dataset groups with paths and weights
+groups:
+  pixmo:
+    description: "Pixmo caption and pointing datasets"
+    datasets:
+      pixmo_cap:
+        path: pixmo/pixmo_cap_webdataset
+        samples: 613610 # Training samples only (val_samples read from manifest)
+        shards: 613 # Training shards only (val_shards read from manifest)
+        weight: 1.0
+        description: "Image captions"
+      pixmo_points:
+        path: pixmo/pixmo_points_webdataset
+        samples: 1919853
+        shards: 1920
+        weight: 1.0
+        proportion: 1.0 # ~500GB dataset - reduce to 0.1-0.5 for faster startup
+        description: "Visual pointing/grounding"
+      pixmo_count:
+        path: pixmo/pixmo_count_webdataset
+        samples: 33216
+        shards: 34
+        weight: 0.5 # Smaller dataset, reduce weight
+        description: "Object counting"
+
+  s1mmalign:
+    description: "Scientific paper datasets (multi-modal alignment)"
+    datasets:
+      arxiv:
+        path: s1mmalign/arxiv_webdataset
+        samples: 13395035
+        shards: 2689
+        weight: 1.0
+        proportion: 0.1 # LARGEST dataset (~3.4TB, 13.4M samples) - use 10% by default
+        description: "ArXiv papers (2007-2025)"
+      biorxiv:
+        path: s1mmalign/biorxiv_webdataset
+        samples: 1142040
+        shards: 1143
+        weight: 1.0
+        proportion: 1.0 # ~100GB - keep full
+        description: "Biology preprints"
+      nature_comunication:
+        path: s1mmalign/nature_comunication_webdataset
+        samples: 549054
+        shards: 550
+        weight: 1.0
+        description: "Nature Communications papers"
+      chemrxiv:
+        path: s1mmalign/chemrxiv_webdataset
+        samples: 178668
+        shards: 179
+        weight: 0.8
+        description: "Chemistry preprints"
+      medrxiv:
+        path: s1mmalign/medrxiv_webdataset
+        samples: 171083
+        shards: 172
+        weight: 0.8
+        description: "Medical preprints"
+      engrxiv:
+        path: s1mmalign/engrxiv_webdataset
+        samples: 24820
+        shards: 25
+        weight: 0.3
+        description: "Engineering preprints"
+      psyarxiv:
+        path: s1mmalign/psyarxiv_webdataset
+        samples: 16942
+        shards: 17
+        weight: 0.3
+        description: "Psychology preprints"
+      edrxiv:
+        path: s1mmalign/edrxiv_webdataset
+        samples: 1375
+        shards: 2
+        weight: 0.1
+        description: "Education preprints"
+      metarxiv:
+        path: s1mmalign/metarxiv_webdataset
+        samples: 362
+        shards: 1
+        weight: 0.1
+        description: "Meta-research preprints"
+
+  cosyn:
+    description: "Synthetic coordinate/pointing data"
+    datasets:
+      cosyn_point:
+        path: cosyn/cosyn_point_webdataset
+        samples: 315895
+        shards: 316
+        weight: 1.0
+        description: "Q&A pointing dataset with Molmo2 format"
+
+  nemotron:
+    description: "Nemotron VLM datasets (wiki + vision)"
+    datasets:
+      wiki_en:
+        path: nemotron/wiki_en_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.3
+        description: "Wikipedia English"
+      wiki_de:
+        path: nemotron/wiki_de_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia German"
+      wiki_fr:
+        path: nemotron/wiki_fr_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia French"
+      wiki_es:
+        path: nemotron/wiki_es_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Spanish"
+      wiki_ja:
+        path: nemotron/wiki_ja_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Japanese"
+      wiki_zh:
+        path: nemotron/wiki_zh_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Chinese"
+      wiki_it:
+        path: nemotron/wiki_it_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Italian"
+      wiki_pt:
+        path: nemotron/wiki_pt_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Portuguese"
+      wiki_ko:
+        path: nemotron/wiki_ko_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Korean"
+      wiki_nl:
+        path: nemotron/wiki_nl_webdataset
+        samples: 198000
+        shards: 198
+        weight: 0.1
+        description: "Wikipedia Dutch"
+      # NOTE: sparsetables and plotqa_cot excluded from pretraining due to
+      # extremely long sequences (2600-4100 tokens avg). Use in SFT instead.
+      sparsetables:
+        path: nemotron/sparsetables_webdataset
+        samples: 99000
+        shards: 99
+        weight: 0.0 # Disabled for pretraining - avg 2604 tokens
+        description: "Sparse table understanding (SFT only)"
+      plotqa_cot:
+        path: nemotron/plotqa_cot_webdataset
+        samples: 16094
+        shards: 17
+        weight: 0.0 # Disabled for pretraining - avg 4096 tokens
+        description: "Plot QA with chain-of-thought (SFT only)"
+      nights_cot:
+        path: nemotron/nights_cot_webdataset
+        samples: 12496
+        shards: 13
+        weight: 0.0
+        description: "Night scene understanding"
+
+  # CALVIN VLA composite shards built by applications/vla/shard_calvin_vla.py.
+  # Sample = {head.jpg, wrist.jpg, pose.npy, action.npy, instruction.txt}.
+  # Loader MUST use the `vla` modality pipeline; shards are episode-aligned
+  # so the wrapper sets shardshuffle=False to keep Markov order.
+  calvin:
+    description: "CALVIN VLA composite shards (head/wrist + pose + action + text)"
+    datasets:
+      calvin_vla:
+        path: vla_training/calvin_webdataset
+        samples: 0           # filled from manifest.json at runtime
+        shards: 0            # filled from manifest.json at runtime
+        weight: 1.0
+        proportion: 1.0
+        description: "CALVIN train split, episode-aligned VLA shards"
+
+# Preset configurations for common use cases
+presets:
+  all:
+    description: "All available datasets"
+    groups:
+      - pixmo
+      - s1mmalign
+      - cosyn
+      - nemotron
+
+  pixmo_only:
+    description: "Only Pixmo datasets (caption + pointing)"
+    groups:
+      - pixmo
+
+  scientific:
+    description: "Scientific paper datasets"
+    groups:
+      - s1mmalign
+
+  vision:
+    description: "Vision-focused datasets"
+    groups:
+      - pixmo
+      - nemotron
+
+  balanced:
+    description: "Balanced mix emphasizing English and major datasets"
+    groups:
+      - pixmo
+      - s1mmalign
+      - cosyn
+    # Override weights for balance
+    weight_overrides:
+      pixmo_cap: 1.0
+      pixmo_points: 1.0
+      pixmo_count: 0.3
+      biorxiv: 0.8
+      nature_comunication: 0.8
+      chemrxiv: 0.5
+      medrxiv: 0.5
+      cosyn_point: 0.5
+
+  pointing_only:
+    description: "Pointing datasets only (pixmo_points + cosyn_point) for testing"
+    groups:
+      - pixmo
+      - cosyn
+    weight_overrides:
+      pixmo_cap: 0.0 # Exclude captions
+      pixmo_points: 1.0
+      pixmo_count: 0.0 # Exclude counting
+      cosyn_point: 1.0
+
+  quick:
+    description: "Fast startup preset - uses 10% of large datasets for testing"
+    groups:
+      - pixmo
+      - s1mmalign
+      - cosyn
+      - nemotron
+    # Reduce large datasets (s1mmalign is ~3TB total) for faster startup
+    proportion_overrides:
+      # s1mmalign datasets (largest - ~3TB combined)
+      arxiv: 0.05
+      biorxiv: 0.1 # ~114 shards instead of 1143
+      nature_comunication: 0.1 # ~55 shards instead of 550
+      chemrxiv: 0.2
+      medrxiv: 0.2
+      # pixmo datasets (~700GB combined)
+      pixmo_points: 0.2 # ~384 shards instead of 1920
+      pixmo_cap: 1.0 # Keep full - only ~200GB
+      pixmo_count: 1.0 # Keep full - small dataset
+      # Other datasets - keep full
+      cosyn_point: 1.0
+
+  tiny:
+    description: "Minimal preset for debugging - uses 1% of all datasets"
+    groups:
+      - pixmo
+      - cosyn
+    proportion_overrides:
+      pixmo_cap: 0.01
+      pixmo_points: 0.01
+      pixmo_count: 0.1
+      cosyn_point: 0.1
+
+  projector:
+    description: "Projector training preset - Molmo-inspired ~60% caption / ~30% pointing mix"
+    groups:
+      - pixmo
+      - s1mmalign
+      - cosyn
+      - nemotron
+    # Weights tuned for ~60% caption / ~30% pointing / ~10% other (Molmo-inspired)
+    # Tiny datasets (metarxiv, edrxiv) excluded to avoid extreme replay
+    # Non-English wiki excluded (not needed for projector alignment)
+    weight_overrides:
+      # Caption (target ~62%): pixmo_cap is the primary caption dataset
+      pixmo_cap: 3.0
+      # Pointing/counting (target ~32%)
+      pixmo_points: 1.5
+      pixmo_count: 0.5
+      cosyn_point: 1.0
+      # Scientific papers (supplementary captions, target ~16%)
+      arxiv: 1.0           # proportion=0.1 limits to 10% of shards
+      biorxiv: 0.5
+      nature_comunication: 0.5
+      chemrxiv: 0.3
+      medrxiv: 0.3
+      engrxiv: 0.1
+      psyarxiv: 0.1
+      # Exclude tiny datasets (extreme replay with no diversity benefit)
+      edrxiv: 0.0           # 1375 samples = memorized within minutes
+      metarxiv: 0.0         # 362 samples = memorized within minutes
+      # Wiki (supplementary, target ~5%)
+      wiki_en: 0.5
+      # Drop non-English wiki for projector training
+      wiki_de: 0.0
+      wiki_fr: 0.0
+      wiki_es: 0.0
+      wiki_ja: 0.0
+      wiki_zh: 0.0
+      wiki_it: 0.0
+      wiki_pt: 0.0
+      wiki_ko: 0.0
+      wiki_nl: 0.0
+    # Reduce proportion for large scientific datasets
+    proportion_overrides:
+      biorxiv: 0.3          # ~343 shards instead of 1143
+      nature_comunication: 0.3  # ~165 shards instead of 550
+
+  sft:
+    description: "SFT preset - includes long-sequence reasoning datasets"
+    groups:
+      - pixmo
+      - cosyn
+      - nemotron
+    weight_overrides:
+      # Re-enable long-sequence datasets for SFT
+      sparsetables: 1.0
+      plotqa_cot: 1.0
+      nights_cot: 1.0
+      # Reduce short-sequence datasets
+      pixmo_points: 0.3
+      pixmo_count: 0.1
+      cosyn_point: 0.3
+
+# Default preset to use
+default_preset: all

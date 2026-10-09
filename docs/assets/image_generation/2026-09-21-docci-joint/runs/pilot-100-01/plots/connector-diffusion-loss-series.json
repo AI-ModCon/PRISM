@@ -1,0 +1,801 @@
+{
+  "alternate_final_validation": [],
+  "cohorts": {
+    "train": [
+      {
+        "id": "train_04996",
+        "seed": 100042,
+        "shuffled_prompt_id": "train_04997"
+      },
+      {
+        "id": "train_08983",
+        "seed": 100043,
+        "shuffled_prompt_id": "train_08984"
+      },
+      {
+        "id": "train_05538",
+        "seed": 100044,
+        "shuffled_prompt_id": "train_05539"
+      },
+      {
+        "id": "train_03445",
+        "seed": 100045,
+        "shuffled_prompt_id": "train_03446"
+      },
+      {
+        "id": "train_05049",
+        "seed": 100046,
+        "shuffled_prompt_id": "train_05050"
+      },
+      {
+        "id": "train_01677",
+        "seed": 100047,
+        "shuffled_prompt_id": "train_01678"
+      },
+      {
+        "id": "train_06344",
+        "seed": 100048,
+        "shuffled_prompt_id": "train_06345"
+      },
+      {
+        "id": "train_01062",
+        "seed": 100049,
+        "shuffled_prompt_id": "train_01063"
+      },
+      {
+        "id": "train_00191",
+        "seed": 100050,
+        "shuffled_prompt_id": "train_00192"
+      },
+      {
+        "id": "train_00198",
+        "seed": 100051,
+        "shuffled_prompt_id": "train_00199"
+      },
+      {
+        "id": "train_04809",
+        "seed": 100052,
+        "shuffled_prompt_id": "train_04810"
+      },
+      {
+        "id": "train_00530",
+        "seed": 100053,
+        "shuffled_prompt_id": "train_00531"
+      },
+      {
+        "id": "train_08304",
+        "seed": 100054,
+        "shuffled_prompt_id": "train_08305"
+      },
+      {
+        "id": "train_06979",
+        "seed": 100055,
+        "shuffled_prompt_id": "train_06980"
+      },
+      {
+        "id": "train_01044",
+        "seed": 100056,
+        "shuffled_prompt_id": "train_01045"
+      },
+      {
+        "id": "train_02443",
+        "seed": 100057,
+        "shuffled_prompt_id": "train_02444"
+      }
+    ],
+    "validation": [
+      {
+        "id": "qual_dev_00000",
+        "seed": 101051,
+        "shuffled_prompt_id": "qual_dev_00001"
+      },
+      {
+        "id": "qual_dev_00001",
+        "seed": 101052,
+        "shuffled_prompt_id": "qual_dev_00002"
+      },
+      {
+        "id": "qual_dev_00002",
+        "seed": 101053,
+        "shuffled_prompt_id": "qual_dev_00003"
+      },
+      {
+        "id": "qual_dev_00003",
+        "seed": 101054,
+        "shuffled_prompt_id": "qual_dev_00004"
+      },
+      {
+        "id": "qual_dev_00004",
+        "seed": 101055,
+        "shuffled_prompt_id": "qual_dev_00005"
+      },
+      {
+        "id": "qual_dev_00005",
+        "seed": 101056,
+        "shuffled_prompt_id": "qual_dev_00006"
+      },
+      {
+        "id": "qual_dev_00006",
+        "seed": 101057,
+        "shuffled_prompt_id": "qual_dev_00007"
+      },
+      {
+        "id": "qual_dev_00007",
+        "seed": 101058,
+        "shuffled_prompt_id": "qual_dev_00008"
+      },
+      {
+        "id": "qual_dev_00008",
+        "seed": 101059,
+        "shuffled_prompt_id": "qual_dev_00009"
+      },
+      {
+        "id": "qual_dev_00009",
+        "seed": 101060,
+        "shuffled_prompt_id": "qual_dev_00010"
+      },
+      {
+        "id": "qual_dev_00010",
+        "seed": 101061,
+        "shuffled_prompt_id": "qual_dev_00011"
+      },
+      {
+        "id": "qual_dev_00011",
+        "seed": 101062,
+        "shuffled_prompt_id": "qual_dev_00012"
+      },
+      {
+        "id": "qual_dev_00012",
+        "seed": 101063,
+        "shuffled_prompt_id": "qual_dev_00013"
+      },
+      {
+        "id": "qual_dev_00013",
+        "seed": 101064,
+        "shuffled_prompt_id": "qual_dev_00014"
+      },
+      {
+        "id": "qual_dev_00014",
+        "seed": 101065,
+        "shuffled_prompt_id": "qual_dev_00015"
+      },
+      {
+        "id": "qual_dev_00015",
+        "seed": 101066,
+        "shuffled_prompt_id": "qual_dev_00016"
+      }
+    ]
+  },
+  "coverage": {
+    "cumulative_examples_seen": 100,
+    "first_logged_step": 1,
+    "last_logged_step": 100,
+    "logged_optimizer_steps": 100,
+    "observed_unique_train_ids": 100
+  },
+  "data_fingerprint": "f45daff5995f78f2409c3d9a3efc9839aae9e860f08b06e1a59781e180f9a7f0",
+  "fixed_probes": {
+    "train": [
+      {
+        "count": 16,
+        "mean_loss": 0.4405691381543875,
+        "mean_shuffled_loss": 0.4502414632588625,
+        "mean_shuffled_minus_correct": 0.009672325104475021,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4399061147123575,
+        "mean_shuffled_loss": 0.44940986670553684,
+        "mean_shuffled_minus_correct": 0.009503751993179321,
+        "optimized_count": 16,
+        "step": 25
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4397139623761177,
+        "mean_shuffled_loss": 0.44942248053848743,
+        "mean_shuffled_minus_correct": 0.009708518162369728,
+        "optimized_count": 16,
+        "step": 50
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.43955710902810097,
+        "mean_shuffled_loss": 0.449121056124568,
+        "mean_shuffled_minus_correct": 0.009563947096467018,
+        "optimized_count": 16,
+        "step": 75
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4395088627934456,
+        "mean_shuffled_loss": 0.4491791743785143,
+        "mean_shuffled_minus_correct": 0.009670311585068703,
+        "optimized_count": 16,
+        "step": 100
+      }
+    ],
+    "validation": [
+      {
+        "count": 16,
+        "mean_loss": 0.45162288285791874,
+        "mean_shuffled_loss": 0.4189531337469816,
+        "mean_shuffled_minus_correct": -0.03266974911093712,
+        "optimized_count": 0,
+        "step": 0
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.45155335031449795,
+        "mean_shuffled_loss": 0.4187030252069235,
+        "mean_shuffled_minus_correct": -0.03285032510757446,
+        "optimized_count": 0,
+        "step": 25
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4514093939214945,
+        "mean_shuffled_loss": 0.4184265397489071,
+        "mean_shuffled_minus_correct": -0.032982854172587395,
+        "optimized_count": 0,
+        "step": 50
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4512728825211525,
+        "mean_shuffled_loss": 0.4182508606463671,
+        "mean_shuffled_minus_correct": -0.03302202187478542,
+        "optimized_count": 0,
+        "step": 75
+      },
+      {
+        "count": 16,
+        "mean_loss": 0.4512749928981066,
+        "mean_shuffled_loss": 0.41706942953169346,
+        "mean_shuffled_minus_correct": -0.034205563366413116,
+        "optimized_count": 0,
+        "step": 100
+      }
+    ]
+  },
+  "full_validation": [
+    {
+      "count": 100,
+      "mean_loss": 0.46494246572256087,
+      "mean_shuffled_loss": 0.46114587917923927,
+      "mean_shuffled_minus_correct": -0.0037965865433216093,
+      "optimized_count": 0,
+      "step": 100
+    }
+  ],
+  "interpretation": {
+    "fixed_cohort": "Each curve retains initial IDs, seeds and wrong-caption IDs; the same subset is recomputed from larger final evaluations.",
+    "full_validation": "Separate markers use every final validation example; the fixed probe curve retains its original cohort.",
+    "gap": "Wrong-caption loss minus matched-caption loss; positive values favor the matched caption. This is not a visual-quality benchmark.",
+    "optimization": "Stochastic timestep/noise losses are plotted separately from fixed-noise probe losses."
+  },
+  "missing_fixed_cohorts": [],
+  "optimizer": [
+    {
+      "examples_seen": 1,
+      "loss": 0.45938408374786377,
+      "step": 1
+    },
+    {
+      "examples_seen": 2,
+      "loss": 0.4663325548171997,
+      "step": 2
+    },
+    {
+      "examples_seen": 3,
+      "loss": 0.585537314414978,
+      "step": 3
+    },
+    {
+      "examples_seen": 4,
+      "loss": 0.35439446568489075,
+      "step": 4
+    },
+    {
+      "examples_seen": 5,
+      "loss": 0.2679695785045624,
+      "step": 5
+    },
+    {
+      "examples_seen": 6,
+      "loss": 0.46649685502052307,
+      "step": 6
+    },
+    {
+      "examples_seen": 7,
+      "loss": 0.44519710540771484,
+      "step": 7
+    },
+    {
+      "examples_seen": 8,
+      "loss": 0.42342954874038696,
+      "step": 8
+    },
+    {
+      "examples_seen": 9,
+      "loss": 0.3254867494106293,
+      "step": 9
+    },
+    {
+      "examples_seen": 10,
+      "loss": 0.35580974817276,
+      "step": 10
+    },
+    {
+      "examples_seen": 11,
+      "loss": 0.34537118673324585,
+      "step": 11
+    },
+    {
+      "examples_seen": 12,
+      "loss": 0.3176514804363251,
+      "step": 12
+    },
+    {
+      "examples_seen": 13,
+      "loss": 0.4970878064632416,
+      "step": 13
+    },
+    {
+      "examples_seen": 14,
+      "loss": 0.5175864696502686,
+      "step": 14
+    },
+    {
+      "examples_seen": 15,
+      "loss": 0.6856374740600586,
+      "step": 15
+    },
+    {
+      "examples_seen": 16,
+      "loss": 0.49662795662879944,
+      "step": 16
+    },
+    {
+      "examples_seen": 17,
+      "loss": 0.4932708144187927,
+      "step": 17
+    },
+    {
+      "examples_seen": 18,
+      "loss": 0.6178433895111084,
+      "step": 18
+    },
+    {
+      "examples_seen": 19,
+      "loss": 0.6024187803268433,
+      "step": 19
+    },
+    {
+      "examples_seen": 20,
+      "loss": 0.4109061360359192,
+      "step": 20
+    },
+    {
+      "examples_seen": 21,
+      "loss": 0.31462562084198,
+      "step": 21
+    },
+    {
+      "examples_seen": 22,
+      "loss": 0.38618430495262146,
+      "step": 22
+    },
+    {
+      "examples_seen": 23,
+      "loss": 0.26520946621894836,
+      "step": 23
+    },
+    {
+      "examples_seen": 24,
+      "loss": 0.4615030586719513,
+      "step": 24
+    },
+    {
+      "examples_seen": 25,
+      "loss": 0.39521104097366333,
+      "step": 25
+    },
+    {
+      "examples_seen": 26,
+      "loss": 0.25920116901397705,
+      "step": 26
+    },
+    {
+      "examples_seen": 27,
+      "loss": 0.42325741052627563,
+      "step": 27
+    },
+    {
+      "examples_seen": 28,
+      "loss": 0.602238655090332,
+      "step": 28
+    },
+    {
+      "examples_seen": 29,
+      "loss": 0.32877829670906067,
+      "step": 29
+    },
+    {
+      "examples_seen": 30,
+      "loss": 0.32368457317352295,
+      "step": 30
+    },
+    {
+      "examples_seen": 31,
+      "loss": 0.4731487035751343,
+      "step": 31
+    },
+    {
+      "examples_seen": 32,
+      "loss": 0.22683463990688324,
+      "step": 32
+    },
+    {
+      "examples_seen": 33,
+      "loss": 0.5521258115768433,
+      "step": 33
+    },
+    {
+      "examples_seen": 34,
+      "loss": 0.5375808477401733,
+      "step": 34
+    },
+    {
+      "examples_seen": 35,
+      "loss": 0.4713352918624878,
+      "step": 35
+    },
+    {
+      "examples_seen": 36,
+      "loss": 0.5282379984855652,
+      "step": 36
+    },
+    {
+      "examples_seen": 37,
+      "loss": 0.5491446256637573,
+      "step": 37
+    },
+    {
+      "examples_seen": 38,
+      "loss": 0.3881722688674927,
+      "step": 38
+    },
+    {
+      "examples_seen": 39,
+      "loss": 0.40508517622947693,
+      "step": 39
+    },
+    {
+      "examples_seen": 40,
+      "loss": 0.4719896912574768,
+      "step": 40
+    },
+    {
+      "examples_seen": 41,
+      "loss": 0.5482602119445801,
+      "step": 41
+    },
+    {
+      "examples_seen": 42,
+      "loss": 0.4357733726501465,
+      "step": 42
+    },
+    {
+      "examples_seen": 43,
+      "loss": 0.4002552628517151,
+      "step": 43
+    },
+    {
+      "examples_seen": 44,
+      "loss": 0.29991135001182556,
+      "step": 44
+    },
+    {
+      "examples_seen": 45,
+      "loss": 0.32667189836502075,
+      "step": 45
+    },
+    {
+      "examples_seen": 46,
+      "loss": 0.4805240333080292,
+      "step": 46
+    },
+    {
+      "examples_seen": 47,
+      "loss": 0.3989408314228058,
+      "step": 47
+    },
+    {
+      "examples_seen": 48,
+      "loss": 0.46836522221565247,
+      "step": 48
+    },
+    {
+      "examples_seen": 49,
+      "loss": 0.4161633849143982,
+      "step": 49
+    },
+    {
+      "examples_seen": 50,
+      "loss": 0.7041012048721313,
+      "step": 50
+    },
+    {
+      "examples_seen": 51,
+      "loss": 0.3363727927207947,
+      "step": 51
+    },
+    {
+      "examples_seen": 52,
+      "loss": 0.29051411151885986,
+      "step": 52
+    },
+    {
+      "examples_seen": 53,
+      "loss": 0.3377699851989746,
+      "step": 53
+    },
+    {
+      "examples_seen": 54,
+      "loss": 0.2614101767539978,
+      "step": 54
+    },
+    {
+      "examples_seen": 55,
+      "loss": 0.5866588354110718,
+      "step": 55
+    },
+    {
+      "examples_seen": 56,
+      "loss": 0.5992336273193359,
+      "step": 56
+    },
+    {
+      "examples_seen": 57,
+      "loss": 0.5776512622833252,
+      "step": 57
+    },
+    {
+      "examples_seen": 58,
+      "loss": 0.325906902551651,
+      "step": 58
+    },
+    {
+      "examples_seen": 59,
+      "loss": 0.40413326025009155,
+      "step": 59
+    },
+    {
+      "examples_seen": 60,
+      "loss": 0.47807997465133667,
+      "step": 60
+    },
+    {
+      "examples_seen": 61,
+      "loss": 0.32847172021865845,
+      "step": 61
+    },
+    {
+      "examples_seen": 62,
+      "loss": 0.3513951897621155,
+      "step": 62
+    },
+    {
+      "examples_seen": 63,
+      "loss": 0.42259931564331055,
+      "step": 63
+    },
+    {
+      "examples_seen": 64,
+      "loss": 0.4145479202270508,
+      "step": 64
+    },
+    {
+      "examples_seen": 65,
+      "loss": 0.6671956181526184,
+      "step": 65
+    },
+    {
+      "examples_seen": 66,
+      "loss": 0.610117495059967,
+      "step": 66
+    },
+    {
+      "examples_seen": 67,
+      "loss": 0.5611889362335205,
+      "step": 67
+    },
+    {
+      "examples_seen": 68,
+      "loss": 0.2934582233428955,
+      "step": 68
+    },
+    {
+      "examples_seen": 69,
+      "loss": 0.35456031560897827,
+      "step": 69
+    },
+    {
+      "examples_seen": 70,
+      "loss": 0.465151846408844,
+      "step": 70
+    },
+    {
+      "examples_seen": 71,
+      "loss": 0.38645583391189575,
+      "step": 71
+    },
+    {
+      "examples_seen": 72,
+      "loss": 0.47435182332992554,
+      "step": 72
+    },
+    {
+      "examples_seen": 73,
+      "loss": 0.45115625858306885,
+      "step": 73
+    },
+    {
+      "examples_seen": 74,
+      "loss": 0.3923417627811432,
+      "step": 74
+    },
+    {
+      "examples_seen": 75,
+      "loss": 0.5946284532546997,
+      "step": 75
+    },
+    {
+      "examples_seen": 76,
+      "loss": 0.4139043688774109,
+      "step": 76
+    },
+    {
+      "examples_seen": 77,
+      "loss": 0.45861661434173584,
+      "step": 77
+    },
+    {
+      "examples_seen": 78,
+      "loss": 0.6118664741516113,
+      "step": 78
+    },
+    {
+      "examples_seen": 79,
+      "loss": 0.3273935616016388,
+      "step": 79
+    },
+    {
+      "examples_seen": 80,
+      "loss": 0.7144463062286377,
+      "step": 80
+    },
+    {
+      "examples_seen": 81,
+      "loss": 0.5497443079948425,
+      "step": 81
+    },
+    {
+      "examples_seen": 82,
+      "loss": 0.7462066411972046,
+      "step": 82
+    },
+    {
+      "examples_seen": 83,
+      "loss": 0.3000692129135132,
+      "step": 83
+    },
+    {
+      "examples_seen": 84,
+      "loss": 0.39624476432800293,
+      "step": 84
+    },
+    {
+      "examples_seen": 85,
+      "loss": 0.34894096851348877,
+      "step": 85
+    },
+    {
+      "examples_seen": 86,
+      "loss": 0.4268365502357483,
+      "step": 86
+    },
+    {
+      "examples_seen": 87,
+      "loss": 0.6207332611083984,
+      "step": 87
+    },
+    {
+      "examples_seen": 88,
+      "loss": 0.7370240092277527,
+      "step": 88
+    },
+    {
+      "examples_seen": 89,
+      "loss": 0.3975725769996643,
+      "step": 89
+    },
+    {
+      "examples_seen": 90,
+      "loss": 0.38637736439704895,
+      "step": 90
+    },
+    {
+      "examples_seen": 91,
+      "loss": 0.5130651593208313,
+      "step": 91
+    },
+    {
+      "examples_seen": 92,
+      "loss": 0.5743186473846436,
+      "step": 92
+    },
+    {
+      "examples_seen": 93,
+      "loss": 0.3105162978172302,
+      "step": 93
+    },
+    {
+      "examples_seen": 94,
+      "loss": 0.34697526693344116,
+      "step": 94
+    },
+    {
+      "examples_seen": 95,
+      "loss": 0.5556285977363586,
+      "step": 95
+    },
+    {
+      "examples_seen": 96,
+      "loss": 0.7103195190429688,
+      "step": 96
+    },
+    {
+      "examples_seen": 97,
+      "loss": 0.336536169052124,
+      "step": 97
+    },
+    {
+      "examples_seen": 98,
+      "loss": 0.4678795337677002,
+      "step": 98
+    },
+    {
+      "examples_seen": 99,
+      "loss": 0.48743927478790283,
+      "step": 99
+    },
+    {
+      "examples_seen": 100,
+      "loss": 0.3532114624977112,
+      "step": 100
+    }
+  ],
+  "plotter_sha256": "8a8e9b606aedb159703aabe9c2066a17dde1e239eafec75a1251947006c13052",
+  "qualification": "unqualified",
+  "runs": [
+    {
+      "completed_steps": 100,
+      "evidence_kind": "real_checkpoint_connector_diffusion_webdataset_pilot",
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/pilot-100-01",
+      "status": "completed"
+    }
+  ],
+  "schema_version": 1,
+  "source_sha256": {
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/pilot-100-01/evaluations.jsonl": "c14a80df8df5340259150ebf3cab66ff347d04915e84af968e16225757e99c4b",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/pilot-100-01/report.json": "7c44ebbbac5f8f7b8fa81baa31ad01c70b65750d4ca93203ec5cc56111640393",
+    "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-21-docci-joint/runs/pilot-100-01/steps.jsonl": "afafe4e21d8a259a229d6e1b6bc0add3ddf35ee1d71e15a1fb8319da9ff17ec0"
+  },
+  "train_count": 9647,
+  "training_scope": "connector_and_diffusion",
+  "validation_count": 100
+}

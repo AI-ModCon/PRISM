@@ -1,0 +1,43 @@
+{
+  "experiment": "conditioning-template-swap-01",
+  "status": "submitted",
+  "reason": "Content-feature alignment completed but two held-out subjects remain absent; test residual prefix/suffix conditioning mismatch.",
+  "source_root": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/prism-template-swap-diagnostic",
+  "configuration": {
+    "train_captions": 2,
+    "validation_captions": 2,
+    "flow_times": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "image_cases": 2,
+    "sampling_steps": 50,
+    "resolution": [
+      256,
+      256
+    ],
+    "primary_guidance": 1,
+    "nodes": 1,
+    "processes": 1,
+    "xpu_tiles": 1,
+    "requested_minutes": 12
+  },
+  "routes": [
+    "native_pretrained",
+    "prism_aligned",
+    "prism_native_prefix",
+    "prism_native_suffix",
+    "prism_native_template"
+  ],
+  "additional_reference": "Original native CFG5, separate from primary matched CFG1 comparison",
+  "training": false,
+  "interpretation_limits": [
+    "Teacher-assisted hybrid rescue does not establish deployable PRISM quality.",
+    "Causal suffix features may encode caption semantics.",
+    "Two heldout images are diagnostic, not a benchmark."
+  ],
+  "next_decision": "Only consider revised connector alignment or joint training after paired controls and actual subject inspection.",
+  "budget_basis": "Completed aligned validation took 381.64 seconds. New run has fewer flow forwards (120 versus192), with similar total sampling forward count; 12 minutes allows additional audits and startup margin.",
+  "job_id": "8848325"
+}

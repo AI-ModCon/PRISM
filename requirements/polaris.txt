@@ -1,0 +1,66 @@
+# Polaris (NVIDIA A100, CUDA) requirements.
+#
+# Install on top of the ALCF conda base environment, which provides
+# torch + cuda + nccl + deepspeed + accelerate + transformers:
+#
+#     module use /soft/modulefiles
+#     module load conda; conda activate base
+#     uv venv .venv-polaris --system-site-packages
+#     source .venv-polaris/bin/activate
+#     uv pip install -r requirements/polaris.txt
+#     uv pip install -e src/libs/walrus
+#
+# We deliberately do NOT pin torch / deepspeed / nccl / transformers here —
+# those come from the conda base module so the venv inherits the ALCF-built
+# CUDA-aware versions. Pinning them in this file would shadow the module
+# and pull non-Aurora wheels that lack the ALCF NCCL patches.
+#
+# Modality / training dependencies that the base conda env does not ship:
+hydra-core>=1.3
+omegaconf
+einops
+pandas
+scikit-learn
+wandb
+tqdm
+pydantic
+safetensors
+pillow
+sentencepiece
+protobuf
+peft
+datasets
+fastapi
+uvicorn
+gradio
+webdataset
+mpi4py
+h5py
+
+# GRPO trainer (src/training/trainer_zone_d_grpo.py) imports GRPOSimpleLoss
+# from torchtune.dev.rl.loss, n-getty/torchtune-aurora's validated GRPO
+# loss/KL implementation. That fork must be installed separately as an
+# editable install (it is not on PyPI):
+#     git clone https://github.com/n-getty/torchtune-aurora <path>
+#     pip install -e <path>
+# torchao is its only otherwise-missing import-time dependency. Pin to
+# 0.5.0, not latest: 0.18.0 removes torchao.dtypes.nf4tensor, which this
+# torchtune fork's modules/common_utils.py still imports at package-init
+# time, breaking `import torchtune` entirely.
+torchao==0.5.0
+
+# Graph modality. torch_geometric is pure Python and works with the conda
+# base torch. The C++ extension wheels (pyg_lib, torch_scatter, etc.) are
+# *not* installed here — GraphEncoder only uses torch_geometric.nn.GATConv
+# which has a pure-Python fallback. Already present in the conda base, but
+# pinning here protects us if --system-site-packages stops inheriting.
+torch_geometric>=2.7,<3.0
+
+# Materials text + periodic crystal-graph regression example.
+pymatgen>=2024.1
+
+# Geometry modality (Walrus + the_well) are installed by setup_polaris_env.sh
+# with --no-deps to avoid pulling a generic torch wheel that would shadow
+# the ALCF-built CUDA-aware torch from the conda base. Do NOT add `the_well`
+# or `walrus` here — they have a `torch>=2.1` requirement and a `pip install`
+# would silently downgrade torch + break NCCL.

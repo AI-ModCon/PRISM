@@ -1,0 +1,15 @@
+{
+  "report_status": "completed",
+  "cases": [
+    "validation-00",
+    "validation-01"
+  ],
+  "native_route": "native_pretrained",
+  "outputs": {
+    "chat": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/conditioning-regions1000-01/conditioning-chat-comparison.png",
+      "sha256": "6ea5a3417223c5d894724e4884030adf75cde8b38250d39d5ad54d1932f3e22c"
+    }
+  },
+  "rendering": "PIL display resizing and Matplotlib layout; original generated files are unchanged."
+}

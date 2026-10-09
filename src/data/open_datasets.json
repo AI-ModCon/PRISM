@@ -1,0 +1,42 @@
+{
+    "Text+Vision": [
+        "LAION-5B",
+        "SciOL-18M",
+        "COYO-700M",
+        "DataComp-1B",
+        "ArXivCap",
+        "PMC-15M"
+    ],
+    "Text+Table": [
+        "PubTables-1M",
+        "SPIQA",
+        "SciTSR",
+        "WikiTableQuestions",
+        "FeTaQA",
+        "TabFact",
+        "WikiSQL",
+        "Common Crawl web tables"
+    ],
+    "Text+Timeseries": [
+        "MIMIC-IV",
+        "ChatTime",
+        "PhysioNet clinical text + signals",
+        "Financial reports + stock data"
+    ],
+    "Text+Geometry": [
+        "ShapeNet (with captions)",
+        "Any text+CFDdata",
+        "Protein Data Bank (PDB)",
+        "Objaverse (with generated captions)",
+        "Textbooks with diagrams & descriptions",
+        "OGB Molecule"
+    ],
+    "Text+Graph": [
+        "PubChem (Molecules + descriptions)",
+        "Wikidata subsets",
+        "AMR (Abstract Meaning Representation) to Text",
+        "OGB-MolPCBA",
+        "PCQM4M",
+        "ChEMBL"
+    ]
+}

@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "run_name": "aligned-regions-joint-lr1e5-smoke-01",
+  "job_id": "8848832.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.anl.gov",
+  "report_sha256": "66b38f33f7ab3719d621a8988e779d2ff90d07d2b4741862a76179d87ba52b7c",
+  "status": "completed_historical_smoke",
+  "decision_context": "The user redirected work to full-data training. This lower-learning-rate smoke is historical evidence only and is not a prerequisite or blocking quality gate for that authorized stage. No additional experiment is recommended or submitted by this audit.",
+  "audit_scope": "Independent local metadata, archived source hashes, exposure log, gradients, plot/gallery and image-hash audit. Terminal bytes independently verified by remote collector as reported by root; no weights transferred or loaded locally.",
+  "integrity": {
+    "final_acceptance_passed": true,
+    "region_checkpoint_sha256": "5cb963cbf1d0c5d231b2df7183d488133d84f3d90439971ec85736546739cc6d",
+    "fresh_optimizer_sampler_rng": true,
+    "original_fp32_dit_masters": true,
+    "connector_runtime_and_masters_fp32": true,
+    "both_groups_master_and_runtime_changed": true,
+    "finite_nonzero_group_gradients_all_steps": true,
+    "reference_branch_zero_gradients_expected_for_t2i": true,
+    "frozen_tensor_count": 1634,
+    "frozen_hashes_identical": true,
+    "source_identity_checks": {
+      "src/data/image_generation.py": true,
+      "src/data/image_generation_webdataset.py": true,
+      "src/decoders/conditioning.py": true,
+      "src/decoders/image.py": true,
+      "src/decoders/loading.py": true,
+      "src/decoders/omnigen2_backend.py": true,
+      "src/decoders/types.py": true,
+      "src/model.py": true,
+      "src/training/cpu_master_adamw.py": true,
+      "tools/align_prism_image_conditioning.py": true,
+      "tools/overfit_prism_image_connector.py": true,
+      "tools/prism_image_alignment_checkpoint.py": true,
+      "tools/prism_image_conditioning.py": true,
+      "tools/train_image_decoder.py": true,
+      "tools/train_prism_image_connector.py": true,
+      "tools/train_prism_image_diffusion.py": true
+    },
+    "terminal_checkpoint": {
+      "path": "/lus/flare/projects/ModCon/sandeep/prism-docci-alignment-20260922/runs/aligned-regions-joint-lr1e5-smoke-01/connector-diffusion-pilot-step-000006.pt",
+      "qualification": "unqualified",
+      "sha256": "117e63f67d309fffdd4d13a7f0ca551e76dc8fe55d556fa25809ae7423716c06",
+      "step": 6,
+      "independently_verified_by_remote_collector": true
+    },
+    "all_ten_image_hashes_pass": true,
+    "within_run_initial_latents_match": true
+  },
+  "optimizer": {
+    "connector_learning_rate": 1e-05,
+    "diffusion_compute_dtype": "bfloat16",
+    "diffusion_learning_rate": 2e-06,
+    "master_dtype": "torch.float32",
+    "max_grad_norm": 1.0,
+    "name": "CPUMasterAdamW",
+    "state_device": "cpu",
+    "weight_decay": 0.0
+  },
+  "exposure": {
+    "updates": 6,
+    "batch_size": 4,
+    "gradient_accumulation": 4,
+    "examples": 96,
+    "unique_pairs": 32,
+    "uses_per_pair": 3
+  },
+  "timing": {
+    "total_run_seconds": 559.670387230115,
+    "update_seconds": [
+      14.07896577497013,
+      11.649291661102325,
+      11.116225051926449,
+      10.03326439508237,
+      10.266326538985595,
+      9.777434692019597
+    ],
+    "mean_after_first": 10.568508467823268,
+    "median_after_first": 10.266326538985595,
+    "range_after_first": [
+      9.777434692019597,
+      11.649291661102325
+    ],
+    "peak_allocated_GiB": 27.740126132965088,
+    "peak_reserved_GiB": 29.736328125
+  },
+  "fixed_probe_losses": {
+    "train": {
+      "count": 8,
+      "initial": 0.37544530257582664,
+      "final": 0.37401987984776497,
+      "relative_change_percent": -0.37966188903743037,
+      "same_ids_and_seeds": true,
+      "legacy_wrong_caption_gaps_provisional": true,
+      "legacy_initial_gap": 0.05593373253941536,
+      "legacy_final_gap": 0.05468481406569481
+    },
+    "validation": {
+      "count": 8,
+      "initial": 0.5263295397162437,
+      "final": 0.52585319429636,
+      "relative_change_percent": -0.09050326533839304,
+      "same_ids_and_seeds": true,
+      "legacy_wrong_caption_gaps_provisional": true,
+      "legacy_initial_gap": -0.04462200775742531,
+      "legacy_final_gap": -0.04373537003993988
+    }
+  },
+  "comparison_to_previous_connector_lr_1e4_smoke": {
+    "same_initial_fixed_evaluation": true,
+    "same_training_cohort_microbatch_ids_and_seeds": true,
+    "six_initial_or_native_image_byte_replays": [
+      {
+        "id": "train_02098",
+        "stage": "warm-start",
+        "byte_identical": true
+      },
+      {
+        "id": "qual_dev_00000",
+        "stage": "warm-start",
+        "byte_identical": true
+      },
+      {
+        "id": "train_01677",
+        "stage": "warm-start",
+        "byte_identical": true
+      },
+      {
+        "id": "qual_dev_00001",
+        "stage": "warm-start",
+        "byte_identical": true
+      },
+      {
+        "id": "qual_dev_00000",
+        "stage": "native-pretrained",
+        "byte_identical": true
+      },
+      {
+        "id": "qual_dev_00001",
+        "stage": "native-pretrained",
+        "byte_identical": true
+      }
+    ],
+    "previous_connector_learning_rate": 0.0001,
+    "this_connector_learning_rate": 1e-05,
+    "same_diffusion_learning_rate": 2e-06,
+    "previous_final_losses": {
+      "train": 0.3783402852714062,
+      "validation": 0.5270050689578056
+    },
+    "limit": "Six optimizer steps and four visual cases do not establish a general learning-rate conclusion."
+  },
+  "visual_findings": {
+    "method": "Direct inspection of the train and validation before/after galleries; CFG5, native negative, 50 steps and matched initial noise within each case.",
+    "train_02098": "Black clock and cream wall remain, but digits change from correct 3:41 to incorrect 3:44; no improvement in specified time.",
+    "train_01677": "Pine tree, dirt patch, grill and basket composition stays close to initialization. Fine detail changes; caption relations and basket contents remain imperfect.",
+    "qual_dev_00000": "Final image separates two small stuffed-animal-like figures with blue hats, compared with one distorted initial figure; a recognizable dog/penguin pair and correct placement are still not established.",
+    "qual_dev_00001": "Final image retains a stylized cart/vehicle-like yellow object and a thin road/runway strip; the requested two airplanes are still absent. Native baseline shows both aircraft.",
+    "limitations": "Two training and two held-out image cases at one seed each; visual observations are qualitative and no benchmark or reconstruction-accuracy claim is made."
+  },
+  "caption_control_limit": "These training-run wrong-caption losses reset RNG but do not record actual paired noisy DiT input/timestep hashes, so their gaps remain provisional. No follow-up factorial run is required by this audit.",
+  "artifacts": {
+    "loss_png": {
+      "path": "plots/connector-diffusion-losses.png",
+      "sha256": "98cee723b29bcd53bd0c9918e837ceda158ebd6cc5f470984703aef7cd503061"
+    },
+    "loss_pdf": {
+      "path": "plots/connector-diffusion-losses.pdf",
+      "sha256": "b777f4b068926a2487898ee971687ddbda33e617e9ee4dc0cb9daf1777222e69"
+    },
+    "series": {
+      "path": "plots/connector-diffusion-loss-series.json",
+      "sha256": "07a83b1fa9a3eaf6ff26e5cd34bbd6ea7f2ac567a62bbada5a5c2c464b143375"
+    },
+    "train_gallery": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/train-comparison-step-000006.png",
+      "sha256": "c8d814f9089a1c3025f31efacc7dde5fbf41edd709d0286c7b1bb94684a698a1",
+      "cases": [
+        "train_02098",
+        "train_01677"
+      ],
+      "samples": [
+        {
+          "id": "train_02098",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "c09034768c972462f14b9906da4eaaba7140ddd3de6ccca6235955b2e2ef6349",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_02098",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "a0735da9710a534f070cb34e3f92f31edefe69a2238c848da491cacc6750159c",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "2943884f9306b6a34f1ed9ae9c9584fb5c468236db0a1e85d6339887e36c9327",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "train_01677",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "660fd9079f56bfcbeeb582d3c3037ab70b228e4e4207024c5c4816d2ef937c85",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        }
+      ]
+    },
+    "validation_gallery": {
+      "path": "/private/tmp/prism-connector-20260921/docs/assets/image_generation/2026-09-22-docci-alignment/runs/aligned-regions-joint-lr1e5-smoke-01/validation-comparison-step-000006.png",
+      "sha256": "466652dc9dd303db91d2c83af081a0cc26a8a2eaf55a593855e03e20701da8e1",
+      "cases": [
+        "qual_dev_00000",
+        "qual_dev_00001"
+      ],
+      "samples": [
+        {
+          "id": "qual_dev_00000",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "b5f005499cae584fb85c990e4e940d0402c51015dee2864d4eac15bbeb84b02e",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "fd6395b67706938ef331df141042700a8a5d0fd7619874979680b09354a2984e",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00000",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "c35f79954d0d0467ac00429b76a46579c2f9929318e48706d3138be52baf115d",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "warm-start",
+          "step": 0,
+          "sha256": "c69dcf5ea830f7a2480d733bf45ed37d88df6d6b4561e68727cfb4e78eeac28a",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "trained",
+          "step": 6,
+          "sha256": "07324e9aeb1b6a8bfa8c4622547c6cdb59362bf9e4e685c20e88b5579fdcedd1",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "chat",
+          "negative_conditioning": "native"
+        },
+        {
+          "id": "qual_dev_00001",
+          "stage": "native-pretrained",
+          "step": 0,
+          "sha256": "92eb78fa628abf6a28c058cc7b5fb93469ad3561b546487325cf2c8c68e0f088",
+          "text_guidance_scale": 5.0,
+          "prompt_format": "native",
+          "negative_conditioning": "native"
+        }
+      ]
+    }
+  }
+}

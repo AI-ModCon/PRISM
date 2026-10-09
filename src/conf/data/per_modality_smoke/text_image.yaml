@@ -1,0 +1,8 @@
+# Per-modality smoke: text + image.
+# Skip ts_qa (the only zone_a default-on dataset) since this cell wants
+# image-only. Enable pixmo_cap (handler: image_pixmo) as the image source.
+dataset_overrides:
+  ts_qa:
+    skip: true
+  pixmo_cap:
+    skip: false

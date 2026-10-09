@@ -1,0 +1,12 @@
+{
+  "completed": true,
+  "real": true,
+  "restored_526": true,
+  "strict_restore": true,
+  "frozen_parent": true,
+  "generator_not_loaded": true,
+  "text_routes": true,
+  "repeated_hidden": true,
+  "text_padding": true,
+  "image_padding": true
+}

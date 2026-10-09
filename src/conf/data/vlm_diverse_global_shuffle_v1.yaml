@@ -1,0 +1,41 @@
+# Globally shuffled VLM WebDataset splits for Qwen/SigLIP scaling runs.
+#
+# These paths are Aurora-specific defaults. Pass --dataset-root to
+# tools/launch_aurora_web.py when mirroring the shards somewhere else.
+
+dastr:
+  mount_base: ${oc.env:PRISM_DATA_ROOT}/prism_datasets
+
+groups:
+  vlm_diverse_global_shuffle_v1_train25k_gbs768:
+    description: "First 3840 shards of global-shuffle v1; 25k steps at global batch 768"
+    datasets:
+      vlm_diverse_global_shuffle_v1_train25k_gbs768:
+        path: vlm_diverse_global_shuffle_v1_train25k_gbs768
+        samples: 19200000
+        shards: 3840
+        weight: 1.0
+        description: "Canonical VLM scaling train split"
+
+  vlm_diverse_global_shuffle_v1_cooldown1k_gbs768:
+    description: "Held-out global-shuffle v1 tail for LR cooldowns"
+    datasets:
+      vlm_diverse_global_shuffle_v1_cooldown1k_gbs768:
+        path: vlm_diverse_global_shuffle_v1_cooldown1k_gbs768
+        samples: 825447
+        shards: 192
+        weight: 1.0
+        description: "Cooldown reserve reshaped to one shard per 16-node global rank"
+
+presets:
+  vlm_diverse_global_shuffle_v1_train25k_gbs768:
+    description: "Canonical VLM scaling train split"
+    groups:
+      - vlm_diverse_global_shuffle_v1_train25k_gbs768
+    mix_strategy: single
+
+  vlm_diverse_global_shuffle_v1_cooldown1k_gbs768:
+    description: "Held-out cooldown split"
+    groups:
+      - vlm_diverse_global_shuffle_v1_cooldown1k_gbs768
+    mix_strategy: single
