@@ -61,7 +61,10 @@ cd "${PROJ_DIR}"
 # which carries a CUDA torch build. Build it once (from a UAN) with:
 #   module load frameworks/2026.1.0
 #   uv venv --system-site-packages -p "$(which python)" $PRISM_VENV && source $PRISM_VENV/bin/activate
-#   uv pip install wandb braceexpand==0.1.7 && uv pip install --no-deps webdataset==1.0.2 torchtune==0.6.1
+#   uv pip install wandb braceexpand==0.1.7 && uv pip install --no-deps webdataset==1.0.2 torchao==0.5.0
+#   # torchtune comes from the n-getty fork (the PyPI wheel lacks torchtune.dev.rl, which GRPO needs):
+#   git clone https://github.com/n-getty/torchtune-aurora.git $(dirname $PRISM_VENV)/torchtune-aurora
+#   uv pip install --no-deps -e $(dirname $PRISM_VENV)/torchtune-aurora
 export PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 module use /soft/modulefiles
 module load frameworks/2026.1.0

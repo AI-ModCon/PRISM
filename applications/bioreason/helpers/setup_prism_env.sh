@@ -3,7 +3,7 @@
 #
 #   Builds (or reuses) the BioReason venv on top of frameworks/2026.1.0 -- the same venv the
 #   scripts/training/submit_bioreason_*.sh scripts activate -- and installs the training extras
-#   the frameworks module lacks plus PRISM itself (--no-deps, so the module's XPU torch stays).
+#   the frameworks module lacks (torchtune from the torchtune-aurora fork) plus PRISM itself (--no-deps, so the module's XPU torch stays).
 #
 # Run once from a login node (UAN; it has direct internet access):
 #   export PRISM_VENV=/flare/<project>/$USER/prism-envs/bioreason-fw2026.1
@@ -35,7 +35,14 @@ source "${PRISM_VENV}/bin/activate"
 # Same extras as the recipe in submit_bioreason_sft.sh; --no-deps keeps the
 # module's XPU torch from being replaced by a PyPI/CUDA wheel.
 uv pip install wandb braceexpand==0.1.7
-uv pip install --no-deps webdataset==1.0.2 torchtune==0.6.1
+uv pip install --no-deps webdataset==1.0.2 torchao==0.5.0   # torchao pin: the fork's torchtune imports torchao.dtypes.nf4tensor
+
+# torchtune: use the n-getty/torchtune-aurora fork, NOT the PyPI wheel. The PyPI torchtune has no
+# torchtune.dev.rl, which src/training/trainer_grpo.py needs (GRPOSimpleLoss); the fork also provides
+# the LoRA modules SFT uses. Cloned next to the venv; override the location with TORCHTUNE_DIR.
+TORCHTUNE_DIR="${TORCHTUNE_DIR:-$(dirname "${PRISM_VENV}")/torchtune-aurora}"
+[ -d "${TORCHTUNE_DIR}/.git" ] || git clone https://github.com/n-getty/torchtune-aurora.git "${TORCHTUNE_DIR}"
+uv pip install --no-deps -e "${TORCHTUNE_DIR}"
 uv pip install --no-deps -e "${PRISM_DIR}"
 
 echo "PRISM environment ready:"
