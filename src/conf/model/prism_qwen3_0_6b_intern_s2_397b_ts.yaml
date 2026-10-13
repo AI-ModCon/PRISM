@@ -19,7 +19,7 @@ ts_load_pretrained: true
 d_ts: 4096
 max_ts_length: 512
 is_interleaved_qa: false
-normalize_ts_in_encoder: false
+normalize_ts_in_encoder: true
 
 mask_padded_modality_tokens: false
 

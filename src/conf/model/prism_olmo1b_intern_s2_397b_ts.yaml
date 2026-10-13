@@ -14,7 +14,7 @@ ts_variates: 1
 max_ts_length: 512
 d_ts: 4096
 is_interleaved_qa: false
-normalize_ts_in_encoder: false
+normalize_ts_in_encoder: true
 modality_start_end_token_indices: {"time_series": [50280,50281]}
 
 projector_hidden_mult: 1

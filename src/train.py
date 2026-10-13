@@ -353,6 +353,7 @@ def main(cfg: DictConfig):
         action_dim=cfg.model.get("action_dim", 7),
         modalities=list(cfg.model.modalities),
         is_interleaved_qa=cfg.model.get("is_interleaved_qa", False),
+        mask_padded_modality_tokens=cfg.model.get("mask_padded_modality_tokens", False),
         # Merged-length guard (issue #123): bound the interleave-merged sequence
         # by the same MAX_SEQ_LENGTH the collators use, so an over-length merge
         # from the interleaved-QA path fails loud instead of triggering a silent
@@ -391,6 +392,7 @@ def main(cfg: DictConfig):
         ts_variates=cfg.model.get("ts_variates", 1),
         ts_forecast_horizon=cfg.model.get("ts_forecast_horizon", 96),
         max_ts_length=cfg.model.get("max_ts_length", 512),
+        ts_max_history=cfg.model.get("ts_max_history", 300_000),
         normalize_ts_in_encoder=cfg.model.get("normalize_ts_in_encoder", False),
         timeomni_patch_len=cfg.model.get("timeomni_patch_len", 16),
         timeomni_stride=cfg.model.get("timeomni_stride", None),

@@ -63,6 +63,29 @@ def test_launch_aurora_web_source_has_no_apostrophe_in_mpiexec_heredoc():
     )
 
 
+@pytest.mark.parametrize("worker", [False, True])
+@pytest.mark.parametrize("failed_command", [
+    "purge", "use /opt/aurora/26.26.0/modulefiles",
+    "load oneapi/release/2025.3.1",
+    "load mpich/prd/5.0.0.aurora_test.51a9474",
+    "load frameworks/2025.3.1",
+])
+def test_web_module_setup_stops_on_failure(worker, failed_command):
+    source = (REPO_ROOT / "tools" / "launch_aurora_web.py").read_text()
+    if worker:
+        setup = _extract_mpiexec_heredoc(source).split("# CRITICAL: Re-export CCL", 1)[0]
+        setup = "\n".join(setup.splitlines()[1:])
+    else:
+        setup = source.split("# --- Module Load ---\n", 1)[1].split("# --- Activate Venv ---", 1)[0]
+    result = subprocess.run(
+        ["bash", "-c", 'FAILED_COMMAND=$1\nmodule() { if [[ "$*" == "$FAILED_COMMAND" ]]; then return 37; fi; return 0; }'
+         + "\n" + setup + "\necho UNEXPECTED_CONTINUATION", "module-check", failed_command],
+        capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 37, result.stderr
+    assert "UNEXPECTED_CONTINUATION" not in result.stdout
+
+
 @pytest.mark.launcher
 @pytest.mark.aurora
 def test_generated_scits_script_passes_bash_syntax_check(tmp_path):
@@ -107,6 +130,7 @@ def test_generated_scits_script_passes_bash_syntax_check(tmp_path):
         "TEST-SCITS-DESIGN",
         "--id",
         "SCITS_FIX_TEST",
+        "--batch",
         "--webdataset-dir",
         str(webdataset_root),
         "--webdataset-modality",
@@ -132,6 +156,28 @@ def test_generated_scits_script_passes_bash_syntax_check(tmp_path):
     assert generated_line is not None, f"missing generated script line:\n{result.stdout}"
     script_path = tmp_path / generated_line.split(": ", 1)[1].strip()
     script_text = script_path.read_text()
+
+    module_setup = "\n".join([
+        "module purge || exit",
+        "module use /opt/aurora/26.26.0/modulefiles || exit",
+        "module load oneapi/release/2025.3.1 || exit",
+        "module load mpich/prd/5.0.0.aurora_test.51a9474 || exit",
+        "module load frameworks/2025.3.1 || exit",
+    ])
+    assert script_text.count(module_setup) == 2
+    assert script_text.index(module_setup) < script_text.index("bin/activate")
+    parent_modules = script_text.split("# --- Module Load ---\n", 1)[1].split(
+        "# --- Activate Venv ---", 1
+    )[0]
+    assert "module load cray-pals/1.8.0 || exit" in parent_modules
+    assert parent_modules.index("module load frameworks/2025.3.1") < parent_modules.index(
+        "module load cray-pals/1.8.0"
+    )
+    assert (
+        "command -v mpiexec >/dev/null 2>&1 || { "
+        'echo "ERROR: mpiexec is not on PATH after loading Aurora modules." '
+        ">&2; exit 127; }"
+    ) in script_text
 
     # 1. Full-script syntax check.
     full_check = subprocess.run(

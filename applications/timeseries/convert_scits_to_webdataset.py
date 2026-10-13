@@ -16,6 +16,9 @@ time-series path in MultiWebDataset:
     <key>.ts.npy
     <key>.text
     <key>.meta.json
+and forecast samples also contain:
+    <key>.gt_ts.npy
+    <key>.gt_ts_mask.npy
 
 The manifest schema is compatible with:
   - src/data/multi_webdataset.py (_get_shards_for_dataset)
@@ -32,6 +35,7 @@ python applications/timeseries/convert_scits_to_webdataset.py \
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import io
 import json
@@ -167,29 +171,107 @@ def _stable_val_bucket(example: dict[str, Any], val_ratio: float) -> bool:
     return bucket < val_ratio
 
 
-def _load_series_from_file(file_path: Path, data_type: str | None = None) -> np.ndarray:
-    """Read data with the conventions in SciTS/process/infer_eval_utils.py."""
+def _load_series_from_file(
+    file_path: Path,
+    data_type: str | None = None,
+    *,
+    return_mask: bool = False,
+) -> np.ndarray | tuple[np.ndarray, np.ndarray]:
+    """Read SciTS series, appending observation-mask channels for missing inputs.
+
+    With ``return_mask=True``, return imputed values and their validity mask
+    separately; this is used for forecast targets so mask channels never become
+    forecast labels.
+    """
     del data_type
     path_str = str(file_path)
     if path_str.endswith(".csv"):
-        rows = []
-        with file_path.open() as raw_data_reader:
-            for line in raw_data_reader.readlines():
-                line = line.strip("\ufeff")
-                rows.append(line.strip().split(",") if "," in line else line.strip())
-        if "X" not in rows:
-            return np.array(rows, dtype=np.float32)
-        return np.array(rows)
+        with file_path.open("r", encoding="utf-8-sig", newline="") as raw_data_reader:
+            rows = [[cell.strip() for cell in row] for row in csv.reader(raw_data_reader)]
+        if not rows:
+            empty = np.empty((0,), dtype=np.float32)
+            return (empty, empty.astype(bool)) if return_mask else empty
+        width = len(rows[0])
+        if width == 0 or any(len(row) != width for row in rows):
+            raise ValueError(f"CSV time series must have a consistent nonzero width: {file_path}")
+
+        values = np.zeros((len(rows), width), dtype=np.float32)
+        observed = np.ones((len(rows), width), dtype=bool)
+        for row_idx, row in enumerate(rows):
+            for col_idx, cell in enumerate(row):
+                if cell.upper() == "X" or not cell:
+                    observed[row_idx, col_idx] = False
+                    continue
+                try:
+                    value = float(cell)
+                except ValueError as exc:
+                    raise ValueError(
+                        f"Non-numeric value {cell!r} in CSV time series {file_path}"
+                    ) from exc
+                if np.isfinite(value):
+                    values[row_idx, col_idx] = value
+                else:
+                    observed[row_idx, col_idx] = False
+
+        if observed.all():
+            result = values[:, 0] if width == 1 else values
+            result_mask = observed[:, 0] if width == 1 else observed
+            return (result, result_mask) if return_mask else result
+        values = _impute_missing_values(values, observed, file_path)
+        if return_mask:
+            result = values[:, 0] if width == 1 else values
+            result_mask = observed[:, 0] if width == 1 else observed
+            return result, result_mask
+        return np.concatenate((values, observed.astype(np.float32)), axis=1)
     if path_str.endswith(".npy"):
-        return np.load(file_path, allow_pickle=False)
+        values = np.load(file_path, allow_pickle=False)
+        if not np.issubdtype(values.dtype, np.number):
+            raise ValueError(f"Time-series array must be numeric: {file_path}")
+        observed = np.isfinite(values)
+        if values.ndim not in (1, 2):
+            raise ValueError(f"Time-series array must have shape (T,) or (T,V): {file_path}")
+        if observed.all():
+            return (values, observed) if return_mask else values
+        values_2d = values[:, None] if values.ndim == 1 else values
+        observed_2d = observed[:, None] if observed.ndim == 1 else observed
+        values_2d = _impute_missing_values(values_2d, observed_2d, file_path)
+        if return_mask:
+            values = values_2d[:, 0] if values.ndim == 1 else values_2d
+            return values, observed
+        return np.concatenate((values_2d, observed_2d.astype(np.float32)), axis=1)
     if path_str.endswith((".wav", ".flac")):
         try:
             import librosa  # type: ignore[import-not-found]
         except ImportError as exc:  # pragma: no cover - optional dependency path
             raise RuntimeError("Reading audio requires the optional 'librosa' dependency") from exc
         data, _ = librosa.core.load(file_path, mono=False)
+        if return_mask:
+            return data, np.ones_like(data, dtype=bool)
         return data
     raise ValueError(f"Unsupported SciTS data type: {file_path.suffix}")
+
+
+def _impute_missing_values(
+    values: np.ndarray, observed: np.ndarray, file_path: Path
+) -> np.ndarray:
+    """Linearly fill each channel, extending edge values, without losing its mask."""
+    values = np.asarray(values, dtype=np.float32)
+    observed = np.asarray(observed, dtype=bool)
+    if values.ndim == 1:
+        values = values[:, None]
+        observed = observed[:, None]
+    if values.ndim != 2 or observed.shape != values.shape:
+        raise ValueError(f"Expected aligned (T,V) values and mask in {file_path}")
+    if not observed.any(axis=0).all():
+        raise ValueError(f"Time series contains a fully missing channel: {file_path}")
+
+    time_indices = np.arange(values.shape[0])
+    for col_idx in range(values.shape[1]):
+        valid = observed[:, col_idx]
+        values[:, col_idx] = np.interp(
+            time_indices, time_indices[valid], values[valid, col_idx]
+        )
+    return values
 
 
 def _resolve_scits_metadata(root: Path) -> Path:
@@ -266,6 +348,7 @@ class TarShardWriter:
         text: str,
         metadata: dict[str, Any],
         gt_ts_array: np.ndarray | None = None,
+        gt_ts_mask_array: np.ndarray | None = None,
     ) -> None:
         if self._current_tar is None:
             self._open_next_shard()
@@ -280,6 +363,12 @@ class TarShardWriter:
             gt_ts_buf = io.BytesIO()
             np.save(gt_ts_buf, gt_ts_array, allow_pickle=False)
             self._add_bytes(self._current_tar, f"{key}.gt_ts.npy", gt_ts_buf.getvalue())
+            if gt_ts_mask_array is not None:
+                gt_mask_buf = io.BytesIO()
+                np.save(gt_mask_buf, gt_ts_mask_array, allow_pickle=False)
+                self._add_bytes(
+                    self._current_tar, f"{key}.gt_ts_mask.npy", gt_mask_buf.getvalue()
+                )
 
         self._add_bytes(self._current_tar, f"{key}.text", text.encode("utf-8"))
         self._add_bytes(
@@ -462,7 +551,29 @@ def _convert_examples(
         data_type = _as_str(series_path.suffix.lstrip(".") or example.get("data_type") or "npy")
 
         try:
-            series = _load_series_from_file(series_path, data_type)
+            series_values, series_observed = _load_series_from_file(
+                series_path, data_type, return_mask=True
+            )
+            history_value_channels = (
+                1 if series_values.ndim == 1 else series_values.shape[1]
+            )
+            history_has_observation_mask = not bool(series_observed.all())
+            if history_has_observation_mask:
+                values_2d = (
+                    series_values[:, None]
+                    if series_values.ndim == 1
+                    else series_values
+                )
+                observed_2d = (
+                    series_observed[:, None]
+                    if series_observed.ndim == 1
+                    else series_observed
+                )
+                series = np.concatenate(
+                    (values_2d, observed_2d.astype(np.float32)), axis=1
+                )
+            else:
+                series = series_values
         except Exception as exc:
             skipped_missing_series += 1
             # Previously swallowed the exception entirely — 43% of the
@@ -476,6 +587,7 @@ def _convert_examples(
             continue
 
         gt_series: np.ndarray | None = None
+        gt_series_mask: np.ndarray | None = None
         gt_path_str = _extract_gt_ts_path(example)
         is_forecasting = False
         if gt_path_str:
@@ -490,7 +602,9 @@ def _convert_examples(
                 pbar.update(1)
                 continue
             try:
-                gt_series = _load_series_from_file(gt_series_path, data_type)
+                gt_series, gt_series_mask = _load_series_from_file(
+                    gt_series_path, data_type, return_mask=True
+                )
                 is_forecasting = True
             except Exception:
                 skipped_missing_gt_series += 1
@@ -512,6 +626,8 @@ def _convert_examples(
             "original_index": idx,
             "shape": list(series.shape),
             "dtype": str(series.dtype),
+            "history_value_channels": history_value_channels,
+            "history_has_observation_mask": history_has_observation_mask,
             "task_id": task_id,
             "task_type": DATASET_TO_TASK.get(task_id, "unknown"),
             "id": key,
@@ -525,11 +641,20 @@ def _convert_examples(
         if gt_series is not None:
             meta["gt_ts_shape"] = list(gt_series.shape)
             meta["gt_ts_dtype"] = str(gt_series.dtype)
+            meta["gt_ts_mask_shape"] = list(gt_series_mask.shape)
 
         if _stable_val_bucket(example, val_ratio):
-            val_writer.write(key, series, text, meta, gt_ts_array=gt_series)
+            val_writer.write(
+                key, series, text, meta,
+                gt_ts_array=gt_series,
+                gt_ts_mask_array=gt_series_mask,
+            )
         else:
-            train_writer.write(key, series, text, meta, gt_ts_array=gt_series)
+            train_writer.write(
+                key, series, text, meta,
+                gt_ts_array=gt_series,
+                gt_ts_mask_array=gt_series_mask,
+            )
 
         processed += 1
         pbar.update(1)

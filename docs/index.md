@@ -97,6 +97,7 @@ loadable as Claude agent skills or read as docs. See the
 |----------|-------------|
 | [getting-started.md](getting-started.md) | Clone, pick a platform, build an environment, run a first job |
 | [training/cli.md](training/cli.md) | Unified CLI (`prism`) reference: installation, commands, options, examples |
+| [tutorial/README.md](tutorial/README.md) | End-to-end SciTS numerical forecasting with the Intern-S2 Preview 397B time-series encoder |
 
 ### Platforms — `platforms/`
 

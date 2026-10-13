@@ -86,6 +86,30 @@ def test_lm_head_decoder_inference_returns_none_loss():
     assert loss is None
 
 
+def test_lm_head_decoder_matches_reference_gradients_with_sparse_supervision():
+    torch.manual_seed(1)
+    logits = torch.randn(2, 7, 13, requires_grad=True)
+    labels = torch.full((2, 7), -100)
+    labels[0, 5] = 3
+    labels[1, 2:4] = torch.tensor([0, 12])
+
+    _, loss = LMHeadDecoder()(logits, targets=labels)
+    (grad,) = torch.autograd.grad(loss, logits)
+    ref = _reference_text_loss(logits, labels)
+    (ref_grad,) = torch.autograd.grad(ref, logits)
+
+    torch.testing.assert_close(loss, ref)
+    torch.testing.assert_close(grad, ref_grad)
+    assert grad[:, -1].eq(0).all()
+
+
+def test_lm_head_decoder_all_ignored_matches_reference_nan():
+    logits = torch.randn(2, 4, 5)
+    labels = torch.full((2, 4), -100)
+    _, loss = LMHeadDecoder()(logits, targets=labels)
+    assert torch.isnan(loss) and torch.isnan(_reference_text_loss(logits, labels))
+
+
 def test_lm_head_decoder_is_parameterless():
     # On the HF-backbone path the LM head lives in the backbone, so this
     # decoder must own no parameters (keeps checkpoint keys unchanged).

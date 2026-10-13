@@ -17,6 +17,7 @@ paths. Everything the module builds is driven by ``ModelConfig``
 """
 
 import logging
+import os
 import random
 from collections.abc import Mapping
 
@@ -39,6 +40,20 @@ from .hf_cache import load_cached_tokenizer
 from .modalities import Modality
 
 logger = logging.getLogger(__name__)
+
+
+def _check_token_bounds(name, ids, upper, ignore_index=None):
+    """Raise if ids fall outside [0, upper) when PRISM_DEBUG_BOUNDS=1 (forces a host sync)."""
+    if os.environ.get("PRISM_DEBUG_BOUNDS") != "1" or ids is None:
+        return
+    checked = ids if ignore_index is None else ids[ids != ignore_index]
+    if checked.numel() and (checked.min() < 0 or checked.max() >= upper):
+        raise ValueError(
+            f"{name} out of range: min={int(checked.min())} max={int(checked.max())} upper={upper}"
+        )
+
+
+
 from .encoders import (
     DNAEncoder,
     GeometryEncoder,
@@ -532,6 +547,7 @@ class UnifiedTransformer(nn.Module):
                 timeomni_ts_tokens=config.timeomni_ts_tokens,
                 timeomni_max_patches=config.timeomni_max_patches,
                 load_pretrained=config.ts_load_pretrained,
+                max_history=config.ts_max_history,
             )
 
             # Use actual encoder output dim if available (Moirai might be 1024, config 512)
@@ -756,7 +772,9 @@ class UnifiedTransformer(nn.Module):
         # Retrieve input_ids from 'text' if available
         if "text" in inputs:
             if self.backbone:
-                return self.backbone.get_input_embeddings()(inputs["text"])
+                embedding = self.backbone.get_input_embeddings()
+                _check_token_bounds("input_ids", inputs["text"], embedding.num_embeddings)
+                return embedding(inputs["text"])
             else:
                 # Custom implementation doesn't have a separate embedding layer usually stored here
                 # In custom impl, Encoders handle embedding.
@@ -1208,19 +1226,53 @@ class UnifiedTransformer(nn.Module):
         hidden: torch.Tensor,
         aux_targets: dict[str, torch.Tensor],
         attention_mask: torch.Tensor | None = None,
+        target_masks: dict[str, torch.Tensor] | None = None,
+        forecast_statistics=None,
+        components: dict | None = None,
     ) -> torch.Tensor:
-        """Sum the losses of all auxiliary decoders that have a target."""
+        """Sum the losses of all auxiliary decoders that have a target.
+
+        If ``components`` is given, stores ``name -> (detached loss, sample count)``.
+        """
         total = None
         for name, target in aux_targets.items():
+            decoder_kwargs = {}
+            if name == "time_series" and forecast_statistics is not None:
+                decoder_kwargs.update(forecast_statistics)
+            if target_masks is not None and name in target_masks:
+                decoder_kwargs["target_mask"] = target_masks[name]
             _, dec_loss = self.decoders[name](
-                hidden, targets=target, attention_mask=attention_mask
+                hidden, targets=target, attention_mask=attention_mask, **decoder_kwargs
             )
             if dec_loss is None:
                 continue
+            if components is not None:
+                mask = decoder_kwargs.get("target_mask")
+                count = (
+                    mask.flatten(1).any(dim=1).sum()
+                    if mask is not None
+                    else torch.tensor(target.shape[0], device=dec_loss.device)
+                )
+                components[name] = (dec_loss.detach(), count)
             total = dec_loss if total is None else total + dec_loss
         if total is None:
             return torch.zeros((), device=hidden.device, dtype=hidden.dtype)
         return total
+
+    def _forecast_statistics_kwargs(self, inputs):
+        mean = inputs.get("time_series_history_mean")
+        scale = inputs.get("time_series_history_scale")
+        if mean is None and scale is None:
+            return {}
+        if mean is None or scale is None:
+            raise ValueError("Forecast history mean and scale must be supplied together")
+        width = self.decoders["time_series"].num_vars
+        if mean.shape != scale.shape or mean.dim() != 2 or mean.shape[1] > width:
+            raise ValueError("Forecast statistics do not match decoder channel mapping")
+        return {
+            "history_mean": torch.nn.functional.pad(mean.detach(), (0, width - mean.shape[1])),
+            "history_scale": torch.nn.functional.pad(scale.detach(), (0, width - scale.shape[1]), value=1.0),
+        }
 
     def _forward_vla(self, inputs: dict[str, torch.Tensor], labels: torch.Tensor | None = None):
         required_keys = ["text", "image_head", "image_wrist", "pose"]
@@ -1360,6 +1412,10 @@ class UnifiedTransformer(nn.Module):
         result = DecoderResult(provenance=condition.provenance)
         for name in names:
             kwargs = dict((decoder_kwargs or {}).get(name, {}))
+            if name == "time_series":
+                kwargs.update(self._forecast_statistics_kwargs(inputs))
+            if name == "time_series" and inputs.get("time_series_target_mask") is not None:
+                kwargs.setdefault("target_mask", inputs["time_series_target_mask"])
             if name == "text":
                 if generate:
                     # HF decoder-only generation reads the last position;
@@ -1433,6 +1489,8 @@ class UnifiedTransformer(nn.Module):
                                         native_context, decoder_kwargs)
         if targets is not None or any(v is not None for v in (output_specs, native_context, decoder_kwargs)):
             raise ValueError("Structured decoding arguments require requested_outputs")
+        # name -> (detached mean loss, sample count); read by the trainer for logging.
+        self.last_loss_components = {}
         if self.is_vla:
             return self._forward_vla(inputs, labels=labels)
 
@@ -1612,8 +1670,8 @@ class UnifiedTransformer(nn.Module):
             # With 256K vocab (AuroraGPT), this creates a massive tensor:
             #   BS=4, seq=2048: 4 * 2048 * 256K * 4B = 8.2 GB (+ 8.2 GB for grads)
             # This causes UR_RESULT_ERROR_OUT_OF_RESOURCES on Intel XPU.
-            # Instead, we compute the loss ourselves using F.cross_entropy which
-            # handles BF16 inputs via a fused kernel (no full FP32 materialization).
+            # Instead, LMHeadDecoder gathers supervised rows before F.cross_entropy,
+            # so autocast's FP32 upcast covers only those rows, not all of (B, T, V).
             #
             # CRITICAL: Bypass transformers' mask construction to avoid Intel XPU
             # UR_RESULT_ERROR_OUT_OF_RESOURCES. In transformers >= 4.57, both the
@@ -1660,6 +1718,11 @@ class UnifiedTransformer(nn.Module):
             # actually has a target in this batch — keeps the default text
             # path allocation-identical to before.
             aux_targets = self._collect_aux_decoder_targets(inputs)
+            aux_target_masks = {
+                name: inputs[f"{name}_target_mask"]
+                for name in aux_targets
+                if inputs.get(f"{name}_target_mask") is not None
+            }
             outputs = self.backbone(
                 inputs_embeds=x,
                 attention_mask=attention_mask_fwd,
@@ -1671,11 +1734,29 @@ class UnifiedTransformer(nn.Module):
 
             logits = outputs.logits
 
-            # Compute cross-entropy loss via the text OutputDecoder. This is
-            # the same shifted next-token CE as before (no FP32 upcast,
-            # ignore_index=-100) — LMHeadDecoder owns no params, so numerics
-            # and checkpoint keys are unchanged.
-            logits, loss = self.text_decoder(logits, targets=full_labels)
+            # Compute cross-entropy loss via the text OutputDecoder: shifted
+            # next-token CE over supervised positions (ignore_index=-100
+            # semantics) — LMHeadDecoder owns no params, so checkpoint keys
+            # are unchanged.
+            if mask_padded and full_labels is not None:
+                full_labels[:, 1:] = full_labels[:, 1:].masked_fill(
+                    ~attention_mask[:, :-1].to(device=full_labels.device, dtype=torch.bool), -100
+                )
+            ts_target_mask = inputs.get("time_series_target_mask")
+            if full_labels is not None and ts_target_mask is not None and "time_series" in self.decoders:
+                # Forecast captions are pure prompts; the forecast decoder is their only loss.
+                forecast_rows = ts_target_mask.flatten(1).any(dim=1).to(full_labels.device)
+                full_labels = full_labels.masked_fill(forecast_rows[:, None], -100)
+            # Guard against empty text loss NaN
+            if full_labels is not None and not (full_labels[:, 1:] != -100).any():
+                loss = logits[:, 0, 0].sum() * 0.0
+            else:
+                _check_token_bounds("labels", full_labels, logits.shape[-1], ignore_index=-100)
+                logits, loss = self.text_decoder(logits, targets=full_labels)
+                if loss is not None:
+                    self.last_loss_components["text"] = (
+                        loss.detach(), (full_labels[:, 1:] != -100).sum()
+                    )
 
             # Auxiliary output decoders (e.g. time_series). Each adds its own
             # loss from the backbone's last hidden state. No-op unless a
@@ -1686,6 +1767,9 @@ class UnifiedTransformer(nn.Module):
                     hidden,
                     aux_targets,
                     attention_mask=attention_mask.to(device=hidden.device),
+                    target_masks=aux_target_masks,
+                    forecast_statistics=self._forecast_statistics_kwargs(inputs) if "time_series" in aux_targets else None,
+                    components=self.last_loss_components,
                 )
                 loss = aux_loss if loss is None else loss + aux_loss
 

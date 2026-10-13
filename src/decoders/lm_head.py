@@ -20,8 +20,9 @@ class LMHeadDecoder(OutputDecoder):
 
     On an HF backbone the LM head lives inside the backbone, so this decoder
     does not own any parameters — it receives the backbone's ``logits`` and
-    computes the shifted cross-entropy exactly as the old inline path did
-    (no FP32 upcast; ``ignore_index=-100``).
+    computes the shifted cross-entropy over supervised positions only
+    (``-100`` labels are ignored). Under autocast, cross-entropy upcasts its
+    input to FP32, so only the gathered supervised rows are upcast.
     """
 
     output_kind = "text"
@@ -54,14 +55,12 @@ class LMHeadDecoder(OutputDecoder):
             return logits, None
 
         # Shift logits and labels for next-token prediction.
-        shift_logits = logits[..., :-1, :].contiguous()
-        shift_labels = targets[..., 1:].contiguous()
-        # F.cross_entropy handles BF16 logits natively via fused kernel — no
-        # need to upcast to FP32, saving ~16GB for 256K vocab.
-        vocab_size = shift_logits.shape[-1]
+        shift_labels = targets[..., 1:]
+        # Gather only supervised rows: avoids a full (B, T, vocab) contiguous
+        # copy and autocast's FP32 upcast of it, which OOMs on long batches.
+        supervised = shift_labels != -100
         loss = F.cross_entropy(
-            shift_logits.view(-1, vocab_size),
-            shift_labels.view(-1),
-            ignore_index=-100,
+            logits[..., :-1, :][supervised],
+            shift_labels[supervised],
         )
         return logits, loss

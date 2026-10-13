@@ -23,7 +23,8 @@ from __future__ import annotations
 
 import math
 
-from src.training.trainer_native import compute_loss_stats
+import pytest
+from src.training.trainer_native import compute_loss_components, compute_loss_stats
 
 
 def _reduce(per_rank: list[tuple[float, float, int]]) -> dict[str, float]:
@@ -116,3 +117,26 @@ def test_negative_token_total_is_clamped():
     # negative total clamped to 0 -> fall back to rank_mean.
     assert out["global_tokens"] == 0.0
     assert math.isclose(out["token_mean"], 1.0, abs_tol=1e-9)
+
+
+def test_loss_components_weight_by_their_own_counts_across_ranks():
+    # Layout per rank: [text_weighted_sum, text_count, ts_weighted_sum, ts_count].
+    rank0 = [2.0 * 100, 100, 0.5 * 2, 2]
+    rank1 = [4.0 * 300, 300, 1.5 * 6, 6]
+    summed = [a + b for a, b in zip(rank0, rank1)]
+    out = compute_loss_components(summed, ("text", "time_series"))
+    assert out["text"]["mean"] == pytest.approx((200 + 1200) / 400)
+    assert out["text"]["count"] == 400
+    assert out["time_series"]["mean"] == pytest.approx((1.0 + 9.0) / 8)
+    assert out["time_series"]["count"] == 8
+
+
+def test_loss_components_omit_components_with_no_samples():
+    out = compute_loss_components([0.0, 0.0, 3.0, 4.0], ("text", "time_series"))
+    assert "text" not in out
+    assert out["time_series"]["mean"] == pytest.approx(0.75)
+
+
+def test_loss_components_reject_mismatched_layout():
+    with pytest.raises(ValueError):
+        compute_loss_components([1.0, 2.0, 3.0], ("text", "time_series"))

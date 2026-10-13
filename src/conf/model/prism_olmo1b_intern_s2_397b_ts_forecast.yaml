@@ -1,0 +1,40 @@
+backbone_id: "allenai/OLMo-1B-0724-hf"
+tokenizer_id: "allenai/OLMo-1B-0724-hf"
+d_text: 2048
+attn_implementation: "sdpa"
+modalities: [text, time_series]
+freeze_backbone: true
+freeze_encoders: true
+is_timeseries: true
+ts_variates: 10
+ts_projector: "intern_s2_397b"
+ts_encoder_id: "${oc.env:HF_HOME}/intern-s2-preview-397b-timeseries/model.safetensors"
+ts_load_pretrained: true
+d_ts: 4096
+max_ts_length: 512
+normalize_ts_in_encoder: true
+projector_hidden_mult: 1
+projector_num_layers: 2
+projector_norm_mode: "layernorm"
+projector_modality_embed_pos: "after_norm"
+projector_modality_embed_scale: 0.02
+is_interleaved_qa: false
+# Released OLMo step_2000 checkpoint was trained without padded-token masking.
+mask_padded_modality_tokens: false
+output_decoders: [text, time_series]
+decoder_loss_weights:
+  time_series: 1.0
+decoder_configs:
+  time_series:
+    readout:
+      type: pool
+      layers: final
+      pool: last
+    bridge:
+      type: identity
+      output_dim: 2048
+    generator:
+      type: linear_quantile
+      horizon: 720
+      num_vars: 10
+      quantiles: [0.1, 0.5, 0.9]

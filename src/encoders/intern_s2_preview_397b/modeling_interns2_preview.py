@@ -1858,10 +1858,19 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
         return_dict=None,
         causal=True,
     ):
+        input_pad_mask = None
+        if attention_mask is not None:
+            input_pad_mask = attention_mask.to(device=input_features.device, dtype=torch.bool)
+        elif input_length is not None:
+            input_pad_mask = torch.arange(input_features.shape[1], device=input_features.device)[None, :] >= input_length[:, None]
+        if input_pad_mask is not None:
+            input_features = input_features.masked_fill(input_pad_mask.unsqueeze(-1), 0.0)
         # (N, T, C) -> (T, N, C) -> (N, C, T)
         input_features = input_features.permute(1, 0, 2)
         input_features = self.adapt_in(input_features)
         input_features = input_features.permute(1, 2, 0)
+        if input_pad_mask is not None:
+            input_features = input_features.masked_fill(input_pad_mask[:, None, :], 0.0)
 
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
@@ -1871,7 +1880,10 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
 
         # (N, C, T) -> (N, C, T//2)
         inputs_embeds = nn.functional.gelu(self.conv1(input_features))
+        if input_pad_mask is not None:
+            inputs_embeds = inputs_embeds.masked_fill(input_pad_mask[:, None, :], 0.0)
         inputs_embeds = nn.functional.gelu(self.conv2(inputs_embeds))
+        output_pad_mask = None if input_pad_mask is None else input_pad_mask[:, ::2]
 
         # (N, C, T) -> (N, T, C)
         inputs_embeds = inputs_embeds.permute(0, 2, 1)  # torch.Size([1, 100, 768])
@@ -1886,6 +1898,14 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
         else:
             hidden_states = inputs_embeds + embed_pos[: inputs_embeds.shape[1], :]
         hidden_states = nn.functional.dropout(hidden_states, p=self.dropout, training=self.training)
+        valid_attention_mask = None
+        if output_pad_mask is not None:
+            hidden_states = hidden_states.masked_fill(output_pad_mask.unsqueeze(-1), 0.0)
+            valid_attention_mask = ~output_pad_mask
+            fully_padded = output_pad_mask.all(dim=-1)
+            if fully_padded.any():
+                valid_attention_mask = valid_attention_mask.clone()
+                valid_attention_mask[fully_padded, 0] = True
 
         encoder_states = () if output_hidden_states else None
         all_attentions = () if output_attentions else None
@@ -1898,12 +1918,19 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
                 attention_mask = self.prepare_chunk_attention_mask(attention_mask, input_shape, inputs_embeds)
             else:
                 attention_mask = self._prepare_decoder_attention_mask(
-                    attention_mask, input_shape, inputs_embeds, past_key_values_length
+                    valid_attention_mask, input_shape, inputs_embeds, past_key_values_length
+                )
+            if self.mask_type == "chunk" and valid_attention_mask is not None:
+                attention_mask = attention_mask.masked_fill(
+                    ~valid_attention_mask[:, None, None, :], torch.finfo(inputs_embeds.dtype).min
                 )
         else:
-            attention_mask = self.prepare_padding_mask(
-                attention_mask, input_shape, inputs_embeds, (input_length + 1) // 2
-            )
+            if valid_attention_mask is not None:
+                attention_mask = self._expand_mask(valid_attention_mask, inputs_embeds.dtype)
+            else:
+                attention_mask = self.prepare_padding_mask(
+                    attention_mask, input_shape, inputs_embeds, (input_length + 1) // 2
+                )
 
         if head_mask is not None:
             assert head_mask.size()[0] == (len(self.layers)), (
@@ -1947,6 +1974,8 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
                     )
 
                 hidden_states = layer_outputs[0]
+                if output_pad_mask is not None:
+                    hidden_states = hidden_states.masked_fill(output_pad_mask.unsqueeze(-1), 0.0)
 
             if output_attentions:
                 all_attentions = all_attentions + (layer_outputs[1],)
@@ -1958,6 +1987,8 @@ class InternS2PreviewTimeSeriesEncoder(PreTrainedModel):
 
         # (T, N, C) -> (N, T, C)
         hidden_states = hidden_states.permute(1, 0, 2)
+        if output_pad_mask is not None:
+            hidden_states = hidden_states.masked_fill(output_pad_mask.unsqueeze(-1), 0.0)
         if output_hidden_states:
             encoder_states = encoder_states + (hidden_states,)
 
@@ -2607,19 +2638,27 @@ class MRQFormer(nn.Module):
         query_tokens = query_tokens.expand(B, -1, -1)
 
         encoder_attention_mask = None
+        fully_masked = None
         if attention_mask is not None:
             encoder_attention_mask = attention_mask
+            fully_masked = ~attention_mask.bool().any(dim=-1)
+            if fully_masked.any():
+                encoder_attention_mask = attention_mask.clone()
+                encoder_attention_mask[fully_masked, 0] = 1
 
         outputs = self.transformer(
             inputs_embeds=query_tokens,
             encoder_hidden_states=encoder_features,
             encoder_attention_mask=encoder_attention_mask,
             return_dict=True,
+            use_cache=False  # Prevent HF from building a DynamicCache on every forward, which triggers an XPU page fault
         )
 
         outputs = outputs.last_hidden_state
 
         outputs = self.proj_out(outputs)
+        if fully_masked is not None:
+            outputs = outputs.masked_fill(fully_masked[:, None, None], 0.0)
 
         return outputs
 
@@ -2761,6 +2800,7 @@ class TotalFixlenSingleResChunkQformerSubsampling(nn.Module):
             idx = torch.arange(L).to(seq.device)
 
             output_list = []
+            output_valid_list = []
             for res_idx, raw_patch in enumerate(self.patch_list):
                 num_query = self.num_query_list[res_idx]
                 stride = subrate * num_query
@@ -2789,22 +2829,61 @@ class TotalFixlenSingleResChunkQformerSubsampling(nn.Module):
                 else:
                     output = raw_output.reshape(-1, D)  # B*N*Q, D
                 output_list.append(output)
+                patch_valid = patched_mask.bool().any(dim=(1, 2))
+                output_valid_list.append(
+                    patch_valid if self.selfatt else patch_valid.repeat_interleave(num_query)
+                )
 
             outputs = torch.cat(output_list, dim=1)
+            output_valid = torch.stack(output_valid_list).any(dim=0)
             outputs = self.fuze_proj(outputs)
+            outputs = outputs.masked_fill(~output_valid.unsqueeze(-1), 0.0)
             _, D_out = outputs.shape
 
         outputs = outputs.reshape(B, -1, D_out)
         raw_outputs = None
 
-        if self.selfatt:
-            output_lens = torch.ceil((padded_mask[:, :, 0].sum(dim=-1) - ps) / st + 1)
-        else:
-            output_lens = torch.ceil((padded_mask[:, :, 0].sum(dim=-1) - ps) / st + 1) * Q_max
+        output_lens = output_valid.reshape(B, -1).sum(dim=-1)
 
         learnable_lens = None
 
         return outputs, output_lens, learnable_lens, pred_strides, raw_outputs
+
+    def _mix_valid_channels(self, x: torch.Tensor, valid: torch.Tensor) -> torch.Tensor:
+        """Mix valid channel features without passing a padding mask to attention.
+
+        Args:
+            x: Channel features with shape ``(C, R, D)``, where ``R`` is the
+                flattened patch-row count.
+            valid: Boolean-compatible mask with shape ``(C, R)``.
+
+        Rows are grouped by their number of valid channels. Within each group,
+        padded channels are compacted away before channel attention, so the
+        attention encoder receives no key-padding mask. Valid outputs are
+        averaged per row; rows with no valid channels remain zero. Indexing and
+        copying operations preserve gradients to the selected input features.
+        """
+        channel_count, row_count, hidden_dim = x.shape
+        valid_rows = valid.transpose(0, 1).bool()
+        valid_counts = valid_rows.sum(dim=-1)
+        rows_by_channel = x.new_zeros((row_count, hidden_dim))
+        sequence_first = x.transpose(0, 1)
+
+        for channel_count_in_group in range(1, channel_count + 1):
+            rows = torch.nonzero(valid_counts == channel_count_in_group, as_tuple=False).flatten()
+            if rows.numel() == 0:
+                continue
+            row_valid = valid_rows.index_select(0, rows)
+            channel_indices = torch.nonzero(row_valid, as_tuple=False)[:, 1].reshape(
+                -1, channel_count_in_group
+            )
+            compact = sequence_first[rows[:, None], channel_indices]
+            mixed = self.channel_encoder(compact.transpose(0, 1)).transpose(0, 1)
+            rows_by_channel = rows_by_channel.index_copy(
+                0, rows, mixed.mean(dim=1).to(dtype=rows_by_channel.dtype)
+            )
+
+        return rows_by_channel
 
     def forward_encoder(self, inputs, mask, res_idx=0):
 
@@ -2835,6 +2914,10 @@ class TotalFixlenSingleResChunkQformerSubsampling(nn.Module):
             all_outputs.append(x_chunk)
 
         x = torch.cat(all_outputs, dim=1)  # [P, B*N*C, D] / [Q, B*N*C, D]
+        channel_valid = mask.bool().any(dim=-1).reshape(num_patch, C)
+        x = x.masked_fill(~channel_valid.reshape(1, num_patch * C, 1), 0.0)
+        channel_valid = channel_valid.transpose(0, 1).unsqueeze(-1).expand(C, num_patch, x.shape[0])
+        channel_valid = channel_valid.reshape(C, -1)
 
         x = x.reshape(-1, num_patch, C, D)  # [P, B*N, C, D] /# [Q, B*N, C, D]
         x = x.permute(2, 1, 0, 3)  # [C, B, P, D]
@@ -2844,8 +2927,8 @@ class TotalFixlenSingleResChunkQformerSubsampling(nn.Module):
 
         for i in range(0, x.size(1), chunk_size):
             x_chunk = x[:, i : i + chunk_size, :].contiguous()  # [C, chunk_len, D]
-            x_chunk = self.channel_encoder(x_chunk)
-            x_chunk = x_chunk.mean(0)  # [chunk_len, D]
+            valid_chunk = channel_valid[:, i : i + chunk_size]
+            x_chunk = self._mix_valid_channels(x_chunk, valid_chunk)
             all_outputs.append(x_chunk)
 
         x = torch.cat(all_outputs, dim=0)  # [B*N*P, D]
@@ -2972,6 +3055,7 @@ class InternS2PreviewTimeSeriesModel(PreTrainedModel):
             return output, indices, output_mask
         return output, output_mask
 
+    # PATRICK: Here is the forward pass for time series
     def forward(
         self,
         time_series_signals: torch.FloatTensor = None,
@@ -3053,6 +3137,7 @@ class InternS2PreviewTimeSeriesModel(PreTrainedModel):
 
         ts_pad_mask = src_key_padding_mask
         ts_embeds = self.projector(encoder_out)
+        ts_embeds = ts_embeds.masked_fill(ts_pad_mask.unsqueeze(-1), 0.0)
 
         return ts_embeds, ts_pad_mask, encoder_out
 

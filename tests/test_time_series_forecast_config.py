@@ -24,6 +24,28 @@ def _decoder_overlay():
     return OmegaConf.load(CONF / "decoder" / "time_series_direct.yaml")
 
 
+def test_forecast_preset_loads_through_long_series_check_helper(monkeypatch):
+    from tools.debug_scits_single_val import _load_model_config
+
+    monkeypatch.setenv("HF_HOME", "/tmp/scits-test-hf")
+    configured = _load_model_config(
+        str(CONF / "model" / "prism_qwen3_0_6b_intern_s2_397b_ts_forecast.yaml")
+    )
+
+    assert isinstance(configured, ModelConfig)
+    assert configured.llm_backbone_id == "Qwen/Qwen3-0.6B"
+    assert configured.llm_tokenizer_id == "Qwen/Qwen3-0.6B"
+    assert configured.freeze_backbone is True
+    assert configured.freeze_encoders is True
+    assert configured.ts_projector == "intern_s2_397b"
+    assert configured.mask_padded_modality_tokens is True
+    assert configured.max_ts_length == 512
+    assert configured.ts_encoder_id == (
+        "/tmp/scits-test-hf/intern-s2-preview-397b-timeseries/model.safetensors"
+    )
+    assert configured.decoder_configs["time_series"]["generator"]["horizon"] == 720
+
+
 def test_overlay_preserves_referenced_intern_s2_input_model():
     """Model fields from the user's pinned 9a2f328 reference stay untouched."""
     base = OmegaConf.create(
@@ -61,20 +83,33 @@ def test_overlay_preserves_referenced_intern_s2_input_model():
         OmegaConf.load(CONF / "model" / "prism_qwen3_0_6b_intern_s2_397b_ts_forecast.yaml"),
         resolve=False,
     )
-    assert {key: preset[key] for key in before} == before
+    expected_preset_input = dict(before)
+    expected_preset_input.pop("freeze_vit")
+    expected_preset_input["ts_variates"] = 10
+    assert {key: preset[key] for key in expected_preset_input} == expected_preset_input
+    assert "freeze_vit" not in preset
     overlay_decoder = merged["decoder_configs"]["time_series"]
     preset_decoder = preset["decoder_configs"]["time_series"]
-    assert preset_decoder == {
-        **overlay_decoder,
-        "bridge": {"type": "identity", "output_dim": 1024},
+    assert preset_decoder["readout"] == overlay_decoder["readout"]
+    assert preset_decoder["bridge"] == {"type": "identity", "output_dim": 1024}
+    assert preset_decoder["generator"] == {
+        **overlay_decoder["generator"],
+        "horizon": 720,
+        "num_vars": 10,
     }
 
 
-def test_complete_forecast_preset_composes_nested_connector_contract():
+@pytest.mark.parametrize("preset, backbone, width, mask_padded", [
+    ("prism_qwen3_0_6b_intern_s2_397b_ts_forecast", "Qwen/Qwen3-0.6B", 1024, True),
+    ("prism_olmo1b_intern_s2_397b_ts_forecast", "allenai/OLMo-1B-0724-hf", 2048, False),
+])
+def test_complete_forecast_preset_composes_nested_connector_contract(
+    preset, backbone, width, mask_padded
+):
     with initialize_config_dir(version_base=None, config_dir=str(CONF)):
         merged = compose(
             config_name="config",
-            overrides=["model=prism_qwen3_0_6b_intern_s2_397b_ts_forecast"],
+            overrides=[f"model={preset}"],
         )
     from src.decoders import TimeSeriesDecoder
 
@@ -82,19 +117,57 @@ def test_complete_forecast_preset_composes_nested_connector_contract():
         merged.model.d_text,
         **OmegaConf.to_container(merged.model.decoder_configs.time_series),
     )
-    assert merged.model.backbone_id == "Qwen/Qwen3-0.6B"
+    assert merged.model.backbone_id == backbone
+    assert merged.model.tokenizer_id == backbone
+    assert merged.model.d_text == width
+    assert merged.model.freeze_backbone is True
+    assert merged.model.freeze_encoders is True
+    assert merged.model.mask_padded_modality_tokens is mask_padded
+    assert merged.model.ts_variates == 10
     assert merged.model.ts_projector == "intern_s2_397b"
     assert merged.model.output_decoders == ["text", "time_series"]
+    assert decoder.horizon == 720
+    assert decoder.num_vars == 10
     assert decoder.conditioning_contract()["bridge"] == {
-        "type": "identity", "input_dim": 1024, "output_dim": 1024,
+        "type": "identity", "input_dim": width, "output_dim": width,
     }
-    assert sum(parameter.numel() for parameter in decoder.parameters()) == 295_200
+    assert sum(parameter.numel() for parameter in decoder.parameters()) == (width + 1) * 720 * 10 * 3
+
+
+def test_forecast_statistics_accept_dataset_maximum_channel_width():
+    from src.model import UnifiedTransformer
+    from src.decoders.time_series import TimeSeriesDecoder
+
+    decoder = TimeSeriesDecoder(4, horizon=720, num_vars=10)
+    model = SimpleNamespace(decoders={"time_series": decoder})
+    history_mean = torch.arange(10, dtype=torch.float32).unsqueeze(0)
+    history_scale = torch.ones_like(history_mean)
+
+    statistics = UnifiedTransformer._forecast_statistics_kwargs(
+        model,
+        {
+            "time_series_history_mean": history_mean,
+            "time_series_history_scale": history_scale,
+        },
+    )
+
+    torch.testing.assert_close(statistics["history_mean"], history_mean)
+    torch.testing.assert_close(statistics["history_scale"], history_scale)
+    _, loss = decoder(
+        torch.zeros(1, 4),
+        targets=torch.zeros(1, 2, 10),
+        target_mask=torch.ones(1, 2, 10, dtype=torch.bool),
+        **statistics,
+    )
+    assert loss is not None and torch.isfinite(loss)
 
 
 @pytest.mark.parametrize("input_fields, expected", [
     ({"ts_projector": "intern_s2_397b", "ts_forecast_horizon": 24},
      {"ts_projector": "intern_s2_397b", "ts_forecast_horizon": 24}),
-    ({}, {"ts_projector": "linear", "ts_forecast_horizon": 96}),
+        ({"mask_padded_modality_tokens": True}, {"mask_padded_modality_tokens": True}),
+        ({}, {"ts_projector": "linear", "ts_forecast_horizon": 96,
+            "mask_padded_modality_tokens": False}),
 ])
 def test_train_constructor_forwards_time_series_selection_and_horizon(input_fields, expected):
     """Evaluate the actual keyword expressions without importing training jobs.
@@ -126,14 +199,8 @@ def test_train_constructor_forwards_time_series_selection_and_horizon(input_fiel
     assert {key: getattr(configured, key) for key in expected} == expected
 
 
-def test_intern_s2_input_preset_requires_its_encoder_implementation(monkeypatch):
-    """The current branch must fail clearly instead of substituting a linear encoder.
-
-    Needs the Intern-S2 dependency floor: below `transformers>=5.2.0` the encoder
-    raises `RuntimeError` about the pin before it can reach the `ValueError` this
-    asserts. CI pins 4.57.6 deliberately (the `--intern-s2` build is a separate
-    overlay), so this skips there rather than failing.
-    """
+def test_intern_s2_397b_preset_selects_vendored_encoder_and_checkpoint(monkeypatch):
+    """The forecast preset selects the vendored 397B encoder without fallback."""
     import transformers
     from packaging.version import Version
 
@@ -143,17 +210,47 @@ def test_intern_s2_input_preset_requires_its_encoder_implementation(monkeypatch)
             f"found {transformers.__version__}"
         )
 
-    from src.encoders.time_series import TimeSeriesEncoder
+    import src.encoders.time_series as time_series_module
 
+    monkeypatch.setenv("HF_HOME", "/tmp/scits-test-hf")
     preset = OmegaConf.load(CONF / "model" / "prism_qwen3_0_6b_intern_s2_397b_ts_forecast.yaml")
-    monkeypatch.setattr(torch.nn, "Linear", lambda *a, **k: pytest.fail("silent linear fallback"))
-    with pytest.raises(ValueError, match="Unsupported encoder type: intern_s2_397b"):
-        TimeSeriesEncoder(
-            encoder_type=preset.ts_projector,
-            num_vars=preset.ts_variates,
-            d_ts=preset.d_ts,
-            max_ts_length=preset.max_ts_length,
-        )
+    loaded = {}
+
+    class _StubEncoder(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(1))
+            self.config = SimpleNamespace(out_hidden_size=4096)
+
+    def _load(checkpoint, **kwargs):
+        loaded["checkpoint"] = checkpoint
+        loaded.update(kwargs)
+        return _StubEncoder()
+
+    monkeypatch.setattr(time_series_module, "_load_intern_s2_model", _load)
+    monkeypatch.setattr(
+        time_series_module.TimeSeriesEncoder,
+        "_probe_intern_s2_397b_tokens",
+        lambda _self: 23,
+    )
+    encoder = time_series_module.TimeSeriesEncoder(
+        encoder_type=preset.ts_projector,
+        num_vars=preset.ts_variates,
+        d_ts=preset.d_ts,
+        model_name=preset.ts_encoder_id,
+        max_ts_length=preset.max_ts_length,
+        load_pretrained=preset.ts_load_pretrained,
+    )
+
+    assert encoder.encoder_type == "intern_s2_397b"
+    assert encoder.num_vars == 10
+    assert encoder.hidden_dim == 4096
+    assert encoder.tokens_per_instance() == 23
+    assert loaded == {
+        "checkpoint": "/tmp/scits-test-hf/intern-s2-preview-397b-timeseries/model.safetensors",
+        "package": "src.encoders.intern_s2_preview_397b",
+        "load_pretrained": True,
+    }
 
 
 def test_hydra_decoder_group_preserves_selected_input_model():
@@ -267,7 +364,9 @@ def test_real_qwen_width_forecast_routes_targets_and_updates_only_head(offline_h
     inputs = {
         "text": torch.tensor([[0, 4, 5], [6, 7, 8]]),
         "text_attention_mask": torch.tensor([[0, 1, 1], [1, 1, 1]]),
+        "time_series_target_mask": torch.ones(2, horizon, num_vars, dtype=torch.bool),
     }
+    inputs["time_series_target_mask"][:, -1, :] = False
     initial = model.forward_outputs(
         inputs,
         targets={"time_series": torch.zeros(2, horizon, num_vars)},

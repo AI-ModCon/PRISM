@@ -220,29 +220,99 @@ class TimeSeriesDecoder(OutputDecoder):
         return self._predict_condition(self._tensor_condition(hidden_states, attention_mask))
 
     def pinball_loss(
-        self, pred_quantiles: torch.Tensor, target: torch.Tensor
+        self,
+        pred_quantiles: torch.Tensor,
+        target: torch.Tensor,
+        target_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        """Mean pinball (quantile) loss.
+        """Masked mean pinball loss, padding shorter targets to head dimensions.
 
         Args:
             pred_quantiles: ``(B, H, V, Q)``.
             target: ``(B, H, V)`` ground-truth future values.
+            target_mask: Optional boolean mask for valid target cells.
         """
-        if target.shape != pred_quantiles.shape[:-1]:
+        forecast_shape = pred_quantiles.shape[:-1]
+        if (
+            pred_quantiles.ndim != 4
+            or target.ndim != 3
+            or target.shape[0] != forecast_shape[0]
+            or target.shape[1] > forecast_shape[1]
+            or target.shape[2] > forecast_shape[2]
+        ):
             raise RuntimeError(
-                f"target shape {tuple(target.shape)} != forecast shape "
-                f"{tuple(pred_quantiles.shape[:-1])} (B, H, V)"
+                f"target shape {tuple(target.shape)} is incompatible with forecast shape "
+                f"{tuple(forecast_shape)} (B, H, V)"
             )
-        target = target.to(dtype=pred_quantiles.dtype)
+        if target_mask is not None and target_mask.shape != target.shape:
+            raise RuntimeError(
+                f"target mask shape {tuple(target_mask.shape)} != target shape {tuple(target.shape)}"
+            )
+
+        target = target.to(device=pred_quantiles.device, dtype=pred_quantiles.dtype)
+        valid = torch.isfinite(target)
+        if target_mask is not None:
+            valid &= target_mask.to(device=pred_quantiles.device, dtype=torch.bool)
+        # The decoder owns the configured head shape; mask these added cells
+        # so target padding never contributes to the loss.
+        padded_target = torch.zeros(forecast_shape, device=pred_quantiles.device, dtype=target.dtype)
+        padded_mask = torch.zeros(forecast_shape, device=pred_quantiles.device, dtype=torch.bool)
+        horizon, variates = target.shape[1:]
+        padded_target[:, :horizon, :variates] = torch.where(valid, target, 0.0)
+        padded_mask[:, :horizon, :variates] = valid
+
         q = self._q.to(device=pred_quantiles.device, dtype=pred_quantiles.dtype)
         # error: (B, H, V, Q)
-        error = target.unsqueeze(-1) - pred_quantiles
-        loss = torch.maximum(q * error, (q - 1.0) * error)
-        return loss.mean()
+        error = padded_target.unsqueeze(-1) - pred_quantiles
+        loss = torch.maximum(q * error, (q - 1.0) * error).mean(dim=-1)
+        if not padded_mask.any():
+            return pred_quantiles.sum() * 0.0
+        return (loss * padded_mask).sum() / padded_mask.sum()
 
     # -- OutputDecoder API -------------------------------------------------
 
-    def forward_condition(self, condition: DecoderCondition, targets=None, **kwargs):
+    def _forecast_with_statistics(
+        self, prediction, targets=None, target_mask=None,
+        history_mean=None, history_scale=None,
+    ):
+        # TODO: expose history statistics for encoder-bypass and cached-embedding inference.
+        if (history_mean is None) != (history_scale is None):
+            raise ValueError("history_mean and history_scale must be provided together")
+        if history_mean is None:
+            loss = None if targets is None else self.pinball_loss(prediction, targets, target_mask)
+            return prediction, loss
+        mean = history_mean.detach().to(device=prediction.device, dtype=torch.float32)
+        scale = history_scale.detach().to(device=prediction.device, dtype=torch.float32)
+        expected = (prediction.shape[0], self.num_vars)
+        if mean.shape != expected or scale.shape != expected:
+            raise ValueError(f"History statistics must have shape {expected}")
+        if not torch.isfinite(mean).all() or not torch.isfinite(scale).all() or (scale <= 0).any():
+            raise ValueError("History statistics must be finite with positive scales")
+        loss = None
+        if targets is not None:
+            variates = targets.shape[-1]
+            target_values = targets.to(device=prediction.device, dtype=torch.float32)
+            valid_targets = torch.isfinite(target_values)
+            if target_mask is not None:
+                if target_mask.shape != targets.shape:
+                    raise RuntimeError(
+                        f"target mask shape {tuple(target_mask.shape)} != target shape {tuple(targets.shape)}"
+                    )
+                valid_targets &= target_mask.to(device=prediction.device, dtype=torch.bool)
+            target_mean = mean[:, None, :variates]
+            safe_targets = torch.where(valid_targets, target_values, target_mean)
+            scaled_targets = (
+                safe_targets - target_mean
+            ) / scale[:, None, :variates]
+            valid_targets &= torch.isfinite(scaled_targets)
+            scaled_targets = torch.where(valid_targets, scaled_targets, 0.0)
+            loss = self.pinball_loss(prediction.float(), scaled_targets, valid_targets)
+        return prediction.float() * scale[:, None, :, None] + mean[:, None, :, None], loss
+
+    def forward_condition(
+        self, condition: DecoderCondition, targets=None,
+        target_mask: torch.Tensor | None = None, **kwargs,
+    ):
         """Forecast quantiles from a typed condition and optionally score them.
 
         Always pools through the readout using the condition's explicit
@@ -262,8 +332,10 @@ class TimeSeriesDecoder(OutputDecoder):
             when ``targets`` is ``None``.
         """
         prediction = self._predict_condition(condition)
-        loss = None if targets is None else self.pinball_loss(prediction, targets)
-        return prediction, loss
+        return self._forecast_with_statistics(
+            prediction, targets, target_mask,
+            kwargs.get("history_mean"), kwargs.get("history_scale"),
+        )
 
     @torch.no_grad()
     def generate_condition(self, condition: DecoderCondition, **kwargs) -> torch.Tensor:
@@ -276,7 +348,11 @@ class TimeSeriesDecoder(OutputDecoder):
         Returns:
             The median-quantile point forecast ``(B, H, V)``.
         """
-        return self._predict_condition(condition)[..., self._median_idx]
+        prediction, _ = self._forecast_with_statistics(
+            self._predict_condition(condition),
+            history_mean=kwargs.get("history_mean"), history_scale=kwargs.get("history_scale"),
+        )
+        return prediction[..., self._median_idx]
 
     def forward(
         self,
@@ -289,13 +365,13 @@ class TimeSeriesDecoder(OutputDecoder):
         Returns ``(pred_quantiles (B,H,V,Q), loss)``.
         """
         pred_quantiles = self.predict(hidden_states, kwargs.get("attention_mask"))
-        if targets is None:
-            return pred_quantiles, None
-        loss = self.pinball_loss(pred_quantiles, targets)
-        return pred_quantiles, loss
+        return self._forecast_with_statistics(
+            pred_quantiles, targets, kwargs.get("target_mask"),
+            kwargs.get("history_mean"), kwargs.get("history_scale"),
+        )
 
     @torch.no_grad()
     def generate(self, hidden_states: torch.Tensor, **kwargs) -> torch.Tensor:
         """Point forecast ``(B, H, V)`` — the median quantile."""
-        pred_quantiles = self.predict(hidden_states, kwargs.get("attention_mask"))
+        pred_quantiles, _ = self.forward(hidden_states, **kwargs)
         return pred_quantiles[..., self._median_idx]

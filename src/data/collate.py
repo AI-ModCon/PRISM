@@ -62,11 +62,70 @@ class MultimodalCollator:
         # Batch is a list of dicts.
         # batch[0] = {"image": tensor, "text": tensor, ...}
 
-        # separate keys
-        keys = batch[0].keys()
         collated = {}
+        for stat_name, default in (("mean", 0.0), ("scale", 1.0)):
+            key = f"time_series_history_{stat_name}"
+            statistics = [sample.get(key) for sample in batch]
+            present = [stat for stat in statistics if stat is not None]
+            if present:
+                width = max(stat.numel() for stat in present)
+                values = torch.full((len(batch), width), default, dtype=torch.float32)
+                for sample_idx, stat in enumerate(statistics):
+                    if stat is not None:
+                        values[sample_idx, :stat.numel()] = stat.detach().float().cpu()
+                collated[key] = values
+        target_samples = [sample.get("time_series_target") for sample in batch]
+        present_targets = [target for target in target_samples if target is not None]
+        if present_targets:
+            # Pad only to this batch's maximum; decoder-specific output sizes
+            # belong to the decoder, not this shared collator.
+            normalized_targets = [
+                None if target is None else (target.unsqueeze(-1) if target.dim() == 1 else target)
+                for target in target_samples
+            ]
+            if any(target.dim() != 2 for target in normalized_targets if target is not None):
+                raise ValueError("time_series_target samples must have shape (H,) or (H,V)")
+            max_horizon = max(target.shape[0] for target in present_targets)
+            max_variates = max(
+                (target.shape[1] if target.dim() == 2 else 1) for target in present_targets
+            )
+            device = present_targets[0].device
+            targets = torch.zeros(
+                len(batch), max_horizon, max_variates, dtype=torch.float32, device=device
+            )
+            target_mask = torch.zeros(
+                len(batch), max_horizon, max_variates, dtype=torch.bool, device=device
+            )
+            for sample_idx, target in enumerate(normalized_targets):
+                if target is None:
+                    continue
+                horizon, variates = target.shape
+                finite = torch.isfinite(target)
+                sample_mask = batch[sample_idx].get("time_series_target_mask")
+                if sample_mask is None:
+                    valid = finite
+                else:
+                    if sample_mask.dim() == 1:
+                        sample_mask = sample_mask.unsqueeze(-1)
+                    if sample_mask.shape != target.shape:
+                        raise ValueError(
+                            "time_series_target_mask shape "
+                            f"{tuple(sample_mask.shape)} != target shape {tuple(target.shape)}"
+                        )
+                    valid = sample_mask.to(device=device, dtype=torch.bool) & finite
+                targets[sample_idx, :horizon, :variates] = torch.nan_to_num(
+                    target.to(device=device, dtype=torch.float32)
+                )
+                target_mask[sample_idx, :horizon, :variates] = valid
+            collated["time_series_target"] = targets
+            collated["time_series_target_mask"] = target_mask
+
+        # Separate keys, excluding optional forecast targets handled above.
+        keys = batch[0].keys()
 
         for k in keys:
+            if k in ("time_series_target", "time_series_target_mask", "time_series_history_mean", "time_series_history_scale"):
+                continue
             # Grab every item for this modality across the batch
             # items is a list of tensors/dicts/lists for modality k: [sample1[k], sample2[k], ...]
             items = [d[k] for d in batch]

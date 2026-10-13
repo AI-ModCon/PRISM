@@ -261,6 +261,24 @@ def compute_loss_stats(
     }
 
 
+def compute_loss_components(summed, names) -> dict[str, dict[str, float]]:
+    """Per-component means from ``[weighted_sum_0, count_0, weighted_sum_1, ...]``.
+
+    ``summed`` is already reduced across ranks. Text is weighted by supervised
+    tokens and auxiliary decoders by samples. Components with no samples are
+    omitted.
+    """
+    values = [float(v) for v in summed]
+    if len(values) != 2 * len(names):
+        raise ValueError(f"Expected {2 * len(names)} values for {names}, got {len(values)}")
+    out = {}
+    for i, name in enumerate(names):
+        weighted, count = values[2 * i], values[2 * i + 1]
+        if count > 0:
+            out[name] = {"mean": weighted / count, "count": count}
+    return out
+
+
 def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, device):
     """Native DDP/FSDP training loop without Accelerate - for timing comparison."""
     import signal
@@ -378,6 +396,29 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
         return iter(train_loader)
 
     is_main = rank == 0
+
+    # Fixed order so every rank all-reduces the same layout.
+    _loss_component_names = ("text",) + tuple(
+        getattr(getattr(model, "module", model), "_AUX_DECODER_NAMES", ())
+    )
+
+    def _new_component_sums() -> torch.Tensor:
+        return torch.zeros(2 * len(_loss_component_names), dtype=torch.float32, device=device)
+
+    def _accumulate_loss_components(sums: torch.Tensor) -> None:
+        components = getattr(getattr(model, "module", model), "last_loss_components", None) or {}
+        for i, name in enumerate(_loss_component_names):
+            if name in components:
+                value, count = components[name]
+                count = count.to(device=device, dtype=torch.float32)
+                sums[2 * i] += value.to(device=device, dtype=torch.float32) * count
+                sums[2 * i + 1] += count
+
+    def _global_loss_components(sums: torch.Tensor) -> dict[str, dict[str, float]]:
+        reduced = sums.clone()
+        if world_size > 1 and dist.is_initialized():
+            dist.all_reduce(reduced, op=dist.ReduceOp.SUM)
+        return compute_loss_components(reduced.tolist(), _loss_component_names)
 
     def _loss_token_count(batch: dict, pad_id: int | None) -> int:
         """Count local tokens that contribute to the text loss."""
@@ -1474,6 +1515,7 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
         accum_loss = 0.0
         accum_weighted_loss_sum = 0.0
         accum_loss_tokens = 0
+        accum_component_sums = _new_component_sums()
 
         if ddp_debug and step < ddp_debug_steps and is_main:
             logger.info(
@@ -1632,6 +1674,8 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
                             },
                         )
                     unscaled_loss_value = float(loss.detach().item())
+                    if "requested_outputs" not in batch:
+                        _accumulate_loss_components(accum_component_sums)
                     # Mixed native objectives are weighted per example, not by
                     # prompt token count (instruction text is not a target).
                     loss_tokens = (
@@ -1861,12 +1905,15 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
             eval_enabled and eval_interval and step > 0 and step % eval_interval == 0
         )
         global_loss_stats = None
+        global_loss_components = {}
         if should_log_train_loss or should_emit_eval_loss:
             global_loss_stats = _global_loss_stats(
                 local_rank_mean_loss,
                 accum_weighted_loss_sum,
                 accum_loss_tokens,
             )
+        if should_log_train_loss:
+            global_loss_components = _global_loss_components(accum_component_sums)
 
         # IsoFLOP eval gate (training-loss proxy variant for native trainer).
         # PR-1's trainer_zone_a has a full evaluator suite; the native trainer
@@ -2041,6 +2088,14 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
                 f"{'examples' if 'requested_outputs' in batch else 'tokens'}="
                 f"{int(global_loss_stats['global_tokens']) if global_loss_stats else accum_loss_tokens})"
             )
+            if global_loss_components:
+                logger.info(
+                    "  [LOSS] "
+                    + " | ".join(
+                        f"{name}={c['mean']:.4f} (n={int(c['count'])})"
+                        for name, c in global_loss_components.items()
+                    )
+                )
 
             # Log LRs during warmup phase to verify scheduler is working
             if step <= 100 or step % 100 == 0:
@@ -2139,6 +2194,9 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
                         else accum_loss_tokens
                     ),
                 }
+                for name, component in global_loss_components.items():
+                    log_dict[f"loss/{name}"] = component["mean"]
+                    log_dict[f"loss/{name}_count"] = component["count"]
                 # Log LR for each param group (supports differential LRs)
                 for i, pg in enumerate(optimizer.param_groups):
                     group_name = pg.get("name", f"group_{i}")

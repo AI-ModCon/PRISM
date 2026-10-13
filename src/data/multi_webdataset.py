@@ -279,7 +279,7 @@ class MultiWebDataset:
             "_process_sample",
         ),
         "time_series": (
-            ("ts.npy", "text", "meta.json"),
+            ("ts.npy", "text", "meta.json", "gt_ts.npy", "gt_ts_mask.npy"),
             "_process_time_series_sample",
         ),
         "graph": (
@@ -988,7 +988,10 @@ class MultiWebDataset:
                 if self.modality == "image":
                     base = base.decode("pil")
 
-                ds = base.to_tuple(*tuple_spec, handler=wds.warn_and_continue).map(process_fn)
+                tuple_kwargs = {"handler": wds.warn_and_continue}
+                if self.modality == "time_series":
+                    tuple_kwargs.update(missing_is_error=False, none_is_error=False)
+                ds = base.to_tuple(*tuple_spec, **tuple_kwargs).map(process_fn)
                 sources.append(ds)
             weights.append(ds_info["normalized_weight"])
 
@@ -1033,9 +1036,12 @@ class MultiWebDataset:
         ]
         if self.modality == "image":
             stages.append(wds.filters.decode("pil"))
+        tuple_kwargs = {"handler": wds.warn_and_continue}
+        if self.modality == "time_series":
+            tuple_kwargs.update(missing_is_error=False, none_is_error=False)
         stages.extend(
             [
-                wds.filters.to_tuple(*tuple_spec, handler=wds.warn_and_continue),
+                wds.filters.to_tuple(*tuple_spec, **tuple_kwargs),
                 wds.filters.map(process_fn),
             ]
         )
@@ -1163,19 +1169,21 @@ class MultiWebDataset:
             "metadata": metadata,
         }
 
-    def _process_time_series_sample(self, sample: tuple) -> dict[str, Any]:
-        """Decode (ts_bytes, text_bytes, meta_bytes) → dict for the wrapper.
+    def _process_time_series_sample(self, sample: tuple) -> dict[str, Any] | None:
+        """Decode time-series and optional target members for the wrapper.
 
         Yields the same shape the downstream `ModalityAwareWebDatasetWrapper`
         expects: a per-modality key (`time_series`) with the raw numpy/bytes
-        payload, plus `text` and `metadata`. The wrapper handles the actual
-        tensor conversion + tokenization.
+        payload, optional numeric target/mask, plus `text` and `metadata`. The
+        wrapper handles the actual tensor conversion + tokenization.
         """
         import io
 
         import numpy as np
 
-        payload, text, metadata = sample
+        payload, text, metadata, target_payload, target_mask_payload = sample
+        if payload is None:
+            return None
         if isinstance(payload, (bytes, bytearray)):
             arr = np.load(io.BytesIO(payload), allow_pickle=False)
         elif isinstance(payload, np.ndarray):
@@ -1192,7 +1200,20 @@ class MultiWebDataset:
         elif not isinstance(metadata, dict):
             metadata = {}
         metadata.setdefault("_data_type", "time_series")
-        return {"time_series": arr, "text": text, "metadata": metadata}
+        result = {"time_series": arr, "text": text, "metadata": metadata}
+        if target_payload is not None:
+            if isinstance(target_payload, (bytes, bytearray)):
+                target = np.load(io.BytesIO(target_payload), allow_pickle=False)
+            else:
+                target = target_payload
+            result["time_series_target"] = target
+            if target_mask_payload is not None:
+                if isinstance(target_mask_payload, (bytes, bytearray)):
+                    target_mask = np.load(io.BytesIO(target_mask_payload), allow_pickle=False)
+                else:
+                    target_mask = target_mask_payload
+                result["time_series_target_mask"] = target_mask
+        return result
 
     def _process_graph_sample(self, sample: tuple) -> dict[str, Any]:
         """Decode (graph_bytes, text_bytes, meta_bytes) → dict for the wrapper."""
@@ -1534,6 +1555,8 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
     # `_process_*_sample` in MultiWebDataset).
     _COMPOSITE_MODALITIES = frozenset({"vla"})
 
+    _ts_history_cap: int | None = None
+
     def __init__(
         self,
         tokenizer,
@@ -1584,6 +1607,12 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
         self._primary_modality = self._modalities[0]
 
         self._image_transform = build_image_transform(model_config)
+        if getattr(model_config, "ts_projector", None) == "intern_s2_397b":
+            from ..encoders.time_series import TimeSeriesEncoder
+
+            self._ts_history_cap = int(
+                getattr(model_config, "ts_max_history", TimeSeriesEncoder.INTERN_S2_397B_MAX_HISTORY)
+            )
 
         if config is None and not local_shards_dir:
             config = load_daos_config(config_path)
@@ -1637,6 +1666,22 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
             arr = np.load(io.BytesIO(value), allow_pickle=False)
             return torch.from_numpy(arr.astype("float32"))
         raise TypeError(f"time_series decoder: unsupported value type {type(value)}")
+
+    @staticmethod
+    def _decode_time_series_mask(value):
+        import io
+
+        import numpy as np
+        import torch
+
+        if isinstance(value, torch.Tensor):
+            return value.bool()
+        if isinstance(value, np.ndarray):
+            return torch.from_numpy(value.astype(bool))
+        if isinstance(value, (bytes, bytearray)):
+            arr = np.load(io.BytesIO(value), allow_pickle=False)
+            return torch.from_numpy(arr.astype(bool))
+        raise TypeError(f"time_series mask decoder: unsupported value type {type(value)}")
 
     @staticmethod
     def _decode_graph(value):
@@ -1706,7 +1751,7 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
         }[modality]
 
     # Delimiter written by the WebDataset converters (see
-    # scripts/convert_scits_to_webdataset._compose_text, which emits
+    # applications/timeseries/convert_scits_to_webdataset._compose_text, which emits
     # "Question: ...\nAnswer: ...").
     _QA_ANSWER_DELIM = "Answer:"
 
@@ -1759,6 +1804,105 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
                     )
                     continue
                 out: dict[str, Any] = {modality: decoder(sample[modality])}
+                metadata = sample.get("metadata", {})
+                if not isinstance(metadata, dict):
+                    metadata = {}
+                numerical_task = metadata.get(
+                    "numerical_task", metadata.get("task_type")
+                )
+                if numerical_task is not None:
+                    out["numerical_task"] = numerical_task
+                # Keep the most recent steps so forecast stats match what the encoder sees.
+                if modality == "time_series" and self._ts_history_cap is not None:
+                    out[modality] = out[modality][-self._ts_history_cap :]
+                if modality == "time_series" and sample.get("time_series_target") is not None:
+                    target = self._decode_time_series(sample["time_series_target"])
+                    target_mask = sample.get("time_series_target_mask")
+                    if target_mask is None:
+                        import torch
+
+                        target_mask = torch.isfinite(target)
+                    else:
+                        target_mask = self._decode_time_series_mask(target_mask)
+                        if target_mask.shape != target.shape:
+                            raise ValueError(
+                                "time_series_target_mask shape "
+                                f"{tuple(target_mask.shape)} != target shape {tuple(target.shape)}"
+                            )
+                        import torch
+
+                        target_mask = target_mask & torch.isfinite(target)
+                    out["time_series_target"] = target
+                    out["time_series_target_mask"] = target_mask
+                if modality == "time_series" and "time_series_target" in out:
+                    from ..encoders.time_series import TimeSeriesEncoder
+
+                    history = out["time_series"]
+                    if history.dim() == 1:
+                        history = history.unsqueeze(-1)
+                    observed = None
+                    if numerical_task == "forecasting":
+                        value_channels = metadata.get("history_value_channels")
+                        if value_channels is not None:
+                            if type(value_channels) is not int or value_channels < 1:
+                                raise ValueError(
+                                    "history_value_channels must be a positive integer"
+                                )
+                            has_observation_mask = metadata.get(
+                                "history_has_observation_mask", False
+                            )
+                            if type(has_observation_mask) is not bool:
+                                raise ValueError(
+                                    "history_has_observation_mask must be a boolean"
+                                )
+                            expected_channels = value_channels * (
+                                2 if has_observation_mask else 1
+                            )
+                            if history.shape[1] != expected_channels:
+                                raise ValueError(
+                                    "History channel count "
+                                    f"{history.shape[1]} != metadata-declared "
+                                    f"channel count {expected_channels}"
+                                )
+                            if has_observation_mask:
+                                mask_channels = history[:, value_channels:]
+                                if not ((mask_channels == 0) | (mask_channels == 1)).all():
+                                    raise ValueError(
+                                        "Appended history observation masks must be binary"
+                                    )
+                                observed = mask_channels.bool()
+                                history = history[:, :value_channels]
+                        elif history.shape[1] % 2 == 0:
+                            # Older SciTS shards lack layout metadata. Their
+                            # converter appended a binary mask as the second
+                            # channel block only when inputs had missing values.
+                            legacy_value_channels = history.shape[1] // 2
+                            mask_channels = history[:, legacy_value_channels:]
+                            if ((mask_channels == 0) | (mask_channels == 1)).all():
+                                observed = mask_channels.bool()
+                                history = history[:, :legacy_value_channels]
+                    else:
+                        forecast_target = out["time_series_target"]
+                        value_channels = (
+                            forecast_target.shape[1]
+                            if forecast_target.dim() == 2
+                            else 1
+                        )
+                        if history.shape[1] == 2 * value_channels:
+                            mask_channels = history[:, value_channels:]
+                            if not ((mask_channels == 0) | (mask_channels == 1)).all():
+                                raise ValueError(
+                                    "Appended history observation masks must be binary"
+                                )
+                            observed = mask_channels.bool()
+                            history = history[:, :value_channels]
+                        elif history.shape[1] != value_channels:
+                            raise ValueError(
+                                "History/forecast channel mapping is ambiguous"
+                            )
+                    mean, scale = TimeSeriesEncoder.forecast_statistics(history, observed)
+                    out["time_series_history_mean"] = mean
+                    out["time_series_history_scale"] = scale
 
                 caption = sample.get("text") or sample.get("caption", "")
                 if isinstance(caption, (bytes, bytearray)):
@@ -1777,7 +1921,8 @@ class ModalityAwareWebDatasetWrapper(_IterableDataset):
                 # captioning, where the whole string is the target).
                 out["_prompt_len"] = self._prompt_token_len(str(caption))
 
-                metadata = sample.get("metadata", {})
+                if isinstance(metadata, dict) and metadata.get("task_id") is not None:
+                    out["task_id"] = metadata["task_id"]
                 data_type = metadata.get("_data_type", "unknown") if isinstance(metadata, dict) else "unknown"
                 sample_id = (
                     metadata.get("id", metadata.get("global_idx", "unknown"))

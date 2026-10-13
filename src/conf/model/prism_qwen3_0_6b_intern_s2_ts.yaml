@@ -18,7 +18,7 @@ intern_s2_sampling_rate: 1.0
 d_ts: 2048
 max_ts_length: 512
 is_interleaved_qa: false
-normalize_ts_in_encoder: false
+normalize_ts_in_encoder: true
 
 projector_hidden_mult: 1
 projector_num_layers: 2

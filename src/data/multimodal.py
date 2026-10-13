@@ -1198,6 +1198,7 @@ class StreamingMultimodalDataset(IterableDataset):
         meta = f"[tulu_sft] {item.get('id', 'Unknown')}"
         return torch.zeros(3, 224, 224), text, meta
 
+    # TODO: Patrick: Delete stale processing code for TS
     def _process_ts_caption(self, item):
         """Process TSQA instruction data from ChengsenWang/TSQA, converting into (timeseries, text caption) pairs.
 
@@ -1333,6 +1334,8 @@ class StreamingMultimodalDataset(IterableDataset):
             logger.error(f"TS Caption Error: {e}")
             raise e
 
+    # TODO: Patrick: This is only used for interleaved ChatTS. 
+    # TODO: Patrick: SciTS does *NOT* use this path; instead it uses MultiWebDataset
     def _process_ts_qa(self, item):
 
         # Time Series
@@ -1657,6 +1660,7 @@ class StreamingMultimodalDataset(IterableDataset):
             raise e
             # return torch.randn(self.model_config.max_ts_length, 1), "Corrupt TS", "[Error] Corrupt TS Item"
 
+    # TODO: Patrick: Delete stale processing code for TS
     def _process_ts_instruction(self, item):
         """Handler for the local ts_instruction JSONL (zone_a dataset).
 

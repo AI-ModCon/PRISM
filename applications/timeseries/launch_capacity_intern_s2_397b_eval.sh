@@ -91,8 +91,11 @@ cat > "$RUN_SCRIPT" <<EOF
 set -eo pipefail
 
 cd "$REPO_ROOT"
-module load frameworks/2025.3.1
-module load hdf5
+mpiexec -n 1 -ppn 1 bash -lc '
+set -eo pipefail
+module use /soft/modulefiles || exit
+module load frameworks/2025.3.1 || exit
+module load hdf5 || exit
 set -u
 
 if [[ -f /tmp/deepspeed_env/.venv-deepspeed/bin/activate ]]; then
@@ -107,7 +110,7 @@ export TRANSFORMERS_CACHE=/flare/ModCon/pemami/hub
 export HF_HUB_CACHE=/flare/ModCon/pemami/hub
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
-export PRISM_VAL_SHARDS_DIR=/flare/ModCon/pemami/data/SciTS-processed/val_shards
+export PRISM_VAL_SHARDS_DIR="${PRISM_VAL_SHARDS_DIR:-/flare/ModCon/pemami/data/SciTS-processed/val_shards}"
 
 echo "Evaluating all SciTS validation samples from $CHECKPOINT"
 python tools/universal_evaluator.py \\
@@ -116,6 +119,7 @@ python tools/universal_evaluator.py \\
     --validation \\
     --limit 0 \\
     --backbone Qwen/Qwen3-0.6B
+'
 EOF
 
 chmod +x "$RUN_SCRIPT"

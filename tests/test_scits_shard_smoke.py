@@ -54,6 +54,10 @@ def _first_shard_path(shard_dir: Path) -> Path:
 
 
 def _sample_key_and_suffix(member_name: str) -> tuple[str, str] | None:
+    if member_name.endswith(".gt_ts_mask.npy"):
+        return member_name[: -len(".gt_ts_mask.npy")], "gt_ts_mask"
+    if member_name.endswith(".gt_ts.npy"):
+        return member_name[: -len(".gt_ts.npy")], "gt_ts"
     if member_name.endswith(".ts.npy"):
         return member_name[: -len(".ts.npy")], "ts"
     if member_name.endswith(".text"):
@@ -61,6 +65,13 @@ def _sample_key_and_suffix(member_name: str) -> tuple[str, str] | None:
     if member_name.endswith(".meta.json"):
         return member_name[: -len(".meta.json")], "meta"
     return None
+
+
+def test_sample_key_parser_accepts_optional_forecast_members():
+    assert _sample_key_and_suffix("sample-1.gt_ts.npy") == ("sample-1", "gt_ts")
+    assert _sample_key_and_suffix("sample-1.gt_ts_mask.npy") == (
+        "sample-1", "gt_ts_mask"
+    )
 
 
 def test_scits_shard_smoke_load_and_validate():
@@ -100,6 +111,9 @@ def test_scits_shard_smoke_load_and_validate():
                 sample_meta[prefix] = json.loads(payload.decode("utf-8"))
                 if it <=10:
                     print(sample_meta[prefix], flush=True)
+            elif suffix in ("gt_ts", "gt_ts_mask"):
+                arr = np.load(io.BytesIO(payload), allow_pickle=False)
+                assert arr.size > 0, f"Empty array in {member.name}"
             elif suffix == "text":
                 assert payload.decode("utf-8").strip(), f"Empty text in {member.name}"
                 if it <=10:

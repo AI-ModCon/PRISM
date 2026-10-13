@@ -304,6 +304,9 @@ class TimeSeriesEncoder(ModalityEncoder):
     _warned_multivariate_timeomni = False
     _warned_left_pad_unmasked = False
 
+    # Intern-S2 397B patch size grows with T/250; longer histories exhaust XPU memory.
+    INTERN_S2_397B_MAX_HISTORY = 300_000
+
     def __init__(
         self,
         encoder_type: str = "moirai",
@@ -321,12 +324,14 @@ class TimeSeriesEncoder(ModalityEncoder):
         timeomni_max_patches: int = 100,
         intern_s2_sampling_rate: float = 1.0,
         load_pretrained: bool = True,
+        max_history: int = INTERN_S2_397B_MAX_HISTORY,
     ):
         # We don't call super with d_ts because Moirai's output dim is fixed by the model
         super().__init__(d_ts)
         self.model_name = model_name
         self.num_vars = num_vars
         self.max_ts_length = max_ts_length
+        self.max_history = int(max_history)
         self.model = None
         self.encoder_type = encoder_type
         self.is_interleaved = is_interleaved
@@ -679,10 +684,40 @@ class TimeSeriesEncoder(ModalityEncoder):
         finally:
             self.model.train(was_training)
 
+    @staticmethod
+    @torch.no_grad()
+    def forecast_statistics(history, observed_mask=None):
+        values = history.detach().float()
+        if values.dim() == 1:
+            values = values.unsqueeze(-1)
+        if values.dim() != 2:
+            raise ValueError("Forecast history must have shape (T,V)")
+        valid = torch.isfinite(values)
+        if observed_mask is not None:
+            if observed_mask.dim() == 1:
+                observed_mask = observed_mask.unsqueeze(-1)
+            if observed_mask.shape != values.shape:
+                raise ValueError("History observation mask must match history values")
+            valid = valid & observed_mask.to(device=values.device, dtype=torch.bool)
+        if values.shape[0] == 0:
+            return values.new_zeros(values.shape[1]), values.new_ones(values.shape[1])
+        count = valid.sum(dim=0)
+        magnitude = torch.where(valid, values.abs(), 0.0).amax(dim=0)
+        normalizer = torch.where(magnitude > 0, magnitude, 1.0)
+        scaled_values = torch.where(valid, values / normalizer, 0.0)
+        scaled_mean = scaled_values.sum(dim=0) / count.clamp_min(1)
+        mean = scaled_mean * magnitude
+        deviations = torch.where(valid, scaled_values - scaled_mean, 0.0)
+        scaled_std = (deviations.square().sum(dim=0) / count.clamp_min(1)).sqrt()
+        std = scaled_std * magnitude
+        scale = torch.where((count > 1) & (std > 1e-6), std, torch.ones_like(std))
+        return mean.detach(), scale.detach()
+
     def _prepare_intern_s2_batch(
         self, inputs: torch.Tensor | list[torch.Tensor], device: torch.device
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """Build the fixed-size (B, max_ts_length, V_max) batch intern_s2 expects.
+        """Build the fixed-size (B, T, V_max) batch intern_s2 expects.
+        Pads to the maximum time series length and number of variates within the batch.
 
         Accepts either a pre-batched Tensor(B,T,V) (legacy, assumed fully
         real/no padding) or a list[Tensor(T_i,V_i)] with heterogeneous
@@ -697,6 +732,8 @@ class TimeSeriesEncoder(ModalityEncoder):
                     f"encoder_type='{self.encoder_type}' expects Tensor(B,T,V) or "
                     f"list[Tensor(T,V)], got shape={tuple(inputs.shape)}"
                 )
+            if self.encoder_type == "intern_s2_397b":
+                inputs = inputs[:, -self.max_history :]
             B, T, V = inputs.shape
             ts_lens = torch.full((B,), T, dtype=torch.long, device=device)
             channels = torch.full((B,), V, dtype=torch.long, device=device)
@@ -724,7 +761,11 @@ class TimeSeriesEncoder(ModalityEncoder):
                     f"got sample[{idx}] shape={tuple(ts.shape)}"
                 )
             t_i, v_i = ts.shape
-            if t_i > self.max_ts_length:
+            if self.encoder_type == "intern_s2_397b":
+                if t_i > self.max_history:
+                    ts = ts[-self.max_history :]
+                    t_i = self.max_history
+            elif t_i > self.max_ts_length:
                 ts = ts[: self.max_ts_length]
                 t_i = self.max_ts_length
             items.append(ts)
@@ -732,8 +773,11 @@ class TimeSeriesEncoder(ModalityEncoder):
             channels_list.append(v_i)
 
         v_max = max(channels_list)
+        batch_max_length = max(self.max_ts_length, max(lens))
         padded = [
-            torch.nn.functional.pad(ts, (0, v_max - ts.shape[1], 0, self.max_ts_length - ts.shape[0]))
+            torch.nn.functional.pad(
+                ts, (0, v_max - ts.shape[1], 0, batch_max_length - ts.shape[0])
+            )
             for ts in items
         ]
         batch = torch.stack(padded, dim=0).to(device=device)
@@ -751,7 +795,7 @@ class TimeSeriesEncoder(ModalityEncoder):
                 "Intern-S2 pad mask must match embedding batch/token dimensions: "
                 f"embeddings={tuple(embeddings.shape)}, pad_mask={tuple(pad_mask.shape)}"
             )
-        target = self.tokens_per_instance()
+        target = min(self.tokens_per_instance(), self.max_ts_length)
         n = embeddings.shape[1]
         if n < target:
             pad = embeddings.new_zeros(embeddings.shape[0], target - n, embeddings.shape[2])
@@ -761,14 +805,52 @@ class TimeSeriesEncoder(ModalityEncoder):
                 dim=1,
             )
         elif n > target:
-            embeddings = embeddings[:, :target, :]
-            pad_mask = pad_mask[:, :target]
+            if self.encoder_type == "intern_s2_397b":
+                pooled = embeddings.new_zeros(
+                    embeddings.shape[0], target, embeddings.shape[2]
+                )
+                pooled_mask = torch.ones(
+                    embeddings.shape[0], target, dtype=torch.bool, device=pad_mask.device
+                )
+                for batch_idx in range(embeddings.shape[0]):
+                    valid_embeddings = embeddings[batch_idx, ~pad_mask[batch_idx]]
+                    valid_count = valid_embeddings.shape[0]
+                    if valid_count > target:
+                        pooled[batch_idx] = torch.nn.functional.adaptive_avg_pool1d(
+                            valid_embeddings.transpose(0, 1).unsqueeze(0), target
+                        ).squeeze(0).transpose(0, 1)
+                        pooled_mask[batch_idx] = False
+                    elif valid_count:
+                        pooled[batch_idx, :valid_count] = valid_embeddings
+                        pooled_mask[batch_idx, :valid_count] = False
+                embeddings, pad_mask = pooled, pooled_mask
+            else:
+                embeddings = embeddings[:, :target, :]
+                pad_mask = pad_mask[:, :target]
         return embeddings, pad_mask.to(dtype=torch.bool)
 
     def _forward_intern_s2_any(self, inputs: torch.Tensor | list[torch.Tensor]) -> torch.Tensor:
+        """
+        Forward pass for the Intern S2 model with any variant.
+
+        Args:
+            inputs (torch.Tensor | list[torch.Tensor]): Input time series data.
+              Un-normalized; intern-s2 applies mean and std deviation normalization 
+              internally over each chunk and channel before patch extraction.
+
+        Returns:
+            torch.Tensor: Embeddings produced by the model.
+        """
         device = next(self.model.parameters()).device
         model_dtype = next(self.model.parameters()).dtype
         signals, ts_lens, channels = self._prepare_intern_s2_batch(inputs, device)
+        nonfinite_inputs = ~torch.isfinite(signals)
+        if nonfinite_inputs.any():
+            logger.warning(
+                "Intern-S2 input contained %d non-finite values; replacing them with zero.",
+                int(nonfinite_inputs.sum().item()),
+            )
+            signals = torch.nan_to_num(signals, nan=0.0, posinf=0.0, neginf=0.0)
         signals = signals.to(dtype=model_dtype)
         B = signals.shape[0]
 
@@ -787,6 +869,15 @@ class TimeSeriesEncoder(ModalityEncoder):
             )
 
         embeddings, pad_mask = self._pad_intern_s2_tokens(embeddings, pad_mask)
+        nonfinite_embeddings = ~torch.isfinite(embeddings)
+        if nonfinite_embeddings.any():
+            logger.warning(
+                "Intern-S2 output contained %d non-finite values; replacing them with zero.",
+                int(nonfinite_embeddings.sum().item()),
+            )
+            embeddings = torch.nan_to_num(
+                embeddings, nan=0.0, posinf=0.0, neginf=0.0
+            )
         self._last_pad_mask = pad_mask.detach()
         return embeddings
 

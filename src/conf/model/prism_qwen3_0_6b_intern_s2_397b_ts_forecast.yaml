@@ -1,8 +1,6 @@
 # Qwen3-0.6B / Intern-S2 input model + simple PRISM forecasting output.
-# Input fields preserve the user's pinned 9a2f328 model configuration.
-# Prerequisite: integrate its intern_s2_397b input encoder and loading wiring;
-# this decoder branch does not implement that input encoder. Hydra composition
-# is available here, but this file alone does not make the full model runnable.
+# Input fields follow the pinned 9a2f328 setup; ts_variates reserves value+mask channels.
+# Requires transformers>=5.2.0 and the pretrained encoder checkpoint under HF_HOME.
 # The output generator is a new linear quantile head, not Intern-S2's forecaster.
 
 backbone_id: "Qwen/Qwen3-0.6B"
@@ -16,18 +14,22 @@ modalities: [text, time_series]
 # creating the optimizer; freeze_encoders does not freeze those projectors.
 freeze_backbone: true
 freeze_encoders: true
-freeze_vit: true
 
 # Observed-history encoder: its 4096-wide output is input to the projector,
 # not the forecasting head. HF_HOME must point to the prepared local assets.
 is_timeseries: true
-ts_variates: 1
+# Reserve encoder tokens for up to five SciTS input channels plus their masks.
+ts_variates: 10
 ts_projector: "intern_s2_397b"
 ts_encoder_id: "${oc.env:HF_HOME}/intern-s2-preview-397b-timeseries/model.safetensors"
 ts_load_pretrained: true
 d_ts: 4096
+# PATRICK: NOTE - in intern-s2-preview 397b, this is not a timestep cap.
+# This caps the encoder **token output** budget.
+# intern-s2-preview 397b separately hard caps input steps to 300000.
+# TODO: Fix the semantics. 
 max_ts_length: 512
-normalize_ts_in_encoder: false
+normalize_ts_in_encoder: true
 
 # Input projection: 4096 -> 1024; prefix fusion puts observed-history tokens
 # before the text prompt. These normalization values are existing defaults.
@@ -37,6 +39,7 @@ projector_norm_mode: "layernorm"
 projector_modality_embed_pos: "after_norm"
 projector_modality_embed_scale: 0.02
 is_interleaved_qa: false
+mask_padded_modality_tokens: true
 
 output_decoders: [text, time_series]
 decoder_loss_weights:
@@ -52,10 +55,11 @@ decoder_configs:
     bridge:
       type: identity
       output_dim: 1024
-    # [B,1,1024] -> [B,96,1,3]; pinball loss, median for point forecasts.
+    # SciTS targets have up to ten variates; target masks exclude padded channels.
+    # [B,1,1024] -> [B,720,10,3].
     # Randomly initialized and trainable: no pretrained generator weights.
     generator:
       type: linear_quantile
-      horizon: 96
-      num_vars: 1
+      horizon: 720
+      num_vars: 10
       quantiles: [0.1, 0.5, 0.9]

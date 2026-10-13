@@ -96,10 +96,15 @@ def test_converts_canonical_scits_task_types_and_series_formats(tmp_path):
     metadata = _read_shard_metadata(output_dir)
     loaded_csv = _convert_mod._load_series_from_file(source_dir / "series" / "input.csv")
     assert manifest["total_samples"] == len(records)
-    assert loaded_csv.shape == (3,)
-    assert loaded_csv[1] == "X"
+    assert loaded_csv.shape == (3, 2)
+    np.testing.assert_array_equal(loaded_csv[:, 0], [1.0, 2.0, 3.0])
+    np.testing.assert_array_equal(loaded_csv[:, 1], [1.0, 0.0, 1.0])
     assert metadata["imputation"]["task_type"] == "imputation"
+    assert metadata["imputation"]["history_value_channels"] == 1
+    assert metadata["imputation"]["history_has_observation_mask"] is True
     assert metadata["forecasting"]["task_type"] == "forecasting"
+    assert metadata["forecasting"]["history_value_channels"] == 1
+    assert metadata["forecasting"]["history_has_observation_mask"] is False
     assert metadata["forecasting"]["gt_ts_shape"] == [2]
     assert metadata["anomaly"]["task_type"] == "anomaly_detection"
     assert metadata["classification"]["task_type"] == "classification"
@@ -107,6 +112,61 @@ def test_converts_canonical_scits_task_types_and_series_formats(tmp_path):
     assert metadata["event"]["task_type"] == "event_detection"
     assert metadata["mcq"]["task_type"] == "mcq"
     assert metadata["synthesize"]["task_type"] == "synthesize"
+
+
+def test_multichannel_csv_missing_values_keep_input_and_forecast_target(tmp_path):
+    import io
+
+    source_dir = tmp_path / "source"
+    series_dir = source_dir / "series"
+    series_dir.mkdir(parents=True)
+    (series_dir / "input.csv").write_text("1,10\nX,20\n3,X\n")
+    target = np.array([[4.0, 40.0], [5.0, np.nan]], dtype=np.float32)
+    np.save(series_dir / "target.npy", target)
+    (source_dir / "meta_data.jsonl").write_text(
+        json.dumps({
+            "id": "forecast-with-missing-input",
+            "task_id": ["ENG02"],
+            "input_ts": "series/input.csv",
+            "gt_ts": "series/target.npy",
+        }) + "\n"
+    )
+
+    output_dir = tmp_path / "output"
+    manifest = _convert_mod.convert_scits_to_webdataset(
+        output_dir=str(output_dir),
+        scits_dir=str(source_dir),
+        samples_per_shard=10,
+        val_ratio=0,
+    )
+
+    assert manifest["total_samples"] == 1
+    shard_path = next((output_dir / "shards").glob("*.tar"))
+    with tarfile.open(shard_path) as shard:
+        input_member = shard.extractfile("forecast-with-missing-input.ts.npy")
+        target_member = shard.extractfile("forecast-with-missing-input.gt_ts.npy")
+        target_mask_member = shard.extractfile("forecast-with-missing-input.gt_ts_mask.npy")
+        assert input_member is not None
+        assert target_member is not None
+        assert target_mask_member is not None
+        input_series = np.load(io.BytesIO(input_member.read()), allow_pickle=False)
+        loaded_target = np.load(io.BytesIO(target_member.read()), allow_pickle=False)
+        target_mask = np.load(io.BytesIO(target_mask_member.read()), allow_pickle=False)
+
+    expected_input = np.array(
+        [[1, 10, 1, 1], [2, 20, 0, 1], [3, 20, 1, 0]], dtype=np.float32
+    )
+    np.testing.assert_array_equal(input_series, expected_input)
+    np.testing.assert_array_equal(loaded_target, [[4.0, 40.0], [5.0, 40.0]])
+    np.testing.assert_array_equal(target_mask, [[True, True], [True, False]])
+
+
+def test_csv_with_fully_missing_channel_is_rejected(tmp_path):
+    path = tmp_path / "series.csv"
+    path.write_text("1,X\n2,X\n")
+
+    with pytest.raises(ValueError, match="fully missing channel"):
+        _convert_mod._load_series_from_file(path)
 
 
 def test_load_failure_message_includes_real_exception(tmp_path):

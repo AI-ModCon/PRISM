@@ -275,6 +275,8 @@ class ModelConfig:
     # If False, builds the moirai/intern_s2/intern_s2_397b encoder architecture from its
     # config but skips loading pretrained weights (random init, for ablation studies).
     ts_load_pretrained: bool = True
+    # Most-recent history steps kept for intern_s2_397b (encoder input and forecast stats).
+    ts_max_history: int = 300_000
     intern_s2_sampling_rate: float = 1.0
     # Moirai and linear both only handle univariate.
     # We handle multivariate by "flatting" the time series (T_ts, Num_Vars) -> (T_ts * Num_Vars) and projecting to d_ts.
@@ -284,6 +286,7 @@ class ModelConfig:
     )
     # Whether to apply scale-loc normalization in the TimeSeriesEncoder (for Moirai, necessary due to patch-specific normalization)
     # or in the StreamingDataset (for general projectors, e.g., linear)
+    # TODO: Patrick - add warning that this does not apply to MultiWebDataset - only StreamingMultimodalDataset
     normalize_ts_in_encoder: bool = True
     # TimeOmni-specific patching knobs. For ts_projector="timeomni", max_ts_length
     # is treated as a dynamic budget computed from these values (see train.py):

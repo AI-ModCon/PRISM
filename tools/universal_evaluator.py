@@ -1531,6 +1531,15 @@ def verify_image_modality(
 
 
 
+def _prepare_scits_time_series(arr, max_ts_len, ts_projector):
+    if ts_projector != "intern_s2_397b" and arr.shape[0] > max_ts_len:
+        arr = arr[:max_ts_len]
+    ts = torch.from_numpy(arr).float()
+    if ts.dim() == 1:
+        ts = ts.view(-1, 1)
+    return ts.unsqueeze(0)
+
+
 def verify_timeseries_scits(
     model,
     tokenizer,
@@ -1550,7 +1559,7 @@ def verify_timeseries_scits(
     # directory instead of raising or falling back.
     val_shards_dir = (
         os.environ.get("PRISM_VAL_SHARDS_DIR")
-        or "/flare/ModCon/pemami/data/SciTS-processed/val_shards"
+        or "/flare/ModCon/pemami/data/SciTS-forecast/val_shards"
     )
     # glob.glob() can hang on dfuse/DAOS mounts; os.listdir() + filter
     # is the safe pattern for shard directories that may live on DAOS.
@@ -1563,7 +1572,9 @@ def verify_timeseries_scits(
         raise ValueError(f"No *.tar shards found in {val_shards_dir}")
     print(f"Loading {len(tar_files)} SciTS validation shard(s) from {val_shards_dir}")
 
-    max_ts_len = getattr(getattr(model, "config", None), "max_ts_length", None) or 512
+    model_config = getattr(model, "config", None)
+    max_ts_len = getattr(model_config, "max_ts_length", None) or 512
+    ts_projector = getattr(model_config, "ts_projector", "linear")
 
     def _scits_iter():
         import io as _io
@@ -1589,13 +1600,9 @@ def verify_timeseries_scits(
                     else:
                         q = text.strip()
                         a = ""
-                    ts = torch.from_numpy(
-                        arr[:max_ts_len] if arr.shape[0] > max_ts_len else arr
-                    ).float()
-                    if ts.dim() == 1:
-                        ts = ts.view(-1, 1)
+                    ts = _prepare_scits_time_series(arr, max_ts_len, ts_projector)
                     yield {
-                        "time_series": ts.unsqueeze(0),
+                        "time_series": ts,
                         "_scits_qa": {"question": q, "answer": a},
                     }
 
