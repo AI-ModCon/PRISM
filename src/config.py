@@ -208,6 +208,10 @@ class ModelConfig:
     # DNA encoder settings
     dna_model_name: str = "InstaDeepAI/nucleotide-transformer-2.5b-multi-species"
     dna_is_evo2: bool = False  # If True, DNAEncoder loads an Evo2 checkpoint instead of NT
+    # Fixed DNA span length in tokens. The data path pads every DNA span to exactly
+    # this (multimodal.py) and DNAEncoder sizes each interleaved slot from it, so
+    # both must read the same value. Set from training.max_dna_length in train.py.
+    max_dna_length: int = 1024
 
     # Image encoder / processor
     image_encoder_id: str = "google/siglip2-base-patch16-224"

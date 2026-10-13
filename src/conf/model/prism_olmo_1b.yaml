@@ -51,6 +51,22 @@ modalities:
 #  - "geometry"
 #  - "graph"
 
+# Interleaved DNA splice tokens. Authored as literal special-token strings
+# (unlike time_series's pre-baked fixed integer ids) — UnifiedTransformer.__init__
+# registers any missing ones as new special tokens and resolves this to integer
+# ids before the merge path runs. Must match _render_dna_prompt_text
+# (src/data/multimodal.py) exactly.
+#
+# Required for correctness, not just for GRPO: without is_interleaved_qa=true,
+# multimodal.py's DNA branch falls through to the "[dna_bioreason]" full-
+# sequence-loss sentinel (the same one the projector-alignment stage uses)
+# instead of computing the "P T" prompt/target split SFT needs to mask loss to
+# just the assistant span. ZoneDTrainer (GRPO) also asserts this unconditionally.
+is_interleaved_qa: true
+modality_start_end_token_indices:
+  dna_reference: ["<dna_ref_start>", "<dna_ref_end>"]
+  dna_variant: ["<dna_var_start>", "<dna_var_end>"]
+
 # IsoFLOP projector capacity knobs (defaults match ModelConfig dataclass) --
 # Hydra struct mode rejects overrides for keys not declared in the YAML,
 # so callers can pass `model.projector_hidden_mult=N` without `+` prefix.

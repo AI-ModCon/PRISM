@@ -1,11 +1,11 @@
 {
   "_comment": "Per-file counts of hardcoded site paths, as a ratchet. See tools/ci/check_site_paths.py. Counts may only decrease; regenerate with `python tools/ci/check_site_paths.py --write`.",
   "files": {
-    "applications/bioreason/submit_bioreason_grpo.sh": 8,
-    "applications/bioreason/submit_bioreason_projector.sh": 7,
-    "applications/bioreason/submit_bioreason_sft.sh": 10,
-    "applications/bioreason/submit_eval_kegg.sh": 8,
-    "applications/bioreason/verify_dna_dataset_mix.sh": 7,
+    "applications/bioreason/scripts/training/submit_bioreason_grpo.sh": 8,
+    "applications/bioreason/scripts/training/submit_bioreason_projector.sh": 7,
+    "applications/bioreason/scripts/training/submit_bioreason_sft.sh": 10,
+    "applications/bioreason/scripts/eval/submit_eval_kegg.sh": 8,
+    "applications/bioreason/scripts/test/verify_dna_dataset_mix.sh": 7,
     "applications/material_science/stage_materials_text_model.py": 1,
     "applications/text/convert_arxiv_streaming.py": 6,
     "applications/text/convert_nemotron_to_webdataset.py": 4,

@@ -210,14 +210,22 @@ class StreamingMultimodalDataset(IterableDataset):
 
         # NT tokenizer for DNA-LLM mode — loaded once here, not per item.
         # LLM mode inlines sequences as plain text and never needs this.
+        # Loaded from the same checkpoint as the DNA encoder: NT v1 (e.g. 2.5B)
+        # and NT v2 vocabularies order their 6-mers differently, so a tokenizer
+        # from another NT release feeds the encoder the wrong k-mer ids.
         self.dna_tokenizer = None
         if self.model_name == "dna-llm":
+            dna_tokenizer_id = getattr(
+                model_config,
+                "dna_model_name",
+                "InstaDeepAI/nucleotide-transformer-2.5b-multi-species",
+            )
             try:
                 self.dna_tokenizer = AutoTokenizer.from_pretrained(
-                    "InstaDeepAI/nucleotide-transformer-v2-250m-multi-species",
+                    dna_tokenizer_id,
                     trust_remote_code=True,
                 )
-                logger.info("DNA tokenizer loaded: nucleotide-transformer-v2-250m-multi-species")
+                logger.info(f"DNA tokenizer loaded: {dna_tokenizer_id}")
             except Exception as e:
                 logger.warning(f"Could not load DNA tokenizer: {e}")
 
@@ -2663,17 +2671,22 @@ class StreamingMultimodalDataset(IterableDataset):
     def _render_dna_prompt_text(self, prompt: list) -> tuple:
         """
         Renders the chat-format prompt list produced by _process_dna_bioreason into
-        two flat strings that match the Qwen/ChatML format expected by the tokenizer
-        and the interleaved merge machinery.
+        two flat strings in OLMo's own (Tulu-style) turn format -- NOT Qwen/ChatML.
+        The tokenizer here is OLMo's, which has no <|im_start|>/<|im_end|>: those
+        would be split into plain subword pieces, so the model could never emit a
+        real stop token. The only OLMo special token used is its eos
+        (self.tokenizer.eos_token, "<|endoftext|>"), which ends the assistant turn.
+        OLMo has no start/BOS token, so none is added; turns are introduced by the
+        plain-text headers "<|user|>" and "<|assistant|>".
 
         The label-masking logic in _merge_text_input_ids_with_modality_embeds
         locates the boundary between question and answer via the "P T" _metadata
-        token counts, while the collate fn scans for the literal substring
-        "<|im_end|>\\n<|im_start|>assistant\\n" to find where the assistant turn
-        begins. This renderer must produce exactly that substring.
+        token counts: P covers everything up to and including "<|assistant|>\\n",
+        T covers the assistant turn through eos (so eos is supervised and the model
+        learns to stop).
 
         User turn rendering:
-          <|im_start|>user\\n
+          <|user|>\\n
           [for each content slot]
             type=="dna_reference" → Reference sequence: <dna_ref_start><dna_ref_end>\\n
             type=="dna_variant"   → Variant sequence: <dna_var_start><dna_var_end>\\n
@@ -2681,22 +2694,41 @@ class StreamingMultimodalDataset(IterableDataset):
                            modality_start_end_token_indices, NOT the chat-template
                            <|dna_start|><|dna_pad|><|dna_end|> variant)
             type=="text" → the question text
-          <|im_end|>\\n
+          \\n
 
         Assistant turn rendering (SFT only):
-          <|im_start|>assistant\\n
+          <|assistant|>\\n
           [if reasoning] <think>\\n{reasoning}\\n</think>\\n\\n
-          {answer text}
-          <|im_end|>\\n
+          {answer text}   (KEGG: "Answer: <answer>{answer}</answer>")
+          <|endoftext|>   (OLMo eos; end of the loss span)
 
         Returns:
             full_text   — user turn + assistant turn (use for example["text"])
-            prompt_text — user turn only + "<|im_start|>assistant\\n" suffix
+            prompt_text — user turn only + "<|assistant|>\\n" suffix
                           (use to measure prompt_tokens for _metadata)
         """
         modality_tags = self.model_config.modality_start_end_token_indices or {}
-        dna_ref_tags = modality_tags.get("dna_reference", ("<dna_ref_start>", "<dna_ref_end>"))
-        dna_var_tags = modality_tags.get("dna_variant", ("<dna_var_start>", "<dna_var_end>"))
+
+        # UnifiedTransformer.__init__ resolves these tag strings to integer ids
+        # *in place* on the shared ModelConfig, and train.py builds the dataset
+        # after the model. Rendering an int here would emit its digits as plain
+        # text ("Reference sequence: 5029250293"), so the merge never finds a
+        # splice point and the DNA embeddings are silently dropped. Map ids back
+        # to their token strings instead.
+        def _tag_str(tag):
+            if isinstance(tag, str):
+                return tag
+            return self.tokenizer.convert_ids_to_tokens(int(tag))
+
+        dna_ref_tags = tuple(
+            _tag_str(t)
+            for t in modality_tags.get("dna_reference", ("<dna_ref_start>", "<dna_ref_end>"))
+        )
+        dna_var_tags = tuple(
+            _tag_str(t)
+            for t in modality_tags.get("dna_variant", ("<dna_var_start>", "<dna_var_end>"))
+        )
+        eos = self.tokenizer.eos_token  # OLMo "<|endoftext|>"
         dna_ref_placeholder = f"Reference sequence: {dna_ref_tags[0]}{dna_ref_tags[1]}\n"
         dna_var_placeholder = f"Variant sequence: {dna_var_tags[0]}{dna_var_tags[1]}\n"
 
@@ -2720,25 +2752,27 @@ class StreamingMultimodalDataset(IterableDataset):
                             parts.append(dna_var_placeholder)
                     elif c.get("type") == "text":
                         parts.append(c["text"])
-                user_body = f"<|im_start|>user\n{''.join(parts)}<|im_end|>\n"
+                user_body = f"<|user|>\n{''.join(parts)}\n"
 
             elif role == "assistant":
+                # The sequence ends at eos with nothing after it: the SFT loss span is
+                # everything after prompt_text, so labels are exactly
+                # (<|assistant|>\n, eos] and nothing beyond.
                 reasoning = msg.get("reasoning_content", "")
                 answer = msg["content"][0]["text"]
                 if reasoning:
                     assistant_body = (
-                        f"<|im_start|>assistant\n"
+                        f"<|assistant|>\n"
                         f"<think>\n{reasoning}\n</think>\n\n"
-                        f"{answer}<|im_end|>\n"
+                        f"{answer}{eos}"
                     )
                 else:
-                    assistant_body = f"<|im_start|>assistant\n{answer}<|im_end|>\n"
+                    assistant_body = f"<|assistant|>\n{answer}{eos}"
 
         # prompt_text ends exactly at the assistant marker so that:
         #   len(tokenize(prompt_text)) == P  (the P in the "P T" _metadata string)
-        # The marker "<|im_end|>\n<|im_start|>assistant\n" is the literal string
-        # relied on elsewhere to find where the assistant turn begins.
-        prompt_text = user_body + "<|im_start|>assistant\n"
+        # The marker "\n<|assistant|>\n" is the literal string that ends the prompt.
+        prompt_text = user_body + "<|assistant|>\n"
 
         # SFT: full_text = user turn + complete assistant turn (answer in the sequence).
         # RL:  full_text = user turn + generation prompt only (model generates the answer).
@@ -2933,14 +2967,15 @@ class StreamingMultimodalDataset(IterableDataset):
 
             if self.is_sft:
                 # SFT: append full assistant turn so collate fn can mask prompt tokens from loss.
+                # Target rendered by _render_dna_prompt_text:
+                #   <think>\n{reasoning}\n</think>\n\nAnswer: <answer>{answer}</answer><|endoftext|>
+                answer_text = f"Answer: <answer>{answer.strip()}</answer>"
                 # Optionally truncate reasoning to stay within token budget.
                 if self.use_reasoning_traces and reasoning and self.tokenizer is not None:
                     MAX_SEQ = 2048
                     prompt_text = question_text
                     prompt_len = len(self.tokenizer.encode(prompt_text, add_special_tokens=False))
-                    answer_overhead = len(self.tokenizer.encode(
-                        f"<answer>{answer.strip()}</answer>", add_special_tokens=False
-                    ))
+                    answer_overhead = len(self.tokenizer.encode(answer_text, add_special_tokens=False))
                     reasoning_budget = MAX_SEQ - prompt_len - answer_overhead - 16
                     if reasoning_budget > 0:
                         reasoning_ids = self.tokenizer.encode(reasoning, add_special_tokens=False)
@@ -2954,7 +2989,7 @@ class StreamingMultimodalDataset(IterableDataset):
                 prompt.append({
                     "role": "assistant",
                     "reasoning_content": reasoning.strip() if self.use_reasoning_traces else "",
-                    "content": [{"type": "text", "text": f"<answer>{answer.strip()}</answer>"}],
+                    "content": [{"type": "text", "text": answer_text}],
                 })
 
             # RL: no assistant turn — answer is kept as the reward signal only.
@@ -3397,6 +3432,7 @@ class StreamingMultimodalDataset(IterableDataset):
             "time_series": [],
             "geometry": [],
             "text": [],
+            "dna": [],
         }
 
         for name in list(self.datasets_objs.keys()):

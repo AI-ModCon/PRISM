@@ -18,8 +18,8 @@
 #   3. Training doesn't crash on the new answer formats/handlers
 #
 # Usage:
-#   qsub applications/bioreason/verify_dna_dataset_mix.sh
-#   bash applications/bioreason/verify_dna_dataset_mix.sh   # on an already-allocated compute node
+#   qsub applications/bioreason/scripts/test/verify_dna_dataset_mix.sh
+#   bash applications/bioreason/scripts/test/verify_dna_dataset_mix.sh   # on an already-allocated compute node
 
 set -euo pipefail
 

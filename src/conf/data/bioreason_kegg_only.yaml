@@ -1,0 +1,16 @@
+# BioReason KEGG-only data mix (wanglab/kegg via the dna_bioreason handler).
+# Pins every zone_a dataset that is default-on in datasets_config.json off, so
+# the SFT run cannot silently mix in another stream (ts_qa is skip=false there).
+#
+# Composed automatically by training=bioreason_{projector,sft,grpo} via their
+# defaults list (/data@_global_.data) -- do not also pass +data=bioreason_kegg_only.
+dataset_overrides:
+  dna_bioreason:
+    skip: false
+    preferred_source: local
+  dna_bioreason_variant_effect_coding:
+    skip: true
+  dna_bioreason_variant_effect_non_snv:
+    skip: true
+  ts_qa:
+    skip: true

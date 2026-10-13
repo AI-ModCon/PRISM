@@ -418,7 +418,7 @@
                 "weight": 0.25,
                 "handler": "dna_bioreason_variant_effect_coding",
                 "modality": "dna",
-                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_coding",
+                "local_path": "/lus/flare/projects/ModCon/abalaji/cache/dna_local_shards/variant_effect_coding",
                 "preferred_source": "local",
                 "required_keys": [
                     "question",
@@ -427,7 +427,7 @@
                     "variant_sequence"
                 ],
                 "fallback_dummy": false,
-                "skip": false,
+                "skip": true,
                 "size_formatted": "48,850 samples (train split)"
             },
             "dna_bioreason_variant_effect_non_snv": {
@@ -437,7 +437,7 @@
                 "weight": 0.25,
                 "handler": "dna_bioreason_variant_effect_non_snv",
                 "modality": "dna",
-                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_non_snv",
+                "local_path": "/lus/flare/projects/ModCon/abalaji/cache/dna_local_shards/variant_effect_non_snv",
                 "preferred_source": "local",
                 "required_keys": [
                         "question",
@@ -446,7 +446,7 @@
                     "mutated_sequence"
                 ],
                 "fallback_dummy": false,
-                "skip": false,
+                "skip": true,
                 "size_formatted": "35,215 samples (train split)"
             }
         }

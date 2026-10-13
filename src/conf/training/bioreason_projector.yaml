@@ -3,13 +3,21 @@
 # Run this before bioreason_sft.yaml (Stage 2).
 # Based on: https://arxiv.org/abs/2505.23579
 
+# KEGG only (wanglab/kegg): composes src/conf/data/bioreason_kegg_only.yaml,
+# which forces the variant_effect_* datasets and every other default-on stream off.
+defaults:
+  - /data@_global_.data: bioreason_kegg_only
+  - _self_
+
 task: "bioreason_projector"
 batch_size: 8
 max_steps: 5000  # ~5 epochs over KEGG (1450 samples)
 device: "auto"
 learning_rate: 5e-5
 gradient_accumulation_steps: 8
-eval_enabled: true  # ZoneATrainer's periodic-eval block is opt-in; must be true for the KEGG eval below to fire
+# Off: ZoneATrainer.run_kegg_eval imports eval_kegg.py, which is not in this repo,
+# so the first eval step would raise ImportError and kill the run.
+eval_enabled: false
 eval_every_n_steps: 200  # Also drives the KEGG validation eval below
 viz_every_n_steps: 1000
 

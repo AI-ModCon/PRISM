@@ -114,7 +114,7 @@ script for a new application appears, not for the first.
 
 The test is what the script *serves*, not what it mentions.
 `tools/universal_evaluator.py` names KEGG and DOCCI but evaluates every
-benchmark, so it is general. `applications/bioreason/submit_bioreason_sft.sh`
+benchmark, so it is general. `applications/bioreason/scripts/training/submit_bioreason_sft.sh`
 runs one training job for one application, so it is not.
 
 Note `tools/` and `scripts/` are not cleanly separated from each other —
