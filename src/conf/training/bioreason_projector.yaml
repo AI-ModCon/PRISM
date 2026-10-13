@@ -4,11 +4,11 @@
 # Based on: https://arxiv.org/abs/2505.23579
 
 task: "bioreason_projector"
-batch_size: 8
-max_steps: 5000  # ~5 epochs over KEGG (1450 samples)
+batch_size: 1  # batch 8 at ~3k merged tokens (1024 DNA slots x2 + text) OOMs an Aurora tile
+max_steps: 100  # demo-sized run; raise for a full alignment (the SFT-stage runs used 500)
 device: "auto"
 learning_rate: 5e-5
-gradient_accumulation_steps: 8
+gradient_accumulation_steps: 1
 # Off: ZoneATrainer.run_kegg_eval imports eval_kegg.py, which is not in this repo,
 # so the first eval step would raise ImportError and kill the run.
 eval_enabled: false
@@ -21,13 +21,13 @@ viz_every_n_steps: 1000
 kegg_eval_max_examples: null  # null = full val split
 
 # Checkpointing
-save_every_n_steps: 500
+save_every_n_steps: 50
 resume_from_checkpoint: null
 resume_weights_only: null
 output_dir: ${hydra:run.dir}
 
 # Optimization
-warmup_steps: 500  # 10% of max_steps=5000
+warmup_steps: 10  # 10% of max_steps=100
 weight_decay: 0.01
 scheduler_type: "cosine"
 min_lr_ratio: 0.0
