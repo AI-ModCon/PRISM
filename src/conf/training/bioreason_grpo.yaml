@@ -2,12 +2,6 @@
 # Based on: https://arxiv.org/abs/2505.23579
 # Stage 2: Group Relative Policy Optimization for biological reasoning
 
-# KEGG only (wanglab/kegg): composes src/conf/data/bioreason_kegg_only.yaml,
-# which forces the variant_effect_* datasets and every other default-on stream off.
-defaults:
-  - /data@_global_.data: bioreason_kegg_only
-  - _self_
-
 task: "bioreason_grpo"
 batch_size: 8
 max_steps: 1000

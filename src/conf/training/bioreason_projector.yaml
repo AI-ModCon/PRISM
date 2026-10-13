@@ -3,12 +3,6 @@
 # Run this before bioreason_sft.yaml (Stage 2).
 # Based on: https://arxiv.org/abs/2505.23579
 
-# KEGG only (wanglab/kegg): composes src/conf/data/bioreason_kegg_only.yaml,
-# which forces the variant_effect_* datasets and every other default-on stream off.
-defaults:
-  - /data@_global_.data: bioreason_kegg_only
-  - _self_
-
 task: "bioreason_projector"
 batch_size: 8
 max_steps: 5000  # ~5 epochs over KEGG (1450 samples)
@@ -58,7 +52,7 @@ use_reasoning_traces: false
 data_num_workers: 1
 
 # BioReason-specific
-bioreason_dataset: "wanglab/kegg"  # or variant_effect_coding, variant_effect_non_snv
+bioreason_dataset: "wanglab/kegg"
 max_dna_length: 1024
 max_text_length: 1024
 dna_truncation_per_side: 1024
