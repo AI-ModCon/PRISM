@@ -418,7 +418,7 @@
                 "weight": 0.25,
                 "handler": "dna_bioreason_variant_effect_coding",
                 "modality": "dna",
-                "local_path": "/lus/flare/projects/ModCon/abalaji/cache/dna_local_shards/variant_effect_coding",
+                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_coding",
                 "preferred_source": "local",
                 "required_keys": [
                     "question",
@@ -437,7 +437,7 @@
                 "weight": 0.25,
                 "handler": "dna_bioreason_variant_effect_non_snv",
                 "modality": "dna",
-                "local_path": "/lus/flare/projects/ModCon/abalaji/cache/dna_local_shards/variant_effect_non_snv",
+                "local_path": "${PRISM_DATA_ROOT}/dna_local_shards/variant_effect_non_snv",
                 "preferred_source": "local",
                 "required_keys": [
                         "question",
