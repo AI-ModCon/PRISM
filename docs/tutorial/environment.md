@@ -46,7 +46,7 @@ explicitly. `--encoder-only` avoids downloading Intern-S2's separate native
 forecaster, which this PRISM preset does not use.
 
 ```bash
-python scripts/extract_intern_s2_timeseries.py \
+python applications/timeseries/extract_intern_s2_timeseries.py \
     --repo-id internlm/Intern-S2-Preview-397B \
     --output-dir "$HF_HOME/intern-s2-preview-397b-timeseries" \
     --code-dir "$HF_HOME/intern-s2-preview-397b-timeseries/source" \

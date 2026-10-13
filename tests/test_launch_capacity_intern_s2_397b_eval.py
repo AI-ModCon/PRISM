@@ -9,7 +9,7 @@ LAUNCHER = REPO_ROOT / "applications" / "timeseries" / "launch_capacity_intern_s
 
 
 def _post_training_hook():
-    launcher = REPO_ROOT / "tools" / "launch_capacity_intern_s2_397b.sh"
+    launcher = REPO_ROOT / "applications" / "timeseries" / "launch_capacity_intern_s2_397b.sh"
     content = launcher.read_text()
     return content.split('cat >> "$RUN_SCRIPT" <<EOF\n', 1)[1].split("\nEOF", 1)[0]
 
