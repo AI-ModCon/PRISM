@@ -63,7 +63,7 @@ def show_source(path: str | Path, start: int | None = None, end: int | None = No
     lines = p.read_text().splitlines()
     if pattern is not None:
         rx = re.compile(pattern)
-        hit = next((i for i, l in enumerate(lines) if rx.search(l)), None)
+        hit = next((i for i, ln in enumerate(lines) if rx.search(ln)), None)
         if hit is None:
             raise ValueError(f"{pattern!r} not found in {path}")
         start, end = hit + 1, min(len(lines), hit + context)
@@ -204,7 +204,7 @@ def plot_lengths(df, max_dna_length: int = 1024):
         ("reasoning_tokens", "Reasoning tokens (OLMo, KEGG only)"),
         ("answer_tokens", "Answer tokens (OLMo)"),
     ]
-    for ax, (col, title) in zip(axes[1:], panels):
+    for ax, (col, title) in zip(axes[1:], panels, strict=False):
         for i, name in enumerate(names):
             vals = df.loc[df.dataset == name, col]
             if vals.max() == 0:
@@ -468,7 +468,7 @@ def plot_logs(logs: dict):
     panels = [(k, "loss", r) for k, r in runs.items()]
     panels += [(k, "reward", r) for k, r in runs.items() if r["reward"]]
     fig, axes = plt.subplots(1, len(panels), figsize=(4.2 * len(panels), 3), squeeze=False)
-    for ax, (name, key, r) in zip(axes[0], panels):
+    for ax, (name, key, r) in zip(axes[0], panels, strict=False):
         if r[key]:
             ax.plot(r["step"], r[key], color=SERIES[0] if key == "loss" else SERIES[2], linewidth=2)
             ax.annotate(f"{r[key][-1]:.3f}", (r["step"][-1], r[key][-1]), fontsize=9, color=INK,

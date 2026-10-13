@@ -153,7 +153,7 @@ def test_sft_false_omits_assistant_turn_for_grpo():
     caption = render(ds, ds._process_dna_bioreason_variant_effect_non_snv(REAL_SAMPLE_ITEM_WITH_TERMS))
     # The generation marker is still emitted (the renderer always opens the
     # assistant turn); what is absent is the answer the model must produce.
-    assert "<|im_start|>assistant" in caption
+    assert "<|assistant|>" in caption
     assert "<answer>" not in caption
 
 
@@ -177,7 +177,7 @@ def test_none_item_returns_safe_fallback():
     assert "<answer>No variant information available.</answer>" in caption
     # dna-llm still needs a well-formed pair for __iter__ to tokenize.
     assert result["dna_sequences"] == ["CTGA", "CTGA"]
-    assert "<|im_start|>assistant" in caption
+    assert "<|assistant|>" in caption
 
 
 def test_none_item_with_is_sft_false_omits_assistant_turn():

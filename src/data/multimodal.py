@@ -2728,7 +2728,7 @@ class StreamingMultimodalDataset(IterableDataset):
             _tag_str(t)
             for t in modality_tags.get("dna_variant", ("<dna_var_start>", "<dna_var_end>"))
         )
-        eos = self.tokenizer.eos_token  # OLMo "<|endoftext|>"
+        eos = getattr(self.tokenizer, "eos_token", None) or "<|endoftext|>"  # OLMo EOS
         dna_ref_placeholder = f"Reference sequence: {dna_ref_tags[0]}{dna_ref_tags[1]}\n"
         dna_var_placeholder = f"Variant sequence: {dna_var_tags[0]}{dna_var_tags[1]}\n"
 

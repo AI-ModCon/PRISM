@@ -522,6 +522,7 @@ def build_collator(
 ):
     """Pick the Bucketed/Multimodal collator for the non-VLA streaming path."""
     _is_dynamic_length_ts = model_config.ts_projector in DYNAMIC_LENGTH_TS_PROJECTORS
+    collator: BucketedCollator | MultimodalCollator
     if use_bucketed_collator and not _is_dynamic_length_ts:
         collator = BucketedCollator(
             tokenizer,
