@@ -4,7 +4,7 @@
 #PBS -l walltime=04:00:00
 #PBS -l filesystems=home:flare
 #PBS -q prod
-#PBS -A ModCon
+# Allocation is not hardcoded: submit with `qsub -A <project> ...`.
 #PBS -k doe
 #PBS -j oe
 #
@@ -41,15 +41,18 @@ fi
 RUN_ID="${RUN_ID:-BIOREASON-GRPO-KEGG}"
 RUN_VARIANT="1B"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d-%H%M%S)}"
-MAX_STEPS="${MAX_STEPS:-1000}"
-NUM_GENERATIONS="${NUM_GENERATIONS:-8}"
-MAX_COMPLETION="${MAX_COMPLETION:-800}"
-SAVE_EVERY="${SAVE_EVERY:-100}"
+# Hyperparameters come from src/conf/training/bioreason_grpo.yaml. Set any of
+# MAX_STEPS / NUM_GENERATIONS / MAX_COMPLETION / SAVE_EVERY to override that value for one run.
+TRAIN_OVERRIDES=""
+[ -n "${MAX_STEPS:-}" ]       && TRAIN_OVERRIDES+=" training.max_steps=${MAX_STEPS}"
+[ -n "${NUM_GENERATIONS:-}" ] && TRAIN_OVERRIDES+=" training.grpo_num_generations=${NUM_GENERATIONS}"
+[ -n "${MAX_COMPLETION:-}" ]  && TRAIN_OVERRIDES+=" training.grpo_max_completion_length=${MAX_COMPLETION}"
+[ -n "${SAVE_EVERY:-}" ]      && TRAIN_OVERRIDES+=" training.save_every_n_steps=${SAVE_EVERY}"
 EXTRA_HYDRA="${EXTRA_HYDRA:-}"
 
-export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/ModCon/${USER}/cache}"
-export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/ModCon/${USER}/output}"
-export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/ModCon/${USER}/modcon/checkpoints}"
+export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/<project>/${USER}/cache}"
+export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/<project>/${USER}/output}"
+export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/<project>/${USER}/modcon/checkpoints}"
 HYDRA_RUN_DIR="${HYDRA_RUN_DIR:-${PRISM_CKPT_ROOT}/${RUN_ID}/${RUN_TAG}}"
 
 # Stage 2 SFT checkpoint. Default: newest SFT step_final under PRISM_CKPT_ROOT.
@@ -61,12 +64,12 @@ fi
 
 cd "${PROJ_DIR}"
 
-export PRISM_VENV="${PRISM_VENV:-/flare/ModCon/${USER}/prism-envs/bioreason-fw2026.1}"
+export PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 module use /soft/modulefiles
 module load frameworks/2026.1.0
 module load hdf5
 if [ ! -f "${PRISM_VENV}/bin/activate" ]; then
-  echo "ERROR: PRISM_VENV not found: ${PRISM_VENV} (bash applications/bioreason/helpers/setup_jupyter_kernel.sh builds it)"
+  echo "ERROR: PRISM_VENV not found: ${PRISM_VENV} (bash applications/bioreason/helpers/setup_prism_env.sh builds it)"
   exit 1
 fi
 source "${PRISM_VENV}/bin/activate"
@@ -78,7 +81,7 @@ if [[ ! "${HOSTNAME}" =~ aurora-uan ]]; then
   export https_proxy="http://proxy.alcf.anl.gov:3128"
 fi
 
-export HF_HOME="${HF_HOME:-/flare/ModCon/${USER}/cache/model_weights}"
+export HF_HOME="${HF_HOME:-/flare/<project>/${USER}/cache/model_weights}"
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
@@ -111,7 +114,7 @@ echo " BIOREASON GRPO (KEGG only, OLMo-1B + LoRA r16, Aurora, 1 tile)"
 echo " Node:          $(hostname)"
 echo " SFT ckpt:      ${STAGE1_CKPT}"
 echo " Run dir:       ${HYDRA_RUN_DIR}"
-echo " Max steps:     ${MAX_STEPS} (G=${NUM_GENERATIONS}, max completion ${MAX_COMPLETION})"
+echo " Overrides:     ${TRAIN_OVERRIDES:- (none; using bioreason_grpo.yaml)}"
 echo "================================================================"
 
 mpiexec -n 1 -ppn 1 --cpu-bind depth --depth 8 bash -lc '
@@ -129,10 +132,7 @@ mpiexec -n 1 -ppn 1 --cpu-bind depth --depth 8 bash -lc '
     exp.variant='"${RUN_VARIANT}"' \
     training.resume_weights_only='"${STAGE1_CKPT}"' \
     training.bioreason_dataset=wanglab/kegg \
-    training.max_steps='"${MAX_STEPS}"' \
-    training.grpo_num_generations='"${NUM_GENERATIONS}"' \
-    training.grpo_max_completion_length='"${MAX_COMPLETION}"' \
-    training.save_every_n_steps='"${SAVE_EVERY}"' \
+    '"${TRAIN_OVERRIDES}"' \
     wandb.mode='"${WANDB_MODE}"' \
     hydra.run.dir='"${HYDRA_RUN_DIR}"' '"${EXTRA_HYDRA}"'
 '

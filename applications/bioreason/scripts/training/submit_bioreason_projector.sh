@@ -4,7 +4,7 @@
 #PBS -l walltime=01:00:00
 #PBS -l filesystems=home:flare
 #PBS -q debug
-#PBS -A ModCon
+# Allocation is not hardcoded: submit with `qsub -A <project> ...`.
 #PBS -k doe
 #PBS -j oe
 #
@@ -15,37 +15,43 @@
 # Its checkpoints/step_final is the STAGE1_CKPT for scripts/training/submit_bioreason_sft.sh.
 # Outputs land in ${PRISM_CKPT_ROOT}/${RUN_ID}/${RUN_TAG} (override with HYDRA_RUN_DIR).
 #
-# Defaults: 100 optimizer steps, grad-accum 1, warmup 10. On 12 tiles x batch 8
-# that is 96 samples/step -> 9,600 samples (~8 epochs of KEGG's 1,159 train rows).
-# bioreason_projector.yaml's own grad-accum of 8 would make 100 steps ~66 epochs.
+# Hyperparameters (steps, warmup, batch, grad-accum, save cadence) come from
+# src/conf/training/bioreason_projector.yaml; the env vars below override them per run.
 #
 # Batch job:
 #   qsub applications/bioreason/scripts/training/submit_bioreason_projector.sh
 #   qsub -v MAX_STEPS=200,GRAD_ACCUM=2 applications/bioreason/scripts/training/submit_bioreason_projector.sh
 #
-# Interactive node (after `qsub -I -l select=1,walltime=01:00:00,filesystems=home:flare -q debug -A ModCon`):
+# Interactive node (after `qsub -I -l select=1,walltime=01:00:00,filesystems=home:flare -q debug -A <project>`):
 #   bash applications/bioreason/scripts/training/submit_bioreason_projector.sh
 
 set -eo pipefail
 
-PROJ_DIR="/home/abalaji/projects/modcon/release/BaseMM_PRISM"
+PROJ_DIR="${PROJ_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." 2>/dev/null && pwd)}"
+# Under qsub the script runs from a spool copy, so BASH_SOURCE points there.
+if [ -n "${PBS_O_WORKDIR:-}" ] && [ ! -f "${PROJ_DIR}/src/train.py" ]; then
+  PROJ_DIR="${PBS_O_WORKDIR}"
+fi
 RUN_ID="${RUN_ID:-BIOREASON-PROJECTOR-KEGG}"
 RUN_VARIANT="1B"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d-%H%M%S)}"
-MAX_STEPS="${MAX_STEPS:-100}"
-WARMUP_STEPS="${WARMUP_STEPS:-10}"
-GRAD_ACCUM="${GRAD_ACCUM:-1}"
-BATCH_SIZE="${BATCH_SIZE:-1}"  # batch 8 at ~3k merged tokens OOMs a tile (see SFT launcher)
-SAVE_EVERY="${SAVE_EVERY:-50}"
+# Training hyperparameters come from src/conf/training/bioreason_projector.yaml. Set any of
+# MAX_STEPS / WARMUP_STEPS / GRAD_ACCUM / BATCH_SIZE / SAVE_EVERY to override that value for one run.
+TRAIN_OVERRIDES=""
+[ -n "${MAX_STEPS:-}" ]    && TRAIN_OVERRIDES+=" training.max_steps=${MAX_STEPS}"
+[ -n "${WARMUP_STEPS:-}" ] && TRAIN_OVERRIDES+=" training.warmup_steps=${WARMUP_STEPS}"
+[ -n "${GRAD_ACCUM:-}" ]   && TRAIN_OVERRIDES+=" training.gradient_accumulation_steps=${GRAD_ACCUM}"
+[ -n "${BATCH_SIZE:-}" ]   && TRAIN_OVERRIDES+=" training.batch_size=${BATCH_SIZE}"
+[ -n "${SAVE_EVERY:-}" ]   && TRAIN_OVERRIDES+=" training.save_every_n_steps=${SAVE_EVERY}"
 NPERNODE="${NPERNODE:-12}"  # 6 PVC GPUs x 2 tiles per Aurora node (FLAT mode)
 
 # Site roots: datasets_config.json resolves dna_bioreason's local_path as
 # ${PRISM_DATA_ROOT}/dna_local_shards/kegg.
-export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/ModCon/abalaji/cache}"
-export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/ModCon/abalaji/output}"
+export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/<project>/${USER}/cache}"
+export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/<project>/${USER}/output}"
 # Checkpoints (~13 GB each: frozen backbone + encoder are saved too) go to flare,
 # not Hydra's default outputs/ under the repo in /home, which overflows its quota.
-export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/ModCon/abalaji/modcon/checkpoints}"
+export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/<project>/${USER}/modcon/checkpoints}"
 HYDRA_RUN_DIR="${HYDRA_RUN_DIR:-${PRISM_CKPT_ROOT}/${RUN_ID}/${RUN_TAG}}"
 
 cd "${PROJ_DIR}"
@@ -56,7 +62,7 @@ cd "${PROJ_DIR}"
 #   module load frameworks/2026.1.0
 #   uv venv --system-site-packages -p "$(which python)" $PRISM_VENV && source $PRISM_VENV/bin/activate
 #   uv pip install wandb braceexpand==0.1.7 && uv pip install --no-deps webdataset==1.0.2 torchtune==0.6.1
-export PRISM_VENV="${PRISM_VENV:-/flare/ModCon/${USER}/prism-envs/bioreason-fw2026.1}"
+export PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 module use /soft/modulefiles
 module load frameworks/2026.1.0
 module load hdf5
@@ -76,7 +82,7 @@ fi
 
 # OLMo-1B-0724-hf, nucleotide-transformer-2.5b-multi-species and
 # datasets--wanglab--kegg are all pre-cached here; run fully offline.
-export HF_HOME="/flare/ModCon/${USER}/cache/model_weights"
+export HF_HOME="/flare/<project>/${USER}/cache/model_weights"
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
@@ -122,7 +128,7 @@ echo " Node:          $(hostname)"
 echo " Master:        ${MASTER_ADDR}:${MASTER_PORT}"
 echo " Ranks:         ${NPERNODE}"
 echo " KEGG shard:    ${PRISM_DATA_ROOT}/dna_local_shards/kegg"
-echo " Steps:         ${MAX_STEPS} (batch ${BATCH_SIZE}, warmup ${WARMUP_STEPS}, grad-accum ${GRAD_ACCUM}, save every ${SAVE_EVERY})"
+echo " Overrides:     ${TRAIN_OVERRIDES:- (none; using bioreason_projector.yaml)}"
 echo " Run dir:       ${HYDRA_RUN_DIR}"
 echo "================================================================"
 
@@ -159,11 +165,7 @@ mpiexec -n "${NPERNODE}" -ppn "${NPERNODE}" --cpu-bind depth --depth 8 bash -lc 
     exp.id='"${RUN_ID}"' \
     exp.variant='"${RUN_VARIANT}"' \
     training.bioreason_dataset=wanglab/kegg \
-    training.batch_size='"${BATCH_SIZE}"' \
-    training.max_steps='"${MAX_STEPS}"' \
-    training.warmup_steps='"${WARMUP_STEPS}"' \
-    training.gradient_accumulation_steps='"${GRAD_ACCUM}"' \
-    training.save_every_n_steps='"${SAVE_EVERY}"' \
+    '"${TRAIN_OVERRIDES}"' \
     wandb.mode='"${WANDB_MODE}"' \
     hydra.run.dir='"${HYDRA_RUN_DIR}"'
 '

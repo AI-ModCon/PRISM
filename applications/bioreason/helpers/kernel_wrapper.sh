@@ -10,7 +10,7 @@
 # Do not call directly; Jupyter passes `-f <connection_file>` as "$@".
 
 FRAMEWORKS_MODULE="${FRAMEWORKS_MODULE:-frameworks/2026.1.0}"
-PRISM_VENV="${PRISM_VENV:-/flare/ModCon/${USER}/prism-envs/bioreason-fw2026.1}"
+PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 
 module use /soft/modulefiles
 module load "${FRAMEWORKS_MODULE}"

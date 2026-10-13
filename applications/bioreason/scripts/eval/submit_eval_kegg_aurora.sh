@@ -4,7 +4,7 @@
 #PBS -l walltime=01:00:00
 #PBS -l filesystems=home:flare
 #PBS -q debug
-#PBS -A ModCon
+# Allocation is not hardcoded: submit with `qsub -A <project> ...`.
 #PBS -k doe
 #PBS -j oe
 #
@@ -36,8 +36,8 @@ MAX_NEW_TOKENS="${MAX_NEW_TOKENS:-1024}"
 DNA_MODE="${DNA_MODE:-real}"
 case "${DNA_MODE}" in real|shuffled|blank) ;; *) echo "ERROR: DNA_MODE must be real|shuffled|blank"; exit 1;; esac
 
-export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/ModCon/${USER}/cache}"
-export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/ModCon/${USER}/output}"
+export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/<project>/${USER}/cache}"
+export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/<project>/${USER}/output}"
 RESULT_NAME="results.json"; [ "${DNA_MODE}" != "real" ] && RESULT_NAME="results_${DNA_MODE}.json"
 OUTPUT="${OUTPUT:-${PRISM_OUTPUT_ROOT}/BIOREASON-EVAL-KEGG/${RUN_TAG}/${RESULT_NAME}}"
 DATA="${DATA:-${PRISM_DATA_ROOT}/dna_local_shards_${SPLIT}/kegg}"
@@ -49,13 +49,13 @@ fi
 
 cd "${PROJ_DIR}"
 
-export PRISM_VENV="${PRISM_VENV:-/flare/ModCon/${USER}/prism-envs/bioreason-fw2026.1}"
+export PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 module use /soft/modulefiles
 module load frameworks/2026.1.0
 module load hdf5
 source "${PRISM_VENV}/bin/activate"
 
-export HF_HOME="${HF_HOME:-/flare/ModCon/${USER}/cache/model_weights}"
+export HF_HOME="${HF_HOME:-/flare/<project>/${USER}/cache/model_weights}"
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1

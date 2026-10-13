@@ -4,7 +4,7 @@
 #PBS -l walltime=06:00:00
 #PBS -l filesystems=home:flare
 #PBS -q capacity
-#PBS -A ModCon
+# Allocation is not hardcoded: submit with `qsub -A <project> ...`.
 #PBS -k doe
 #PBS -j oe
 #
@@ -21,27 +21,33 @@
 #   # optional: start from a pretrained projector instead of random init
 #   qsub -v STAGE1_CKPT=/path/to/checkpoints/step_N applications/bioreason/scripts/training/submit_bioreason_sft.sh
 #
-# Interactive node (after `qsub -I -l select=1,walltime=01:00:00,filesystems=home:flare -q debug -A ModCon`):
+# Interactive node (after `qsub -I -l select=1,walltime=01:00:00,filesystems=home:flare -q debug -A <project>`):
 #   bash applications/bioreason/scripts/training/submit_bioreason_sft.sh
 # Single-tile debug run:
 #   NPERNODE=1 MAX_STEPS=20 bash applications/bioreason/scripts/training/submit_bioreason_sft.sh
 
 set -eo pipefail
 
-PROJ_DIR="/home/abalaji/projects/modcon/release/BaseMM_PRISM"
+PROJ_DIR="${PROJ_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." 2>/dev/null && pwd)}"
+# Under qsub the script runs from a spool copy, so BASH_SOURCE points there.
+if [ -n "${PBS_O_WORKDIR:-}" ] && [ ! -f "${PROJ_DIR}/src/train.py" ]; then
+  PROJ_DIR="${PBS_O_WORKDIR}"
+fi
 RUN_ID="${RUN_ID:-BIOREASON-SFT-KEGG}"
 RUN_VARIANT="1B"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d-%H%M%S)}"
-MAX_STEPS="${MAX_STEPS:-500}"
+# Hyperparameters come from src/conf/training/bioreason_sft.yaml; set MAX_STEPS to override max_steps.
+TRAIN_OVERRIDES=""
+[ -n "${MAX_STEPS:-}" ] && TRAIN_OVERRIDES+=" training.max_steps=${MAX_STEPS}"
 NPERNODE="${NPERNODE:-12}"  # 6 PVC GPUs x 2 tiles per Aurora node (FLAT mode)
 
 # Site roots: datasets_config.json resolves dna_bioreason's local_path as
 # ${PRISM_DATA_ROOT}/dna_local_shards/kegg.
-export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/ModCon/abalaji/cache}"
-export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/ModCon/abalaji/output}"
+export PRISM_DATA_ROOT="${PRISM_DATA_ROOT:-/lus/flare/projects/<project>/${USER}/cache}"
+export PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/<project>/${USER}/output}"
 # Checkpoints (~13 GB each) go to flare, not Hydra's default outputs/ under the
 # repo in /home, which overflows its quota.
-export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/ModCon/abalaji/modcon/checkpoints}"
+export PRISM_CKPT_ROOT="${PRISM_CKPT_ROOT:-/lus/flare/projects/<project>/${USER}/modcon/checkpoints}"
 HYDRA_RUN_DIR="${HYDRA_RUN_DIR:-${PRISM_CKPT_ROOT}/${RUN_ID}/${RUN_TAG}}"
 
 # Optional: Stage 1 (bioreason_projector, model=prism_olmo_1b) checkpoint. Unset
@@ -61,7 +67,7 @@ cd "${PROJ_DIR}"
 #   module load frameworks/2026.1.0
 #   uv venv --system-site-packages -p "$(which python)" $PRISM_VENV && source $PRISM_VENV/bin/activate
 #   uv pip install wandb braceexpand==0.1.7 && uv pip install --no-deps webdataset==1.0.2 torchtune==0.6.1
-export PRISM_VENV="${PRISM_VENV:-/flare/ModCon/${USER}/prism-envs/bioreason-fw2026.1}"
+export PRISM_VENV="${PRISM_VENV:-/flare/<project>/${USER}/prism-envs/bioreason-fw2026.1}"
 module use /soft/modulefiles
 module load frameworks/2026.1.0
 module load hdf5
@@ -80,7 +86,7 @@ fi
 
 # OLMo-1B-0724-hf, nucleotide-transformer-2.5b-multi-species and
 # datasets--wanglab--kegg are all pre-cached here; run fully offline.
-export HF_HOME="/flare/ModCon/${USER}/cache/model_weights"
+export HF_HOME="/flare/<project>/${USER}/cache/model_weights"
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export HF_DATASETS_OFFLINE=1
@@ -130,7 +136,7 @@ echo " Master:        ${MASTER_ADDR}:${MASTER_PORT}"
 echo " Ranks:         ${NPERNODE}"
 echo " Projector init: ${STAGE1_CKPT:-random (no Stage 1)}"
 echo " KEGG shard:    ${PRISM_DATA_ROOT}/dna_local_shards/kegg"
-echo " Max steps:     ${MAX_STEPS}"
+echo " Overrides:     ${TRAIN_OVERRIDES:- (none; using bioreason_sft.yaml)}"
 echo " Run dir:       ${HYDRA_RUN_DIR}"
 echo "================================================================"
 
@@ -168,7 +174,7 @@ mpiexec -n "${NPERNODE}" -ppn "${NPERNODE}" --cpu-bind depth --depth 8 bash -lc 
     exp.variant='"${RUN_VARIANT}"' \
     '"${RESUME_ARG}"' \
     training.bioreason_dataset=wanglab/kegg \
-    training.max_steps='"${MAX_STEPS}"' \
+    '"${TRAIN_OVERRIDES}"' \
     wandb.mode='"${WANDB_MODE}"' \
     hydra.run.dir='"${HYDRA_RUN_DIR}"'
 '

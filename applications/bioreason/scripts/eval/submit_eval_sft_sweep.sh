@@ -17,7 +17,7 @@ CKPT_DIR="${1:?usage: $0 <sft run>/checkpoints}"
 SPLIT="${SPLIT:-val}"
 WALLTIME="${WALLTIME:-01:00:00}"
 TAG="${TAG:-sweep-$(date +%Y%m%d-%H%M%S)}"
-PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/ModCon/${USER}/output}"
+PRISM_OUTPUT_ROOT="${PRISM_OUTPUT_ROOT:-/lus/flare/projects/<project>/${USER}/output}"
 OUT_DIR="${PRISM_OUTPUT_ROOT}/BIOREASON-EVAL-KEGG/${TAG}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

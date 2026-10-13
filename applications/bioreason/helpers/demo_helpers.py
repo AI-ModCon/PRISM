@@ -370,9 +370,11 @@ def patch_stage_script(src: str | Path, dst: str | Path) -> Path:
 
 def qsub(script, env: dict | None = None, depend: str | None = None, log: str | None = None,
          queue: str | None = None, walltime: str | None = None, name: str | None = None,
-         cwd: str | None = None, dry_run: bool = False) -> str:
-    """Submit ``script`` and return the job id. ``env`` is passed with -v."""
+         cwd: str | None = None, dry_run: bool = False, account: str | None = None) -> str:
+    """Submit ``script`` and return the job id. ``env`` is passed with -v; ``account`` with -A."""
     cmd = ["qsub"]
+    if account:
+        cmd += ["-A", account]
     if env:
         bad = [k for k, v in env.items() if "," in str(v)]
         if bad:
