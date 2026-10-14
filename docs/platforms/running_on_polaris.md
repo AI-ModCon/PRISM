@@ -98,7 +98,7 @@ recommended layout:
   datasets/<dataset>/shards/*.tar
   models/<hf-org--hf-model>/         # HF snapshot dirs
   envs/.venv-polaris/                # built by setup_polaris_env.sh
-  repos/PRISM/                # checkout
+  repos/PRISM/                       # checkout
   logs/<DESIGN>/                     # PBS stdout/stderr
 ```
 

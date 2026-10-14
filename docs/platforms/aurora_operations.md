@@ -45,7 +45,7 @@ cat $PBS_NODEFILE
 Open a new terminal on the UAN and run:
 
 ```bash
-cd /lus/flare/projects/ModCon/ngetty/PRISM
+cd /lus/flare/projects/<project>/<user>/PRISM
 
 # Quick test (5 steps, 1B model):
 python tools/launch_aurora_web.py \

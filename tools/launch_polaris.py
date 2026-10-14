@@ -239,7 +239,7 @@ def main() -> int:
         env_config = load_dotenv()
 
     # When --prism-dir isn't given, prefer the launcher's own location over
-    # cwd. That way `ssh polaris "cd /eagle/.../BaseMM_PRISM && \
+    # cwd. That way `ssh polaris "cd /eagle/.../PRISM && \
     # python tools/launch_polaris.py ..."` Just Works from a different host.
     if args.prism_dir:
         prism_dir = args.prism_dir
