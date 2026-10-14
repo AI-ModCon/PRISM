@@ -140,8 +140,8 @@ image files:
 python applications/vision_language/prepare_pixmo_dataset.py \
   --hf-id allenai/pixmo-cap \
   --output-dir "$PIXMO_LOCAL_DIR" \
-  --limit 50000 \
-  --workers 32
+  --limit 250000 \
+  --workers 64
 ```
 
 Convert it to WebDataset shards:
@@ -176,6 +176,35 @@ prism data convert \
 ```
 
 For a two-node run, use at least 24 shards so every Aurora rank has data to read.
+For finite, no-repeat training, also make sure the number of usable samples in
+`manifest.json` is at least:
+
+```text
+required_samples = nodes * 12 * local_batch * max_steps
+```
+
+The launch commands below use two nodes, 400 steps, DDP local batch 10, and
+HSDP local batch 16. That means the same WebDataset should contain at least
+`2 * 12 * 16 * 400 = 153600` usable samples if you want both launches to run
+without repeating data. Check this before submitting:
+
+```bash
+python - <<'PY'
+import json
+import os
+
+manifest = os.path.join(os.environ["WDS_DIR"], "manifest.json")
+with open(manifest) as f:
+    data = json.load(f)
+
+usable = int(data.get("total_written") or data.get("total_samples") or 0)
+required = 2 * 12 * 16 * 400
+print(f"usable_samples={usable:,}")
+print(f"required_samples_for_hsdp_demo={required:,}")
+if usable < required:
+    raise SystemExit("Increase --limit and rebuild the WebDataset before training.")
+PY
+```
 
 ## 5. Launch Training
 
@@ -184,11 +213,12 @@ and increases the local batch size. For this comparison to be meaningful,
 first choose the largest local batch that runs under DDP, then use HSDP for
 the first larger local batch that DDP cannot run.
 
-For example, if DDP runs at local batch 8 but fails at local batch 16, and
+For example, if DDP runs at local batch 10 but fails at local batch 16, and
 HSDP runs at local batch 16, set:
 
 ```bash
-export DDP_LOCAL_BATCH=8
+export DEMO_MAX_STEPS=400
+export DDP_LOCAL_BATCH=10
 export HSDP_LOCAL_BATCH=16
 ```
 
@@ -209,10 +239,11 @@ python tools/launch_aurora_web.py \
   --project "$PROJECT_ALLOCATION" \
   --walltime 01:00:00 \
   --webdataset-dir "$WDS_DIR" \
+  --finite-webdataset \
   --packed-env "$PRISM_DIR/deepspeed_env.tar.gz" \
   --dist-strategy ddp \
   --wandb-project prism-vlm-demo \
-  --max-steps 500 \
+  --max-steps "$DEMO_MAX_STEPS" \
   model=prism_image_only \
   training=projector_only \
   model.backbone_id=allenai/OLMo-1B-0724-hf \
@@ -222,9 +253,10 @@ python tools/launch_aurora_web.py \
   training.gradient_accumulation_steps=1 \
   training.learning_rate=5e-4 \
   training.lr_connector=5e-4 \
-  training.warmup_steps=20 \
-  training.save_every_n_steps=500 \
-  training.viz_every_n_steps=20 \
+  training.warmup_steps=40 \
+  training.save_every_n_steps="$DEMO_MAX_STEPS" \
+  training.viz_every_n_steps=100 \
+  training.viz_num_examples=10 \
   training.eval_every_n_steps=1000 \
   training.device=xpu \
   wandb.mode=online \
@@ -252,12 +284,13 @@ python tools/launch_aurora_web.py \
   --project "$PROJECT_ALLOCATION" \
   --walltime 01:00:00 \
   --webdataset-dir "$WDS_DIR" \
+  --finite-webdataset \
   --packed-env "$PRISM_DIR/deepspeed_env.tar.gz" \
   --dist-strategy hsdp \
   --fsdp-sharding shard_grad_op \
   --benchmark-mode \
   --wandb-project prism-vlm-demo \
-  --max-steps 500 \
+  --max-steps "$DEMO_MAX_STEPS" \
   model=prism_image_only \
   training=projector_only \
   model.backbone_id=allenai/OLMo-1B-0724-hf \
@@ -267,9 +300,10 @@ python tools/launch_aurora_web.py \
   training.gradient_accumulation_steps=1 \
   training.learning_rate=5e-4 \
   training.lr_connector=5e-4 \
-  training.warmup_steps=20 \
-  training.save_every_n_steps=500 \
-  training.viz_every_n_steps=20 \
+  training.warmup_steps=40 \
+  training.save_every_n_steps="$DEMO_MAX_STEPS" \
+  training.viz_every_n_steps=100 \
+  training.viz_num_examples=10 \
   training.eval_every_n_steps=1000 \
   training.device=xpu \
   wandb.mode=online \

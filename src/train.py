@@ -457,6 +457,7 @@ def main(cfg: DictConfig):
         gradient_accumulation_steps=cfg.training.get("gradient_accumulation_steps", 1),
         save_every_n_steps=cfg.training.get("save_every_n_steps", 1000),
         viz_every_n_steps=cfg.training.get("viz_every_n_steps", 500),
+        viz_num_examples=cfg.training.get("viz_num_examples", 4),
         wandb_project=cfg.wandb.project,
         wandb_entity=cfg.wandb.get("entity", None),
         wandb_mode=cfg.wandb.get("mode", "online"),
