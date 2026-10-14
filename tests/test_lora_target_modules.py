@@ -3,7 +3,9 @@
 Previously ``training.lora_target_modules`` was written to the adapter sidecar
 but never reached ``apply_lora_torchtune``, so every nn.Linear except lm_head was
 adapted regardless; and a Hydra-supplied list crashed ``save_lora_adapter``'s
-json.dump. Skipped where torchtune is not installed (CI does not install it).
+json.dump. The layer-selection and name-check tests need no torchtune and run in
+CI; the LoRALinear and sidecar tests skip where torchtune is not installed (CI
+does not install it).
 """
 
 from __future__ import annotations
@@ -12,10 +14,7 @@ import json
 
 import pytest
 import torch.nn as nn
-
-pytest.importorskip("torchtune")
-from src.utils.lora_utils import apply_lora_torchtune, save_lora_adapter  # noqa: E402
-from torchtune.modules.peft import LoRALinear  # noqa: E402
+from src.utils.lora_utils import _select_lora_targets, apply_lora_torchtune, save_lora_adapter
 
 pytestmark = pytest.mark.unit
 
@@ -35,27 +34,20 @@ class _Tiny(nn.Module):
         self.lm_head = nn.Linear(8, 16)
 
 
-def _adapted(model: nn.Module) -> set[str]:
-    return {name for name, module in model.named_modules() if isinstance(module, LoRALinear)}
+_ALL = {f"layers.{i}.{leaf}" for i in range(2) for leaf in ("q_proj", "v_proj", "o_proj")}
+_QV = {f"layers.{i}.{leaf}" for i in range(2) for leaf in ("q_proj", "v_proj")}
 
 
-def test_default_adapts_every_linear_except_lm_head():
-    model = apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0)
-    assert _adapted(model) == {
-        f"layers.{i}.{leaf}" for i in range(2) for leaf in ("q_proj", "v_proj", "o_proj")
-    }
+def _selected(target_modules) -> set[str]:
+    return {name for name, _ in _select_lora_targets(_Tiny(), ("lm_head",), target_modules)}
 
 
-def test_target_modules_restricts_adaptation_and_trainable_params():
-    model = apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0, target_modules=["q_proj", "v_proj"])
-    assert _adapted(model) == {f"layers.{i}.{leaf}" for i in range(2) for leaf in ("q_proj", "v_proj")}
-    trainable = {name for name, p in model.named_parameters() if p.requires_grad}
-    assert trainable == {
-        f"layers.{i}.{leaf}.lora_{ab}.weight"
-        for i in range(2)
-        for leaf in ("q_proj", "v_proj")
-        for ab in ("a", "b")
-    }
+def test_default_selects_every_linear_except_lm_head():
+    assert _selected(None) == _ALL
+
+
+def test_target_modules_restricts_selection():
+    assert _selected(["q_proj", "v_proj"]) == _QV
 
 
 @pytest.mark.parametrize(
@@ -69,10 +61,24 @@ def test_target_modules_restricts_adaptation_and_trainable_params():
 )
 def test_bad_target_modules_raise(target_modules, error):
     with pytest.raises(error):
-        apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0, target_modules=target_modules)
+        _selected(target_modules)
+
+
+@pytest.mark.parametrize(
+    ("target_modules", "expected"), [(None, _ALL), (["q_proj", "v_proj"], _QV)]
+)
+def test_apply_adapts_selected_layers_and_trains_only_lora(target_modules, expected):
+    LoRALinear = pytest.importorskip("torchtune.modules.peft").LoRALinear
+    model = apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0, target_modules=target_modules)
+    assert {
+        name for name, module in model.named_modules() if isinstance(module, LoRALinear)
+    } == expected
+    trainable = {name for name, p in model.named_parameters() if p.requires_grad}
+    assert trainable == {f"{name}.lora_{ab}.weight" for name in expected for ab in ("a", "b")}
 
 
 def test_sidecar_records_hydra_list(tmp_path):
+    pytest.importorskip("torchtune")
     omegaconf = pytest.importorskip("omegaconf")
     targets = omegaconf.OmegaConf.create({"t": ["q_proj"]}).t  # as cfg.training.get() returns it
     model = apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0, target_modules=targets)

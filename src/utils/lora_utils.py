@@ -25,6 +25,48 @@ def _load_adapter_meta(adapter_path: str) -> dict | None:
         return json.load(f)
 
 
+def _select_lora_targets(
+    backbone: nn.Module,
+    exclude: tuple[str, ...],
+    target_modules: list[str] | None,
+) -> list[tuple[str, nn.Linear]]:
+    """Return the (dotted name, nn.Linear) pairs that apply_lora_torchtune replaces.
+
+    Every nn.Linear whose leaf name is not in exclude, restricted to the leaf names
+    in target_modules when that is not None. Kept free of torchtune so the name
+    checks can be tested in CI, which does not install it.
+
+    Raises:
+        TypeError: If target_modules is a bare string rather than a list of names.
+        ValueError: If target_modules is empty, or names a module that matches no
+            non-excluded nn.Linear (a typo would otherwise train nothing there).
+    """
+    if isinstance(target_modules, str):
+        raise TypeError(
+            f"target_modules must be a list of leaf module names, got the string "
+            f"{target_modules!r}; write [{target_modules!r}]"
+        )
+    targets = None if target_modules is None else set(target_modules)
+    if targets is not None and not targets:
+        raise ValueError("target_modules is empty; use None to adapt every nn.Linear")
+
+    selected = []
+    for name, module in backbone.named_modules():
+        if isinstance(module, nn.Linear):
+            leaf = name.split(".")[-1]
+            if leaf not in exclude and (targets is None or leaf in targets):
+                selected.append((name, module))
+
+    if targets is not None:
+        unmatched = sorted(targets - {name.split(".")[-1] for name, _ in selected})
+        if unmatched:
+            raise ValueError(
+                f"target_modules {unmatched} matched no nn.Linear in the backbone "
+                f"(excluded: {list(exclude)})"
+            )
+    return selected
+
+
 def apply_lora_torchtune(
     backbone: nn.Module,
     rank: int = 32,
@@ -60,15 +102,6 @@ def apply_lora_torchtune(
     """
     from torchtune.modules.peft import LoRALinear, get_adapter_params, set_trainable_params
 
-    if isinstance(target_modules, str):
-        raise TypeError(
-            f"target_modules must be a list of leaf module names, got the string "
-            f"{target_modules!r}; write [{target_modules!r}]"
-        )
-    targets = None if target_modules is None else set(target_modules)
-    if targets is not None and not targets:
-        raise ValueError("target_modules is empty; use None to adapt every nn.Linear")
-
     def _get_parent(model: nn.Module, dotted_name: str):
         parts = dotted_name.split(".")
         parent = model
@@ -77,20 +110,7 @@ def apply_lora_torchtune(
         return parent, parts[-1]
 
     # Collect replacements first to avoid mutating the module tree mid-iteration.
-    to_replace = []
-    for name, module in backbone.named_modules():
-        if isinstance(module, nn.Linear):
-            leaf = name.split(".")[-1]
-            if leaf not in exclude and (targets is None or leaf in targets):
-                to_replace.append((name, module))
-
-    if targets is not None:
-        unmatched = sorted(targets - {name.split(".")[-1] for name, _ in to_replace})
-        if unmatched:
-            raise ValueError(
-                f"target_modules {unmatched} matched no nn.Linear in the backbone "
-                f"(excluded: {list(exclude)})"
-            )
+    to_replace = _select_lora_targets(backbone, exclude, target_modules)
 
     replaced = 0
     for name, module in to_replace:
