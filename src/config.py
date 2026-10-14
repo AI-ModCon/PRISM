@@ -543,7 +543,7 @@ PRISM_CONFIGS: dict[str, dict[str, Any]] = {
             "PRISM_OLMO1B_INTERLEAVED_TOKENIZER",
             # Custom tokenizer with interleaving tokens added; build it with
             # the committed tokenizers/ directory, or point this at your own path.
-            "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-1b-interleaved",
+            "/flare/<project>/<user>/PRISM/tokenizers/prism-olmo-1b-interleaved",
         ),
         "modalities": ["text", "time_series"],
         "freeze_backbone": True,
@@ -566,7 +566,7 @@ PRISM_CONFIGS: dict[str, dict[str, Any]] = {
             "PRISM_OLMO1B_INTERLEAVED_TOKENIZER",
             # Custom tokenizer with interleaving tokens added; build it with
             # the committed tokenizers/ directory, or point this at your own path.
-            "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-1b-interleaved",
+            "/flare/<project>/<user>/PRISM/tokenizers/prism-olmo-1b-interleaved",
         ),
         "modalities": ["text", "time_series"],
         "freeze_backbone": True,
@@ -589,7 +589,7 @@ PRISM_CONFIGS: dict[str, dict[str, Any]] = {
             "PRISM_OLMO1B_INTERLEAVED_TOKENIZER",
             # Custom tokenizer with interleaving tokens added; build it with
             # the committed tokenizers/ directory, or point this at your own path.
-            "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-1b-interleaved",
+            "/flare/<project>/<user>/PRISM/tokenizers/prism-olmo-1b-interleaved",
         ),
         "modalities": ["text", "time_series"],
         "freeze_backbone": True,

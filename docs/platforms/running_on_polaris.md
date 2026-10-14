@@ -22,8 +22,8 @@ counterpart to [Aurora operations](aurora_operations.md).
 ```bash
 ssh polaris
 cd /eagle/ModCon/ngetty/repos
-git clone git@github.com:AI-ModCon/BaseMM_PRISM.git    # or rsync from Aurora
-cd BaseMM_PRISM
+git clone git@github.com:AI-ModCon/PRISM.git    # or rsync from Aurora
+cd PRISM
 
 # Build the venv on top of the conda base module (uses uv if available)
 PRISM_VENV=/eagle/ModCon/ngetty/envs/.venv-polaris \
@@ -98,7 +98,7 @@ recommended layout:
   datasets/<dataset>/shards/*.tar
   models/<hf-org--hf-model>/         # HF snapshot dirs
   envs/.venv-polaris/                # built by setup_polaris_env.sh
-  repos/BaseMM_PRISM/                # checkout
+  repos/PRISM/                # checkout
   logs/<DESIGN>/                     # PBS stdout/stderr
 ```
 
@@ -206,7 +206,7 @@ Training Zone A: 100%|██████| 30/30 [00:31<00:00, 1.02s/it, loss=8.9
   `from src.X` imports resolve. Aurora launchers don't need this
   because their per-rank shell isn't `-l`.
 - **rsync `--exclude='data'` is too greedy.** It matches both the
-  intended repo-root `BaseMM_PRISM/data` AND `BaseMM_PRISM/src/data`.
+  intended repo-root `PRISM/data` AND `PRISM/src/data`.
   Use anchored excludes (`--exclude='/data'`) when staging the repo
   to Polaris.
 - **Outbound network is via proxy.** Set

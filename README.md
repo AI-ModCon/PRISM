@@ -344,7 +344,7 @@ Full reference, including the export key-renaming and the serving flags:
 ## Project structure
 
 ```
-BaseMM_PRISM/
+PRISM/
 ├── src/
 │   ├── train.py                # Hydra entry point
 │   ├── model.py                # UnifiedTransformer

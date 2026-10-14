@@ -68,4 +68,4 @@ will make up v0.1.0.
      pretrained causal-LM backbone, with validated training paths on Aurora,
      Polaris, and Perlmutter. -->
 
-[Unreleased]: https://github.com/AI-ModCon/BaseMM_PRISM/commits/main
+[Unreleased]: https://github.com/AI-ModCon/PRISM/commits/main
