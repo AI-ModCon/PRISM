@@ -46,8 +46,8 @@ No HPC allocation, DAOS container, or accelerator needed.
 > *Installation* instead.
 
 ```bash
-git clone --recursive https://github.com/AI-ModCon/BaseMM_PRISM.git
-cd BaseMM_PRISM
+git clone --recursive https://github.com/AI-ModCon/PRISM.git
+cd PRISM
 
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements/base.txt
@@ -344,7 +344,7 @@ Full reference, including the export key-renaming and the serving flags:
 ## Project structure
 
 ```
-BaseMM_PRISM/
+PRISM/
 ├── src/
 │   ├── train.py                # Hydra entry point
 │   ├── model.py                # UnifiedTransformer

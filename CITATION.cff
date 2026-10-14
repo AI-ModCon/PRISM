@@ -42,8 +42,8 @@ abstract: >-
 type: software
 version: 0.1.0
 license: Apache-2.0
-repository-code: "https://github.com/AI-ModCon/BaseMM_PRISM"
-url: "https://github.com/AI-ModCon/BaseMM_PRISM"
+repository-code: "https://github.com/AI-ModCon/PRISM"
+url: "https://github.com/AI-ModCon/PRISM"
 keywords:
   - multimodal
   - machine learning

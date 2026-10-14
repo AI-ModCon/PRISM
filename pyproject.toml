@@ -102,10 +102,10 @@ data = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AI-ModCon/BaseMM_PRISM"
-Repository = "https://github.com/AI-ModCon/BaseMM_PRISM"
-Issues = "https://github.com/AI-ModCon/BaseMM_PRISM/issues"
-Documentation = "https://github.com/AI-ModCon/BaseMM_PRISM/tree/main/docs"
+Homepage = "https://github.com/AI-ModCon/PRISM"
+Repository = "https://github.com/AI-ModCon/PRISM"
+Issues = "https://github.com/AI-ModCon/PRISM/issues"
+Documentation = "https://github.com/AI-ModCon/PRISM/tree/main/docs"
 
 [project.scripts]
 prism = "src.cli:app"

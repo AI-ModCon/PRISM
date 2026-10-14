@@ -55,12 +55,12 @@ its license and provenance. Write "None" if there are none.
 - [ ] I have added tests that cover this change, or explained why none are needed
 - [ ] New and existing tests pass locally
 - [ ] No secrets, credentials, or absolute institutional paths are included
-      (see [SECURITY.md](https://github.com/AI-ModCon/BaseMM_PRISM/blob/main/SECURITY.md))
+      (see [SECURITY.md](https://github.com/AI-ModCon/PRISM/blob/main/SECURITY.md))
 
 ## AI/LLM Assistance
 
 See *Guidelines for AI/LLM-Assisted Contributions* in
-[CONTRIBUTING.md](https://github.com/AI-ModCon/BaseMM_PRISM/blob/main/CONTRIBUTING.md). All PRs require a human reviewer who is
+[CONTRIBUTING.md](https://github.com/AI-ModCon/PRISM/blob/main/CONTRIBUTING.md). All PRs require a human reviewer who is
 accountable for the review — a project norm, not yet enforced by branch
 protection.
 

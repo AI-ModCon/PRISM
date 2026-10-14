@@ -128,8 +128,8 @@ Historical experiment IDs and their ordering are stable — see *Compatibility*.
 1. Fork the repository, then clone your fork **with submodules**:
 
    ```bash
-   git clone --recursive https://github.com/<your-username>/BaseMM_PRISM.git
-   cd BaseMM_PRISM
+   git clone --recursive https://github.com/<your-username>/PRISM.git
+   cd PRISM
    ```
 
    If you already cloned without `--recursive`:
