@@ -30,6 +30,7 @@ python tools/launch_aurora_web.py \
     --file experiments/LLM_timeseries_scaling.yaml \
     --design PRISM-OLMO-1B-SCITS-FORECAST \
     --nodes 1 \
+    --project GenesisHackathonOct26 \
     --batch \
     --queue debug \
     --walltime 00:30:00 \
@@ -67,7 +68,9 @@ every 500 steps under
 `outputs/OLMO-SCITS-FORECAST/<date>/<time>/checkpoints/`. It consumes numeric
 targets and their masks; text generation is not the forecast output.
 
-The command uses HSDP to match the branch's capacity launch recipe. See
-[evaluation](evaluation.md) for what its `eval` records do and do not measure.
+`--project` sets the PBS allocation (`#PBS -A`) and defaults to `ModCon`;
+use your own allocation outside the hackathon. See
+[evaluation](evaluation.md) for how to check the run and score its
+checkpoints.
 
 Next: [evaluate the run](evaluation.md).

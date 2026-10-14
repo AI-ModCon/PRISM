@@ -5,6 +5,11 @@ PRISM's converter writes `SciTS-forecast/` with `shards/`, `val_shards/`, and
 `manifest.json`. Forecast examples contain a history array, a numeric target,
 an observation mask, prompt text, and metadata.
 
+> **Genesis hackathon:** a converted copy is pre-staged at
+> `/flare/GenesisHackathonOct26/scits/data/SciTS-forecast`. Set
+> `PRISM_DATA_ROOT=/flare/GenesisHackathonOct26/scits/data`, run the checks
+> below, and skip the conversion.
+
 ## Convert SciTS
 
 The source tree must contain `meta_data.jsonl` and the referenced series files.
@@ -26,7 +31,10 @@ python applications/timeseries/convert_scits_to_webdataset.py \
 The split is deterministic by sample ID. The converter keeps forecast targets
 in `.gt_ts.npy` and their validity in `.gt_ts_mask.npy`; missing observations
 are not treated as target values. The model preset supports up to ten target
-channels. Do not use `--max-samples` for the production conversion.
+channels. A full conversion processes about 52,000 samples at roughly
+4–5 samples per second, so expect about 3 hours on a login node. To try the
+converter quickly, add `--max-samples 300` and use a separate output
+directory; do not use `--max-samples` for the production conversion.
 
 ## Check the converted dataset
 
