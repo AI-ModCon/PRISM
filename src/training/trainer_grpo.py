@@ -231,6 +231,7 @@ class ZoneDTrainer:
                 rank=config.lora_r,
                 alpha=config.lora_alpha,
                 dropout=config.lora_dropout,
+                target_modules=getattr(config, "lora_target_modules", None),
             )
 
             # Verify the freshly created LoRA layers are actually rank config.lora_r
