@@ -411,7 +411,7 @@ def test_streaming_dataset_emits_requested_modality(modality: str):
         ds = StreamingMultimodalDataset(
             tokenizer=_Tok(),
             batch_size=1,
-            max_steps=4,
+            max_steps=32,
             model_config=cfg,
             allow_dummy_data=True,  # fallback so missing local data doesn't hard-fail
         )
@@ -426,13 +426,13 @@ def test_streaming_dataset_emits_requested_modality(modality: str):
     try:
         for i, sample in enumerate(ds):
             seen_keys.update(sample.keys())
-            if i >= 3:
+            if i >= 31:
                 break
     except Exception as exc:
         pytest.skip(f"StreamingMultimodalDataset iter failed (likely HF offline): {exc}")
 
     assert modality in seen_keys, (
-        f"Pulled 4 samples; requested modality {modality!r} never appeared. "
+        f"Pulled 32 samples; requested modality {modality!r} never appeared. "
         f"Saw keys: {sorted(seen_keys)}"
     )
 

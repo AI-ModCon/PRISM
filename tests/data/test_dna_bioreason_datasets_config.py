@@ -47,9 +47,13 @@ def test_handler_field_matches_key(zone_a_datasets):
         assert zone_a_datasets[key]["handler"] == key
 
 
-def test_none_are_skipped(zone_a_datasets):
-    for key in DNA_HANDLER_KEYS:
-        assert zone_a_datasets[key]["skip"] is False, f"{key} is marked skip=true"
+def test_bioreason_demo_default_is_kegg_only(zone_a_datasets):
+    # The bioreason demo trains on KEGG only: dna_bioreason is enabled and the two
+    # variant-effect datasets are skipped by default (flip skip to false, or use
+    # data.dataset_overrides, to mix them back in).
+    assert zone_a_datasets["dna_bioreason"]["skip"] is False
+    for key in ("dna_bioreason_variant_effect_coding", "dna_bioreason_variant_effect_non_snv"):
+        assert zone_a_datasets[key]["skip"] is True, f"{key} should be skip=true in the demo default"
 
 
 def test_all_dna_handlers_contain_dna_substring(zone_a_datasets):
@@ -119,10 +123,8 @@ def test_modality_group_normalization_matches_multimodal_py():
         modality_groups[target].append((name, w))
 
     dna_group = dict(modality_groups["dna"])
-    assert set(dna_group.keys()) == set(DNA_HANDLER_KEYS.keys())
+    assert set(dna_group.keys()) == {"dna_bioreason"}
 
     total = sum(dna_group.values())
     normalized = {k: v / total for k, v in dna_group.items()}
-    assert normalized["dna_bioreason"] == pytest.approx(0.50)
-    assert normalized["dna_bioreason_variant_effect_coding"] == pytest.approx(0.25)
-    assert normalized["dna_bioreason_variant_effect_non_snv"] == pytest.approx(0.25)
+    assert normalized["dna_bioreason"] == pytest.approx(1.0)

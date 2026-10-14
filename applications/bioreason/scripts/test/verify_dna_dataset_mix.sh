@@ -18,12 +18,16 @@
 #   3. Training doesn't crash on the new answer formats/handlers
 #
 # Usage:
-#   qsub applications/bioreason/verify_dna_dataset_mix.sh
-#   bash applications/bioreason/verify_dna_dataset_mix.sh   # on an already-allocated compute node
+#   qsub applications/bioreason/scripts/test/verify_dna_dataset_mix.sh
+#   bash applications/bioreason/scripts/test/verify_dna_dataset_mix.sh   # on an already-allocated compute node
 
 set -euo pipefail
 
-PROJ_DIR="/home/abalaji/projects/modcon/genome/BaseMM_PRISM"
+PROJ_DIR="${PROJ_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." 2>/dev/null && pwd)}"
+# Under qsub the script runs from a spool copy, so BASH_SOURCE points there.
+if [ -n "${PBS_O_WORKDIR:-}" ] && [ ! -f "${PROJ_DIR}/src/train.py" ]; then
+  PROJ_DIR="${PBS_O_WORKDIR}"
+fi
 STAGE1_CKPT="/lus/eagle/projects/argonne_tpc/abalaji/modcon/genome/output/GENOME-SFT-1B/2026-06-29/07-41-10/checkpoints/step_8000"
 
 cd "${PROJ_DIR}"

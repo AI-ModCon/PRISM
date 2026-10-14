@@ -1,20 +1,37 @@
-# BioReason Stage 2: SFT with LoRA
-# Loads projector weights from Stage 1 (bioreason_projector.yaml) and freezes them.
-# Trains only LoRA adapters on the LLM backbone. DNA encoder remains frozen.
+# BioReason SFT with LoRA on KEGG (wanglab/kegg), 1B OLMo base.
+# Single-stage, matching the BioReason repo (no projector pre-training stage):
+# the DNA projector starts from its fresh random init and trains jointly with
+# the LoRA adapters on the frozen LLM backbone. DNA encoder (NT-2.5B) remains
+# frozen. Pass training.resume_weights_only=<ckpt> only to opt in to
+# initializing from a pretrained projector (bioreason_projector.yaml).
 # Based on: https://arxiv.org/abs/2505.23579
 #
-# Before running: set resume_weights_only to the Stage 1 checkpoint path, e.g.:
-#   resume_weights_only: /path/to/stage1/outputs/.../checkpoints/step_final
+# Must be composed with the 1B model (KEGG-only comes from datasets_config.json, where only dna_bioreason is enabled):
+#   python src/train.py training=bioreason_sft model=prism_olmo_1b
+# (config.yaml's default model is prism_olmo3_7b, so model=prism_olmo_1b is required.)
+#
+# Loss: labels are -100 everywhere except the assistant span
+#   <|assistant|>\n[ <think>\n{reasoning}\n</think>\n\nAnswer: <answer>{answer}</answer><|endoftext|> ]
+# (OLMo turn format: plain-text <|user|>/<|assistant|> headers, OLMo eos <|endoftext|> ends the target;
+# no Qwen <|im_start|>/<|im_end|>.)
+# (prompt/target split via the "P T" _metadata, requires model.is_interleaved_qa=true).
+# Launcher: applications/bioreason/scripts/training/submit_bioreason_sft.sh
 
 task: "bioreason_sft"
+# Per-rank batch 1 x accumulation 1 x 12 ranks = 12 samples/step (BioReason: 1 x 8 on 1 GPU).
+# batch_size 8 at ~2.8-3.6k merged tokens/sample ran out of XPU memory (~40 s/micro-batch).
+# accumulation 1 also keeps the scheduler units right: the trainer sizes the LR schedule as
+# max_steps x num_ranks optimizer steps, which only matches when step == optimizer step.
 batch_size: 1
-max_steps: 10000  # ~10 epochs over KEGG (1450 train samples); previous 5000 steps showed no convergence trend
+max_steps: 500  # ~5 epochs over the local KEGG shard (1159 train samples / 12 per step = ~97 steps/epoch), as in BioReason
 device: "auto"
 learning_rate: 5e-5
-gradient_accumulation_steps: 8
-eval_enabled: true  # ZoneATrainer's periodic-eval block is opt-in; must be true for the KEGG eval below to fire
+gradient_accumulation_steps: 1
+# Off: ZoneATrainer.run_kegg_eval imports eval_kegg.py, which is not in this repo,
+# so the first eval step would raise ImportError and kill the run.
+eval_enabled: false
 eval_every_n_steps: 1000  # Also drives the KEGG validation eval below
-viz_every_n_steps: 1000
+viz_every_n_steps: 100
 
 # KEGG validation eval (wanglab/kegg 'val' split), run inline during training on
 # the eval_every_n_steps cadence above. See ZoneATrainer.run_kegg_eval /
@@ -22,31 +39,33 @@ viz_every_n_steps: 1000
 kegg_eval_max_examples: null  # null = full val split
 
 # Checkpointing
-save_every_n_steps: 500
+save_every_n_steps: 100
 resume_from_checkpoint: null
-# Set this to the Stage 1 checkpoint directory to load projector weights.
-# Loads model weights only — optimizer and step counter reset for the new stage.
-resume_weights_only: ${oc.env:PRISM_OUTPUT_ROOT,<set-PRISM_OUTPUT_ROOT>}/GENOME-PROJECTOR-1B/2026-06-18/16-57-40/checkpoints/step_1500
+# Optional model-weights-only init (optimizer and step counter reset). null =
+# projector starts from random init, as in BioReason. Set to a
+# bioreason_projector (same model=prism_olmo_1b) checkpoint to start from a
+# pretrained projector instead.
+resume_weights_only: null
 output_dir: ${hydra:run.dir}
 
 # Optimization
-warmup_steps: 300  # 3% of max_steps=10000; reduced from 500 — projector already pretrained
+warmup_steps: 50  # 10% of max_steps=500, as in BioReason (get_cosine_schedule_with_warmup, 0.1 * total); projector is untrained
 weight_decay: 0.01  
 scheduler_type: "cosine"
 min_lr_ratio: 0.0
 
 # Differential Learning Rates
-lr_connector: 5e-5   # Projector LR
+lr_connector: 5e-5   # Projector LR (random init, trains jointly with LoRA; same as BioReason's single lr 5e-5)
 lr_dna: 5e-6          # DNA encoder LR — only active if freeze_vit: false (frozen by default)
-lr_llm: null           # LLM frozen by default
+lr_llm: null           # Also the LoRA LR (null -> learning_rate); base LLM is frozen
 
 # Freezing
 # freeze_llm and lora_enabled are independent knobs: freeze_llm freezes the
 # base backbone, lora_enabled adds trainable LoRA adapters on top. Both true
-# here -- base backbone frozen, only the LoRA adapters train.
-freeze_llm: true     # base backbone frozen; LoRA adapters (below) are the only trainable part
+# here -- base backbone frozen, LoRA adapters + DNA projector train.
+freeze_llm: true     # base backbone frozen; LoRA adapters (below) train on top
 freeze_vit: true     # DNA encoder frozen (matches BioReason default)
-freeze_connector: true  # projector loaded from Stage 1 and frozen; only LoRA trains
+freeze_connector: false  # projector randomly initialized and trained (lr_connector)
 
 # LoRA (applied to LLM backbone)
 lora_enabled: true
@@ -61,14 +80,17 @@ use_reasoning_traces: true
 # Class-balanced loss: inverse-frequency weighting so rare diseases get proportional gradient.
 # Weights computed from wanglab/kegg train split at dataset init.
 # w_c = min(N / (C * n_c), class_weight_max) — capped to avoid n=1 instability.
-use_class_weights: true
+# Disabled: plain unweighted CE over the assistant span. (When true, the weights
+# are counted via load_dataset("wanglab/kegg") from the Hub, which fails on
+# offline compute nodes and silently falls back to uniform weights anyway.)
+use_class_weights: false
 class_weight_max: 10.0
 
 # Data
 data_num_workers: 1
 
 # BioReason-specific
-bioreason_dataset: "wanglab/kegg"  # or variant_effect_coding, variant_effect_non_snv
+bioreason_dataset: "wanglab/kegg"
 max_dna_length: 1024
 max_text_length: 1024
 dna_truncation_per_side: 1024

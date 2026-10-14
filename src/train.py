@@ -255,71 +255,12 @@ def analyze_vla_dataset(dataset, train_config):
     logger.info("=" * 50 + "\n")
 
 
-@hydra.main(config_path="conf", config_name="config", version_base="1.2")
-def main(cfg: DictConfig):
-    if _is_main_env():
-        print_prism_banner("Foundational Multimodal Training")
-        logger.info(f"--- Starting PRISM Training [{cfg.exp.id}] ---")
-        logger.info(OmegaConf.to_yaml(cfg))
+def build_model_config(cfg: DictConfig, rank: int = 0) -> ModelConfig:
+    """Map the Hydra ``cfg.model`` / ``cfg.training`` tree onto a ``ModelConfig``.
 
-    # 0. Determine execution path
-    use_native_fsdp = os.environ.get("USE_NATIVE_FSDP", "0") == "1"
-    use_native_ddp = os.environ.get("USE_NATIVE_DDP", "0") == "1"
-
-    # Defaults for Accelerate path (setup_distributed is native-only).
-    def _env_int(keys, default):
-        for key in keys:
-            val = os.environ.get(key, "")
-            if val and val.strip():
-                try:
-                    return int(val)
-                except ValueError:
-                    continue
-        return default
-
-    rank = _env_int(["RANK", "PMI_RANK", "PALS_RANKID"], 0)
-    world_size = _env_int(["WORLD_SIZE", "PMI_SIZE", "PALS_SIZE"], 1)
-    local_rank = _env_int(["LOCAL_RANK", "PMI_LOCAL_RANK", "PALS_LOCAL_RANKID"], 0)
-    device = cfg.training.get("device", "cpu")
-
-    # Only call setup_distributed() for native DDP/FSDP paths.
-    # For Accelerate path, Accelerator handles distributed init internally.
-    # Calling both causes "Fatal error in internal_Init_thread" (double MPI init).
-    if use_native_fsdp or use_native_ddp:
-        # 0. Setup Distributed Environment (mpi4py-based for multi-node)
-        rank, world_size, local_rank, device = setup_distributed()
-        if rank == 0:
-            logger.info(
-                f"[Distributed] Rank {rank}/{world_size}, Local Rank {local_rank}, Device: {device}"
-            )
-
-    # Seed plumbing: `system.seed` lives in src/conf/config.yaml (default 42) but
-    # no code read it before. Stage A IsoFLOP's variance-floor measurement needs
-    # the BASE@3e17 seed-replicas to actually diverge, so seed every RNG the
-    # trainer touches. Set the same base seed on every rank — downstream
-    # samplers/collators add `rank` themselves where they need rank-specific
-    # streams (e.g. DistributedSampler), and starting from identical RNG state
-    # makes runs reproducible across world-size changes.
-    _seed_cfg = cfg.get("system", None)
-    seed = int(_seed_cfg.get("seed", 42)) if _seed_cfg is not None else 42
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if hasattr(torch, "xpu") and torch.xpu.is_available():
-        torch.xpu.manual_seed_all(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
-    if rank == 0:
-        logger.info(f"[Seed] Set RNG state from system.seed={seed}")
-
-    # 1. Configuration Mapping
-    from hydra.core.hydra_config import HydraConfig
-
-    try:
-        hydra_out = HydraConfig.get().runtime.output_dir
-    except Exception:
-        hydra_out = os.getcwd()
-
+    Shared by ``main()`` and the notebooks/tools that need the exact model
+    ``src/train.py`` would build (e.g. applications/bioreason/bioreason_demo.ipynb).
+    """
     ts_projector = str(cfg.model.get("ts_projector", "linear"))
     timeomni_patch_lens = _coerce_int_list(cfg.model.get("timeomni_patch_len", 16))
     timeomni_strides = _resolve_timeomni_strides(
@@ -371,6 +312,7 @@ def main(cfg: DictConfig):
             "dna_model_name", "InstaDeepAI/nucleotide-transformer-2.5b-multi-species"
         ),
         dna_is_evo2=cfg.model.get("dna_is_evo2", False),
+        max_dna_length=cfg.training.get("max_dna_length", 1024),
         image_encoder_id=cfg.model.get(
             "image_encoder_id", "google/siglip2-base-patch16-224"
         ),
@@ -440,11 +382,14 @@ def main(cfg: DictConfig):
         if cfg.model.get("decoder_configs", None) is not None
         else {},
     )
+    return model_config
 
 
-    # Allow override of dimensions if specified in cfg (not implemented fully in hydra yaml yet, relying on defaults)
-
-
+def build_training_config(
+    cfg: DictConfig, model_config: ModelConfig, output_dir: str, seed: int
+) -> TrainingConfig:
+    """Map ``cfg.training`` onto a ``TrainingConfig``; checkpoints go to ``output_dir/checkpoints``."""
+    hydra_out = output_dir
     train_config = TrainingConfig(
         batch_size=cfg.training.batch_size,
         max_steps=cfg.training.max_steps,
@@ -526,10 +471,6 @@ def main(cfg: DictConfig):
         grpo_beta=cfg.training.get("grpo_beta", 0.0),
         grpo_reward_functions=cfg.training.get("grpo_reward_functions", None),
     )
-    if train_config.wandb_mode:
-        os.environ["WANDB_MODE"] = train_config.wandb_mode
-    if train_config.wandb_entity:
-        os.environ["WANDB_ENTITY"] = train_config.wandb_entity
 
     # Inject eval_interval logic
     if getattr(cfg.training, "debug_mode", False) or cfg.training.max_steps < 100:
@@ -545,6 +486,180 @@ def main(cfg: DictConfig):
     # gate never fires no matter what the YAML / CLI says. Surfaced during
     # the Smoke 4 replay on 2026-05-27.
     train_config.eval_enabled = getattr(cfg.training, "eval_enabled", False)
+    return train_config
+
+
+def build_bio_dataset_kwargs(
+    task_type: str, train_config: TrainingConfig, model_config: ModelConfig
+) -> dict:
+    """Extra ``StreamingMultimodalDataset`` kwargs for the BioReason DNA/KEGG tasks."""
+    is_bio_task = task_type in ("bioreason_sft", "bioreason_grpo", "bioreason_projector")
+    # StreamingMultimodalDataset kwargs specific to BioReason DNA/KEGG runs.
+    # is_sft=False for the GRPO stage (no assistant turn appended; answer kept
+    # for reward computation), True for SFT/projector (assistant turn
+    # appended, loss masked to the answer). is_projector_only selects the
+    # "[dna_bioreason]" full-sequence-loss sentinel for the projector-only
+    # alignment stage, distinct from is_sft — see multimodal.py's
+    # _finalize_dna_item / model.py's label-masking branch.
+    bio_dataset_kwargs = (
+        {
+            "use_reasoning_traces": train_config.use_reasoning_traces,
+            "model_name": "dna-llm" if Modality.DNA in model_config.modalities else "llm",
+            "is_sft": task_type != "bioreason_grpo",
+            "task": task_type,
+            "use_class_weights": train_config.use_class_weights,
+            "class_weight_max": train_config.class_weight_max,
+            "is_projector_only": task_type == "bioreason_projector",
+        }
+        if is_bio_task
+        else {}
+    )
+    return bio_dataset_kwargs
+
+
+def build_collator(
+    tokenizer, model_config: ModelConfig, use_bucketed_collator: bool, collator_max_seq: int
+):
+    """Pick the Bucketed/Multimodal collator for the non-VLA streaming path."""
+    _is_dynamic_length_ts = model_config.ts_projector in DYNAMIC_LENGTH_TS_PROJECTORS
+    collator: BucketedCollator | MultimodalCollator
+    if use_bucketed_collator and not _is_dynamic_length_ts:
+        collator = BucketedCollator(
+            tokenizer,
+            sort_within_batch=True,
+            log_efficiency=True,
+            max_seq_length=collator_max_seq,
+        )
+        logger.info(f"Using BucketedCollator with max_seq_length={collator_max_seq}")
+    else:
+        if use_bucketed_collator and _is_dynamic_length_ts:
+            logger.info(
+                f"Disabling BucketedCollator for ts_projector={model_config.ts_projector}; "
+                "using MultimodalCollator with time_series passthrough for dynamic batching."
+            )
+        # Interleaved-QA samples carry <ts>/<ts/> token pairs and
+        # prompt/target metadata that must stay in sync; tail-truncating
+        # them at collate time would desync those invariants and crash the
+        # merge in model.py. That path is capped at the variate level in
+        # _process_ts_qa instead, so pass max_seq_length=None here. For
+        # plain (non-interleaved) batches, apply the same cap as the
+        # bucketed collator (issue #120).
+        collator_cap = None if model_config.is_interleaved_qa else collator_max_seq
+        collator = MultimodalCollator(
+            tokenizer,
+            max_seq_length=collator_cap,
+            passthrough_time_series=_is_dynamic_length_ts,
+        )
+        logger.info(
+            f"Using MultimodalCollator with max_seq_length={collator_cap} "
+            f"(is_interleaved_qa={model_config.is_interleaved_qa}, "
+            f"passthrough_time_series={_is_dynamic_length_ts})"
+        )
+    return collator
+
+
+def build_streaming_dataset(
+    cfg: DictConfig,
+    tokenizer,
+    model_config: ModelConfig,
+    train_config: TrainingConfig,
+    bio_dataset_kwargs: dict,
+    max_seq_length: int,
+    allow_dummy_data: bool = False,
+) -> StreamingMultimodalDataset:
+    """Build the HF/local-Arrow ``StreamingMultimodalDataset`` (the BioReason DNA path)."""
+    return StreamingMultimodalDataset(
+        tokenizer=tokenizer,
+        batch_size=train_config.batch_size,
+        max_steps=train_config.max_steps,
+        model_config=model_config,
+        hf_token=os.environ.get("HF_TOKEN"),
+        allow_dummy_data=allow_dummy_data,
+        verbosity=getattr(
+            logging, cfg.training.get("verbosity", "INFO").upper(), logging.INFO
+        ),
+        dataset_overrides=_resolve_dataset_overrides(cfg),
+        max_seq_length=max_seq_length,
+        **bio_dataset_kwargs,
+    )
+
+
+@hydra.main(config_path="conf", config_name="config", version_base="1.2")
+def main(cfg: DictConfig):
+    if _is_main_env():
+        print_prism_banner("Foundational Multimodal Training")
+        logger.info(f"--- Starting PRISM Training [{cfg.exp.id}] ---")
+        logger.info(OmegaConf.to_yaml(cfg))
+
+    # 0. Determine execution path
+    use_native_fsdp = os.environ.get("USE_NATIVE_FSDP", "0") == "1"
+    use_native_ddp = os.environ.get("USE_NATIVE_DDP", "0") == "1"
+
+    # Defaults for Accelerate path (setup_distributed is native-only).
+    def _env_int(keys, default):
+        for key in keys:
+            val = os.environ.get(key, "")
+            if val and val.strip():
+                try:
+                    return int(val)
+                except ValueError:
+                    continue
+        return default
+
+    rank = _env_int(["RANK", "PMI_RANK", "PALS_RANKID"], 0)
+    world_size = _env_int(["WORLD_SIZE", "PMI_SIZE", "PALS_SIZE"], 1)
+    local_rank = _env_int(["LOCAL_RANK", "PMI_LOCAL_RANK", "PALS_LOCAL_RANKID"], 0)
+    device = cfg.training.get("device", "cpu")
+
+    # Only call setup_distributed() for native DDP/FSDP paths.
+    # For Accelerate path, Accelerator handles distributed init internally.
+    # Calling both causes "Fatal error in internal_Init_thread" (double MPI init).
+    if use_native_fsdp or use_native_ddp:
+        # 0. Setup Distributed Environment (mpi4py-based for multi-node)
+        rank, world_size, local_rank, device = setup_distributed()
+        if rank == 0:
+            logger.info(
+                f"[Distributed] Rank {rank}/{world_size}, Local Rank {local_rank}, Device: {device}"
+            )
+
+    # Seed plumbing: `system.seed` lives in src/conf/config.yaml (default 42) but
+    # no code read it before. Stage A IsoFLOP's variance-floor measurement needs
+    # the BASE@3e17 seed-replicas to actually diverge, so seed every RNG the
+    # trainer touches. Set the same base seed on every rank — downstream
+    # samplers/collators add `rank` themselves where they need rank-specific
+    # streams (e.g. DistributedSampler), and starting from identical RNG state
+    # makes runs reproducible across world-size changes.
+    _seed_cfg = cfg.get("system", None)
+    seed = int(_seed_cfg.get("seed", 42)) if _seed_cfg is not None else 42
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if hasattr(torch, "xpu") and torch.xpu.is_available():
+        torch.xpu.manual_seed_all(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    if rank == 0:
+        logger.info(f"[Seed] Set RNG state from system.seed={seed}")
+
+    # 1. Configuration Mapping
+    from hydra.core.hydra_config import HydraConfig
+
+    try:
+        hydra_out = HydraConfig.get().runtime.output_dir
+    except Exception:
+        hydra_out = os.getcwd()
+
+    model_config = build_model_config(cfg, rank=rank)
+
+
+    # Allow override of dimensions if specified in cfg (not implemented fully in hydra yaml yet, relying on defaults)
+
+
+    train_config = build_training_config(cfg, model_config, hydra_out, seed)
+    if train_config.wandb_mode:
+        os.environ["WANDB_MODE"] = train_config.wandb_mode
+    if train_config.wandb_entity:
+        os.environ["WANDB_ENTITY"] = train_config.wandb_entity
 
     # Debug print
     _rprint(
@@ -691,26 +806,7 @@ def main(cfg: DictConfig):
         raise RuntimeError("training.task=vla_calvin requires model.is_vla=true")
 
     is_bio_task = task_type in ("bioreason_sft", "bioreason_grpo", "bioreason_projector")
-    # StreamingMultimodalDataset kwargs specific to BioReason DNA/KEGG runs.
-    # is_sft=False for the GRPO stage (no assistant turn appended; answer kept
-    # for reward computation), True for SFT/projector (assistant turn
-    # appended, loss masked to the answer). is_projector_only selects the
-    # "[dna_bioreason]" full-sequence-loss sentinel for the projector-only
-    # alignment stage, distinct from is_sft — see multimodal.py's
-    # _finalize_dna_item / model.py's label-masking branch.
-    bio_dataset_kwargs = (
-        {
-            "use_reasoning_traces": train_config.use_reasoning_traces,
-            "model_name": "dna-llm" if Modality.DNA in model_config.modalities else "llm",
-            "is_sft": task_type != "bioreason_grpo",
-            "task": task_type,
-            "use_class_weights": train_config.use_class_weights,
-            "class_weight_max": train_config.class_weight_max,
-            "is_projector_only": task_type == "bioreason_projector",
-        }
-        if is_bio_task
-        else {}
-    )
+    bio_dataset_kwargs = build_bio_dataset_kwargs(task_type, train_config, model_config)
 
     # 3. Tokenizer / Data
     _rprint("Initializing Tokenizer...", flush=True)
@@ -922,39 +1018,9 @@ def main(cfg: DictConfig):
         # from outlier-length sequences at epoch boundaries.
         # For projector training, 512 is sufficient; for E2E, match max_seq_length.
         collator_max_seq = int(os.environ.get("MAX_SEQ_LENGTH", "2048"))
-        _is_dynamic_length_ts = model_config.ts_projector in DYNAMIC_LENGTH_TS_PROJECTORS
-        if use_bucketed_collator and not _is_dynamic_length_ts:
-            collator = BucketedCollator(
-                tokenizer,
-                sort_within_batch=True,
-                log_efficiency=True,
-                max_seq_length=collator_max_seq,
-            )
-            logger.info(f"Using BucketedCollator with max_seq_length={collator_max_seq}")
-        else:
-            if use_bucketed_collator and _is_dynamic_length_ts:
-                logger.info(
-                    f"Disabling BucketedCollator for ts_projector={model_config.ts_projector}; "
-                    "using MultimodalCollator with time_series passthrough for dynamic batching."
-                )
-            # Interleaved-QA samples carry <ts>/<ts/> token pairs and
-            # prompt/target metadata that must stay in sync; tail-truncating
-            # them at collate time would desync those invariants and crash the
-            # merge in model.py. That path is capped at the variate level in
-            # _process_ts_qa instead, so pass max_seq_length=None here. For
-            # plain (non-interleaved) batches, apply the same cap as the
-            # bucketed collator (issue #120).
-            collator_cap = None if model_config.is_interleaved_qa else collator_max_seq
-            collator = MultimodalCollator(
-                tokenizer,
-                max_seq_length=collator_cap,
-                passthrough_time_series=_is_dynamic_length_ts,
-            )
-            logger.info(
-                f"Using MultimodalCollator with max_seq_length={collator_cap} "
-                f"(is_interleaved_qa={model_config.is_interleaved_qa}, "
-                f"passthrough_time_series={_is_dynamic_length_ts})"
-            )
+        collator = build_collator(
+            tokenizer, model_config, use_bucketed_collator, collator_max_seq
+        )
         # Check if we should use direct MultiWebDataset mode
         # This bypasses StreamingMultimodalDataset which has integration issues
         # with multi-dataset loading (Issue 14 in the Feb-2026 bring-up debug
@@ -1201,35 +1267,15 @@ def main(cfg: DictConfig):
                         f"WARNING: LOCAL_SHARDS_DIR={local_shards_dir} exists but has no .tar files, falling back to StreamingMultimodalDataset",
                         flush=True,
                     )
-                    dataset = StreamingMultimodalDataset(
-                        tokenizer=tokenizer,
-                        batch_size=train_config.batch_size,
-                        max_steps=train_config.max_steps,
-                        model_config=model_config,
-                        hf_token=os.environ.get("HF_TOKEN"),
-                        allow_dummy_data=_enable_all_modalities,
-                        verbosity=getattr(
-                            logging, cfg.training.get("verbosity", "INFO").upper(), logging.INFO
-                        ),
-                        dataset_overrides=_resolve_dataset_overrides(cfg),
-                        max_seq_length=collator_max_seq,
-                        **bio_dataset_kwargs,
+                    dataset = build_streaming_dataset(
+                        cfg, tokenizer, model_config, train_config, bio_dataset_kwargs,
+                        max_seq_length=collator_max_seq, allow_dummy_data=_enable_all_modalities,
                     )
             else:
                 # Pure legacy mode: Use StreamingMultimodalDataset
-                dataset = StreamingMultimodalDataset(
-                    tokenizer=tokenizer,
-                    batch_size=train_config.batch_size,
-                    max_steps=train_config.max_steps,
-                    model_config=model_config,
-                    hf_token=os.environ.get("HF_TOKEN"),
-                    allow_dummy_data=_enable_all_modalities,
-                    verbosity=getattr(
-                        logging, cfg.training.get("verbosity", "INFO").upper(), logging.INFO
-                    ),
-                    dataset_overrides=_resolve_dataset_overrides(cfg),
-                    max_seq_length=collator_max_seq,
-                    **bio_dataset_kwargs,
+                dataset = build_streaming_dataset(
+                    cfg, tokenizer, model_config, train_config, bio_dataset_kwargs,
+                    max_seq_length=collator_max_seq, allow_dummy_data=_enable_all_modalities,
                 )
 
     # Compare the modalities the dataloader will actually emit against

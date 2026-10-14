@@ -4,10 +4,10 @@ as Arrow shards, so the StreamingMultimodalDataset local-path loader
 branch) can pick them up without hitting the HF Hub at train time.
 
 Usage:
-    python applications/bioreason/download_bioreason_dna_datasets.py --dataset kegg --output-dir /path/to/output
-    python applications/bioreason/download_bioreason_dna_datasets.py --dataset variant_effect_coding --output-dir /path/to/output
-    python applications/bioreason/download_bioreason_dna_datasets.py --dataset variant_effect_non_snv --output-dir /path/to/output
-    python applications/bioreason/download_bioreason_dna_datasets.py --dataset all --output-dir /path/to/output_root
+    python applications/bioreason/helpers/download_bioreason_dna_datasets.py --dataset kegg --output-dir /path/to/output
+    python applications/bioreason/helpers/download_bioreason_dna_datasets.py --dataset variant_effect_coding --output-dir /path/to/output
+    python applications/bioreason/helpers/download_bioreason_dna_datasets.py --dataset variant_effect_non_snv --output-dir /path/to/output
+    python applications/bioreason/helpers/download_bioreason_dna_datasets.py --dataset all --output-dir /path/to/output_root
 """
 
 import argparse
