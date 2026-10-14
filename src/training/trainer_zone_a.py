@@ -273,7 +273,8 @@ class ZoneATrainer:
                     param.requires_grad = True
 
             if lora_enabled:
-                # torchtune replaces every nn.Linear (except lm_head) with LoRALinear
+                # torchtune replaces every nn.Linear (except lm_head), or only the
+                # leaf names in lora_target_modules when set, with LoRALinear
                 # in-place, copies pretrained weights, then freezes base weights via
                 # set_trainable_params — only lora_a.weight / lora_b.weight keep
                 # requires_grad=True afterward. Same mechanism trainer_grpo.py
@@ -285,6 +286,7 @@ class ZoneATrainer:
                     rank=config.lora_r,
                     alpha=config.lora_alpha,
                     dropout=config.lora_dropout,
+                    target_modules=getattr(config, "lora_target_modules", None),
                 )
                 self.accelerator.print("torchtune LoRA applied to backbone.")
             elif not freeze_llm:
