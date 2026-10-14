@@ -1,8 +1,20 @@
 # 1. Environment
 
-Training uses Qwen3-0.6B, PRISM's Intern-S2 Preview 397B time-series encoder,
+Training uses OLMo-1B, PRISM's Intern-S2 Preview 397B time-series encoder,
 and a newly initialized linear quantile head. The 397B label identifies the
 source model; PRISM extracts only its time-series encoder weights.
+
+## Clone the repository
+
+PRISM vendors the Walrus encoder as a git submodule, and the environment build
+fails if it is missing, so clone recursively:
+
+```bash
+git clone --recursive https://github.com/AI-ModCon/PRISM.git
+cd PRISM
+git checkout scits-demo
+git submodule update --init --recursive
+```
 
 ## Build the Aurora environment
 
@@ -13,7 +25,7 @@ which installs Transformers 5.2.0. On Aurora:
 module purge
 module use /opt/aurora/26.26.0/modulefiles
 module load oneapi/release/2025.3.1
-module load mpich/prd/5.0.0.aurora_test.51a9474 
+module load mpich/prd/5.0.0.aurora_test.51a9474
 module load frameworks/2025.3.1
 export VENV_PATH=/flare/GenesisHackathonOct26/$USER/prism-envs/py3.12-intern-s2
 bash tools/build_aurora_env.sh --intern-s2
@@ -30,13 +42,14 @@ with vLLM's declared version range; vLLM is not needed for this tutorial. See
 
 Choose shared cache locations visible from compute nodes. Set `HF_TOKEN` in
 your local ignored `.env` or through your site's secret manager; the extraction
-script reads it from the environment or `.env`. For the Genesis hackathon, the project field can be `GenesisHackathonOct26`
+script reads it from the environment or `.env`. For the Genesis hackathon, use
+`GenesisHackathonOct26` as the project in paths and job submissions.
 
 ```bash
 export HF_HOME=/flare/GenesisHackathonOct26/$USER/huggingface
 ```
 
-Make sure the public Qwen3-0.6B checkpoint is also present in the shared
+Make sure the public `allenai/OLMo-1B-0724-hf` checkpoint is also present in the shared
 Hugging Face cache before launching a job that cannot access the network.
 
 ## Extract the time-series encoder
