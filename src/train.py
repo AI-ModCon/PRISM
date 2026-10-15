@@ -8,7 +8,7 @@ import hydra
 import numpy as np
 import torch
 import torch.distributed as dist
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig, ListConfig, OmegaConf
 from torch.utils.data import DataLoader
 
 # Path Safety
@@ -62,6 +62,21 @@ def _coerce_str_or_none(value):
     except TypeError:
         pass
     return str(value)
+
+
+def _coerce_listconfig(value):
+    """Return an OmegaConf ListConfig as a plain list; anything else unchanged.
+
+    Hydra hands list-valued fields over as ListConfig, which json cannot
+    serialize: the trainers' json.dump(..., default=str) of the config then
+    records ['q_proj'] in training_state.json as the string "['q_proj']".
+    Anything else, including None and a bare string, is left for the consumer
+    to validate (apply_lora_torchtune rejects a bare string; list() here would
+    split it into characters instead).
+    """
+    if isinstance(value, ListConfig):
+        return OmegaConf.to_container(value, resolve=True)
+    return value
 
 
 def _is_main_env() -> bool:
@@ -460,7 +475,7 @@ def build_training_config(
         lora_r=cfg.training.get("lora_r", 32),
         lora_alpha=cfg.training.get("lora_alpha", 64),
         lora_dropout=cfg.training.get("lora_dropout", 0.05),
-        lora_target_modules=cfg.training.get("lora_target_modules", None),
+        lora_target_modules=_coerce_listconfig(cfg.training.get("lora_target_modules", None)),
         resume_lora_alpha=cfg.training.get("resume_lora_alpha", None),
         allow_missing_resume_adapter=cfg.training.get("allow_missing_resume_adapter", False),
         grpo_num_generations=cfg.training.get("grpo_num_generations", 8),
