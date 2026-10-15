@@ -67,6 +67,7 @@ class TrainingConfig:
     eval_enabled: bool = False
     validation_batches: int = 8  # Number of validation batches per eval event
     viz_every_n_steps: int = 500  # Run batch visualization every 500 steps
+    viz_num_examples: int = 4  # Number of rows to log in viz/predictions
     warmup_steps: int = 10
     weight_decay: float = 0.01
     gradient_accumulation_steps: int = 1

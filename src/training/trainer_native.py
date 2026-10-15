@@ -2236,7 +2236,11 @@ def train_native_ddp(model, config, train_loader, rank, world_size, local_rank, 
 
                 # Prediction Monitoring
                 try:
-                    pred_table = visualizer.visualize_predictions(viz_batch, model)
+                    pred_table = visualizer.visualize_predictions(
+                        viz_batch,
+                        model,
+                        limit=getattr(config, "viz_num_examples", 4),
+                    )
                     if pred_table:
                         viz_results["viz/predictions"] = pred_table
                 except Exception as e_gen:
