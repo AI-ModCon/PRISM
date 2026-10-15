@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from collections import Counter
 
 import torch
 import torch.nn as nn
@@ -40,6 +41,7 @@ def _select_lora_targets(
         TypeError: If target_modules is a bare string rather than a list of names.
         ValueError: If target_modules is empty, or names a module that matches no
             non-excluded nn.Linear (a typo would otherwise train nothing there).
+            The message lists the leaf names that can be targeted.
     """
     if isinstance(target_modules, str):
         raise TypeError(
@@ -50,19 +52,24 @@ def _select_lora_targets(
     if targets is not None and not targets:
         raise ValueError("target_modules is empty; use None to adapt every nn.Linear")
 
-    selected = []
-    for name, module in backbone.named_modules():
-        if isinstance(module, nn.Linear):
-            leaf = name.split(".")[-1]
-            if leaf not in exclude and (targets is None or leaf in targets):
-                selected.append((name, module))
+    eligible = [
+        (name, module)
+        for name, module in backbone.named_modules()
+        if isinstance(module, nn.Linear) and name.split(".")[-1] not in exclude
+    ]
+    selected = [
+        (name, module)
+        for name, module in eligible
+        if targets is None or name.split(".")[-1] in targets
+    ]
 
     if targets is not None:
-        unmatched = sorted(targets - {name.split(".")[-1] for name, _ in selected})
+        available = sorted({name.split(".")[-1] for name, _ in eligible})
+        unmatched = sorted(targets - set(available))
         if unmatched:
             raise ValueError(
-                f"target_modules {unmatched} matched no nn.Linear in the backbone "
-                f"(excluded: {list(exclude)})"
+                f"target_modules {unmatched} matched no nn.Linear in the backbone. "
+                f"Available: {available} (excluded: {list(exclude)})"
             )
     return selected
 
@@ -136,8 +143,10 @@ def apply_lora_torchtune(
 
     n_trainable = sum(p.numel() for p in backbone.parameters() if p.requires_grad)
     n_total = sum(p.numel() for p in backbone.parameters())
+    per_leaf = Counter(name.split(".")[-1] for name, _ in to_replace)
     logger.info(
-        f"torchtune LoRA: replaced {replaced} linear layers | "
+        f"torchtune LoRA: replaced {replaced} linear layers "
+        f"({', '.join(f'{leaf}: {n}' for leaf, n in sorted(per_leaf.items()))}) | "
         f"trainable {n_trainable:,} / {n_total:,} params "
         f"({100.0 * n_trainable / n_total:.3f}%)"
     )

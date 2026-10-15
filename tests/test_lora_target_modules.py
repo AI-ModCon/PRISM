@@ -11,6 +11,7 @@ does not install it).
 from __future__ import annotations
 
 import json
+import logging
 
 import pytest
 import torch.nn as nn
@@ -64,6 +65,12 @@ def test_bad_target_modules_raise(target_modules, error):
         _selected(target_modules)
 
 
+@pytest.mark.parametrize("target_modules", [["q_prj"], ["lm_head"]])
+def test_unmatched_error_lists_available_names(target_modules):
+    with pytest.raises(ValueError, match=r"Available: \['o_proj', 'q_proj', 'v_proj'\]"):
+        _selected(target_modules)
+
+
 @pytest.mark.parametrize(
     ("target_modules", "expected"), [(None, _ALL), (["q_proj", "v_proj"], _QV)]
 )
@@ -75,6 +82,20 @@ def test_apply_adapts_selected_layers_and_trains_only_lora(target_modules, expec
     } == expected
     trainable = {name for name, p in model.named_parameters() if p.requires_grad}
     assert trainable == {f"{name}.lora_{ab}.weight" for name in expected for ab in ("a", "b")}
+
+
+@pytest.mark.parametrize(
+    ("target_modules", "summary"),
+    [
+        (None, "replaced 6 linear layers (o_proj: 2, q_proj: 2, v_proj: 2)"),
+        (["q_proj", "v_proj"], "replaced 4 linear layers (q_proj: 2, v_proj: 2)"),
+    ],
+)
+def test_log_reports_adapted_names(caplog, target_modules, summary):
+    pytest.importorskip("torchtune")
+    with caplog.at_level(logging.INFO, logger="src.utils.lora_utils"):
+        apply_lora_torchtune(_Tiny(), rank=2, alpha=4.0, target_modules=target_modules)
+    assert summary in caplog.text
 
 
 def test_sidecar_records_hydra_list(tmp_path):
