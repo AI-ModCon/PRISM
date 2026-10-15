@@ -34,6 +34,14 @@ lora_enabled: true
 lora_r: 16
 lora_alpha: 32
 lora_dropout: 0.0
+# Leaf names of the backbone nn.Linear layers that get a GRPO adapter.
+# [q_proj, v_proj] adapts only the attention query/value projections
+# (OLMo-1B: 32 of 112 layers). null adapts every nn.Linear except lm_head.
+# Names differ between architectures; list the valid ones for a model with:
+#   python tools/list_lora_targets.py model=prism_olmo_1b
+# A misspelled name fails at startup. Independent of the SFT adapter's
+# targets: that adapter is merged into the base weights first.
+lora_target_modules: [q_proj, v_proj]
 
 # alpha the resume_weights_only checkpoint's lora_adapter.pt was trained with
 # (see bioreason_sft.yaml lora_alpha). Used only to merge that adapter into the
