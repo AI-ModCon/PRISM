@@ -72,7 +72,11 @@ lora_enabled: true
 lora_r: 32
 lora_alpha: 64
 lora_dropout: 0.05
-# lora_target_modules: null  # null = all nn.Linear layers (excluding lm_head); or leaf names, e.g. [q_proj, v_proj]
+# Leaf names of the backbone nn.Linear layers that get an adapter.
+# null adapts every nn.Linear except lm_head; a list such as [q_proj, v_proj]
+# adapts only those. List the valid names for a model with:
+#   python tools/list_lora_targets.py model=prism_olmo_1b
+lora_target_modules: null
 
 # Data format: include reasoning traces in Stage 2 so LoRA learns chain-of-thought.
 use_reasoning_traces: true
