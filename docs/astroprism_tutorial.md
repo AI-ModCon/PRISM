@@ -48,14 +48,24 @@ module use /soft/modulefiles && module load frameworks/2026.1.0
 python -m venv --system-site-packages /flare/<project>/$USER/prism-envs/astroprism
 source /flare/<project>/$USER/prism-envs/astroprism/bin/activate
 pip install --no-deps -e .
-pip install "hydra-core>=1.3" pyarrow huggingface_hub polymathic-aion==0.0.2
+pip install "hydra-core>=1.3" pyarrow huggingface_hub
+pip install --no-deps polymathic-aion==0.0.2 jaxtyping astropy
 ```
 
 `--system-site-packages` plus `--no-deps` is the Aurora rule: the frameworks
 module supplies the XPU-patched PyTorch, and a plain
 `pip install -r requirements/base.txt` pulls a CUDA build from PyPI that
-shadows it. Install `polymathic-aion` **without** its `torch` extra for the
-same reason. See [platforms/aurora_operations.md](platforms/aurora_operations.md).
+shadows it. See [platforms/aurora_operations.md](platforms/aurora_operations.md).
+
+`polymathic-aion` must go in with `--no-deps` for that reason, but then its own
+requirements do not come along. The module already supplies all but two, so
+`jaxtyping` and `astropy` are named explicitly — without `jaxtyping`,
+`aion.codecs` raises `ModuleNotFoundError` the moment the encoder is built.
+Check before training:
+
+```bash
+python -c "from aion.codecs import ImageCodec, SpectrumCodec; print('aion OK')"
+```
 
 Point the caches at `/flare`; home quotas are too small for 4 B-parameter
 checkpoints:
@@ -78,7 +88,7 @@ Stage Qwen3-4B there once, from a login node:
 
 ```bash
 mkdir -p "$ASTROPRISM_ROOT/hf/models" "$ASTROPRISM_ROOT/hf/cache"
-huggingface-cli download Qwen/Qwen3-4B \
+hf download Qwen/Qwen3-4B \
     --revision 1cfa9a7208912126459214e8b04321603b3df60c \
     --local-dir "$ASTROPRISM_ROOT/hf/models/qwen3-4b"
 ```
@@ -129,6 +139,23 @@ from measured facts but remain **unreviewed**. The
 `never_train` — do not train on it.
 
 ## 4. Stage 1A: image-caption alignment
+Materialize it into the layout the training configs read. The Hugging Face
+package and the configs use different manifest envelopes — the configs want
+`artifact_type: astroprism_raw_images` with an `outputs` block and a
+per-candidate list, while the HF tree ships an upload index and a bare
+`candidates.jsonl` — so one step bridges them:
+
+```bash
+python tools/materialize_astroprism_hf_dataset.py --output-dir _local/astroprism
+```
+
+That writes four small manifests under `_local/astroprism/` pointing at the
+arrays where `snapshot_download` already put them, so nothing large is copied
+twice. `_local/astroprism` is what `src/conf/data/astroprism_*.yaml` reads by
+default. Pass `--snapshot-dir` to reuse a snapshot you already have, and
+regenerate the tree if you ever move or clear the Hugging Face cache, since the
+manifests reference absolute paths.
+
 
 ```bash
 python tools/launch_aurora.py \
@@ -196,7 +223,7 @@ The checkpoint is a PRISM `UnifiedTransformer`, **not** loadable with
 examples ships with the weights:
 
 ```bash
-huggingface-cli download Sand33p/AstroPRISM \
+hf download Sand33p/AstroPRISM \
   inference/generate_astroprism_joint_examples.py model.safetensors \
   --local-dir $HF_HOME/astroprism
 ```

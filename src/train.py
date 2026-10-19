@@ -615,6 +615,33 @@ def build_model_config(cfg: DictConfig, rank: int = 0) -> ModelConfig:
         image_size=cfg.model.get("image_size", 224),
         image_mean=tuple(cfg.model.get("image_mean", (0.5, 0.5, 0.5))),
         image_std=tuple(cfg.model.get("image_std", (0.5, 0.5, 0.5))),
+        # === AION (AstroPRISM image + spectrum) ===
+        # Without these the joint path silently falls back to SigLIP, which
+        # then tries to reach the Hub for an encoder the run never wanted.
+        image_encoder_type=cfg.model.get("image_encoder_type", "siglip"),
+        spectrum_encoder_type=cfg.model.get("spectrum_encoder_type", "aion"),
+        d_spectrum=cfg.model.get("d_spectrum", 768),
+        aion_model_name_or_path=cfg.model.get(
+            "aion_model_name_or_path", "polymathic-ai/aion-base"
+        ),
+        aion_model_revision=cfg.model.get(
+            "aion_model_revision", "40541618104bab0fa85c8af68daeb867a720bb8c"
+        ),
+        aion_codec_revision=cfg.model.get(
+            "aion_codec_revision", "40541618104bab0fa85c8af68daeb867a720bb8c"
+        ),
+        aion_spectrum_codec_revision=cfg.model.get(
+            "aion_spectrum_codec_revision", "40541618104bab0fa85c8af68daeb867a720bb8c"
+        ),
+        aion_cache_dir=cfg.model.get("aion_cache_dir", None),
+        aion_local_files_only=cfg.model.get("aion_local_files_only", True),
+        aion_image_bands=tuple(
+            cfg.model.get("aion_image_bands", ("DES-G", "DES-R", "DES-I", "DES-Z"))
+        ),
+        aion_num_image_tokens=cfg.model.get("aion_num_image_tokens", 576),
+        aion_raw_image_size=tuple(cfg.model.get("aion_raw_image_size", (160, 160))),
+        aion_num_spectrum_tokens=cfg.model.get("aion_num_spectrum_tokens", 273),
+        aion_raw_spectrum_length=cfg.model.get("aion_raw_spectrum_length", 7781),
         # === Timeseries ===
         is_timeseries=cfg.model.get("is_timeseries", False),
         ts_encoder_id=cfg.model.get(
