@@ -13,6 +13,10 @@ learn to describe calibrated galaxy images and DESI spectra in words.
 
 Only the two projectors train — 17,059,840 parameters out of 4.45 B.
 
+Every command below was run on an Aurora compute node while this page was
+written; section 4 shows the loss and checkpoint a two-step smoke run
+produces.
+
 | Stage | Training config | Trains | Script |
 |---|---|---|---|
 | 1A. Image alignment | `astroprism_stage1a` | image projector | `experiments/astroprism_stage1a.yaml` |
@@ -96,6 +100,19 @@ hf download Qwen/Qwen3-4B \
 Leave it unset and the configs fall back to a relative `_local/astroprism`,
 which will not exist on a compute node.
 
+Stage the AION encoder too, 1.8 GB at the revision the released checkpoint
+pins. The configs set `aion_local_files_only: true`, so a compute node will
+not fetch it for you:
+
+```bash
+hf download polymathic-ai/aion-base \
+    --revision 40541618104bab0fa85c8af68daeb867a720bb8c
+```
+
+That goes to `$HF_HOME`, which is where the configs look (`aion_cache_dir:
+null`). Without it the run dies in `AION.from_pretrained` with
+`LocalEntryNotFoundError`.
+
 ## 2. Check the inputs
 
 ```bash
@@ -172,6 +189,27 @@ on a node you already hold.
 Watch for the merged sequence length in the log: 576 image tokens plus the
 prompt must fit `max_merged_seq_length` (2048 in the shipped config), or
 examples are silently dropped.
+
+A two-step smoke run on one node is the fastest way to confirm the whole path
+before spending queue time:
+
+```bash
+python src/train.py model=prism_astroprism_qwen3_4b \
+  training=astroprism_stage1a +data=astroprism_stage1a \
+  training.max_steps=2 training.warmup_steps=1 \
+  training.device=xpu training.batch_size=1 wandb.mode=offline
+```
+
+It should reach a loss and write a checkpoint:
+
+```text
+Step 1: Loss 2.9253
+Training Zone A: 100%|██████████| 2/2 [00:10<00:00,  5.47s/it, loss=2.93]
+Checkpoint Saved.
+```
+
+The checkpoint is ~9 GB: the frozen Qwen and AION tensors are saved alongside
+the projector that actually trained.
 
 ## 5. Stage 1B: spectrum-caption alignment
 

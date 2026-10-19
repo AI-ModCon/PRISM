@@ -14,7 +14,10 @@ spectrum_encoder_type: "aion"
 aion_model_name_or_path: "polymathic-ai/aion-base"
 aion_model_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
 aion_spectrum_codec_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
-aion_cache_dir: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/cache"
+# huggingface_hub's cache_dir is the hub directory itself, unlike HF_HOME
+# which has hub/ appended. null uses the ambient cache, which is what the
+# released checkpoint's training_config.yaml records.
+aion_cache_dir: null
 aion_local_files_only: true
 aion_num_spectrum_tokens: 273
 aion_raw_spectrum_length: 7781
