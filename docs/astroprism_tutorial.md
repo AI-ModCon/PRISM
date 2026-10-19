@@ -14,14 +14,25 @@ learn to describe calibrated galaxy images and DESI spectra in words.
 Only the two projectors train — 17,059,840 parameters out of 4.45 B.
 
 Every command below was run on an Aurora compute node while this page was
-written; section 4 shows the loss and checkpoint a two-step smoke run
-produces.
+written: all three stages as two-step smoke runs, and section 7's inference
+against the released weights, which reproduces the published spectrum caption
+exactly.
 
-| Stage | Training config | Trains | Script |
+The three stages are a sequence, not three independent runs. 1A and 1B each
+produce half the adapters; a composer merges them; the joint stage *resumes*
+from that merge rather than starting cold:
+
+```
+1A ──► image projector    ─┐
+                           ├──► compose_astroprism_joint_adapters.py ──► joint
+1B ──► spectrum projector ─┘            (joint_adapter_init)
+```
+
+| Stage | Training config | Trains | Starts from |
 |---|---|---|---|
-| 1A. Image alignment | `astroprism_stage1a` | image projector | `experiments/astroprism_stage1a.yaml` |
-| 1B. Spectrum alignment | `astroprism_stage1b_spectrum` | spectrum projector | `experiments/astroprism_stage1b_spectrum.yaml` |
-| Joint | `astroprism_joint_aion` | both, alternating | `experiments/astroprism_joint_aion.yaml` |
+| 1A. Image alignment | `astroprism_stage1a` | image projector | random init |
+| 1B. Spectrum alignment | `astroprism_stage1b_spectrum` | spectrum projector | random init |
+| Joint | `astroprism_joint_aion` | both, alternating | 1A + 1B, composed |
 
 A reference checkpoint from the joint stage is published at
 [`Sand33p/AstroPRISM`](https://huggingface.co/Sand33p/AstroPRISM), trained with
@@ -221,13 +232,32 @@ python tools/launch_aurora.py \
   --nodes 1 --batch
 ```
 
-Same shape, 273 spectrum tokens, training the spectrum projector. Note the two
+Same shape, 273 spectrum tokens, training the spectrum projector. A two-step
+smoke run here prints `loss=4.70` and saves a checkpoint holding
+`projectors.spectrum` only. Note the two
 projectors are configured differently and deliberately so: the image projector
 uses `norm_mode: none`, the spectrum projector `text_scaled_layernorm` with
 `target_norm: 1.04`. Spectra and images do not arrive at the backbone with
 comparable scales.
 
 ## 6. Joint alignment
+
+First merge the two adapters. The joint config's `resume_weights_only` points
+at `_local/astroprism/joint_adapter_init`, and the run fails with
+`FileNotFoundError` if it is not there:
+
+```bash
+python tools/compose_astroprism_joint_adapters.py \
+  --image-checkpoint    <stage-1a-run>/checkpoints/step_final \
+  --spectrum-checkpoint <stage-1b-run>/checkpoints/step_final \
+  --output-dir          _local/astroprism/joint_adapter_init
+```
+
+Each stage-1 checkpoint holds only its own projector — 1A `projectors.image`,
+1B `projectors.spectrum` — and the composer writes the small checkpoint that
+carries both. Set `ASTROPRISM_JOINT_ADAPTER_INIT` to put it elsewhere.
+
+Then launch:
 
 ```bash
 python tools/launch_aurora.py \
@@ -253,6 +283,19 @@ teacher-forced losses:
 | Spectrum-caption | 1.3006 |
 
 These measure target-token prediction, not scientific correctness.
+
+A two-step smoke run of this stage is the one place both modalities are
+exercised together, and it reports them separately:
+
+```text
+Training Zone A: 100%|██████████| 2/2 [00:31<00:00, 15.96s/it, loss=6.18]
+Test loss metrics: {'test/loss': 5.728, 'test/image_loss': 3.057,
+                    'test/spectrum_loss': 14.780, ...}
+```
+
+Its checkpoint carries both projectors. Those numbers are two steps against
+the released run's 200 — they show the alternating sampler works, nothing
+more.
 
 ## 7. Generate from the published checkpoint
 
