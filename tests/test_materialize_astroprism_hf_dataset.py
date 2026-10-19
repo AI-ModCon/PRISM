@@ -41,6 +41,30 @@ def _snapshot(tmp_path: Path, rows: int = 3) -> Path:
         "row_count": rows,
         "outputs": {"spectrum_flux": {"path": "spectrum_flux.npy", "shape": [rows, 16]}},
     }))
+    # Spectrum captions live in their own Parquet config, not in
+    # candidates.jsonl -- the published dataset splits them that way.
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    spec_cfg = snap / "data" / "spectrum_caption"
+    spec_cfg.mkdir(parents=True)
+    for split, idxs in (("train", list(range(rows))), ("validation", []), ("test", [])):
+        pq.write_table(
+            pa.table({
+                "candidate_index": idxs,
+                "paired_targetid": [1000 + i for i in idxs],
+                "caption_object_id": [f"obj-{i}" for i in idxs],
+                "source_group_id": [f"grp-{i}" for i in idxs],
+                "split": [split] * len(idxs),
+                "caption": [f"a spectrum {i}" for i in idxs],
+                "caption_status": ["accepted"] * len(idxs),
+                "review_status": ["accepted"] * len(idxs),
+                "training_allowed": [split == "train"] * len(idxs),
+                "dataset_ready": [True] * len(idxs),
+            }),
+            spec_cfg / f"{split}.parquet",
+        )
+
     with open(meta / "candidates.jsonl", "w", encoding="utf-8") as fh:
         for i in range(rows):
             fh.write(json.dumps({
@@ -146,3 +170,83 @@ def test_missing_token_is_reported_rather_than_a_traceback(
 ) -> None:
     monkeypatch.delenv("HF_TOKEN", raising=False)
     assert mat.main(["--output-dir", str(tmp_path / "local")]) == 1
+
+
+def test_spectrum_roster_comes_from_the_parquet_not_candidates_jsonl(
+    tmp_path: Path,
+) -> None:
+    """The published candidates.jsonl carries image captions only."""
+    out = tmp_path / "local"
+    _run(_snapshot(tmp_path, rows=3), out)
+    rows = [
+        json.loads(line)
+        for line in (out / "stage1b_spectrum_caption_accepted/captions.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip()
+    ]
+    assert [r["candidate_index"] for r in rows] == [0, 1, 2]
+    assert rows[0]["spectrum_caption"]["original"] == "a spectrum 0"
+    assert rows[0]["spectrum_caption"]["status"] == "accepted"
+
+
+def test_split_roles_and_gradient_policy_follow_the_dataset_card(
+    tmp_path: Path,
+) -> None:
+    """Only train may take gradients; validation and test are inspection-only."""
+    out = tmp_path / "local"
+    _run(_snapshot(tmp_path, rows=2), out)
+    rows = [
+        json.loads(line)
+        for line in (out / "stage1b_spectrum_caption_accepted/captions.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip()
+    ]
+    policy = rows[0]["training_policy"]
+    assert policy["role"] == "alignment_training"
+    assert policy["gradient_training_allowed"] is True
+    assert policy["eligible_for_evaluation"] is False
+
+
+def test_both_manifests_declare_the_same_roster(tmp_path: Path) -> None:
+    """The loader compares their SHA-256 to prove one roster describes both."""
+    out = tmp_path / "local"
+    _run(_snapshot(tmp_path), out)
+    raw = json.loads((out / "raw_spectra/manifest.json").read_text())
+    caps = json.loads((out / "stage1b_spectrum_caption_accepted/manifest.json").read_text())
+    assert raw["roster"]["sha256"] == caps["roster"]["sha256"]
+    assert raw["roster"]["row_count"] == caps["roster"]["row_count"]
+
+
+def test_missing_spectrum_parquet_fails_with_a_usable_message(tmp_path: Path) -> None:
+    snap = _snapshot(tmp_path)
+    (snap / "data/spectrum_caption/train.parquet").unlink()
+    assert _run(snap, tmp_path / "local") == 1
+
+
+def test_training_allowed_disagreeing_with_the_split_is_rejected(
+    tmp_path: Path,
+) -> None:
+    """A row marked trainable outside train must not quietly become trainable."""
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    snap = _snapshot(tmp_path, rows=2)
+    bad = snap / "data/spectrum_caption/test.parquet"
+    pq.write_table(
+        pa.table({
+            "candidate_index": [0],
+            "paired_targetid": [1000],
+            "caption_object_id": ["obj-0"],
+            "source_group_id": ["grp-0"],
+            "split": ["test"],
+            "caption": ["a spectrum"],
+            "caption_status": ["accepted"],
+            "review_status": ["accepted"],
+            "training_allowed": [True],  # wrong for a test-split row
+            "dataset_ready": [True],
+        }),
+        bad,
+    )
+    assert _run(snap, tmp_path / "local") == 1

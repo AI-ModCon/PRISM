@@ -43,6 +43,13 @@ ARRAY_PATTERNS = ["assets/raw/images/*.npy", "assets/raw/spectra/*.npy"]
 
 REPO_ID = "Sand33p/AstroPRISM"
 
+# src/data/astroprism_stage1b_spectrum_dataset.py::_ROLE_BY_SPLIT
+_ROLE_BY_SPLIT = {
+    "train": "alignment_training",
+    "validation": "alignment_validation",
+    "test": "alignment_test",
+}
+
 
 class MaterializeError(RuntimeError):
     """Raised when the snapshot does not match what the loaders require."""
@@ -146,6 +153,122 @@ def _candidate_manifest(candidates: Path, *, verify: bool) -> dict[str, Any]:
     }
 
 
+def _spectrum_caption_records(
+    snapshot: Path, image_records: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Build the Stage 1B roster from the dataset's spectrum_caption Parquet.
+
+    metadata/candidates.jsonl carries only the image captions, so Stage 1B has
+    no roster in the published tree. The spectrum captions live in the
+    ``spectrum_caption`` config instead, one Parquet per split. Join them back
+    onto the image roster by ``candidate_index`` -- which is also the raw-array
+    index -- and restate the per-record review and policy facts the loader
+    checks. Those are not invented: ``caption_status`` and ``training_allowed``
+    come from the Parquet, and the split roles follow the dataset card, which
+    permits gradients on train only and marks validation and test
+    inspection-only.
+    """
+    import pyarrow.parquet as pq
+
+    by_index = {r.get("candidate_index"): r for r in image_records}
+    rows: dict[int, dict[str, Any]] = {}
+    for split in ("train", "validation", "test"):
+        shard = snapshot / "data" / "spectrum_caption" / f"{split}.parquet"
+        if not shard.is_file():
+            raise MaterializeError(
+                f"spectrum captions for split {split!r} are missing at {shard}. "
+                "Re-run without --no-download, or fetch data/spectrum_caption/*.parquet."
+            )
+        table = pq.read_table(
+            shard,
+            columns=["candidate_index", "split", "caption", "caption_status",
+                     "review_status", "training_allowed", "dataset_ready"],
+        )
+        for row in table.to_pylist():
+            index = row["candidate_index"]
+            base = by_index.get(index)
+            if base is None:
+                raise MaterializeError(
+                    f"spectrum caption {index} has no matching image-roster row"
+                )
+            is_train = row["split"] == "train"
+            if bool(row["training_allowed"]) is not is_train:
+                raise MaterializeError(
+                    f"spectrum caption {index} in split {row['split']!r} has "
+                    f"training_allowed={row['training_allowed']!r}"
+                )
+            rows[index] = {
+                "candidate_index": index,
+                "paired_targetid": base.get("paired_targetid"),
+                "caption_object_id": base.get("caption_object_id"),
+                "source_group_id": base.get("source_group_id"),
+                "split": row["split"],
+                "coordinates_deg": base.get("coordinates_deg"),
+                "spectrum_caption": {
+                    "original": row["caption"],
+                    "status": row["caption_status"],
+                },
+                "review": {
+                    "status": row["review_status"],
+                    "decision_source": "user_instruction",
+                },
+                "training_policy": {
+                    "dataset_ready": bool(row["dataset_ready"]),
+                    "gradient_training_allowed": is_train,
+                    "eligible_for_training": is_train,
+                    "eligible_for_evaluation": not is_train,
+                    "role": _ROLE_BY_SPLIT[row["split"]],
+                },
+            }
+    # candidate_index is the raw-array index, so roster order must be preserved.
+    return [rows[i] for i in sorted(rows)]
+
+
+def _spectrum_caption_manifest(
+    candidates: Path, records: list[dict[str, Any]], *, verify: bool
+) -> dict[str, Any]:
+    """Stage 1B checks a stricter envelope than Stage 1A around the same rows.
+
+    It requires its own artifact_type plus the review and training-policy
+    blocks that record the roster was accepted and which splits may take
+    gradients. Those facts come from the dataset card (train-only gradient
+    training; validation and test inspection-only), restated here in the shape
+    src/data/astroprism_stage1b_spectrum_dataset.py validates.
+    """
+    from collections import Counter
+
+    rows = len(records)
+    entry: dict[str, Any] = {"path": str(candidates.resolve()), "row_count": rows}
+    if verify:
+        entry["sha256"] = _sha256(candidates)
+    # The loader cross-checks these against the JSONL it reads, so derive them
+    # from the roster rather than restating them.
+    indices = [record.get("candidate_index") for record in records]
+    split_counts = dict(Counter(record.get("split") for record in records))
+    return {
+        "artifact_type": "astroprism_spectrum_captions_accepted",
+        "candidate_indices": indices,
+        "split_counts": split_counts,
+        "splits": {"row_counts": split_counts},
+        "schema_version": 1,
+        "role": "reviewed_alignment_dataset",
+        "row_count": rows,
+        "source": {"repo_id": REPO_ID, "repo_type": "dataset"},
+        "review": {"status": "accepted", "decision_source": "user_instruction"},
+        "training_policy": {
+            "dataset_ready": True,
+            "gradient_training_splits": ["train"],
+            "evaluation_splits": ["validation", "test"],
+            "roles": {
+                "train": "alignment_training",
+                "validation": "alignment_validation",
+                "test": "alignment_test",
+            },
+        },
+        "outputs": {"captions.jsonl": entry, "candidates": entry},
+    }
+
+
 def _fetch_snapshot(revision: str | None, token: str | None) -> Path:
     from huggingface_hub import snapshot_download
 
@@ -223,17 +346,51 @@ def main(argv: list[str] | None = None) -> int:
     images["artifact_type"] = "astroprism_raw_images"
     spectra["artifact_type"] = "astroprism_raw_spectra"
 
+    # Stage 1B needs its own roster: the published candidates.jsonl has image
+    # captions only. Build it from the spectrum_caption Parquet shards.
+    spectrum_dir = out / "stage1b_spectrum_caption_accepted"
+    spectrum_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        spectrum_records = _spectrum_caption_records(snap, records)
+    except MaterializeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    spectrum_file = spectrum_dir / "captions.jsonl"
+    spectrum_file.write_text(
+        "".join(json.dumps(r) + "\n" for r in spectrum_records), encoding="utf-8"
+    )
+    spectrum_captions = _spectrum_caption_manifest(
+        spectrum_file, spectrum_records, verify=verify
+    )
+
+    # Both manifests must declare the same roster provenance; the loader
+    # compares their SHA-256 and row count to prove the arrays and the
+    # captions describe one roster. The published package ships the roster
+    # under provenance/, so use it when present and fall back to the
+    # candidate file, which is the roster the arrays were built from.
+    roster_file = snap / "provenance/overlap_candidates_646.csv.gz"
+    if not roster_file.is_file():
+        roster_file = candidates_file
+    roster = {
+        "path": str(roster_file.resolve()),
+        "sha256": _sha256(roster_file),
+        "row_count": len(records),
+    }
+    for payload in (images, spectra, candidates, spectrum_captions):
+        payload["roster"] = roster
     written = {
         "raw_images/manifest.json": images,
         "raw_spectra/manifest.json": spectra,
         "stage1a_accepted/manifest.json": candidates,
-        "stage1b_spectrum_caption_accepted/manifest.json": candidates,
+        "stage1b_spectrum_caption_accepted/manifest.json": spectrum_captions,
     }
     for rel, payload in written.items():
         dest = out / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         print(f"wrote {dest}")
+
+    print(f"wrote {spectrum_file}")
 
     print(f"\nsnapshot: {snap}")
     print(f"candidates: {candidates['outputs']['candidates']['row_count']} rows")
