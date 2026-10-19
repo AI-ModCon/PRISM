@@ -1,0 +1,25 @@
+# AstroPRISM Stage 1B reviewed spectrum-caption alignment.
+defaults:
+  - zone_a
+  - _self_
+
+task: "astroprism_stage1b_spectrum"
+batch_size: 2
+max_steps: 100
+finite_epoch_steps: 0
+
+# Train only the spectrum adapter/type embedding against reviewed captions.
+# The AION codec/shared encoder and Qwen backbone remain frozen.
+freeze_llm: true
+freeze_vit: true
+learning_rate: 1e-3
+lr_connector: 1e-3
+lr_vit: 1e-5
+weight_decay: 0.0
+warmup_steps: 10
+
+# The reviewed corpus is small and mmap-backed. Evaluation remains disabled
+# for this alignment run even though held-out captions are evaluation-ready.
+data_num_workers: 0
+eval_enabled: false
+validation_batches: 0

@@ -51,6 +51,7 @@ class ModalityProjector(nn.Module):
     Configurable Normalization Modes (for ablation studies):
     - none: No normalization (simple MLP output)
     - layernorm: Standard LayerNorm on output (original/default behavior)
+    - text_scaled_layernorm: LayerNorm initialized to the target text-token norm
     - rmsnorm: RMSNorm (like LLaMA/OLMo, no centering)
     - l2_token: Per-token L2 normalization to target_norm
     - l2_sequence: Sequence-level L2 normalization (preserves token differences)
@@ -67,6 +68,7 @@ class ModalityProjector(nn.Module):
     VALID_NORM_MODES = {
         "none",
         "layernorm",
+        "text_scaled_layernorm",
         "rmsnorm",
         "l2_token",
         "l2_sequence",
@@ -181,6 +183,11 @@ class ModalityProjector(nn.Module):
 
         if norm_mode == "layernorm":
             self.final_norm = nn.LayerNorm(d_model)
+        elif norm_mode == "text_scaled_layernorm":
+            self.final_norm = nn.LayerNorm(d_model)
+            initial_gain = target_norm / math.sqrt(d_model)
+            nn.init.constant_(self.final_norm.weight, initial_gain)
+            nn.init.zeros_(self.final_norm.bias)
         elif norm_mode == "rmsnorm":
             self.final_norm = RMSNorm(d_model)
         elif norm_mode in ["l2_token", "l2_sequence", "scale_only"]:
@@ -256,6 +263,11 @@ class ModalityProjector(nn.Module):
 
         elif self.norm_mode == "layernorm":
             # Standard LayerNorm (original behavior)
+            return self.final_norm(x)
+
+        elif self.norm_mode == "text_scaled_layernorm":
+            # LayerNorm's unit-variance output has L2 norm sqrt(d_model), so
+            # the initialized gain makes the merge-point token norm target_norm.
             return self.final_norm(x)
 
         elif self.norm_mode == "rmsnorm":

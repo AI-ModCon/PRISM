@@ -225,10 +225,11 @@ fi
             "\n"
             "# Rank 0 on each node takes care of unpacking\n"
             'if [ "$LOCAL_RANK" == "0" ]; then\n'
-            '    if [ ! -f "$MARKER_FILE" ]; then\n'
+            '    if [ ! -f "$MARKER_FILE" ] || [ "$ENV_TARBALL" -nt "$MARKER_FILE" ]; then\n'
+            '         rm -rf "$LOCAL_ENV"\n'
             '         echo "Rank $RANK (Local 0): Unpacking $ENV_TARBALL to $LOCAL_ENV..."\n'
-            "         mkdir -p $LOCAL_ENV\n"
-            "         tar -xzf $ENV_TARBALL -C $LOCAL_ENV\n"
+            '         mkdir -p "$LOCAL_ENV"\n'
+            '         tar -xzf "$ENV_TARBALL" -C "$LOCAL_ENV"\n'
             "         if [ $? -ne 0 ]; then\n"
             '             echo "ERROR: Failed to unpack $ENV_TARBALL"\n'
             "             exit 1\n"
@@ -245,7 +246,14 @@ fi
             "    sleep 1\n"
             "done\n"
         )
-        activate_line = "source $LOCAL_ENV/bin/activate"
+        # setup_deepspeed_env.sh builds .venv-deepspeed/ and the documented
+        # tar command preserves that top-level directory. Relocate VIRTUAL_ENV
+        # before sourcing so console scripts and diagnostics refer to /tmp.
+        activate_line = (
+            'sed -i "s|VIRTUAL_ENV=.*|VIRTUAL_ENV=\\"$LOCAL_ENV/.venv-deepspeed\\"|" '
+            "$LOCAL_ENV/.venv-deepspeed/bin/activate\n"
+            "source $LOCAL_ENV/.venv-deepspeed/bin/activate"
+        )
         model_section = (
             "# --- Model Copy (Local /tmp) ---\n"
             'export SHARED_HF_HOME="' + default_shared_hf_home + '"\n'
@@ -436,6 +444,21 @@ fi
         # print("\n--- SCRIPT CONTENT ---")
         # print(run_script_content)
         pass
+    elif args.batch:
+        # A PBS script has to be submitted, not executed: running it here would
+        # run the job on the login node and ignore every #PBS directive above.
+        print("Submitting batch job via qsub...")
+        try:
+            result = subprocess.run(
+                ["qsub", script_path],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            print(result.stdout.strip())
+        except subprocess.CalledProcessError as e:
+            print(f"qsub failed: {e.stderr}")
+            raise SystemExit(e.returncode) from e
     else:
         print("Executing...")
         try:

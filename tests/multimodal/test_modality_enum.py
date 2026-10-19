@@ -6,6 +6,7 @@ from src.modalities import ALL_MODALITIES, Modality, parse_modality
 def test_modality_str_equality():
     """Modality.X == 'x' so existing string-keyed dicts and configs work."""
     assert Modality.IMAGE == "image"
+    assert Modality.SPECTRUM == "spectrum"
     assert Modality.TEXT == "text"
     assert Modality.TIME_SERIES == "time_series"
     assert "image" == Modality.IMAGE
@@ -28,11 +29,12 @@ def test_dict_lookup_round_trip():
     assert d2["graph"] == "graph_enc"
 
 
-def test_all_modalities_has_seven():
-    assert len(ALL_MODALITIES) == 7
+def test_all_modalities_has_eight():
+    assert len(ALL_MODALITIES) == 8
     assert set(ALL_MODALITIES) == {
         Modality.TEXT,
         Modality.IMAGE,
+        Modality.SPECTRUM,
         Modality.TABLE,
         Modality.TIME_SERIES,
         Modality.GEOMETRY,
@@ -43,6 +45,7 @@ def test_all_modalities_has_seven():
 
 def test_parse_modality_coerces_string():
     assert parse_modality("image") is Modality.IMAGE
+    assert parse_modality("spectrum") is Modality.SPECTRUM
     assert parse_modality(Modality.GRAPH) is Modality.GRAPH
 
 

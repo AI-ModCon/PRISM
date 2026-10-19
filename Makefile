@@ -89,6 +89,7 @@ multimodal:  ## Run the contract suite as CI's `multimodal_contract` job does
 # none of them -- this target is the only make path that does.
 launcher:  ## Run the launcher contracts as CI's `launcher_contract` job does
 	$(PYTHON) -m pytest -q \
+	  tests/test_launch_aurora.py \
 	  tests/test_launch_aurora_web_vla.py \
 	  tests/platform/test_perlmutter_launch_contract.py \
 	  tests/platform/test_hpc_bridge_contract.py \

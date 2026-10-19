@@ -1,0 +1,37 @@
+# AstroPRISM Stage 1A: raw Legacy Survey images -> AION -> adapter -> Qwen3-4B.
+
+backbone_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+tokenizer_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+freeze_backbone: true
+freeze_encoders: true
+
+d_text: 2560
+d_img: 768
+
+# AION consumes calibrated four-band 160x160 cutouts directly. The released
+# feature tensors are parity references only, not model inputs.
+image_encoder_type: "aion"
+image_encoder_id: "google/siglip2-base-patch16-224"  # Inactive compatibility default.
+image_processor_id: null
+image_processor_strict: false
+image_size: 160
+aion_model_name_or_path: "polymathic-ai/aion-base"
+aion_model_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_codec_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_cache_dir: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/cache"
+aion_local_files_only: true
+aion_image_bands: ["DES-G", "DES-R", "DES-I", "DES-Z"]
+aion_num_image_tokens: 576
+aion_raw_image_size: [160, 160]
+
+attn_implementation: "sdpa"
+
+modalities:
+  - "text"
+  - "image"
+
+# Existing two-layer 768 -> 2560 adapter.
+projector_norm_mode: "none"
+projector_modality_embed_pos: "after_norm"
+projector_hidden_mult: 1
+projector_num_layers: 2

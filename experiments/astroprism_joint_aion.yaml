@@ -1,0 +1,34 @@
+# Joint raw-image + raw-spectrum alignment with one frozen AION core and Qwen3-4B.
+
+experiments:
+  - id: ASTROPRISM-JOINT-AION
+    name: "AstroPRISM joint AION image/spectrum caption alignment"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      model: prism_astroprism_joint_qwen3_4b
+      training: astroprism_joint_aion
+      +data: astroprism_joint_aion
+
+      training.task: astroprism_joint_aion
+      training.device: xpu
+      training.batch_size: 2
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 200
+      training.save_every_n_steps: 50
+      training.eval_enabled: true
+      training.eval_every_n_steps: 50
+      training.validation_batches: 0
+      training.freeze_llm: true
+      training.freeze_vit: true
+
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      data.split: train
+
+      wandb.project: astroprism-joint-aion
+      # This host has no W&B credential. The complete run is retained locally
+      # and can be uploaded later with `wandb sync`.
+      wandb.mode: offline

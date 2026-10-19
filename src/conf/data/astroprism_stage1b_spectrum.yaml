@@ -1,0 +1,14 @@
+# Raw observed-frame DESI spectra with promoted, reviewed spectrum captions.
+raw_manifest_path: "_local/astroprism/raw_spectra/manifest.json"
+captions_manifest_path: "_local/astroprism/stage1b_spectrum_caption_accepted/manifest.json"
+captions_path: null
+
+# Preserve the immutable source-level split; only train enters gradient updates.
+split: "train"
+accepted_caption_statuses: ["accepted"]
+verify_file_hashes: true
+
+max_merged_seq_length: 2048
+
+# Require the model and dataset to agree on the emitted non-text modality.
+strict_modality_check: true

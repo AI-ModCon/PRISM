@@ -97,6 +97,8 @@ loadable as Claude agent skills or read as docs. See the
 |----------|-------------|
 | [getting-started.md](getting-started.md) | Clone, pick a platform, build an environment, run a first job |
 | [training/cli.md](training/cli.md) | Unified CLI (`prism`) reference: installation, commands, options, examples |
+| [materials_prism_tutorial.md](materials_prism_tutorial.md) | Tutorial: jointly train on material descriptions and crystal structures |
+| [astroprism_tutorial.md](astroprism_tutorial.md) | Tutorial: prepare the AstroPrism galaxy corpus on Aurora (data preparation; training is not implemented) |
 
 ### Platforms — `platforms/`
 
@@ -177,6 +179,11 @@ Recorded experiment outcomes. These are dated reports, not usage guides.
 | [applications/kegg_curation_pipeline.md](applications/kegg_curation_pipeline.md) | KEGG dataset curation pipeline — design doc |
 | [applications/kegg_curation_implementation_status.md](applications/kegg_curation_implementation_status.md) | KEGG curation — what is built and live-tested, stage by stage |
 | [applications/materials_multimodal.md](applications/materials_multimodal.md) | Materials property prediction from text + crystal graphs (`src/materials`, `CrystalGraphTokenEncoder`) |
+| [applications/astroprism.md](applications/astroprism.md) | AstroPrism: the 646-candidate image + spectrum + language pilot — start here |
+| [applications/astroprism_training_plan.md](applications/astroprism_training_plan.md) | AstroPrism: AION-1/Qwen architecture, training phases, splits and settings (proposed) |
+| [applications/astroprism_synthetic_data_prompts.md](applications/astroprism_synthetic_data_prompts.md) | AstroPrism: prompt templates and data contracts for caption and instruction synthesis |
+| [applications/astroprism_benchmark_landscape.md](applications/astroprism_benchmark_landscape.md) | AstroPrism: astronomy benchmark survey and the proposed evaluation panels |
+| [applications/astroprism_data.md](applications/astroprism_data.md) | AstroPrism: the 646-candidate roster — pins, checksum, field definitions, recovery |
 
 ### API reference — `api/`
 

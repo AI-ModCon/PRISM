@@ -1,0 +1,31 @@
+# Joint adapter continuation from the separately aligned image/spectrum adapters.
+defaults:
+  - zone_a
+  - _self_
+
+task: "astroprism_joint_aion"
+batch_size: 2
+
+# Rank-synchronous alternating modalities give each adapter 100 optimizer
+# updates and the same 2,400 sample presentations as its prior 100-step run.
+max_steps: 200
+finite_epoch_steps: 0
+
+freeze_llm: true
+freeze_vit: true
+learning_rate: 1e-3
+lr_connector: 1e-3
+lr_vit: 1e-5
+weight_decay: 0.0
+warmup_steps: 10
+
+data_num_workers: 0
+viz_every_n_steps: 0
+save_every_n_steps: 50
+
+# Validation is periodic; test is evaluated once after the final update.
+eval_enabled: true
+eval_every_n_steps: 50
+validation_batches: 0
+
+resume_weights_only: "${oc.env:ASTROPRISM_JOINT_ADAPTER_INIT,_local/astroprism/joint_adapter_init}"

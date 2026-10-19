@@ -1,4 +1,6 @@
+import json
 import os
+from collections.abc import Mapping
 
 import torch
 import torch.optim as optim
@@ -26,6 +28,174 @@ try:
     import wandb
 except Exception:
     wandb = None
+
+
+def _set_encoder_trainable(encoder: torch.nn.Module, trainable: bool) -> None:
+    """Apply an encoder's narrow trainability boundary when it exposes one.
+
+    AION's raw-image wrapper owns both a frozen fp32 codec and a potentially
+    trainable shared encoder. Falling back to toggling every parameter is only
+    safe for legacy encoders that do not expose that distinction.
+    """
+    set_shared_trainable = getattr(encoder, "set_shared_encoder_trainable", None)
+    if callable(set_shared_trainable):
+        set_shared_trainable(trainable)
+        return
+
+    for parameter in encoder.parameters():
+        parameter.requires_grad_(trainable)
+
+
+def _configure_encoder_for_training(
+    encoder: torch.nn.Module,
+    *,
+    trainable: bool,
+    target_dtype: torch.dtype,
+) -> None:
+    """Set dtype and trainability without recasting protected encoder state."""
+    if not callable(getattr(encoder, "set_shared_encoder_trainable", None)):
+        encoder.to(dtype=target_dtype)
+    _set_encoder_trainable(encoder, trainable)
+
+
+def _refresh_encoder_frozen_cache(model: torch.nn.Module) -> None:
+    """Refresh cached encoder freeze state through the model API when present."""
+    refresh = getattr(model, "refresh_encoder_frozen_cache", None)
+    if callable(refresh):
+        refresh()
+        return
+
+    cache = getattr(model, "_encoder_frozen_cache", None)
+    encoders = getattr(model, "encoders", None)
+    if not isinstance(cache, dict) or encoders is None:
+        return
+    for modality, encoder in encoders.items():
+        cache[modality] = not any(parameter.requires_grad for parameter in encoder.parameters())
+
+
+def _labels_for_batch(batch):
+    """Prefer collator-supplied loss labels; retain legacy text-as-labels."""
+    if "labels" in batch:
+        return batch["labels"]
+    return batch["text"]
+
+
+_ALIGNMENT_MODALITIES = ("image", "spectrum")
+_LOSS_STAT_SIZE = 2 + 2 * len(_ALIGNMENT_MODALITIES)
+
+
+def _supervised_token_count(batch, *, pad_token_id=None) -> torch.Tensor:
+    """Count tokens that contribute to the causal-language-model loss.
+
+    AstroPRISM collators provide assistant-only ``labels`` with ``-100`` for
+    prompt and padding positions. Those labels are the authoritative loss
+    mask. The text fallback keeps legacy Zone A datasets working when they do
+    not provide a separate label tensor.
+    """
+    labels = batch.get("labels")
+    if isinstance(labels, torch.Tensor):
+        return labels.ne(-100).sum(dtype=torch.float32)
+
+    text = batch.get("text")
+    if not isinstance(text, torch.Tensor):
+        return torch.tensor(0.0)
+    if pad_token_id is None:
+        return torch.tensor(float(text.numel()), device=text.device)
+    return text.ne(pad_token_id).sum(dtype=torch.float32)
+
+
+def _alignment_modality(batch) -> str | None:
+    """Return the single tracked alignment modality present in ``batch``."""
+    present = [
+        modality
+        for modality in _ALIGNMENT_MODALITIES
+        if modality in batch and batch[modality] is not None
+    ]
+    return present[0] if len(present) == 1 else None
+
+
+def _validate_provenance_split(batch, expected_split: str) -> None:
+    """Fail closed when a provenance-bearing batch crosses split roles."""
+    provenance = batch.get("provenance")
+    if isinstance(provenance, dict):
+        records = [provenance]
+    elif isinstance(provenance, list | tuple):
+        records = provenance
+    else:
+        return
+    observed = {
+        record.get("split")
+        for record in records
+        if isinstance(record, dict) and record.get("split") is not None
+    }
+    if observed and observed != {expected_split}:
+        raise RuntimeError(
+            f"expected only {expected_split!r} samples, observed splits {sorted(observed)!r}"
+        )
+
+
+def _loss_stats_for_batch(
+    loss: torch.Tensor,
+    batch,
+    *,
+    pad_token_id=None,
+    modality: str | None = None,
+) -> torch.Tensor:
+    """Build additive ``(loss numerator, supervised tokens)`` statistics.
+
+    The first pair is the aggregate. Subsequent pairs are image and spectrum,
+    respectively. A fixed-width vector lets every distributed rank execute
+    the same SUM collective even when ranks see different modalities.
+    """
+    detached_loss = loss.detach().float()
+    token_count = _supervised_token_count(
+        batch,
+        pad_token_id=pad_token_id,
+    ).to(device=detached_loss.device, dtype=torch.float32)
+    stats = torch.zeros(
+        _LOSS_STAT_SIZE,
+        device=detached_loss.device,
+        dtype=torch.float32,
+    )
+    stats[0] = detached_loss * token_count
+    stats[1] = token_count
+
+    resolved_modality = modality or _alignment_modality(batch)
+    if resolved_modality in _ALIGNMENT_MODALITIES:
+        offset = 2 + 2 * _ALIGNMENT_MODALITIES.index(resolved_modality)
+        stats[offset] = stats[0]
+        stats[offset + 1] = token_count
+    return stats
+
+
+def _loss_metrics_from_stats(
+    stats: torch.Tensor,
+    prefix: str,
+    *,
+    include_legacy_loss: bool = False,
+) -> dict[str, float]:
+    """Convert reduced additive statistics to token-weighted loss metrics."""
+    values = stats.detach().float().cpu().tolist()
+    total_tokens = float(values[1])
+    if total_tokens <= 0:
+        return {}
+
+    aggregate_loss = float(values[0]) / total_tokens
+    metrics = {
+        f"{prefix}/loss": aggregate_loss,
+        f"{prefix}/supervised_tokens": total_tokens,
+    }
+    if include_legacy_loss:
+        metrics["loss"] = aggregate_loss
+
+    for index, modality in enumerate(_ALIGNMENT_MODALITIES):
+        offset = 2 + 2 * index
+        modality_tokens = float(values[offset + 1])
+        if modality_tokens <= 0:
+            continue
+        metrics[f"{prefix}/{modality}_loss"] = float(values[offset]) / modality_tokens
+        metrics[f"{prefix}/{modality}_supervised_tokens"] = modality_tokens
+    return metrics
 
 
 class _NullEvaluatorRegistry:
@@ -86,9 +256,7 @@ class ModalityMonitor:
         # Identify present modalities (excluding 'text' which is usually present as labels)
         # Note: In PRISM, 'text' is the input for SFT. Multimodal inputs have other keys.
         present = [
-            k
-            for k in batch.keys()
-            if k != "text" and k != "labels" and not k.startswith("_")
+            k for k in batch.keys() if k != "text" and k != "labels" and not k.startswith("_")
         ]
 
         if not present:
@@ -134,8 +302,18 @@ class ZoneATrainer:
             return inner
         return self.accelerator.unwrap_model(self.model)
 
-    def __init__(self, model: UnifiedTransformer, config: TrainingConfig, train_loader):
+    def __init__(
+        self,
+        model: UnifiedTransformer,
+        config: TrainingConfig,
+        train_loader,
+        *,
+        validation_loaders: Mapping[str, object] | None = None,
+        test_loaders: Mapping[str, object] | None = None,
+    ):
         self.config = config
+        self.validation_loaders = dict(validation_loaders or {})
+        self.test_loaders = dict(test_loaders or {})
         self.monitor = None  # Init later
 
         # 1. Initialize Accelerator
@@ -178,9 +356,7 @@ class ZoneATrainer:
             from src.training.distributed import _resolve_find_unused
 
             num_modalities = len(getattr(model.config, "modalities", []) or [])
-            is_composite = (
-                os.environ.get("ZE_FLAT_DEVICE_HIERARCHY", "").upper() == "COMPOSITE"
-            )
+            is_composite = os.environ.get("ZE_FLAT_DEVICE_HIERARCHY", "").upper() == "COMPOSITE"
             is_interleaved = bool(getattr(model.config, "is_interleaved_qa", False))
             # Pass trainable_mb=0 to assume projector-only (the only regime
             # this Accelerate trainer is configured for — frozen encoders +
@@ -308,22 +484,29 @@ class ZoneATrainer:
         freeze_vit = getattr(config, "freeze_vit", True)
         if freeze_vit:
             self.accelerator.print("Freezing Encoders...")
-            for param in self.model.encoders.parameters():
-                param.requires_grad = False
         else:
             self.accelerator.print("Unfreezing Encoders...")
-            for param in self.model.encoders.parameters():
-                param.requires_grad = True
-            params_vit.extend([p for p in self.model.encoders.parameters() if p.requires_grad])
 
+        for encoder in self.model.encoders.values():
+            _configure_encoder_for_training(
+                encoder,
+                trainable=not freeze_vit,
+                target_dtype=target_dtype,
+            )
+        _refresh_encoder_frozen_cache(self.model)
+        if not freeze_vit:
+            params_vit.extend(
+                parameter
+                for parameter in self.model.encoders.parameters()
+                if parameter.requires_grad
+            )
 
-
-        # PATRICK: Is commenting this out breaking? 
-        #self.accelerator.print("Training Projectors Only (Freezing Non-Projector Params)...")
+        # PATRICK: Is commenting this out breaking?
+        # self.accelerator.print("Training Projectors Only (Freezing Non-Projector Params)...")
         # Letting the freeze logic handle parameters allows experimentation with unfreezing encoders/backbones.
-        
+
         # Zone A is projector warmup: freeze everything except projectors.
-        #for name, param in self.model.named_parameters():
+        # for name, param in self.model.named_parameters():
         #    param.requires_grad = name.startswith("projectors.")
 
         # Cast projectors to target_dtype
@@ -369,7 +552,6 @@ class ZoneATrainer:
         # Group 1: ViT
         if params_vit:
             param_groups.append({"params": params_vit, "lr": lr_vit, "name": "vit"})
-
 
         # Group 2: LLM
         if params_llm:
@@ -466,9 +648,7 @@ class ZoneATrainer:
         if use_deepspeed:
             ds_plugin = self.accelerator.state.deepspeed_plugin
             ds_plugin.deepspeed_config["train_micro_batch_size_per_gpu"] = config.batch_size
-            self.model, self.optimizer = self.accelerator.prepare(
-                self.model, self.optimizer
-            )
+            self.model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
         else:
             self.model, self.optimizer, self.train_loader = self.accelerator.prepare(
                 self.model, self.optimizer, self.train_loader
@@ -515,7 +695,12 @@ class ZoneATrainer:
         # We should instantiate them here.
         # Ideally, we only run eval on main process to avoid duplication in logging.
         self.evaluators = []
-        if self.accelerator.is_main_process and _EVAL_IMPORT_ERROR is None:
+        if self.validation_loaders:
+            if self.accelerator.is_main_process:
+                self.accelerator.print(
+                    "Skipping registry evaluators: held-out loss loaders are configured."
+                )
+        elif self.accelerator.is_main_process and _EVAL_IMPORT_ERROR is None:
             self.accelerator.print("Initializing Evaluators...")
             # Unwrapped model for eval generation?
             # Accelerator wraps model.
@@ -574,39 +759,67 @@ class ZoneATrainer:
                 f"Skipping evaluator initialization: optional dependencies unavailable ({_EVAL_IMPORT_ERROR})"
             )
 
-        # WandB Init handled by Accelerator if 'log_with' is set,
-        # or we config it manually. Accelerator tracking is cleaner.
-        # Explicit WandB Init (Bypassing Accelerator for reliability with Native DDP)
-        if config.wandb_project and self.accelerator.is_main_process:
-            if wandb is None:
-                self.accelerator.print(
-                    "[Warning] wandb is not installed. Skipping explicit WandB initialization."
-                )
-            else:
-                self.accelerator.print(
-                    f"[DEBUG] Explicitly initializing WandB: {config.wandb_project} run={config.wandb_run_name}"
-                )
-                try:
-                    wandb.init(
-                        project=config.wandb_project,
-                        name=config.wandb_run_name,
-                        config=config.__dict__,
-                        reinit=True,
-                    )
-                    self.accelerator.print("[DEBUG] WandB Explicit Init Successful!")
-                except Exception as e:
-                    self.accelerator.print(f"[ERROR] WandB Explicit Init Failed: {e}")
-        else:
-            if self.accelerator.is_main_process:
-                self.accelerator.print("[DEBUG] WandB Project not set - Skipping Init.")
+        self._initialize_trackers()
 
         # IsoFLOP FLOP counter. The launcher exports `CALIBRATION_JSON` per
         # cell (see `tools/isoflop_launch.py` in PR-2). When unset, the
         # counter is a no-op and per-step records get `flops_per_step=None`
         # — the collector treats that as missing rather than zero.
-        self._flop_counter = _FlopCounter.from_calibration(
-            os.environ.get("CALIBRATION_JSON")
-        )
+        self._flop_counter = _FlopCounter.from_calibration(os.environ.get("CALIBRATION_JSON"))
+
+    def _initialize_trackers(self):
+        """Initialize Accelerate's W&B tracker exactly once on rank zero."""
+        if not self.accelerator.is_main_process:
+            return
+        if not self.config.wandb_project:
+            self.accelerator.print("[DEBUG] W&B project not set - skipping init.")
+            return
+        if wandb is None:
+            self.accelerator.print(
+                "[Warning] wandb is not installed. Skipping W&B tracker initialization."
+            )
+            return
+
+        wandb_kwargs = {
+            "name": self.config.wandb_run_name,
+            "reinit": True,
+        }
+        if self.config.wandb_entity:
+            wandb_kwargs["entity"] = self.config.wandb_entity
+        if self.config.wandb_mode:
+            wandb_kwargs["mode"] = self.config.wandb_mode
+        if self.config.wandb_run_id:
+            wandb_kwargs["id"] = self.config.wandb_run_id
+            wandb_kwargs["resume"] = "allow"
+
+        try:
+            self.accelerator.init_trackers(
+                project_name=self.config.wandb_project,
+                config=self.config.__dict__,
+                init_kwargs={"wandb": wandb_kwargs},
+            )
+            self.accelerator.print("[DEBUG] Accelerate W&B tracker initialized.")
+        except Exception as exc:
+            self.accelerator.print(f"[ERROR] W&B tracker initialization failed: {exc}")
+
+    def _write_loss_metrics(self, metrics, *, step, split):
+        """Append rank-zero loss metrics for offline inspection."""
+        if not self.accelerator.is_main_process or not metrics:
+            return
+        output_dir = getattr(self.config, "output_dir", None)
+        if not output_dir:
+            return
+
+        try:
+            os.makedirs(output_dir, exist_ok=True)
+            record = {"step": step, "split": split}
+            for key, value in metrics.items():
+                record[key] = float(value)
+            metrics_path = os.path.join(output_dir, "loss_metrics.jsonl")
+            with open(metrics_path, "a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, sort_keys=True) + "\n")
+        except Exception as exc:  # noqa: BLE001
+            self.accelerator.print(f"[Warning] Failed to append loss metrics for {split}: {exc}")
 
         # KEGG eval (run_kegg_eval): dataset/tokenizer are lazy-loaded on first call.
         self._kegg_eval_dataset = None
@@ -864,9 +1077,7 @@ class ZoneATrainer:
                     },
                 )
             except Exception as _e_startup:  # noqa: BLE001
-                self.accelerator.print(
-                    f"[perf] startup_param_count skipped: {_e_startup}"
-                )
+                self.accelerator.print(f"[perf] startup_param_count skipped: {_e_startup}")
 
         data_iter = iter(self.train_loader)
 
@@ -919,6 +1130,11 @@ class ZoneATrainer:
         _pad_id_for_tokens = (
             getattr(_tok_for_pad, "pad_token_id", None) if _tok_for_pad is not None else None
         )
+        train_loss_window = torch.zeros(
+            _LOSS_STAT_SIZE,
+            device=self._device,
+            dtype=torch.float32,
+        )
 
         self.optimizer.zero_grad()
 
@@ -943,6 +1159,9 @@ class ZoneATrainer:
                 self.accelerator.print("Error: 'text' missing in batch for Zone A training.")
                 break
 
+            if self.validation_loaders or self.test_loaders:
+                _validate_provenance_split(batch, "train")
+
             # Rank-0-only counts; scaled by world_size in the perf record below.
             if self.accelerator.is_main_process:
                 try:
@@ -955,20 +1174,12 @@ class ZoneATrainer:
                     text_tensor = batch.get("text")
                     if isinstance(text_tensor, torch.Tensor) and text_tensor.dim() == 2:
                         if _pad_id_for_tokens is None:
-                            per_sample = [int(text_tensor.shape[1])] * int(
-                                text_tensor.shape[0]
-                            )
+                            per_sample = [int(text_tensor.shape[1])] * int(text_tensor.shape[0])
                         else:
-                            per_sample = (
-                                (text_tensor != _pad_id_for_tokens)
-                                .sum(dim=1)
-                                .tolist()
-                            )
+                            per_sample = (text_tensor != _pad_id_for_tokens).sum(dim=1).tolist()
                         seq_lens_window.extend(int(n) for n in per_sample)
                 except Exception as _e_perf:  # noqa: BLE001
-                    self.accelerator.print(
-                        f"[perf] modality/token count skipped: {_e_perf}"
-                    )
+                    self.accelerator.print(f"[perf] modality/token count skipped: {_e_perf}")
 
             # Monitor Data Starvation
             self.monitor.check(batch, step)
@@ -987,7 +1198,7 @@ class ZoneATrainer:
                 # --- Forward Timing ---
                 t1 = time.perf_counter()
                 with self.accelerator.autocast():
-                    logits, loss = self.model(batch, labels=batch["text"])
+                    logits, loss = self.model(batch, labels=_labels_for_batch(batch))
                 # Sync for accurate timing on XPU (skipped under PRISM_PRODUCTION_MODE)
                 if not _production_mode and hasattr(torch, "xpu") and torch.xpu.is_available():
                     torch.xpu.synchronize()
@@ -998,9 +1209,7 @@ class ZoneATrainer:
                     self.accelerator.print(f"\nCRITICAL: NaN Loss Detected at Step {step}")
                     if "_metadata" in batch:
                         # _metadata is a list of strings (collated)
-                        self.accelerator.print(
-                            f"Offending Batch Metadata: {batch['_metadata']}"
-                        )
+                        self.accelerator.print(f"Offending Batch Metadata: {batch['_metadata']}")
                     else:
                         self.accelerator.print(
                             "No metadata found in batch (Was it stripped by collator?)."
@@ -1011,6 +1220,12 @@ class ZoneATrainer:
                     # Dump batch keys?
                     # self.accelerator.print(f"Batch Keys: {batch.keys()}")
                     raise ValueError("Training Diverged (NaN) - See Log for Metadata")
+
+                train_loss_window += _loss_stats_for_batch(
+                    loss,
+                    batch,
+                    pad_token_id=_pad_id_for_tokens,
+                )
 
                 # --- Backward Timing (separating compute from AllReduce) ---
                 # DEBUG_NO_SYNC: Run backward WITHOUT DDP AllReduce to isolate pure compute time
@@ -1049,7 +1264,11 @@ class ZoneATrainer:
 
                     # Now wait for AllReduce to complete (DDP overlaps but we measure the wait).
                     # Skipped under PRISM_PRODUCTION_MODE.
-                    if not _production_mode and hasattr(torch.distributed, "barrier") and torch.distributed.is_initialized():
+                    if (
+                        not _production_mode
+                        and hasattr(torch.distributed, "barrier")
+                        and torch.distributed.is_initialized()
+                    ):
                         torch.distributed.barrier()
                     t_after_allreduce = time.perf_counter()
                     timing_allreduce_wait += t_after_allreduce - t_after_backward
@@ -1071,15 +1290,27 @@ class ZoneATrainer:
                         # Separate Clipping
                         # 1. Projectors (Connectors)
                         if unwrapped_model.projectors:
-                            self.accelerator.clip_grad_norm_(unwrapped_model.projectors.parameters(), 1.0)
+                            self.accelerator.clip_grad_norm_(
+                                unwrapped_model.projectors.parameters(), 1.0
+                            )
 
                         # 2. Encoders (ViT) - Only if trainable
-                        if not getattr(self.config, "freeze_vit", True) and unwrapped_model.encoders:
-                            self.accelerator.clip_grad_norm_(unwrapped_model.encoders.parameters(), 1.0)
+                        if (
+                            not getattr(self.config, "freeze_vit", True)
+                            and unwrapped_model.encoders
+                        ):
+                            self.accelerator.clip_grad_norm_(
+                                unwrapped_model.encoders.parameters(), 1.0
+                            )
 
                         # 3. Backbone (LLM) - Only if trainable
-                        if not getattr(self.config, "freeze_llm", True) and unwrapped_model.backbone:
-                            self.accelerator.clip_grad_norm_(unwrapped_model.backbone.parameters(), 1.0)
+                        if (
+                            not getattr(self.config, "freeze_llm", True)
+                            and unwrapped_model.backbone
+                        ):
+                            self.accelerator.clip_grad_norm_(
+                                unwrapped_model.backbone.parameters(), 1.0
+                            )
                     else:
                         # Legacy Global Clipping
                         max_grad_norm = getattr(self.config, "max_grad_norm", 1.0)
@@ -1180,9 +1411,7 @@ class ZoneATrainer:
                         else 0.0
                     )
                     tokens_per_batch = (
-                        global_tokens_window / timing_steps
-                        if timing_steps > 0
-                        else 0.0
+                        global_tokens_window / timing_steps if timing_steps > 0 else 0.0
                     )
                     # IsoFLOP per-step extensions: sequence-length distribution
                     # + analytic FLOP accounting + projector capacity knobs.
@@ -1290,12 +1519,30 @@ class ZoneATrainer:
 
             # 1. Loss Logging (0 disables — guard against ZeroDivisionError).
             log_interval = self.config.log_every_n_steps
+            should_log_loss = False
             if log_interval and step % log_interval == 0:
-                avg_loss = loss.item()
+                should_log_loss = True
+            elif log_interval and (step + 1) >= self.config.max_steps:
+                should_log_loss = True
+            if should_log_loss:
+                global_loss_stats = self.accelerator.reduce(
+                    train_loss_window,
+                    reduction="sum",
+                )
+                loss_metrics = _loss_metrics_from_stats(
+                    global_loss_stats,
+                    "train",
+                    include_legacy_loss=True,
+                )
+                if not loss_metrics:
+                    fallback_loss = float(loss.detach().item())
+                    loss_metrics = {"loss": fallback_loss, "train/loss": fallback_loss}
+                avg_loss = loss_metrics["loss"]
                 lr = self.scheduler.get_last_lr()[0]
-                log_data.update(
-                    {"loss": avg_loss, "lr": lr}
-                )  # "step": step is handled by accelerator kwarg
+                log_data.update(loss_metrics)
+                log_data["lr"] = lr
+                self._write_loss_metrics(loss_metrics, step=step, split="train")
+                train_loss_window.zero_()
                 do_log = True
 
                 if self.accelerator.is_main_process:
@@ -1356,30 +1603,118 @@ class ZoneATrainer:
 
         # Save Final Checkpoint
         self.save_checkpoint("final")
+        if self.test_loaders:
+            self.run_test_evaluation(step)
         self.accelerator.print("Training Complete.")
         self.accelerator.print(f"Checkpoints saved to: {self.config.output_dir}")
         self.accelerator.end_training()
 
-    def run_evaluation(self, step):
-        """Run all registered evaluators and log metrics."""
-        if not self.accelerator.is_main_process:
-            return
+    def _evaluate_loss_loaders(self, loaders, *, split, max_batches=None):
+        """Evaluate deterministic replicated loaders without gradient updates.
 
-        self.accelerator.print(f"\n[Step {step}] Running Evaluation...")
+        The loaders intentionally remain unprepared by Accelerate. Every rank
+        therefore evaluates the same examples in the same order, which keeps
+        ZeRO/FSDP forwards collective-safe without padding the 65-row held-out
+        splits. Reduced statistics are divided by world size so token counts
+        describe the dataset once rather than the replicated compute.
+        """
+        if not loaders:
+            return {}
+
+        was_training = self.model.training
+        local_stats = torch.zeros(
+            _LOSS_STAT_SIZE,
+            device=self._device,
+            dtype=torch.float32,
+        )
         self.model.eval()
+        try:
+            with torch.inference_mode():
+                for modality in sorted(loaders):
+                    if modality not in _ALIGNMENT_MODALITIES:
+                        raise ValueError(f"unsupported held-out loss modality: {modality!r}")
+                    for batch_index, batch in enumerate(loaders[modality]):
+                        if max_batches is not None and batch_index >= max_batches:
+                            break
+                        batch = send_to_device(batch, self._device)
+                        _validate_provenance_split(batch, split)
+                        observed_modality = _alignment_modality(batch)
+                        if observed_modality != modality:
+                            raise RuntimeError(
+                                "held-out loader/batch modality mismatch: "
+                                f"loader={modality!r}, batch={observed_modality!r}"
+                            )
+                        with self.accelerator.autocast():
+                            _, loss = self.model(
+                                batch,
+                                labels=_labels_for_batch(batch),
+                            )
+                        if loss is None:
+                            raise RuntimeError(f"{split} {modality} evaluation returned no loss")
+                        local_stats += _loss_stats_for_batch(
+                            loss,
+                            batch,
+                            modality=modality,
+                        )
+        finally:
+            self.model.train(was_training)
 
-        total_metrics = {}
-        for evaluator in self.evaluators:
+        reduced_stats = self.accelerator.reduce(local_stats, reduction="sum")
+        world_size = max(1, int(getattr(self.accelerator, "num_processes", 1)))
+        return _loss_metrics_from_stats(reduced_stats / world_size, split)
+
+    def run_test_evaluation(self, step):
+        """Run the full held-out test split once at the end of training."""
+        metrics = self._evaluate_loss_loaders(
+            self.test_loaders,
+            split="test",
+            max_batches=None,
+        )
+        if self.accelerator.is_main_process and metrics:
+            self.accelerator.log(metrics, step=step)
+            self._write_loss_metrics(metrics, step=step, split="test")
+            self.accelerator.print(f"Test loss metrics: {metrics}")
+        return metrics
+
+    def run_evaluation(self, step):
+        """Run held-out CE loaders, or the legacy evaluator suite."""
+        self.accelerator.print(f"\n[Step {step}] Running Evaluation...")
+
+        if self.validation_loaders:
+            configured_batches = int(getattr(self.config, "validation_batches", 0) or 0)
+            max_batches = configured_batches if configured_batches > 0 else None
+            total_metrics = self._evaluate_loss_loaders(
+                self.validation_loaders,
+                split="validation",
+                max_batches=max_batches,
+            )
+            if not self.accelerator.is_main_process:
+                return total_metrics
+            self._write_loss_metrics(
+                total_metrics,
+                step=step,
+                split="validation",
+            )
+        else:
+            if not self.accelerator.is_main_process:
+                return {}
+            was_training = self.model.training
+            total_metrics = {}
+            self.model.eval()
             try:
-                name = evaluator.__class__.__name__
-                metrics = evaluator.evaluate(limit=10)  # Small batch for sanity
-                # Prefix metrics
-                for k, v in metrics.items():
-                    total_metrics[f"eval/{name}/{k}"] = v
-            except Exception as e:
-                self.accelerator.print(f"Eval Error ({name}): {e}")
+                for evaluator in self.evaluators:
+                    name = evaluator.__class__.__name__
+                    try:
+                        metrics = evaluator.evaluate(limit=10)
+                        for key, value in metrics.items():
+                            total_metrics[f"eval/{name}/{key}"] = value
+                    except Exception as exc:
+                        self.accelerator.print(f"Eval Error ({name}): {exc}")
+            finally:
+                self.model.train(was_training)
 
-        self.accelerator.log(total_metrics, step=step)
+        if total_metrics:
+            self.accelerator.log(total_metrics, step=step)
         self.accelerator.print(f"Eval Metrics: {total_metrics}")
 
         # IsoFLOP per-family eval-loss records. The fitter keys off
@@ -1388,9 +1723,7 @@ class ZoneATrainer:
         # evaluator reports a per-family loss, the collector treats the
         # row's `loss_<family>` as missing.
         try:
-            modalities = (
-                model_modalities(self._unwrap_model()) or []
-            )
+            modalities = model_modalities(self._unwrap_model()) or []
             for family in modalities:
                 # Pick the first metric whose lowercased key contains the
                 # modality name AND the substring "loss" — accommodates
@@ -1428,9 +1761,9 @@ class ZoneATrainer:
                     },
                 )
         except Exception as _e_eval_perf:  # noqa: BLE001
-            self.accelerator.print(
-                f"[perf] eval per-family loss record skipped: {_e_eval_perf}"
-            )
+            self.accelerator.print(f"[perf] eval per-family loss record skipped: {_e_eval_perf}")
+
+        return total_metrics
 
     def run_kegg_eval(self, step):
         """

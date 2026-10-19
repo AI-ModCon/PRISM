@@ -201,6 +201,7 @@ class ModelConfig:
     d_table: int = 768
     d_ts: int = 512
     d_img: int = 1152  # SigLIP-large native dim (use 768 for SigLIP2-base)
+    d_spectrum: int = 768
     d_geo: int = 512
     d_graph: int = 768
     d_dna: int = 1024  # Nucleotide Transformer hidden dim
@@ -214,12 +215,40 @@ class ModelConfig:
     max_dna_length: int = 1024
 
     # Image encoder / processor
+    # ``siglip`` preserves the existing RGB image path. ``aion`` selects the
+    # calibrated four-band Legacy Survey path and its pinned raw-image codec.
+    image_encoder_type: str = "siglip"
     image_encoder_id: str = "google/siglip2-base-patch16-224"
     image_processor_id: str | None = None
     image_processor_strict: bool = False
     image_size: int = 224
     image_mean: tuple[float, float, float] = (0.5, 0.5, 0.5)
     image_std: tuple[float, float, float] = (0.5, 0.5, 0.5)
+
+    # Pinned AION raw-image path. These fields are intentionally separate
+    # from the SigLIP identifiers above: AION loads both a hard-quantized
+    # image codec and the differentiable shared transformer encoder.
+    aion_model_name_or_path: str = "polymathic-ai/aion-base"
+    aion_model_revision: str = "40541618104bab0fa85c8af68daeb867a720bb8c"
+    aion_codec_revision: str = "40541618104bab0fa85c8af68daeb867a720bb8c"
+    aion_cache_dir: str | None = None
+    aion_local_files_only: bool = True
+    aion_image_bands: tuple[str, str, str, str] = (
+        "DES-G",
+        "DES-R",
+        "DES-I",
+        "DES-Z",
+    )
+    aion_num_image_tokens: int = 576
+    aion_raw_image_size: tuple[int, int] = (160, 160)
+
+    # Pinned AION raw-spectrum path. The base transformer/cache settings above
+    # are shared with the image wrapper, while the modality codec has its own
+    # explicit revision and input/token contract.
+    spectrum_encoder_type: str = "aion"
+    aion_spectrum_codec_revision: str = "40541618104bab0fa85c8af68daeb867a720bb8c"
+    aion_num_spectrum_tokens: int = 273
+    aion_raw_spectrum_length: int = 7781
 
     # Transformer / MoE
     num_layers: int = 20
@@ -327,10 +356,11 @@ class ModelConfig:
 
     # === Projector Configuration (Ablation-Ready) ===
     # Normalization mode for ModalityProjector
-    # Options: "none", "layernorm", "rmsnorm", "l2_token", "l2_sequence", "scale_only",
-    #          "match_text_stats", "match_text_elemstats"
+    # Options: "none", "layernorm", "text_scaled_layernorm", "rmsnorm", "l2_token",
+    #          "l2_sequence", "scale_only", "match_text_stats", "match_text_elemstats"
     #   - none: No normalization (simple MLP output)
     #   - layernorm: Standard LayerNorm on output (original behavior)
+    #   - text_scaled_layernorm: LayerNorm initialized to the target text-token norm
     #   - rmsnorm: RMSNorm (like LLaMA/OLMo, no centering)
     #   - l2_token: Per-token L2 normalization to target_norm
     #   - l2_sequence: Sequence-level L2 normalization (preserves token differences)
@@ -339,7 +369,7 @@ class ModelConfig:
     #   - match_text_elemstats: Match element-wise distribution to text (like LayerNorm but scaled)
     projector_norm_mode: str = "layernorm"  # Default: original behavior
 
-    # Target norm for l2_token, l2_sequence, and scale_only modes
+    # Target norm for text_scaled_layernorm, l2_token, l2_sequence, and scale_only modes
     projector_target_norm: float = 0.25
 
     # Where to add the modality embedding
@@ -350,6 +380,20 @@ class ModelConfig:
     # Default 0.02 gives embedding norm ~0.9 for d_model=2048, which is 3.5x larger than text norms!
     # For text-matched norms, use: target_norm / sqrt(d_model) ≈ 0.25/45.25 ≈ 0.0055
     projector_modality_embed_scale: float = 0.02  # Default: original behavior (norm ~0.9)
+
+    # Optional adapter-specific settings. None preserves the global setting
+    # above, so every existing single-modality preset remains bit-compatible.
+    # Joint AstroPRISM can retain its established image adapter
+    # (none/after_norm) and spectrum adapter
+    # (text_scaled_layernorm/1.04/before_norm) in the same model.
+    image_projector_norm_mode: str | None = None
+    image_projector_target_norm: float | None = None
+    image_projector_modality_embed_pos: str | None = None
+    image_projector_modality_embed_scale: float | None = None
+    spectrum_projector_norm_mode: str | None = None
+    spectrum_projector_target_norm: float | None = None
+    spectrum_projector_modality_embed_pos: str | None = None
+    spectrum_projector_modality_embed_scale: float | None = None
 
     # === Text Statistics Matching (for match_text_stats and match_text_elemstats modes) ===
     # These values are based on observed OLMo-1B text embedding statistics
@@ -388,6 +432,64 @@ class ModelConfig:
         # to ["text", "action"] here. Idempotent if already listed.
         if self.is_vla and "action" not in self.output_decoders:
             self.output_decoders = ["text", "action"]
+
+        self.image_encoder_type = str(self.image_encoder_type).strip().lower()
+        valid_image_encoder_types = {"siglip", "aion"}
+        if self.image_encoder_type not in valid_image_encoder_types:
+            raise ValueError(
+                "image_encoder_type must be one of "
+                f"{sorted(valid_image_encoder_types)}, got {self.image_encoder_type!r}"
+            )
+
+        # OmegaConf ListConfig values are accepted at the Hydra boundary but
+        # normalized here so downstream construction receives stable tuples.
+        self.aion_image_bands = tuple(str(band) for band in self.aion_image_bands)
+        self.aion_raw_image_size = tuple(int(size) for size in self.aion_raw_image_size)
+
+        if self.image_encoder_type == "aion":
+            expected_bands = ("DES-G", "DES-R", "DES-I", "DES-Z")
+            if self.d_img != 768:
+                raise ValueError(
+                    "The pinned AION shared encoder emits d_img=768 features; "
+                    f"got d_img={self.d_img}."
+                )
+            if self.aion_num_image_tokens != 576:
+                raise ValueError(
+                    "The pinned AION image codec emits exactly 576 tokens; "
+                    f"got aion_num_image_tokens={self.aion_num_image_tokens}."
+                )
+            if self.aion_image_bands != expected_bands:
+                raise ValueError(
+                    "AION requires calibrated Legacy Survey channels in "
+                    f"{expected_bands!r} order; got {self.aion_image_bands!r}."
+                )
+            if self.aion_raw_image_size != (160, 160):
+                raise ValueError(
+                    "The verified AION raw-image path expects 160x160 cutouts; "
+                    f"got {self.aion_raw_image_size!r}."
+                )
+
+        self.spectrum_encoder_type = str(self.spectrum_encoder_type).strip().lower()
+        if self.spectrum_encoder_type != "aion":
+            raise ValueError(
+                "spectrum_encoder_type must be 'aion', got "
+                f"{self.spectrum_encoder_type!r}"
+            )
+        if self.d_spectrum != 768:
+            raise ValueError(
+                "The pinned AION shared encoder emits d_spectrum=768 features; "
+                f"got d_spectrum={self.d_spectrum}."
+            )
+        if self.aion_num_spectrum_tokens != 273:
+            raise ValueError(
+                "The pinned AION spectrum codec emits exactly 273 tokens; "
+                f"got aion_num_spectrum_tokens={self.aion_num_spectrum_tokens}."
+            )
+        if self.aion_raw_spectrum_length != 7781:
+            raise ValueError(
+                "The verified AION raw-spectrum path expects 7781 samples; "
+                f"got aion_raw_spectrum_length={self.aion_raw_spectrum_length}."
+            )
 
     @classmethod
     def from_preset(cls, preset_name: str):

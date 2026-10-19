@@ -1,0 +1,36 @@
+# AstroPRISM Stage 1B proxy: raw DESI spectra -> AION -> adapter -> Qwen3-4B.
+
+backbone_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+tokenizer_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+freeze_backbone: true
+freeze_encoders: true
+
+d_text: 2560
+d_spectrum: 768
+
+# AION consumes the raw observed-frame DESI arrays. Released spectrum
+# embeddings remain parity references and are not model inputs.
+spectrum_encoder_type: "aion"
+aion_model_name_or_path: "polymathic-ai/aion-base"
+aion_model_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_spectrum_codec_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_cache_dir: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/cache"
+aion_local_files_only: true
+aion_num_spectrum_tokens: 273
+aion_raw_spectrum_length: 7781
+
+# No image tower is active in this spectrum-only model.
+image_encoder_id: null
+attn_implementation: "sdpa"
+
+modalities:
+  - "text"
+  - "spectrum"
+
+# Initialize the adapter output at the measured Qwen text-token norm.
+projector_norm_mode: "text_scaled_layernorm"
+projector_target_norm: 1.04
+projector_modality_embed_pos: "before_norm"
+projector_modality_embed_scale: 0.02
+projector_hidden_mult: 1
+projector_num_layers: 2

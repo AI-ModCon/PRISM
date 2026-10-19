@@ -2,6 +2,7 @@ import logging
 import os
 import random
 import sys
+from pathlib import Path
 from typing import Any, cast
 
 import hydra
@@ -9,7 +10,7 @@ import numpy as np
 import torch
 import torch.distributed as dist
 from omegaconf import DictConfig, OmegaConf
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 # Path Safety
 # Prioritize local source code over installed packages.
@@ -17,6 +18,25 @@ from torch.utils.data import DataLoader
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.config import DYNAMIC_LENGTH_TS_PROJECTORS, ModelConfig, TrainingConfig
+from src.data.astroprism_joint_batch_sampler import AstroPRISMJointBatchSampler
+from src.data.astroprism_joint_collate import AstroPRISMJointCollator
+from src.data.astroprism_joint_dataset import AstroPRISMJointDataset
+from src.data.astroprism_stage1a_collate import AstroPRISMStage1ACollator
+from src.data.astroprism_stage1a_dataset import (
+    DEFAULT_SYSTEM_PROMPT,
+    DEFAULT_USER_PROMPT,
+    AstroPRISMStage1ADataset,
+    AstroPRISMStage1ADatasetConfig,
+)
+from src.data.astroprism_stage1b_spectrum_collate import (
+    AstroPRISMStage1BSpectrumCollator,
+)
+from src.data.astroprism_stage1b_spectrum_dataset import (
+    DEFAULT_SPECTRUM_SYSTEM_PROMPT,
+    DEFAULT_SPECTRUM_USER_PROMPT,
+    AstroPRISMStage1BSpectrumDataset,
+    AstroPRISMStage1BSpectrumDatasetConfig,
+)
 from src.data.calvin_vla import CalvinVLADataset
 from src.data.collate import BucketedCollator, MultimodalCollator
 from src.data.multi_webdataset import (
@@ -35,11 +55,22 @@ from src.training.distributed import (
     setup_distributed,
 )
 from src.training.trainer_native import train_native_ddp
-from src.training.trainer_zone_a import ZoneATrainer
+from src.training.trainer_zone_a import (
+    ZoneATrainer,
+)
 from src.training.trainer_zone_a_vla import ZoneAVLATrainer
 from src.utils.banner import print_prism_banner
 
 logger = logging.getLogger(__name__)
+
+
+_ASTROPRISM_MAP_STYLE_TASKS = frozenset(
+    {
+        "astroprism_stage1a",
+        "astroprism_stage1b_spectrum",
+        "astroprism_joint_aion",
+    }
+)
 
 
 def _coerce_str_or_none(value):
@@ -126,6 +157,269 @@ def _resolve_timeomni_strides(
             f"timeomni_patch_len len={len(patch_lens)} or be scalar"
         )
     return [int(x) for x in strides]
+
+
+def _build_astroprism_stage1a_data(data_cfg, tokenizer):
+    """Construct the strict raw-image Stage 1A dataset and collator."""
+    if data_cfg is None or not hasattr(data_cfg, "get"):
+        raise RuntimeError(
+            "training.task=astroprism_stage1a requires the data=astroprism_stage1a "
+            "Hydra config group"
+        )
+
+    def required_path(name: str) -> Path:
+        value = data_cfg.get(name, None)
+        if value is None or not str(value).strip():
+            raise RuntimeError(
+                f"training.task=astroprism_stage1a requires data.{name}"
+            )
+        return Path(hydra.utils.to_absolute_path(str(value)))
+
+    candidates_path_value = data_cfg.get("candidates_path", None)
+    candidates_path = (
+        Path(hydra.utils.to_absolute_path(str(candidates_path_value)))
+        if candidates_path_value is not None and str(candidates_path_value).strip()
+        else None
+    )
+    max_merged_seq_length = int(data_cfg.get("max_merged_seq_length", 2048))
+    accepted_statuses = tuple(
+        str(status)
+        for status in data_cfg.get("accepted_statuses", ("accepted", "approved"))
+    )
+    dataset_config = AstroPRISMStage1ADatasetConfig(
+        raw_manifest_path=required_path("raw_manifest_path"),
+        candidates_manifest_path=required_path("candidates_manifest_path"),
+        candidates_path=candidates_path,
+        split=_coerce_str_or_none(data_cfg.get("split", None)),
+        max_merged_seq_length=max_merged_seq_length,
+        caption_field=str(data_cfg.get("caption_field", "auto")),
+        system_prompt=str(data_cfg.get("system_prompt", DEFAULT_SYSTEM_PROMPT)),
+        user_prompt=str(data_cfg.get("user_prompt", DEFAULT_USER_PROMPT)),
+        accepted_caption_statuses=tuple(
+            str(status)
+            for status in data_cfg.get(
+                "accepted_caption_statuses", ("released_reused", "released_revised")
+            )
+        ),
+        allow_unsafe_candidates=bool(
+            data_cfg.get("allow_unsafe_candidates", False)
+        ),
+        accepted_statuses=accepted_statuses,
+        verify_file_hashes=bool(data_cfg.get("verify_file_hashes", False)),
+    )
+    dataset = AstroPRISMStage1ADataset(dataset_config, tokenizer)
+    collator = AstroPRISMStage1ACollator(
+        tokenizer,
+        max_merged_seq_length=max_merged_seq_length,
+    )
+    return dataset, collator
+
+
+def _validate_astroprism_stage1a_model_contract(
+    task: str,
+    model_config: ModelConfig,
+) -> None:
+    """Fail closed when Stage 1A is paired with a different model contract."""
+    if task != "astroprism_stage1a":
+        return
+    if model_config.image_encoder_type != "aion":
+        raise RuntimeError(
+            "training.task=astroprism_stage1a requires "
+            "model.image_encoder_type=aion"
+        )
+    modalities = {str(modality) for modality in model_config.modalities}
+    expected_modalities = {"image", "text"}
+    if modalities != expected_modalities:
+        raise RuntimeError(
+            "training.task=astroprism_stage1a requires exactly "
+            f"model.modalities={sorted(expected_modalities)}, got {sorted(modalities)}"
+        )
+
+
+def _build_astroprism_stage1b_spectrum_data(data_cfg, tokenizer):
+    """Construct reviewed spectrum-caption Stage 1B data and its collator."""
+    task = "astroprism_stage1b_spectrum"
+    if data_cfg is None or not hasattr(data_cfg, "get"):
+        raise RuntimeError(
+            f"training.task={task} requires the data={task} Hydra config group"
+        )
+
+    def required_path(name: str) -> Path:
+        value = data_cfg.get(name, None)
+        if value is None or not str(value).strip():
+            raise RuntimeError(f"training.task={task} requires data.{name}")
+        return Path(hydra.utils.to_absolute_path(str(value)))
+
+    captions_path_value = data_cfg.get("captions_path", None)
+    captions_path = (
+        Path(hydra.utils.to_absolute_path(str(captions_path_value)))
+        if captions_path_value is not None and str(captions_path_value).strip()
+        else None
+    )
+    max_merged_seq_length = int(data_cfg.get("max_merged_seq_length", 2048))
+    dataset_config = AstroPRISMStage1BSpectrumDatasetConfig(
+        raw_manifest_path=required_path("raw_manifest_path"),
+        captions_manifest_path=required_path("captions_manifest_path"),
+        captions_path=captions_path,
+        split=_coerce_str_or_none(data_cfg.get("split", "train")),
+        max_merged_seq_length=max_merged_seq_length,
+        system_prompt=str(
+            data_cfg.get("system_prompt", DEFAULT_SPECTRUM_SYSTEM_PROMPT)
+        ),
+        user_prompt=str(data_cfg.get("user_prompt", DEFAULT_SPECTRUM_USER_PROMPT)),
+        accepted_caption_statuses=tuple(
+            str(status)
+            for status in data_cfg.get("accepted_caption_statuses", ("accepted",))
+        ),
+        verify_file_hashes=bool(data_cfg.get("verify_file_hashes", False)),
+    )
+    dataset = AstroPRISMStage1BSpectrumDataset(dataset_config, tokenizer)
+    collator = AstroPRISMStage1BSpectrumCollator(
+        tokenizer,
+        max_merged_seq_length=max_merged_seq_length,
+    )
+    return dataset, collator
+
+
+def _validate_astroprism_stage1b_spectrum_model_contract(
+    task: str,
+    model_config: ModelConfig,
+) -> None:
+    """Fail closed unless the spectrum proxy receives only text and spectra."""
+    if task != "astroprism_stage1b_spectrum":
+        return
+    if model_config.spectrum_encoder_type != "aion":
+        raise RuntimeError(
+            "training.task=astroprism_stage1b_spectrum requires "
+            "model.spectrum_encoder_type=aion"
+        )
+    modalities = {str(modality) for modality in model_config.modalities}
+    expected_modalities = {"spectrum", "text"}
+    if modalities != expected_modalities:
+        raise RuntimeError(
+            "training.task=astroprism_stage1b_spectrum requires exactly "
+            f"model.modalities={sorted(expected_modalities)}, got {sorted(modalities)}"
+        )
+
+
+def _nested_data_config(data_cfg, name: str, *, split: str):
+    """Copy one joint-data subsection and enforce the requested split."""
+
+    section = data_cfg.get(name, None) if data_cfg is not None else None
+    if section is None or not hasattr(section, "get"):
+        raise RuntimeError(
+            "training.task=astroprism_joint_aion requires "
+            f"data.{name} in the data=astroprism_joint_aion config group"
+        )
+    plain = OmegaConf.to_container(section, resolve=True)
+    if not isinstance(plain, dict):
+        raise RuntimeError(f"data.{name} must be a mapping")
+    plain["split"] = split
+    plain["max_merged_seq_length"] = int(
+        data_cfg.get("max_merged_seq_length", 2048)
+    )
+    return OmegaConf.create(plain)
+
+
+def _build_astroprism_joint_data(data_cfg, tokenizer, *, split: str):
+    """Build one split of the joint, homogeneous-batch AstroPRISM dataset."""
+
+    task = "astroprism_joint_aion"
+    if data_cfg is None or not hasattr(data_cfg, "get"):
+        raise RuntimeError(
+            f"training.task={task} requires the data={task} Hydra config group"
+        )
+    if split not in {"train", "validation", "test"}:
+        raise RuntimeError(f"Unsupported AstroPRISM joint split: {split!r}")
+
+    image_dataset, image_collator = _build_astroprism_stage1a_data(
+        _nested_data_config(data_cfg, "image", split=split),
+        tokenizer,
+    )
+    spectrum_dataset, spectrum_collator = _build_astroprism_stage1b_spectrum_data(
+        _nested_data_config(data_cfg, "spectrum", split=split),
+        tokenizer,
+    )
+    dataset = AstroPRISMJointDataset(
+        image_dataset,
+        spectrum_dataset,
+        split=split,
+    )
+    collator = AstroPRISMJointCollator(
+        image_collator,
+        spectrum_collator,
+    )
+    return dataset, collator
+
+
+def _build_astroprism_joint_eval_loaders(
+    dataset,
+    collator,
+    *,
+    batch_size: int,
+    num_workers: int,
+    pin_memory: bool,
+):
+    """Build deterministic, modality-specific held-out loaders.
+
+    These loaders intentionally remain unsharded: every distributed rank runs
+    the same 65-row modality split, which avoids padding duplicates while still
+    keeping all ranks in lockstep through the wrapped model forward.
+    """
+
+    loaders = {}
+    for modality, indices in dataset.modality_indices.items():
+        subset = Subset(dataset, list(indices))
+        loaders[modality] = DataLoader(
+            subset,
+            batch_size=batch_size,
+            shuffle=False,
+            collate_fn=collator,
+            num_workers=num_workers,
+            persistent_workers=num_workers > 0,
+            prefetch_factor=2 if num_workers > 0 else None,
+            pin_memory=pin_memory,
+        )
+    return loaders
+
+
+def _validate_astroprism_joint_model_contract(
+    task: str,
+    model_config: ModelConfig,
+) -> None:
+    """Fail closed unless the joint task uses both pinned AION raw paths."""
+
+    if task != "astroprism_joint_aion":
+        return
+    if model_config.image_encoder_type != "aion":
+        raise RuntimeError(
+            "training.task=astroprism_joint_aion requires model.image_encoder_type=aion"
+        )
+    if model_config.spectrum_encoder_type != "aion":
+        raise RuntimeError(
+            "training.task=astroprism_joint_aion requires model.spectrum_encoder_type=aion"
+        )
+    modalities = {str(modality) for modality in model_config.modalities}
+    expected_modalities = {"image", "spectrum", "text"}
+    if modalities != expected_modalities:
+        raise RuntimeError(
+            "training.task=astroprism_joint_aion requires exactly "
+            f"model.modalities={sorted(expected_modalities)}, got {sorted(modalities)}"
+        )
+
+
+def _validate_astroprism_joint_runtime_environment(task: str) -> None:
+    """Reject modes that bypass the joint sampler's rank sharding."""
+
+    if task != "astroprism_joint_aion":
+        return
+    zero_stage = os.environ.get("DEEPSPEED_ZERO_STAGE", "").strip()
+    if zero_stage:
+        raise RuntimeError(
+            "training.task=astroprism_joint_aion does not support DeepSpeed: "
+            "DEEPSPEED_ZERO_STAGE must be unset so Accelerate shards the "
+            "rank-synchronous joint batch sampler"
+        )
 
 
 def _local_shards_active(
@@ -594,6 +888,15 @@ def main(cfg: DictConfig):
     # 0. Determine execution path
     use_native_fsdp = os.environ.get("USE_NATIVE_FSDP", "0") == "1"
     use_native_ddp = os.environ.get("USE_NATIVE_DDP", "0") == "1"
+    requested_task = cfg.training.get("task", "vlm")
+    _validate_astroprism_joint_runtime_environment(requested_task)
+    if requested_task in _ASTROPRISM_MAP_STYLE_TASKS and (
+        use_native_fsdp or use_native_ddp
+    ):
+        raise RuntimeError(
+            f"AstroPRISM task {requested_task!r} uses a finite map-style dataset and currently "
+            "supports the Accelerate path only; unset USE_NATIVE_DDP/FSDP."
+        )
 
     # Defaults for Accelerate path (setup_distributed is native-only).
     def _env_int(keys, default):
@@ -650,6 +953,9 @@ def main(cfg: DictConfig):
         hydra_out = os.getcwd()
 
     model_config = build_model_config(cfg, rank=rank)
+    _validate_astroprism_stage1a_model_contract(requested_task, model_config)
+    _validate_astroprism_stage1b_spectrum_model_contract(requested_task, model_config)
+    _validate_astroprism_joint_model_contract(requested_task, model_config)
 
 
     # Allow override of dimensions if specified in cfg (not implemented fully in hydra yaml yet, relying on defaults)
@@ -795,8 +1101,16 @@ def main(cfg: DictConfig):
     except Exception as e:
         _rprint(f"Analysis Failed: {e}", flush=True)
 
-    task_type = cfg.training.get("task", "vlm")
+    task_type = requested_task
     is_vla_task = bool(model_config.is_vla or task_type == "vla_calvin")
+    is_astroprism_stage1a_task = task_type == "astroprism_stage1a"
+    is_astroprism_stage1b_spectrum_task = task_type == "astroprism_stage1b_spectrum"
+    is_astroprism_joint_task = task_type == "astroprism_joint_aion"
+    is_astroprism_map_style_task = task_type in _ASTROPRISM_MAP_STYLE_TASKS
+    if is_astroprism_map_style_task and model_config.is_vla:
+        raise RuntimeError(
+            f"training.task={task_type} is incompatible with model.is_vla=true"
+        )
     if model_config.is_vla and task_type != "vla_calvin":
         _rprint(
             "Warning: model.is_vla=True while training.task!=vla_calvin. Enabling VLA path.",
@@ -920,13 +1234,19 @@ def main(cfg: DictConfig):
     # Branches assign concrete types that don't share a common base.
     dataset: Any
     collator: Any
+    validation_dataset = None
+    validation_collator = None
+    test_dataset = None
+    test_collator = None
 
     # Read once at the top so both branches (VLA and non-VLA) see the same
     # value and the downstream `if use_bucketed_collator:` worker-count
-    # check at line ~741 is always defined. VLA uses its own collator and
-    # always wants `train_config.data_num_workers`, so we force False there.
+    # check is always defined. VLA and finite AstroPRISM tasks use dedicated
+    # collators, so force False for those tasks.
     use_bucketed_collator = (
-        os.environ.get("USE_BUCKETED_COLLATOR", "1") == "1" and not is_vla_task
+        os.environ.get("USE_BUCKETED_COLLATOR", "1") == "1"
+        and not is_vla_task
+        and not is_astroprism_map_style_task
     )
 
     if is_vla_task:
@@ -1008,6 +1328,55 @@ def main(cfg: DictConfig):
                 flush=True,
             )
         collator = VLACollator(tokenizer)
+    elif is_astroprism_stage1a_task:
+        _rprint(
+            "Initializing AstroPRISM Stage 1A raw-image dataset...",
+            flush=True,
+        )
+        dataset, collator = _build_astroprism_stage1a_data(
+            cfg.get("data", None),
+            tokenizer,
+        )
+        _rprint(f"Loaded {len(dataset):,} AstroPRISM Stage 1A samples", flush=True)
+    elif is_astroprism_stage1b_spectrum_task:
+        _rprint(
+            "Initializing AstroPRISM Stage 1B raw-spectrum proxy dataset...",
+            flush=True,
+        )
+        dataset, collator = _build_astroprism_stage1b_spectrum_data(
+            cfg.get("data", None),
+            tokenizer,
+        )
+        _rprint(f"Loaded {len(dataset):,} AstroPRISM spectrum samples", flush=True)
+    elif is_astroprism_joint_task:
+        data_cfg = cfg.get("data", None)
+        configured_split = (
+            _coerce_str_or_none(data_cfg.get("split", None))
+            if data_cfg is not None and hasattr(data_cfg, "get")
+            else None
+        )
+        if configured_split != "train":
+            raise RuntimeError(
+                "training.task=astroprism_joint_aion requires data.split=train; "
+                "validation/test are constructed as held-out, evaluation-only loaders"
+            )
+        _rprint("Initializing joint AstroPRISM image+spectrum datasets...", flush=True)
+        dataset, collator = _build_astroprism_joint_data(
+            data_cfg, tokenizer, split="train"
+        )
+        validation_dataset, validation_collator = _build_astroprism_joint_data(
+            data_cfg, tokenizer, split="validation"
+        )
+        test_dataset, test_collator = _build_astroprism_joint_data(
+            data_cfg, tokenizer, split="test"
+        )
+        _rprint(
+            "Loaded AstroPRISM joint splits: "
+            f"train={dataset.modality_lengths}, "
+            f"validation={validation_dataset.modality_lengths}, "
+            f"test={test_dataset.modality_lengths}",
+            flush=True,
+        )
     else:
         _rprint("Initializing Streaming Datasets...", flush=True)
 
@@ -1373,19 +1742,60 @@ def main(cfg: DictConfig):
                 f"using default n_workers={n_workers}",
                 flush=True,
             )
-    _rprint(
-        f"[Rank {rank}] Creating DataLoader: num_workers={n_workers}, pin_memory={use_pin_memory}",
-        flush=True,
-    )
-    train_loader = DataLoader(
-        dataset,
-        batch_size=train_config.batch_size,
-        collate_fn=collator,
-        num_workers=n_workers,
-        persistent_workers=True if n_workers > 0 else False,
-        prefetch_factor=2 if n_workers > 0 else None,
-        pin_memory=use_pin_memory,
-    )
+    validation_loaders = {}
+    test_loaders = {}
+    if is_astroprism_joint_task:
+        joint_batch_sampler = AstroPRISMJointBatchSampler(
+            dataset,
+            batch_size=train_config.batch_size,
+            seed=seed,
+            num_replicas=world_size,
+        )
+        _rprint(
+            f"[Rank {rank}] Creating rank-synchronous joint DataLoader: "
+            f"num_workers={n_workers}, pin_memory={use_pin_memory}, "
+            f"world_size={world_size}, global_batches={len(joint_batch_sampler)}",
+            flush=True,
+        )
+        train_loader = DataLoader(
+            dataset,
+            batch_sampler=joint_batch_sampler,
+            collate_fn=collator,
+            num_workers=n_workers,
+            persistent_workers=n_workers > 0,
+            prefetch_factor=2 if n_workers > 0 else None,
+            pin_memory=use_pin_memory,
+        )
+        validation_loaders = _build_astroprism_joint_eval_loaders(
+            validation_dataset,
+            validation_collator,
+            batch_size=train_config.batch_size,
+            num_workers=n_workers,
+            pin_memory=use_pin_memory,
+        )
+        test_loaders = _build_astroprism_joint_eval_loaders(
+            test_dataset,
+            test_collator,
+            batch_size=train_config.batch_size,
+            num_workers=n_workers,
+            pin_memory=use_pin_memory,
+        )
+    else:
+        _rprint(
+            f"[Rank {rank}] Creating DataLoader: num_workers={n_workers}, "
+            f"pin_memory={use_pin_memory}, shuffle={is_astroprism_map_style_task}",
+            flush=True,
+        )
+        train_loader = DataLoader(
+            dataset,
+            batch_size=train_config.batch_size,
+            shuffle=is_astroprism_map_style_task,
+            collate_fn=collator,
+            num_workers=n_workers,
+            persistent_workers=n_workers > 0,
+            prefetch_factor=2 if n_workers > 0 else None,
+            pin_memory=use_pin_memory,
+        )
     _rprint(f"[Rank {rank}] DataLoader created successfully", flush=True)
 
     # Critical: Attach tokenizer to model for Evaluators/Trainer usage
@@ -1401,7 +1811,7 @@ def main(cfg: DictConfig):
         logger.info("\n*** LOADING WEIGHTS FROM CHECKPOINT (model-only, fresh optimizer) ***")
         logger.info(f"  Checkpoint: {train_config.resume_weights_only}")
         prev_step = load_model_weights_only(
-            model, train_config.resume_weights_only, device=device
+            model, train_config.resume_weights_only, device="cpu"
         )
         logger.info(f"  Previous training ended at step {prev_step}")
         logger.info("  Starting fresh training with new optimizer/scheduler config")
@@ -1447,7 +1857,15 @@ def main(cfg: DictConfig):
             # here too -- ZoneATrainer handles DNA/LoRA/KEGG-eval via
             # config-gated branches (lora_enabled, freeze_connector,
             # bioreason_dataset), no longer needing a separate trainer class.
-            trainer = ZoneATrainer(model, train_config, train_loader)
+            # AstroPRISM's joint path builds per-modality eval loaders above;
+            # every other task leaves these empty and the trainer skips eval.
+            trainer = ZoneATrainer(
+                model,
+                train_config,
+                train_loader,
+                validation_loaders=validation_loaders,
+                test_loaders=test_loaders,
+            )
         # 6. Train
         _rprint(f"Starting Training Loop for {train_config.max_steps} steps...")
         trainer.train()

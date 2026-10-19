@@ -62,6 +62,13 @@ def main():
         help="Path to packed env tarball",
     )
     parser.add_argument(
+        "--skip-model-staging",
+        action="store_true",
+        help="Skip copying shared Hugging Face caches to node-local /tmp. "
+        "Use only when every required model/tokenizer/cache path is an "
+        "absolute, existing shared-filesystem path.",
+    )
+    parser.add_argument(
         "--prism-dir",
         default=None,
         help="Path to PRISM checkout (default: $PRISM_DIR from .env, else cwd). "
@@ -685,6 +692,35 @@ fi
         print(f"Model staging: {backbone_id} (local path, no staging needed)")
     else:
         print(f"Model staging: {backbone_id} -> {hf_model_dir}")
+    if args.skip_model_staging:
+        tokenizer_id = resolve_hydra_override(
+            final_overrides,
+            unknown_args,
+            "model.tokenizer_id",
+            model_group_config.get("tokenizer_id", backbone_id),
+        )
+        required_shared_paths = {
+            "model.backbone_id": backbone_id,
+            "model.tokenizer_id": tokenizer_id,
+        }
+        if image_encoder_id is not None:
+            required_shared_paths["model.image_encoder_id"] = image_encoder_id
+        if image_processor_id is not None:
+            required_shared_paths["model.image_processor_id"] = image_processor_id
+
+        invalid_paths = []
+        for key, value in required_shared_paths.items():
+            if value is None or not os.path.isabs(value) or not os.path.exists(value):
+                invalid_paths.append(f"{key}={value!r}")
+        if invalid_paths:
+            parser.error(
+                "--skip-model-staging requires absolute, existing shared paths; "
+                "invalid: " + ", ".join(invalid_paths)
+            )
+        print(
+            "Model staging disabled: all required model assets resolve to "
+            "absolute shared-filesystem paths."
+        )
     if image_encoder_id:
         print(f"Image encoder staging: {image_encoder_id} -> {hf_cache_dir(image_encoder_id)}")
     if image_processor_id and image_processor_id != image_encoder_id:
@@ -1073,7 +1109,10 @@ if [ "$LOCAL_RANK" == "0" ]; then
             echo "  Linked standalone artifact $ARTIFACT"
         fi
     done
-    if [ ! -f "$MODEL_MARKER" ]; then
+    if [ "''' + ("1" if args.skip_model_staging else "0") + '''" = "1" ]; then
+        echo "Rank $RANK (Local 0): Skipping model staging; using absolute shared paths."
+        touch "$MODEL_MARKER"
+    elif [ ! -f "$MODEL_MARKER" ]; then
         echo "Rank $RANK (Local 0): Staging models to /tmp..."
         for MODEL in "${MODELS_TO_STAGE[@]}"; do
             if [ -d "$SHARED_HF_HOME/$MODEL" ] && [ ! -d "$LOCAL_HF_HOME/$MODEL" ]; then

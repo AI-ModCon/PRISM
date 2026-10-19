@@ -1,0 +1,25 @@
+# AstroPRISM Stage 1A: align calibrated raw AION image tokens to language.
+defaults:
+  - zone_a
+  - _self_
+
+task: "astroprism_stage1a"
+batch_size: 2
+max_steps: 100
+finite_epoch_steps: 0
+
+# First align the adapter/projector. The AION wrapper keeps its hard codec
+# frozen/fp32 even when this is later overridden to false for encoder tuning.
+freeze_llm: true
+freeze_vit: true
+learning_rate: 1e-3
+lr_connector: 1e-3
+lr_vit: 1e-5
+weight_decay: 0.0
+warmup_steps: 10
+
+# The 646-row mmap-backed dataset is small; avoid multiplying open mappings by
+# default. Operators can raise this after validating a launch environment.
+data_num_workers: 0
+eval_enabled: false
+validation_batches: 0
