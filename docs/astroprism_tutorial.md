@@ -56,9 +56,14 @@ access at all.
 ## 1. Set up the environment
 
 Build on a login node — it has direct internet access, while compute nodes
-reach the network only through the ALCF proxy.
+reach the network only through the ALCF proxy. Clone onto `/flare`, not
+`$HOME`, which is too small for the caches this needs:
 
 ```bash
+cd /flare/<project>/$USER
+git clone https://github.com/AI-ModCon/PRISM.git
+cd PRISM
+
 module use /soft/modulefiles && module load frameworks/2026.1.0
 python -m venv --system-site-packages /flare/<project>/$USER/prism-envs/astroprism
 source /flare/<project>/$USER/prism-envs/astroprism/bin/activate
@@ -81,6 +86,11 @@ Check before training:
 ```bash
 python -c "from aion.codecs import ImageCodec, SpectrumCodec; print('aion OK')"
 ```
+
+Built this way from a clean clone the venv is about 1.4 MB: everything heavy
+comes from the frameworks module, and `torch` stays the XPU build
+(`2.13.0a0+gitcf30153`). If `site-packages/nvidia/` appears, a CUDA wheel
+stack has shadowed it and the environment is wrong.
 
 Point the caches at `/flare`; home quotas are too small for 4 B-parameter
 checkpoints:
