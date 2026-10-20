@@ -19,6 +19,7 @@ import argparse
 import datetime
 import json
 import os
+import re
 import subprocess
 import sys
 import textwrap
@@ -708,9 +709,24 @@ fi
         if image_processor_id is not None:
             required_shared_paths["model.image_processor_id"] = image_processor_id
 
+        # load_model_group_config uses yaml.safe_load and resolve_hydra_override
+        # only selects values, so Hydra interpolations arrive here as literal
+        # "${oc.env:VAR,default}/..." strings. Expand the oc.env form before
+        # testing the filesystem, or a config that resolves to real staged
+        # assets is rejected for looking relative.
+        def _expand(value: str | None) -> str | None:
+            if not isinstance(value, str):
+                return value
+            def _sub(match: "re.Match[str]") -> str:
+                body = match.group(1)
+                name, _, fallback = body.partition(",")
+                return os.environ.get(name.strip(), fallback.strip())
+            return re.sub(r"\$\{oc\.env:([^}]*)\}", _sub, value)
+
         invalid_paths = []
         for key, value in required_shared_paths.items():
-            if value is None or not os.path.isabs(value) or not os.path.exists(value):
+            resolved = _expand(value)
+            if resolved is None or not os.path.isabs(resolved) or not os.path.exists(resolved):
                 invalid_paths.append(f"{key}={value!r}")
         if invalid_paths:
             parser.error(

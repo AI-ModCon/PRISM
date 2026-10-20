@@ -241,8 +241,11 @@ fi
             "    fi\n"
             "fi\n"
             "\n"
-            "# Wait for unpack completion\n"
-            'while [ ! -f "$MARKER_FILE" ]; do\n'
+            "# Wait for unpack completion. The marker must also be newer than the\n"
+            "# tarball: a stale marker from a previous run satisfies an existence-only\n"
+            "# test immediately, letting other ranks activate the environment while\n"
+            "# rank 0 is still deleting and re-extracting it.\n"
+            'while [ ! -f "$MARKER_FILE" ] || [ "$ENV_TARBALL" -nt "$MARKER_FILE" ]; do\n'
             "    sleep 1\n"
             "done\n"
         )

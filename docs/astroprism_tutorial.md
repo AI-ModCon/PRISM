@@ -68,7 +68,7 @@ module use /soft/modulefiles && module load frameworks/2026.1.0
 python -m venv --system-site-packages /flare/<project>/$USER/prism-envs/astroprism
 source /flare/<project>/$USER/prism-envs/astroprism/bin/activate
 pip install --no-deps -e .
-pip install "hydra-core>=1.3" pyarrow huggingface_hub
+pip install "hydra-core>=1.3" pyarrow huggingface_hub wandb
 pip install --no-deps polymathic-aion==0.0.2 jaxtyping astropy
 ```
 

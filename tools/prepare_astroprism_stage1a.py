@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--roster",
         type=Path,
-        default=REPO_ROOT / "docs/astroprism/data/overlap_candidates_646.csv.gz",
+        default=REPO_ROOT / "docs/applications/astroprism_data/overlap_candidates_646.csv.gz",
     )
     parser.add_argument(
         "--paired-root",

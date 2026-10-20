@@ -158,7 +158,11 @@ def test_astroprism_hydra_preset_is_raw_aion_qwen3_4b():
     assert cfg["image_encoder_type"] == "aion"
     assert cfg["d_img"] == AION_IMAGE_WIDTH
     assert cfg["aion_model_name_or_path"] == AION_REPO_ID
-    assert cfg["aion_cache_dir"] == f"{asset_root}/hf/cache"
+    # null means the ambient HF cache. huggingface_hub's cache_dir is the hub
+    # directory itself, unlike HF_HOME which has hub/ appended, so a path here
+    # resolved one level too high and never found the weights. The released
+    # checkpoint's training_config.yaml records null for the same reason.
+    assert cfg["aion_cache_dir"] is None
     assert cfg["aion_model_revision"] == AION_MODEL_REVISION
     assert cfg["aion_codec_revision"] == AION_IMAGE_CODEC_REVISION
     assert cfg["aion_local_files_only"] is True

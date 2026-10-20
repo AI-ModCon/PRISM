@@ -91,6 +91,13 @@ def test_packed_env_uses_documented_nested_venv_layout(
     assert 'VIRTUAL_ENV=\\"$LOCAL_ENV/.venv-deepspeed\\"' in script
     assert '[ "$ENV_TARBALL" -nt "$MARKER_FILE" ]' in script
     assert 'tar -xzf "$ENV_TARBALL" -C "$LOCAL_ENV"' in script
+    # The wait must test the same staleness condition as the unpack: with a
+    # stale marker on disk, an existence-only wait lets other ranks activate
+    # the environment while rank 0 is deleting it.
+    wait_line = next(
+        line for line in script.splitlines() if line.startswith("while [ ! -f")
+    )
+    assert '[ "$ENV_TARBALL" -nt "$MARKER_FILE" ]' in wait_line
 
 
 def test_batch_mode_submits_generated_script_with_qsub(
