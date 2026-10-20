@@ -170,6 +170,38 @@ class AIONImageEncoder(ModalityEncoder):
         for parameter in self.image_codec.parameters():
             parameter.requires_grad_(False)
 
+    def _apply(self, fn, recurse=True):
+        """Keep the codec in float32 through blanket dtype casts.
+
+        ``nn.Module.to()`` reaches children via ``_apply``, so a child-level
+        ``to()`` override never sees it and the trainer's
+        ``self.model.encoders.to(dtype=target_dtype)`` rounds the codec.
+        Calling ``.float()`` afterwards restores the dtype but not the values,
+        and the codec quantizes hard: rounded weights can change token ids.
+        Device moves pass through untouched. Mirrors ``DNAEncoder._apply``.
+        """
+        is_reduced_precision = False
+        try:
+            probe = fn(torch.zeros(1, dtype=torch.float32))
+            if isinstance(probe, torch.Tensor) and probe.dtype not in (
+                torch.float32,
+                torch.float64,
+            ):
+                is_reduced_precision = True
+        except Exception:
+            pass
+
+        if is_reduced_precision:
+            for child in self.children():
+                if child is not self.image_codec:
+                    child._apply(fn, recurse=recurse)
+            for key, buf in self._buffers.items():
+                if buf is not None:
+                    self._buffers[key] = fn(buf)
+            return self
+
+        return super()._apply(fn, recurse=recurse)
+
     @property
     def shared_encoder_trainable(self) -> bool:
         """Whether the differentiable AION image/shared-encoder path is trainable."""

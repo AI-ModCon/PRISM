@@ -1091,7 +1091,7 @@ if [ "$LOCAL_RANK" == "0" ]; then
 fi
 while [ ! -f "$MARKER_FILE" ]; do sleep 1; done'''}
 
-{"# --- Model Cache (shared filesystem) ---" + chr(10) + 'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'echo "  HF_HOME set to: $HF_HOME (shared filesystem)"' if args.use_shared_venv else '''# --- Model Copy ---
+{"# --- Model Cache (shared filesystem) ---" + chr(10) + 'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'echo "  HF_HOME set to: $HF_HOME (shared filesystem)"' if args.use_shared_venv or args.skip_model_staging else '''# --- Model Copy ---
 export SHARED_HF_ROOT="''' + default_hf_home + '''"
 export SHARED_HF_HOME="''' + default_shared_hf_home + '''"
 export LOCAL_HF_ROOT="/tmp/huggingface"
@@ -1126,8 +1126,10 @@ if [ "$LOCAL_RANK" == "0" ]; then
         fi
     done
     if [ "''' + ("1" if args.skip_model_staging else "0") + '''" = "1" ]; then
+        # No marker here. It means the node cache is staged, and nothing was
+        # copied; a later staging-enabled launch on the same node would see
+        # it, skip its own copy loop, then fail offline on an empty cache.
         echo "Rank $RANK (Local 0): Skipping model staging; using absolute shared paths."
-        touch "$MODEL_MARKER"
     elif [ ! -f "$MODEL_MARKER" ]; then
         echo "Rank $RANK (Local 0): Staging models to /tmp..."
         for MODEL in "${MODELS_TO_STAGE[@]}"; do
@@ -1142,7 +1144,9 @@ if [ "$LOCAL_RANK" == "0" ]; then
         echo "Rank $RANK (Local 0): Models already staged."
     fi
 fi
-while [ ! -f "$MODEL_MARKER" ]; do sleep 2; done'''}
+if [ "''' + ("0" if args.skip_model_staging else "1") + '''" = "1" ]; then
+    while [ ! -f "$MODEL_MARKER" ]; do sleep 2; done
+fi'''}
 
 # --- WebDataset Shard Staging (Node-Local) ---
 export SHARD_MARKER="$LOCAL_SHARDS_DIR/shards_ready"
@@ -1216,7 +1220,7 @@ while [ ! -f "$WDS_MARKER" ]; do sleep 1; done
 
 export MASTER_ADDR="$MASTER_ADDR"
 export MASTER_PORT="$MASTER_PORT"
-{'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'export TRANSFORMERS_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_HUB_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_DATASETS_CACHE="' + default_hf_home + '/datasets"' if args.use_shared_venv else '''export HF_HOME="/tmp/huggingface"
+{'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'export TRANSFORMERS_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_HUB_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_DATASETS_CACHE="' + default_hf_home + '/datasets"' if args.use_shared_venv or args.skip_model_staging else '''export HF_HOME="/tmp/huggingface"
 export TRANSFORMERS_CACHE="/tmp/huggingface/hub"
 export HF_HUB_CACHE="/tmp/huggingface/hub"
 export HF_DATASETS_CACHE="/tmp/huggingface/datasets"'''}

@@ -255,3 +255,26 @@ def test_rejects_unexpected_shared_encoder_feature_shape():
 
     with pytest.raises(RuntimeError, match="shared encoder must emit features"):
         encoder(_make_inputs(batch_size=1))
+
+
+def test_codec_values_survive_a_blanket_reduced_precision_cast():
+    """Dtype alone is not enough: rounded weights can change token ids.
+
+    ZoneATrainer casts the whole encoder ModuleDict to the backbone dtype
+    (src/training/trainer_zone_a.py), which reaches this encoder through
+    nn.Module._apply. Restoring float32 afterwards would recover the dtype but
+    not the values, and the codec quantizes hard.
+    """
+    encoder = _make_encoder()
+    before = [p.detach().clone() for p in encoder.spectrum_codec.parameters()]
+    assert before
+
+    import torch.nn as nn
+
+    bundle = nn.ModuleDict({"aion": encoder})
+    bundle.to(dtype=torch.bfloat16)
+
+    after = list(encoder.spectrum_codec.parameters())
+    assert all(p.dtype == torch.float32 for p in after)
+    for original, current in zip(before, after, strict=True):
+        assert torch.equal(original, current)
