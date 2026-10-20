@@ -911,7 +911,11 @@ def _write_image_parquet(path: Path, rows: list[dict[str, Any]]) -> None:
         }
     )
     path.parent.mkdir(parents=True, exist_ok=True)
-    Dataset.from_list(rows, features=features).to_parquet(str(path), compression="zstd")
+    # No compression= here. datasets 5.x chooses it per column -- "none" for
+    # columns holding embedded binary, "snappy" elsewhere -- and passing our
+    # own collides with that ("multiple values for keyword argument
+    # 'compression'"). The per-column choice is also the better one.
+    Dataset.from_list(rows, features=features).to_parquet(str(path))
     _validate_hf_image_feature(path, "image")
 
 
@@ -948,7 +952,7 @@ def _write_spectrum_parquet(path: Path, rows: list[dict[str, Any]]) -> None:
         }
     )
     path.parent.mkdir(parents=True, exist_ok=True)
-    Dataset.from_list(rows, features=features).to_parquet(str(path), compression="zstd")
+    Dataset.from_list(rows, features=features).to_parquet(str(path))
     _validate_hf_image_feature(path, "spectrum_plot")
 
 
