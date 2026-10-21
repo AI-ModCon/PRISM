@@ -198,7 +198,7 @@ actually exercised by shipped configs and CI, not what the architecture permits.
 | **Image** | Supported | 11 of 29 | Best-validated multimodal path; the basis of the scaling results below. |
 | **Time series** | Supported | 14 of 29 | Five encoder backends (`linear`, `moirai`, `intern_s2`, `intern_s2_397b`, `timeomni`). One of two modalities with a vLLM inference processor (the other is image). |
 | **DNA** | Supported | 2 of 29 | Nucleotide Transformer encoder (`src/encoders/dna.py`), used by the BioReason/KEGG path — see [docs/applications/bioreason_grpo.md](docs/applications/bioreason_grpo.md). Input-only. |
-| **Spectrum** | Supported | 2 of 29 | AION-1 Base codec + shared encoder (`src/encoders/aion_spectrum.py`), used by the AstroPRISM path — see [docs/astroprism_tutorial.md](docs/astroprism_tutorial.md). Input-only. |
+| **Spectrum** | Supported | 2 of 29 | AION-1 Base codec + shared encoder (`src/encoders/aion_spectrum.py`), used by the AstroPRISM path — see [docs/tutorials/astroprism/astroprism_tutorial.md](docs/tutorials/astroprism/astroprism_tutorial.md). Input-only. |
 | **Graph** | Experimental | 0 | Requires `torch_geometric`. Runs in the per-modality sweep (172.7 samp/s) but no shipped model config enables it, and the handler is labelled untested in its own smoke config. |
 | **Table** | Experimental | 0 | TAPAS-based; runs in the sweep (65.5 samp/s). Input-only — no output decoder. No shipped model config enables it. |
 | **Geometry** | Experimental | 0 | Requires `walrus` and `the_well`. Runs in the sweep (69.4 samp/s) **on synthetic data** — no real PDEBench corpus is staged, and `GeometryEncoder` hardcodes `input_dim=6`. A `WALRUS_FALLBACK=1` stub exists for smoke runs and produces meaningless features. |

@@ -12,6 +12,7 @@ evaluation invocations, see [`docs/applications/`](../applications/).
 
 | Area | Tutorial | Modalities | Platform |
 |---|---|---|---|
+| Astronomy | [Align AION and Qwen3-4B on galaxy images and spectra](astroprism/astroprism_tutorial.md): image-caption and spectrum-caption alignment, a joint stage, and inference from the published checkpoint | Galaxy image + spectrum + text | Aurora |
 | Biology | [BioReason: train a DNA + language model](../../applications/bioreason/bioreason_demo.ipynb) (notebook): projector alignment, SFT, GRPO, and KEGG evaluation, submitted as chained PBS jobs | DNA + text | Aurora |
 | Materials science | [Jointly train on material descriptions and crystal structures](material_science/materials_prism_tutorial.md): predict a material property from a CIF crystal graph and a text description | Crystal graph + text | CUDA, XPU, or CPU |
 

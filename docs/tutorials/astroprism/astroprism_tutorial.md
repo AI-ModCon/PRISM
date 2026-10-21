@@ -75,7 +75,7 @@ pip install --no-deps polymathic-aion==0.0.2 jaxtyping astropy
 `--system-site-packages` plus `--no-deps` is the Aurora rule: the frameworks
 module supplies the XPU-patched PyTorch, and a plain
 `pip install -r requirements/base.txt` pulls a CUDA build from PyPI that
-shadows it. See [platforms/aurora_operations.md](platforms/aurora_operations.md).
+shadows it. See [platforms/aurora_operations.md](../../platforms/aurora_operations.md).
 
 `polymathic-aion` must go in with `--no-deps` for that reason, but then its own
 requirements do not come along. The module already supplies all but two, so
@@ -358,7 +358,7 @@ integer range; read them as strings end to end.
 
 ## Where to read further
 
-- [applications/astroprism_training_plan.md](applications/astroprism_training_plan.md) — the full architecture and stage rationale
-- [applications/astroprism_data.md](applications/astroprism_data.md) — roster provenance, pinned revisions, recovery from upstream sources
-- [applications/astroprism_benchmark_landscape.md](applications/astroprism_benchmark_landscape.md) — what a real astronomy evaluation would require
-- [applications/astroprism_synthetic_data_prompts.md](applications/astroprism_synthetic_data_prompts.md) — how the captions were generated
+- [applications/astroprism_training_plan.md](../../applications/astroprism_training_plan.md) — the full architecture and stage rationale
+- [applications/astroprism_data.md](../../applications/astroprism_data.md) — roster provenance, pinned revisions, recovery from upstream sources
+- [applications/astroprism_benchmark_landscape.md](../../applications/astroprism_benchmark_landscape.md) — what a real astronomy evaluation would require
+- [applications/astroprism_synthetic_data_prompts.md](../../applications/astroprism_synthetic_data_prompts.md) — how the captions were generated

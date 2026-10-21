@@ -97,8 +97,6 @@ loadable as Claude agent skills or read as docs. See the
 |----------|-------------|
 | [getting-started.md](getting-started.md) | Clone, pick a platform, build an environment, run a first job |
 | [training/cli.md](training/cli.md) | Unified CLI (`prism`) reference: installation, commands, options, examples |
-| [materials_prism_tutorial.md](materials_prism_tutorial.md) | Tutorial: jointly train on material descriptions and crystal structures |
-| [astroprism_tutorial.md](astroprism_tutorial.md) | Tutorial: prepare the AstroPrism galaxy corpus on Aurora (data preparation; training is not implemented) |
 
 ### Tutorials — `tutorials/`
 
@@ -109,6 +107,7 @@ End-to-end walkthroughs, grouped by application area. Pages live in
 | Document | Description |
 |----------|-------------|
 | [tutorials/README.md](tutorials/README.md) | Every tutorial by application area, and where a new one goes |
+| [tutorials/astroprism/astroprism_tutorial.md](tutorials/astroprism/astroprism_tutorial.md) | AstroPRISM: align a frozen AION-1 encoder and Qwen3-4B on galaxy images and DESI spectra, from the three alignment stages through inference, on Aurora |
 | [../applications/bioreason/bioreason_demo.ipynb](../applications/bioreason/bioreason_demo.ipynb) | BioReason notebook: train a DNA + language model through projector alignment, SFT, GRPO, and KEGG evaluation on Aurora |
 | [tutorials/material_science/materials_prism_tutorial.md](tutorials/material_science/materials_prism_tutorial.md) | Materials: jointly train on crystal structures and text descriptions to predict a material property |
 
