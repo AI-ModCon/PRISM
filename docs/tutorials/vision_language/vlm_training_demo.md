@@ -326,7 +326,7 @@ qstat -u "$USER"
 Check local logs:
 
 ```bash
-ls -lt logs/PRISM-VLM-DEMO-OLMO1B-SIGLIP2-BASE/
+ls -lt logs/PRISM-IMAGE-ONLY-2N/
 ```
 
 The run should appear in W&B under `prism-vlm-demo`. The main fields to check are:
@@ -337,4 +337,4 @@ The run should appear in W&B under `prism-vlm-demo`. The main fields to check ar
 - `grad_norm/projector_mean`
 - `viz/predictions`
 
-`viz/predictions` logs image-caption examples every 20 training steps for this demo.
+`viz/predictions` logs image-caption examples every 100 training steps for this demo.

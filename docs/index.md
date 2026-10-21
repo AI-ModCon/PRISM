@@ -109,6 +109,7 @@ End-to-end walkthroughs, grouped by application area. Pages live in
 | [tutorials/README.md](tutorials/README.md) | Every tutorial by application area, and where a new one goes |
 | [../applications/bioreason/bioreason_demo.ipynb](../applications/bioreason/bioreason_demo.ipynb) | BioReason notebook: train a DNA + language model through projector alignment, SFT, GRPO, and KEGG evaluation on Aurora |
 | [tutorials/material_science/materials_prism_tutorial.md](tutorials/material_science/materials_prism_tutorial.md) | Materials: jointly train on crystal structures and text descriptions to predict a material property |
+| [tutorials/vision_language/vlm_training_demo.md](tutorials/vision_language/vlm_training_demo.md) | Vision language: train an image projector between frozen SigLIP2 and OLMo-1B on PixMo-Cap, as a 2-node DDP or HSDP job on Aurora |
 
 ### Platforms — `platforms/`
 
