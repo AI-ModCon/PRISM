@@ -274,6 +274,7 @@ descriptions and return types where they are not obvious from the signature.
   | `modalities/` | Encoders, projectors, output decoders |
   | `models/` | Backbone integrations |
   | `evaluation/` | Universal evaluator, vLLM inference |
+  | `tutorials/` | End-to-end walkthroughs, one folder per application area; notebooks stay in the top-level `applications/<area>/`, not `docs/applications/` |
   | `applications/` | Scientific applications (BioReason, KEGG, materials) |
   | `api/` | API reference for the public `src.*` surface |
   | `development/` | CI and contributor tooling |

@@ -89,7 +89,7 @@ python applications/material_science/stage_materials_text_model.py \
   --cache-dir /path/to/shared/huggingface/hub
 ```
 
-Then point Hugging Face at that cache when launching training, according to your cluster's setup. The tokenizer and model name passed to `--text-model` must match the staged model. On Polaris, see [the materials guide](applications/materials_multimodal.md) for the PBS launcher and cache environment settings.
+Then point Hugging Face at that cache when launching training, according to your cluster's setup. The tokenizer and model name passed to `--text-model` must match the staged model. On Polaris, see [the materials guide](../../applications/materials_multimodal.md) for the PBS launcher and cache environment settings.
 
 ## 5. What PRISM does with the two inputs
 
