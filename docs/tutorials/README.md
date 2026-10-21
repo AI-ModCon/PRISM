@@ -14,6 +14,7 @@ evaluation invocations, see [`docs/applications/`](../applications/).
 |---|---|---|---|
 | Biology | [BioReason: train a DNA + language model](../../applications/bioreason/bioreason_demo.ipynb) (notebook): projector alignment, SFT, GRPO, and KEGG evaluation, submitted as chained PBS jobs | DNA + text | Aurora |
 | Materials science | [Jointly train on material descriptions and crystal structures](material_science/materials_prism_tutorial.md): predict a material property from a CIF crystal graph and a text description | Crystal graph + text | CUDA, XPU, or CPU |
+| Time series | [SciTS forecasting with Intern-S2 Preview 397B](timeseries/README.md): environment, data, training, and held-out evaluation of a quantile forecast head on a frozen OLMo-1B, with a companion [notebook](../../applications/timeseries/olmo_scits_forecast.ipynb) | Time series + text | Aurora |
 
 ## Adding a tutorial
 

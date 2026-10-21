@@ -17,7 +17,7 @@ encoder weights from the 397B checkpoint; it does not train or load the full
 | [Data](data.md) | Convert SciTS into train/validation shards with numeric targets and masks |
 | [Training](training.md) | Smoke and full `SCITS-FORECAST` runs |
 | [Evaluation](evaluation.md) | Training signals, checkpoints, and held-out forecast scoring |
-| [Notebook](olmo_scits_forecast.ipynb) | The smoke run and checkpoint evaluation, step by step on a debug node |
+| [Notebook](../../../applications/timeseries/olmo_scits_forecast.ipynb) | The smoke run and checkpoint evaluation, step by step on a debug node |
 
 You need an Aurora allocation for training. Run the commands from the
 repository root. Replace path placeholders with shared paths available on
@@ -27,4 +27,4 @@ both the login and compute nodes.
 > `SciTS-forecast` data, and a trained `step_2000` checkpoint are pre-staged
 > under `/flare/GenesisHackathonOct26/scits`. You can skip the encoder
 > extraction and data conversion steps and point `HF_HOME` and
-> `PRISM_DATA_ROOT` there (see the [notebook](olmo_scits_forecast.ipynb)).
+> `PRISM_DATA_ROOT` there (see the [notebook](../../../applications/timeseries/olmo_scits_forecast.ipynb)).

@@ -8,7 +8,7 @@ the held-out `val_shards/`. Only the last stage measures forecast quality.
 |---|---|---|
 | 1. Training signals | Job log and `checkpoints/perf.jsonl` | Whether optimization is progressing |
 | 2. Checkpoints | `checkpoints/step_<N>/model.safetensors` | Which model states you can score |
-| 3. Held-out forecast scoring | [Tutorial notebook](olmo_scits_forecast.ipynb), section 4 | Forecast accuracy and calibration on unseen series |
+| 3. Held-out forecast scoring | [Tutorial notebook](../../../applications/timeseries/olmo_scits_forecast.ipynb), section 4 | Forecast accuracy and calibration on unseen series |
 
 All paths below are relative to the run directory,
 `outputs/<run-id>/<date>/<time>/`.
@@ -49,7 +49,7 @@ Only `model.safetensors` is needed for evaluation.
 
 ## 3. Held-out forecast scoring
 
-Section 4 of the [notebook](olmo_scits_forecast.ipynb) scores one
+Section 4 of the [notebook](../../../applications/timeseries/olmo_scits_forecast.ipynb) scores one
 checkpoint end to end:
 
 1. **Load** – build the model from the

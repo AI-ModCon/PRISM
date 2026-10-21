@@ -36,7 +36,7 @@ Keep `VENV_PATH` exported for the launcher, or put it in your ignored local
 `.env`. The launcher below uses `--use-shared-venv`. Load the pinned module
 before activating the environment. This Transformers variant is not compatible
 with vLLM's declared version range; vLLM is not needed for this tutorial. See
-[Aurora operations](../platforms/aurora_operations.md) for module details.
+[Aurora operations](../../platforms/aurora_operations.md) for module details.
 
 ## Set model paths and access
 
