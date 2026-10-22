@@ -91,7 +91,8 @@ by every stage to read/write its checkpoint file.
 
 ## `kegg_rest.py` — KEGG REST API Client
 
-Thin, direct wrapper around `https://rest.kegg.jp`, using `requests`
+Thin, direct wrapper around the [KEGG REST API](https://www.kegg.jp/kegg/rest/keggapi.html)
+(`https://rest.kegg.jp`), using `requests`
 directly rather than the `kegg_pull` PyPI package.
 
 **Why not `kegg_pull`**: `kegg_pull` 3.2.3 (latest on PyPI as of

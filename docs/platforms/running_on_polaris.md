@@ -210,8 +210,10 @@ Training Zone A: 100%|██████| 30/30 [00:31<00:00, 1.02s/it, loss=8.9
   Use anchored excludes (`--exclude='/data'`) when staging the repo
   to Polaris.
 - **Outbound network is via proxy.** Set
-  `HTTP_PROXY=http://proxy.alcf.anl.gov:3128` for HF downloads. The
-  launcher exports these by default; use `--no-proxy` for offline runs.
+  `HTTP_PROXY=http://proxy.alcf.anl.gov:3128` for HF downloads (an HTTP
+  proxy endpoint, not a browsable page — see the
+  [ALCF getting-started docs](https://docs.alcf.anl.gov/polaris/getting-started/)).
+  The launcher exports these by default; use `--no-proxy` for offline runs.
 - **Pre-cache HF models.** Compute nodes go through the proxy too,
   which is rate-limited and intermittently blocks. Download models
   on a login node first:
