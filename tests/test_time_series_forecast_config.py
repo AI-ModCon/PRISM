@@ -135,8 +135,8 @@ def test_complete_forecast_preset_composes_nested_connector_contract(
 
 
 def test_forecast_statistics_accept_dataset_maximum_channel_width():
-    from src.model import UnifiedTransformer
     from src.decoders.time_series import TimeSeriesDecoder
+    from src.model import UnifiedTransformer
 
     decoder = TimeSeriesDecoder(4, horizon=720, num_vars=10)
     model = SimpleNamespace(decoders={"time_series": decoder})

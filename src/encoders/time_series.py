@@ -687,6 +687,7 @@ class TimeSeriesEncoder(ModalityEncoder):
     @staticmethod
     @torch.no_grad()
     def forecast_statistics(history, observed_mask=None):
+        """Return per-channel (mean, scale) over the finite, observed cells of a history."""
         values = history.detach().float()
         if values.dim() == 1:
             values = values.unsqueeze(-1)

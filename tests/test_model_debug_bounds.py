@@ -4,9 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 import torch
-from torch import nn
-
 from src.model import UnifiedTransformer, _check_token_bounds
+from torch import nn
 
 pytestmark = pytest.mark.unit
 

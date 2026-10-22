@@ -197,12 +197,12 @@ def test_time_series_target_and_task_id_reach_wrapper_optional_target():
 
 
 def test_synthetic_forecast_tar_reaches_masked_decoder_loss(tmp_path):
-    import webdataset as wds
     from types import SimpleNamespace
 
+    import webdataset as wds
     from src.data.collate import MultimodalCollator
-    from src.decoders import TimeSeriesDecoder
     from src.data.multi_webdataset import MultiWebDataset
+    from src.decoders import TimeSeriesDecoder
 
     def payload(array):
         buffer = io.BytesIO()

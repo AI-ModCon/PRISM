@@ -93,6 +93,7 @@ def test_masked_extreme_forecast_target_cannot_overflow_standardization():
 
 def _forecast_wrapper(multi_ds, history_cap=None):
     from types import SimpleNamespace
+
     from src.data.multi_webdataset import ModalityAwareWebDatasetWrapper
 
     class Tokenizer:
@@ -179,6 +180,7 @@ def test_forecast_loader_history_cap_matches_intern_s2_397b_encoder(
     monkeypatch, projector, expected
 ):
     from types import SimpleNamespace
+
     import src.data.multi_webdataset as mwd
     from src.encoders.time_series import TimeSeriesEncoder
 
@@ -204,6 +206,7 @@ def test_forecast_loader_history_cap_matches_intern_s2_397b_encoder(
 
 def test_forecast_loader_history_cap_follows_model_config_override(monkeypatch):
     from types import SimpleNamespace
+
     import src.data.multi_webdataset as mwd
 
     class FakeMultiWebDataset:
@@ -233,8 +236,9 @@ def test_ts_max_history_defaults_to_encoder_cap():
 
 def test_forecast_loader_collator_and_model_pass_detached_statistics():
     from types import SimpleNamespace
-    from src.data.multi_webdataset import ModalityAwareWebDatasetWrapper
+
     from src.data.collate import MultimodalCollator
+    from src.data.multi_webdataset import ModalityAwareWebDatasetWrapper
     from src.model import UnifiedTransformer
 
     class Tokenizer:

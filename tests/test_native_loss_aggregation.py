@@ -123,7 +123,7 @@ def test_loss_components_weight_by_their_own_counts_across_ranks():
     # Layout per rank: [text_weighted_sum, text_count, ts_weighted_sum, ts_count].
     rank0 = [2.0 * 100, 100, 0.5 * 2, 2]
     rank1 = [4.0 * 300, 300, 1.5 * 6, 6]
-    summed = [a + b for a, b in zip(rank0, rank1)]
+    summed = [a + b for a, b in zip(rank0, rank1, strict=True)]
     out = compute_loss_components(summed, ("text", "time_series"))
     assert out["text"]["mean"] == pytest.approx((200 + 1200) / 400)
     assert out["text"]["count"] == 400
