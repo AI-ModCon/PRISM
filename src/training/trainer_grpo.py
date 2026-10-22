@@ -529,7 +529,7 @@ class ZoneDTrainer:
 
         Returns:
             Tensor of shape (1, comp_len): per-token log-prob of each
-            completion token. Left unreduced (not summed/meaned) so
+            completion token. Left unreduced (not summed/averaged) so
             GRPOSimpleLoss.forward can apply its own masked-mean over the
             completion dimension, matching torchtune's validated GRPO loss
             exactly instead of pre-reducing to a scalar before combining

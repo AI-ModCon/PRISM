@@ -114,6 +114,15 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--verify",
+        action="store_true",
+        help=(
+            "Read the live protection and report whether it matches the intended "
+            "policy. Changes nothing. Exits non-zero on any mismatch, so CI or a "
+            "reviewer can prove the setting rather than infer it from the tree."
+        ),
+    )
     return parser
 
 
@@ -214,6 +223,63 @@ def preflight(owner: str, repo: str, branch: str, token: str, checks: list[str])
     raise SystemExit("\n".join(lines))
 
 
+def verify(owner: str, repo: str, branch: str, token: str, payload: dict) -> int:
+    """Compare live branch protection against the policy this script applies.
+
+    Branch protection lives in repository settings, not in the tree, so a test
+    over source files can only show intent. This reads the live setting and
+    diffs the fields that matter, which is what makes the claim checkable.
+    """
+    url = f"https://api.github.com/repos/{owner}/{repo}/branches/{branch}/protection"
+    try:
+        _, body = _request("GET", url, token)
+    except urllib.error.HTTPError as exc:
+        details = exc.read().decode("utf-8", errors="replace")
+        raise SystemExit(
+            f"Could not read branch protection for {owner}/{repo}@{branch} "
+            f"({exc.code}).\nResponse: {details}"
+        ) from exc
+
+    live = json.loads(body)
+    want_checks = payload["required_status_checks"]["contexts"]
+    live_checks = live.get("required_status_checks", {}).get("contexts", [])
+    live_reviews = live.get("required_pull_request_reviews", {}) or {}
+    want_reviews = payload["required_pull_request_reviews"]
+
+    findings: list[tuple[str, object, object]] = [
+        ("required checks", sorted(want_checks), sorted(live_checks)),
+        (
+            "strict (branch up to date)",
+            payload["required_status_checks"]["strict"],
+            live.get("required_status_checks", {}).get("strict"),
+        ),
+        ("enforce_admins", payload["enforce_admins"], live.get("enforce_admins", {}).get("enabled")),
+        (
+            "required approving reviews",
+            want_reviews["required_approving_review_count"],
+            live_reviews.get("required_approving_review_count"),
+        ),
+        (
+            "conversation resolution",
+            payload["required_conversation_resolution"],
+            live.get("required_conversation_resolution", {}).get("enabled"),
+        ),
+        ("force pushes", payload["allow_force_pushes"], live.get("allow_force_pushes", {}).get("enabled")),
+        ("deletions", payload["allow_deletions"], live.get("allow_deletions", {}).get("enabled")),
+    ]
+
+    mismatches = [f for f in findings if f[1] != f[2]]
+    print(f"Live branch protection for {owner}/{repo}@{branch}:")
+    for label, want, got in findings:
+        mark = "ok  " if want == got else "DIFF"
+        print(f"  [{mark}] {label}: live={got!r}" + ("" if want == got else f" expected={want!r}"))
+    if mismatches:
+        print(f"\n{len(mismatches)} field(s) differ from the policy this script applies.")
+        return 1
+    print("\nLive protection matches the policy.")
+    return 0
+
+
 def main() -> int:
     args = build_parser().parse_args()
     owner, repo = _parse_repo(args.repo)
@@ -242,6 +308,11 @@ def main() -> int:
     }
 
     url = f"https://api.github.com/repos/{owner}/{repo}/branches/{args.branch}/protection"
+    if args.verify:
+        if not args.token:
+            raise SystemExit("GITHUB_TOKEN is required to read protection (or pass --token).")
+        return verify(owner, repo, args.branch, args.token, payload)
+
     if args.dry_run:
         print(json.dumps({"url": url, "payload": payload}, indent=2))
         return 0

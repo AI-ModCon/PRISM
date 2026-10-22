@@ -4,7 +4,7 @@ Evaluates a BioReason SFT or GRPO checkpoint against the KEGG test split.
 
 > [!IMPORTANT]
 > `eval_kegg.py` is **not yet on `main`** — it ships with the eval-pipeline PR
-> (#133). `applications/bioreason/submit_eval_kegg.sh` already invokes it, so both this page
+> (#133). `applications/bioreason/scripts/eval/submit_eval_kegg.sh` already invokes it, so both this page
 > and that script only work once #133 lands. The invocation below is recorded
 > so the arguments are documented; it will not run against a clean checkout
 > today.

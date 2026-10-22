@@ -46,8 +46,8 @@ No HPC allocation, DAOS container, or accelerator needed.
 > *Installation* instead.
 
 ```bash
-git clone --recursive https://github.com/AI-ModCon/BaseMM_PRISM.git
-cd BaseMM_PRISM
+git clone --recursive https://github.com/AI-ModCon/PRISM.git
+cd PRISM
 
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements/base.txt
@@ -344,7 +344,7 @@ Full reference, including the export key-renaming and the serving flags:
 ## Project structure
 
 ```
-BaseMM_PRISM/
+PRISM/
 ├── src/
 │   ├── train.py                # Hydra entry point
 │   ├── model.py                # UnifiedTransformer
@@ -375,6 +375,7 @@ BaseMM_PRISM/
 [docs/index.md](docs/index.md) indexes every page. Most-used entry points:
 
 - [docs/getting-started.md](docs/getting-started.md) — clone → environment → first run
+- [docs/tutorials/README.md](docs/tutorials/README.md) — end-to-end tutorials by application area (BioReason, materials, …)
 - [docs/platforms/site_paths.md](docs/platforms/site_paths.md) — configuring the `PRISM_*` roots
 - [docs/platforms/aurora_operations.md](docs/platforms/aurora_operations.md) — Aurora ops, env, CCL tuning, troubleshooting
 - [docs/training/training.md](docs/training/training.md) — training stages

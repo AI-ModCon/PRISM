@@ -56,7 +56,7 @@ grpo_reward_functions:
   - correctness
 
 # Data
-data_num_workers: 4
+data_num_workers: 1  # KEGG local shard is a single Arrow file; extra workers get no shard and the stream looks empty
 bioreason_dataset: "wanglab/kegg"
 max_dna_length: 1024
 max_text_length: 1024

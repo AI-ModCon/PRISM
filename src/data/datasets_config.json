@@ -196,7 +196,7 @@
                     "output"
                 ],
                 "fallback_dummy": false,
-                "skip": false,
+                "skip": true,
                 "size_formatted": "~105K samples"
             },
             "ts_instruction": {
@@ -427,7 +427,7 @@
                     "variant_sequence"
                 ],
                 "fallback_dummy": false,
-                "skip": false,
+                "skip": true,
                 "size_formatted": "48,850 samples (train split)"
             },
             "dna_bioreason_variant_effect_non_snv": {
@@ -446,7 +446,7 @@
                     "mutated_sequence"
                 ],
                 "fallback_dummy": false,
-                "skip": false,
+                "skip": true,
                 "size_formatted": "35,215 samples (train split)"
             }
         }

@@ -1,0 +1,17 @@
+# Written by applications/bioreason/bioreason_demo.ipynb (section 5).
+# KEGG + variant-effect mix (BioReason weights). Use with: data=bioreason_demo_mix
+dataset_overrides:
+  dna_bioreason:
+    skip: false
+    preferred_source: local
+    weight: 0.5
+  dna_bioreason_variant_effect_coding:
+    skip: false
+    preferred_source: local
+    weight: 0.25
+    local_path: ${oc.env:PRISM_DATA_ROOT}/dna_local_shards/variant_effect_coding
+  dna_bioreason_variant_effect_non_snv:
+    skip: false
+    preferred_source: local
+    weight: 0.25
+    local_path: ${oc.env:PRISM_DATA_ROOT}/dna_local_shards/variant_effect_non_snv

@@ -24,7 +24,7 @@ Other solutions or features you considered, and why they fall short.
 ## Compatibility Impact
 
 Would this change any of the following? See *Compatibility* in
-[CONTRIBUTING.md](https://github.com/AI-ModCon/BaseMM_PRISM/blob/main/CONTRIBUTING.md).
+[CONTRIBUTING.md](https://github.com/AI-ModCon/PRISM/blob/main/CONTRIBUTING.md).
 
 - [ ] `src.*` import paths
 - [ ] the `prism` CLI surface
