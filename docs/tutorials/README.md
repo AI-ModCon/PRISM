@@ -14,6 +14,7 @@ evaluation invocations, see [`docs/applications/`](../applications/).
 |---|---|---|---|
 | Biology | [BioReason: train a DNA + language model](../../applications/bioreason/bioreason_demo.ipynb) (notebook): projector alignment, SFT, GRPO, and KEGG evaluation, submitted as chained PBS jobs | DNA + text | Aurora |
 | Materials science | [Jointly train on material descriptions and crystal structures](material_science/materials_prism_tutorial.md): predict a material property from a CIF crystal graph and a text description | Crystal graph + text | CUDA, XPU, or CPU |
+| Vision language | [Train a vision-language projector](vision_language/vlm_training_demo.md): project frozen SigLIP2 features into a frozen OLMo-1B on PixMo-Cap, launched as a 2-node DDP or HSDP job and logged to W&B | Image + text | Aurora |
 
 ## Adding a tutorial
 
