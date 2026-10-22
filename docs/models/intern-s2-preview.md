@@ -7,17 +7,37 @@ with [Intern-S2 Preview 397B](https://huggingface.co/internlm/Intern-S2-Preview-
 
 ## At a Glance
 
-> **Hugging Face access.** Some models referenced from this encoder's vendored
-> upstream code are **gated on Hugging Face** and return `HTTP 401` to an
-> anonymous request — `Qwen/Qwen3.5-35B-A3B-Instruct`, cited in
-> `src/encoders/intern_s2_preview/configuration_interns2_preview.py`, is one.
-> That is not a dead link: you must be signed in to a Hugging Face account
-> that has been granted access to the repository, and then authenticate
-> locally (`huggingface-cli login`, or `HF_TOKEN` in the environment) before
-> the weights will download. PRISM does not redistribute them.
+> **`Qwen/Qwen3.5-35B-A3B-Instruct` does not resolve.** The vendored upstream
+> files cite it as the checkpoint their defaults correspond to —
+> `configuration_interns2_preview.py` and `modeling_interns2_preview.py`, in
+> both the 35B and 397B trees — but Hugging Face returns `HTTP 401` for it
+> anonymously. **That is not the gating signal.** A gated repository serves
+> its model card with `HTTP 200` and gates only the file downloads, so 401
+> here matches a repository that is not public rather than one you lack
+> access to:
 >
-> The citing file is vendored upstream code and is kept byte-identical, so
-> this note lives here rather than in it.
+> | Repository | Anonymous page | Meaning |
+> |---|---|---|
+> | `Qwen/Qwen3.5-35B-A3B` | 200 | public, exists |
+> | `Qwen/Qwen3.5-35B-A3B-Instruct` | 401 | does not resolve |
+> | a known-gated repository | 200 | gated, card still served |
+>
+> The rest of the family resolves (`Qwen3.5-9B`, `-4B`, `-35B-A3B`,
+> `-397B-A17B`), so the `-Instruct` suffix appears to be the error and
+> [`Qwen/Qwen3.5-35B-A3B`](https://huggingface.co/Qwen/Qwen3.5-35B-A3B) is the
+> nearest real checkpoint. Treat that as the reference until upstream
+> clarifies; it has not been confirmed as the exact model those defaults were
+> taken from.
+>
+> **Why the citing files are not corrected.** They are vendored upstream code,
+> kept byte-identical so they can be re-synced
+> (`pyproject.toml` excludes them from lint and formatting, and CONTRIBUTING
+> forbids annotating them). The correction lives here instead.
+>
+> Separately, models that *are* gated — including ones this project uses —
+> need a Hugging Face account granted access plus local authentication
+> (`hf auth login`, or `HF_TOKEN` in the environment) before weights
+> download. PRISM redistributes none of them.
 
 
 The 35B model has a time-series **encoder-to-LLM** path: it converts a numeric

@@ -377,6 +377,7 @@ PRISM/
 [docs/index.md](docs/index.md) indexes every page. Most-used entry points:
 
 - [docs/getting-started.md](docs/getting-started.md) — clone → environment → first run
+- [docs/tutorials/README.md](docs/tutorials/README.md) — end-to-end tutorials by application area (BioReason, materials, …)
 - [docs/platforms/site_paths.md](docs/platforms/site_paths.md) — configuring the `PRISM_*` roots
 - [docs/platforms/aurora_operations.md](docs/platforms/aurora_operations.md) — Aurora ops, env, CCL tuning, troubleshooting
 - [docs/training/training.md](docs/training/training.md) — training stages

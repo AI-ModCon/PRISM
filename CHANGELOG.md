@@ -30,6 +30,10 @@ will make up v0.1.0.
   per-modality support-status table
 - `tools/ci/check_doc_links.py`, a link checker for relative Markdown links, run
   as a required `doc_links` CI job
+- `docs/tutorials/`, an index of end-to-end tutorials grouped by application
+  area. The materials tutorial moved from `docs/materials_prism_tutorial.md` to
+  `docs/tutorials/material_science/materials_prism_tutorial.md`; notebooks stay
+  next to their scripts in `applications/<area>/`
 
 ### Changed
 

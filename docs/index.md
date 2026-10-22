@@ -100,6 +100,18 @@ loadable as Claude agent skills or read as docs. See the
 | [materials_prism_tutorial.md](materials_prism_tutorial.md) | Tutorial: jointly train on material descriptions and crystal structures |
 | [astroprism_tutorial.md](astroprism_tutorial.md) | Tutorial: prepare the AstroPrism galaxy corpus on Aurora (data preparation; training is not implemented) |
 
+### Tutorials — `tutorials/`
+
+End-to-end walkthroughs, grouped by application area. Pages live in
+`tutorials/<area>/`; notebooks live next to their scripts in the top-level
+[`applications/<area>/`](../applications/) directory.
+
+| Document | Description |
+|----------|-------------|
+| [tutorials/README.md](tutorials/README.md) | Every tutorial by application area, and where a new one goes |
+| [../applications/bioreason/bioreason_demo.ipynb](../applications/bioreason/bioreason_demo.ipynb) | BioReason notebook: train a DNA + language model through projector alignment, SFT, GRPO, and KEGG evaluation on Aurora |
+| [tutorials/material_science/materials_prism_tutorial.md](tutorials/material_science/materials_prism_tutorial.md) | Materials: jointly train on crystal structures and text descriptions to predict a material property |
+
 ### Platforms — `platforms/`
 
 Environment build and job submission, one page per machine, plus the
