@@ -2,7 +2,7 @@ backbone_id: allenai/OLMo-1B-0724-hf
 # Custom tokenizer with interleaving tokens added.
 # Placeholder path — set to wherever you've built/copied this tokenizer
 # (see PRISM_OLMO1B_INTERLEAVED_TOKENIZER default in src/config.py).
-tokenizer_id: "/flare/<project>/<user>/BaseMM_PRISM/tokenizers/prism-olmo-1b-interleaved"
+tokenizer_id: "/flare/<project>/<user>/PRISM/tokenizers/prism-olmo-1b-interleaved"
 
 modalities: [text,time_series]
 

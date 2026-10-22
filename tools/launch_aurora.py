@@ -56,7 +56,10 @@ def main():
     env_config = load_dotenv()
 
     # Defaults from .env or hardcoded fallbacks
-    default_prism_dir = env_config.get("PRISM_DIR", "/flare/ModCon/ngetty/BaseMM_PRISM")
+    # Fall back to the checkout this launcher lives in, not a hardcoded user path.
+    default_prism_dir = env_config.get(
+        "PRISM_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
     default_hf_home = env_config.get("HF_HOME", "/flare/ModCon/sandeep")
     env_config.get("PROJECT_ALLOCATION", "ModCon")
     env_config.get("QUEUE_NAME", "debug")

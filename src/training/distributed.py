@@ -1127,7 +1127,9 @@ def load_model_weights_only(model, checkpoint_path, device="cpu"):
         )
 
     print(f"[Resume] Loading model weights from {safetensors_path}")
-    state_dict = load_file(safetensors_path, device=str(device))
+    # Load on CPU: `device` may be the string "auto" (training.device), which
+    # safetensors rejects; load_state_dict copies onto the model's device anyway.
+    state_dict = load_file(safetensors_path, device="cpu")
 
     # Strip "module." prefix if present (from DDP-saved checkpoints)
     clean_state_dict = {}

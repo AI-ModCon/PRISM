@@ -394,15 +394,25 @@ class ZoneATrainer:
         sched_type = getattr(config, "scheduler_type", "cosine")
         min_lr_ratio = getattr(config, "min_lr_ratio", 0.0)
 
+        # accelerator.prepare(scheduler) below wraps it in AcceleratedScheduler,
+        # which calls the inner scheduler.step() num_processes times per
+        # optimizer step (it assumes the dataloader batch was scaled by world
+        # size). Express every schedule length in those units so warmup/decay
+        # are counted in optimizer steps; otherwise on 12 ranks warmup ends 12x
+        # early and the HF cosine passes its end at max_steps/12 and rises again.
+        n_sched = self.accelerator.num_processes
+        sched_total = config.max_steps * n_sched
+        sched_warmup = config.warmup_steps * n_sched
+
         if sched_type == "molmo_layered":
             from src.utils.scheduler import get_molmo_scheduler
 
             self.accelerator.print("Using Molmo Layered Scheduler (Separate Warmups)")
             self.scheduler = get_molmo_scheduler(
                 self.optimizer,
-                config.max_steps,
-                warmup_connector=getattr(config, "warmup_steps_connector", 200),
-                warmup_main=getattr(config, "warmup_steps_main", 2000),
+                sched_total,
+                warmup_connector=getattr(config, "warmup_steps_connector", 200) * n_sched,
+                warmup_main=getattr(config, "warmup_steps_main", 2000) * n_sched,
                 min_lr_ratio=min_lr_ratio,
             )
         elif sched_type == "cosine_with_min_lr":
@@ -411,8 +421,8 @@ class ZoneATrainer:
             self.accelerator.print(f"Using Cosine Scheduler with Floor {min_lr_ratio}")
             self.scheduler = get_cosine_with_min_lr(
                 self.optimizer,
-                num_warmup_steps=config.warmup_steps,
-                num_training_steps=config.max_steps,
+                num_warmup_steps=sched_warmup,
+                num_training_steps=sched_total,
                 min_lr_ratio=min_lr_ratio,
             )
         elif sched_type == "wsd":
@@ -427,18 +437,18 @@ class ZoneATrainer:
             )
             self.scheduler = get_wsd_scheduler(
                 self.optimizer,
-                num_warmup_steps=config.warmup_steps,
-                num_training_steps=config.max_steps,
+                num_warmup_steps=sched_warmup,
+                num_training_steps=sched_total,
                 min_lr_ratio=min_lr_ratio,
                 decay_ratio=getattr(config, "wsd_decay_ratio", 0.1),
-                decay_steps=wsd_decay_steps,
+                decay_steps=wsd_decay_steps * n_sched if wsd_decay_steps else wsd_decay_steps,
             )
         else:
             # Default HF
             self.scheduler = get_cosine_schedule_with_warmup(
                 self.optimizer,
-                num_warmup_steps=config.warmup_steps,
-                num_training_steps=config.max_steps,
+                num_warmup_steps=sched_warmup,
+                num_training_steps=sched_total,
             )
 
         # 3. Prepare via Accelerator
@@ -603,6 +613,33 @@ class ZoneATrainer:
         self._kegg_eval_logger = None
         self._kegg_eval_nt_tokenizer = None
 
+    # Parameter-name keys -> label, shared by the gradient watchdog and its snapshot.
+    _GRAD_COMPONENTS = (
+        ("projector", "Projector"),
+        ("lora_", "LoRA"),
+        ("encoder", "Encoder/ViT"),
+        ("backbone", "Backbone/LLM"),
+    )
+
+    def _snapshot_grad_norms(self):
+        """Record the largest grad norm per component (label -> (norm, param name)).
+
+        Called just before ``optimizer.zero_grad()`` on steps whose *next* iteration runs
+        ``check_parameter_status``: that check runs at the top of the loop, after
+        ``zero_grad()`` has already set every ``.grad`` to None, so it can't see them.
+        """
+        snap = {}
+        for key, label in self._GRAD_COMPONENTS:
+            best, name = 0.0, None
+            for n, p in self.model.named_parameters():
+                if key in n and p.requires_grad and p.grad is not None:
+                    g = p.grad.norm().item()
+                    if g > best:
+                        best, name = g, n
+            if name is not None:
+                snap[label] = (best, name)
+        self._grad_snapshot = snap
+
     def check_parameter_status(self, step):
         """Watchdog: Fail fast if projectors are seemingly frozen."""
         if not self.accelerator.is_main_process:
@@ -672,12 +709,8 @@ class ZoneATrainer:
         # 2. Check Gradients (Only if step > 0)
         # Sample from each component type
         if step > 0:
-            components = [
-                ("projector", "Projector"),
-                ("lora_", "LoRA"),
-                ("encoder", "Encoder/ViT"),
-                ("backbone", "Backbone/LLM"),
-            ]
+            components = self._GRAD_COMPONENTS
+            snapshot = getattr(self, "_grad_snapshot", None) or {}
 
             for key, label in components:
                 found_grad = False
@@ -692,9 +725,17 @@ class ZoneATrainer:
                             sample_name = n
                             found_grad = True
 
+                from_snapshot = False
+                if not found_grad and label in snapshot:
+                    # Live grads were already cleared by zero_grad(); use the norms
+                    # recorded just before it on the previous optimizer step.
+                    max_norm, sample_name = snapshot[label]
+                    found_grad, from_snapshot = True, True
+
                 if found_grad and max_norm > 0:
+                    src = " [last optimizer step]" if from_snapshot else ""
                     print(
-                        f"  ✅ {label}: {sample_name.split('.')[-2]}.{sample_name.split('.')[-1]} (Norm: {max_norm:.6f})"
+                        f"  ✅ {label}: {sample_name.split('.')[-2]}.{sample_name.split('.')[-1]} (Norm: {max_norm:.6f}){src}"
                     )
                 elif found_grad:
                     print(f"  ⚠️ {label}: Gradients exist but are zero!")
@@ -1059,6 +1100,10 @@ class ZoneATrainer:
                     t3 = time.perf_counter()
                     self.optimizer.step()
                     self.scheduler.step()
+                    # The watchdog runs at the top of iteration step+1 (step 1 and every
+                    # 100th), after zero_grad(); capture the grad norms it will report.
+                    if (step + 1) == 1 or (step + 1) % 100 == 0:
+                        self._snapshot_grad_norms()
                     self.optimizer.zero_grad()
                     # Skipped under PRISM_PRODUCTION_MODE
                     if not _production_mode and hasattr(torch, "xpu") and torch.xpu.is_available():
@@ -1428,8 +1473,9 @@ class ZoneATrainer:
             if dna_encoder is not None and getattr(dna_encoder, "tokenizer", None) is not None:
                 self._kegg_eval_nt_tokenizer = dna_encoder.tokenizer
             else:
+                # Same checkpoint as the encoder (see StreamingMultimodalDataset).
                 self._kegg_eval_nt_tokenizer = AutoTokenizer.from_pretrained(
-                    "InstaDeepAI/nucleotide-transformer-v2-250m-multi-species",
+                    unwrapped.config.dna_model_name,
                     trust_remote_code=True,
                 )
 

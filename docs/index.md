@@ -99,6 +99,18 @@ loadable as Claude agent skills or read as docs. See the
 | [training/cli.md](training/cli.md) | Unified CLI (`prism`) reference: installation, commands, options, examples |
 | [tutorial/README.md](tutorial/README.md) | End-to-end SciTS numerical forecasting with the Intern-S2 Preview 397B time-series encoder |
 
+### Tutorials — `tutorials/`
+
+End-to-end walkthroughs, grouped by application area. Pages live in
+`tutorials/<area>/`; notebooks live next to their scripts in the top-level
+[`applications/<area>/`](../applications/) directory.
+
+| Document | Description |
+|----------|-------------|
+| [tutorials/README.md](tutorials/README.md) | Every tutorial by application area, and where a new one goes |
+| [../applications/bioreason/bioreason_demo.ipynb](../applications/bioreason/bioreason_demo.ipynb) | BioReason notebook: train a DNA + language model through projector alignment, SFT, GRPO, and KEGG evaluation on Aurora |
+| [tutorials/material_science/materials_prism_tutorial.md](tutorials/material_science/materials_prism_tutorial.md) | Materials: jointly train on crystal structures and text descriptions to predict a material property |
+
 ### Platforms — `platforms/`
 
 Environment build and job submission, one page per machine, plus the

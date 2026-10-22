@@ -29,9 +29,9 @@ the Stage 3 GRPO reinforcement learning implementation.
 Each stage loads weights from the previous via `training.resume_weights_only`.
 
 Submit scripts:
-- Stage 1: `applications/bioreason/submit_bioreason_projector.sh`
-- Stage 2: `applications/bioreason/submit_bioreason_sft.sh`
-- Stage 3: `applications/bioreason/submit_bioreason_grpo.sh`
+- Stage 1: `applications/bioreason/scripts/training/submit_bioreason_projector.sh`
+- Stage 2: `applications/bioreason/scripts/training/submit_bioreason_sft.sh`
+- Stage 3: `applications/bioreason/scripts/training/submit_bioreason_grpo.sh`
 
 ---
 

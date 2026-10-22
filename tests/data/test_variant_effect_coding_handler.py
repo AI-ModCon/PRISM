@@ -147,12 +147,12 @@ def test_sft_true_appends_answer_tagged_assistant_turn_with_no_reasoning():
     # never "Answer: X" (BioReason's literal format) — see handler docstring.
     assert "<think>" not in caption
     assert "<answer>pathogenic</answer>" in caption
-    assert "<|im_start|>assistant" in caption
+    assert "<|assistant|>" in caption
     # The "promptlen targetlen" split is computed in __iter__ from these two
     # renderings, so assert the property it depends on: the prompt stops at the
     # assistant marker and the answer lands strictly after it.
     full_text, prompt_text = ds._render_dna_prompt_text(result["prompt"])
-    assert prompt_text.endswith("<|im_start|>assistant\n")
+    assert prompt_text.endswith("<|assistant|>\n")
     assert len(full_text) > len(prompt_text)
     assert "<answer>pathogenic</answer>" not in prompt_text
 
@@ -163,7 +163,7 @@ def test_sft_false_omits_assistant_turn_for_grpo():
     caption = render(ds, result)
     # The generation marker is still emitted (that is what makes it a generation
     # prompt); what must be absent is the answer text after it.
-    assert "<|im_start|>assistant" in caption
+    assert "<|assistant|>" in caption
     assert "<answer>" not in caption  # generation-prompt only, no answer text
     # The answer still surfaces for reward computation, but as a real key --
     # trainer_grpo.py reads batch["answer"] rather than parsing a metadata tag.
@@ -191,7 +191,7 @@ def test_none_item_returns_safe_fallback():
     # fallback ref/var = ("CTGA", "CTGA") in dna-llm mode, so there is still a
     # real pair for __iter__ to encode.
     assert result["dna_sequences"] == ["CTGA", "CTGA"]
-    assert "<|im_start|>assistant" in caption  # is_sft=True still appends fallback assistant turn
+    assert "<|assistant|>" in caption  # is_sft=True still appends fallback assistant turn
 
 
 def test_none_item_with_is_sft_false_omits_assistant_turn():

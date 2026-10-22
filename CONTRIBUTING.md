@@ -114,7 +114,7 @@ script for a new application appears, not for the first.
 
 The test is what the script *serves*, not what it mentions.
 `tools/universal_evaluator.py` names KEGG and DOCCI but evaluates every
-benchmark, so it is general. `applications/bioreason/submit_bioreason_sft.sh`
+benchmark, so it is general. `applications/bioreason/scripts/training/submit_bioreason_sft.sh`
 runs one training job for one application, so it is not.
 
 Note `tools/` and `scripts/` are not cleanly separated from each other —
@@ -128,8 +128,8 @@ Historical experiment IDs and their ordering are stable — see *Compatibility*.
 1. Fork the repository, then clone your fork **with submodules**:
 
    ```bash
-   git clone --recursive https://github.com/<your-username>/BaseMM_PRISM.git
-   cd BaseMM_PRISM
+   git clone --recursive https://github.com/<your-username>/PRISM.git
+   cd PRISM
    ```
 
    If you already cloned without `--recursive`:
@@ -274,6 +274,7 @@ descriptions and return types where they are not obvious from the signature.
   | `modalities/` | Encoders, projectors, output decoders |
   | `models/` | Backbone integrations |
   | `evaluation/` | Universal evaluator, vLLM inference |
+  | `tutorials/` | End-to-end walkthroughs, one folder per application area; notebooks stay in the top-level `applications/<area>/`, not `docs/applications/` |
   | `applications/` | Scientific applications (BioReason, KEGG, materials) |
   | `api/` | API reference for the public `src.*` surface |
   | `development/` | CI and contributor tooling |

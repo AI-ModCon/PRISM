@@ -501,7 +501,7 @@ def test_no_user_specific_hub_paths_in_model_configs():
 
     Tokenizer paths under a project dir are still allowed: the interleaved TS
     configs legitimately point at custom tokenizers checked in under
-    /flare/ModCon/<user>/BaseMM_PRISM/tokenizers/.
+    /flare/<project>/<user>/PRISM/tokenizers/.
     """
     offenders = []
     for cfg in sorted((REPO_ROOT / "src" / "conf" / "model").glob("*.yaml")):

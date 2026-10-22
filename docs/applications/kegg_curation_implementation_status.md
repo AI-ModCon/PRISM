@@ -351,7 +351,7 @@ the remaining 53).
 ## `entrez_client.py` — NCBI Entrez E-utilities Client
 
 Thin wrapper around NCBI's E-utilities REST endpoints
-(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils`), used by stages 04 and 07.
+(`https://eutils.ncbi.nlm.nih.gov`), used by stages 04 and 07.
 Not built via `Bio.Entrez` — direct `requests` calls instead, for the same
 reason `kegg_rest.py` avoids `kegg_pull`: full control over request/response
 handling without depending on a library's internal assumptions.
