@@ -1,0 +1,22 @@
+# Reviewed image-caption and spectrum-caption pairs over the shared 646 roster.
+split: "train"
+max_merged_seq_length: 2048
+
+image:
+  raw_manifest_path: "_local/astroprism/raw_images/manifest.json"
+  candidates_manifest_path: "_local/astroprism/stage1a_accepted/manifest.json"
+  candidates_path: null
+  caption_field: "auto"
+  allow_unsafe_candidates: false
+  accepted_statuses: ["accepted", "approved"]
+  accepted_caption_statuses: ["released_reused", "released_revised"]
+  verify_file_hashes: true
+
+spectrum:
+  raw_manifest_path: "_local/astroprism/raw_spectra/manifest.json"
+  captions_manifest_path: "_local/astroprism/stage1b_spectrum_caption_accepted/manifest.json"
+  captions_path: null
+  accepted_caption_statuses: ["accepted"]
+  verify_file_hashes: true
+
+strict_modality_check: true

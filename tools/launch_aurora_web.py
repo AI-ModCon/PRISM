@@ -19,6 +19,7 @@ import argparse
 import datetime
 import json
 import os
+import re
 import subprocess
 import sys
 import textwrap
@@ -60,6 +61,13 @@ def main():
         "--packed-env",
         default="deepspeed_env.tar.gz",
         help="Path to packed env tarball",
+    )
+    parser.add_argument(
+        "--skip-model-staging",
+        action="store_true",
+        help="Skip copying shared Hugging Face caches to node-local /tmp. "
+        "Use only when every required model/tokenizer/cache path is an "
+        "absolute, existing shared-filesystem path.",
     )
     parser.add_argument(
         "--prism-dir",
@@ -685,6 +693,50 @@ fi
         print(f"Model staging: {backbone_id} (local path, no staging needed)")
     else:
         print(f"Model staging: {backbone_id} -> {hf_model_dir}")
+    if args.skip_model_staging:
+        tokenizer_id = resolve_hydra_override(
+            final_overrides,
+            unknown_args,
+            "model.tokenizer_id",
+            model_group_config.get("tokenizer_id", backbone_id),
+        )
+        required_shared_paths = {
+            "model.backbone_id": backbone_id,
+            "model.tokenizer_id": tokenizer_id,
+        }
+        if image_encoder_id is not None:
+            required_shared_paths["model.image_encoder_id"] = image_encoder_id
+        if image_processor_id is not None:
+            required_shared_paths["model.image_processor_id"] = image_processor_id
+
+        # load_model_group_config uses yaml.safe_load and resolve_hydra_override
+        # only selects values, so Hydra interpolations arrive here as literal
+        # "${oc.env:VAR,default}/..." strings. Expand the oc.env form before
+        # testing the filesystem, or a config that resolves to real staged
+        # assets is rejected for looking relative.
+        def _expand(value: str | None) -> str | None:
+            if not isinstance(value, str):
+                return value
+            def _sub(match: "re.Match[str]") -> str:
+                body = match.group(1)
+                name, _, fallback = body.partition(",")
+                return os.environ.get(name.strip(), fallback.strip())
+            return re.sub(r"\$\{oc\.env:([^}]*)\}", _sub, value)
+
+        invalid_paths = []
+        for key, value in required_shared_paths.items():
+            resolved = _expand(value)
+            if resolved is None or not os.path.isabs(resolved) or not os.path.exists(resolved):
+                invalid_paths.append(f"{key}={value!r}")
+        if invalid_paths:
+            parser.error(
+                "--skip-model-staging requires absolute, existing shared paths; "
+                "invalid: " + ", ".join(invalid_paths)
+            )
+        print(
+            "Model staging disabled: all required model assets resolve to "
+            "absolute shared-filesystem paths."
+        )
     if image_encoder_id:
         print(f"Image encoder staging: {image_encoder_id} -> {hf_cache_dir(image_encoder_id)}")
     if image_processor_id and image_processor_id != image_encoder_id:
@@ -1039,7 +1091,7 @@ if [ "$LOCAL_RANK" == "0" ]; then
 fi
 while [ ! -f "$MARKER_FILE" ]; do sleep 1; done'''}
 
-{"# --- Model Cache (shared filesystem) ---" + chr(10) + 'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'echo "  HF_HOME set to: $HF_HOME (shared filesystem)"' if args.use_shared_venv else '''# --- Model Copy ---
+{"# --- Model Cache (shared filesystem) ---" + chr(10) + 'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'echo "  HF_HOME set to: $HF_HOME (shared filesystem)"' if args.use_shared_venv or args.skip_model_staging else '''# --- Model Copy ---
 export SHARED_HF_ROOT="''' + default_hf_home + '''"
 export SHARED_HF_HOME="''' + default_shared_hf_home + '''"
 export LOCAL_HF_ROOT="/tmp/huggingface"
@@ -1073,7 +1125,12 @@ if [ "$LOCAL_RANK" == "0" ]; then
             echo "  Linked standalone artifact $ARTIFACT"
         fi
     done
-    if [ ! -f "$MODEL_MARKER" ]; then
+    if [ "''' + ("1" if args.skip_model_staging else "0") + '''" = "1" ]; then
+        # No marker here. It means the node cache is staged, and nothing was
+        # copied; a later staging-enabled launch on the same node would see
+        # it, skip its own copy loop, then fail offline on an empty cache.
+        echo "Rank $RANK (Local 0): Skipping model staging; using absolute shared paths."
+    elif [ ! -f "$MODEL_MARKER" ]; then
         echo "Rank $RANK (Local 0): Staging models to /tmp..."
         for MODEL in "${MODELS_TO_STAGE[@]}"; do
             if [ -d "$SHARED_HF_HOME/$MODEL" ] && [ ! -d "$LOCAL_HF_HOME/$MODEL" ]; then
@@ -1087,7 +1144,9 @@ if [ "$LOCAL_RANK" == "0" ]; then
         echo "Rank $RANK (Local 0): Models already staged."
     fi
 fi
-while [ ! -f "$MODEL_MARKER" ]; do sleep 2; done'''}
+if [ "''' + ("0" if args.skip_model_staging else "1") + '''" = "1" ]; then
+    while [ ! -f "$MODEL_MARKER" ]; do sleep 2; done
+fi'''}
 
 # --- WebDataset Shard Staging (Node-Local) ---
 export SHARD_MARKER="$LOCAL_SHARDS_DIR/shards_ready"
@@ -1161,7 +1220,7 @@ while [ ! -f "$WDS_MARKER" ]; do sleep 1; done
 
 export MASTER_ADDR="$MASTER_ADDR"
 export MASTER_PORT="$MASTER_PORT"
-{'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'export TRANSFORMERS_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_HUB_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_DATASETS_CACHE="' + default_hf_home + '/datasets"' if args.use_shared_venv else '''export HF_HOME="/tmp/huggingface"
+{'export HF_HOME="' + default_hf_home + '"' + chr(10) + 'export TRANSFORMERS_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_HUB_CACHE="' + default_shared_hf_home + '"' + chr(10) + 'export HF_DATASETS_CACHE="' + default_hf_home + '/datasets"' if args.use_shared_venv or args.skip_model_staging else '''export HF_HOME="/tmp/huggingface"
 export TRANSFORMERS_CACHE="/tmp/huggingface/hub"
 export HF_HUB_CACHE="/tmp/huggingface/hub"
 export HF_DATASETS_CACHE="/tmp/huggingface/datasets"'''}

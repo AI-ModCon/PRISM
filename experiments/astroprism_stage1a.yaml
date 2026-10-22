@@ -1,0 +1,42 @@
+# AstroPRISM Stage 1A: raw calibrated images -> frozen AION -> adapter -> Qwen3-4B.
+#
+# The submission command supplies absolute shared-filesystem paths for the
+# checkout, Qwen weights, AION cache, and reviewed data manifests. Keeping those
+# operator-owned paths out of this design makes the experiment reusable while
+# preserving an offline/fail-closed runtime.
+
+experiments:
+  - id: ASTROPRISM-STAGE1A
+    name: "AstroPRISM Stage 1A: frozen AION/Qwen image-caption alignment"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      model: prism_astroprism_qwen3_4b
+      training: astroprism_stage1a
+      +data: astroprism_stage1a
+
+      # Keep this explicit so launch_aurora_web.py selects its supported
+      # Accelerate path before Hydra composes the training group.
+      training.task: astroprism_stage1a
+      training.device: xpu
+      training.batch_size: 2
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 100
+      training.save_every_n_steps: 50
+      training.freeze_llm: true
+      training.freeze_vit: true
+
+      # AION is selected by image_encoder_type in the model preset; prevent the
+      # launcher from staging the inactive SigLIP compatibility default.
+      model.image_encoder_id: null
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+
+      data.split: train
+      data.allow_unsafe_candidates: false
+      data.verify_file_hashes: true
+
+      wandb.project: astroprism-stage1a
+      wandb.mode: offline

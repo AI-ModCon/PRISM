@@ -107,6 +107,7 @@ End-to-end walkthroughs, grouped by application area. Pages live in
 | Document | Description |
 |----------|-------------|
 | [tutorials/README.md](tutorials/README.md) | Every tutorial by application area, and where a new one goes |
+| [tutorials/astroprism/astroprism_tutorial.md](tutorials/astroprism/astroprism_tutorial.md) | AstroPRISM: align a frozen AION-1 encoder and Qwen3-4B on galaxy images and DESI spectra, from the three alignment stages through inference, on Aurora |
 | [../applications/bioreason/bioreason_demo.ipynb](../applications/bioreason/bioreason_demo.ipynb) | BioReason notebook: train a DNA + language model through projector alignment, SFT, GRPO, and KEGG evaluation on Aurora |
 | [tutorials/material_science/materials_prism_tutorial.md](tutorials/material_science/materials_prism_tutorial.md) | Materials: jointly train on crystal structures and text descriptions to predict a material property |
 
@@ -189,6 +190,11 @@ Recorded experiment outcomes. These are dated reports, not usage guides.
 | [applications/kegg_curation_pipeline.md](applications/kegg_curation_pipeline.md) | KEGG dataset curation pipeline — design doc |
 | [applications/kegg_curation_implementation_status.md](applications/kegg_curation_implementation_status.md) | KEGG curation — what is built and live-tested, stage by stage |
 | [applications/materials_multimodal.md](applications/materials_multimodal.md) | Materials property prediction from text + crystal graphs (`src/materials`, `CrystalGraphTokenEncoder`) |
+| [applications/astroprism.md](applications/astroprism.md) | AstroPrism: the 646-candidate image + spectrum + language pilot — start here |
+| [applications/astroprism_training_plan.md](applications/astroprism_training_plan.md) | AstroPrism: AION-1/Qwen architecture, training phases, splits and settings (proposed) |
+| [applications/astroprism_synthetic_data_prompts.md](applications/astroprism_synthetic_data_prompts.md) | AstroPrism: prompt templates and data contracts for caption and instruction synthesis |
+| [applications/astroprism_benchmark_landscape.md](applications/astroprism_benchmark_landscape.md) | AstroPrism: astronomy benchmark survey and the proposed evaluation panels |
+| [applications/astroprism_data.md](applications/astroprism_data.md) | AstroPrism: the 646-candidate roster — pins, checksum, field definitions, recovery |
 
 ### API reference — `api/`
 

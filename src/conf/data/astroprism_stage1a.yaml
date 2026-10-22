@@ -1,0 +1,18 @@
+# Calibrated Legacy Survey images extracted for the 646-object overlap roster.
+raw_manifest_path: "_local/astroprism/raw_images/manifest.json"
+candidates_manifest_path: "_local/astroprism/stage1a_accepted/manifest.json"
+candidates_path: null
+
+# Production-safe defaults. The accepted artifact preserves the original
+# candidate roster while recording crop-overlap groups and frozen splits.
+split: "train"
+allow_unsafe_candidates: false
+accepted_statuses: ["accepted", "approved"]
+accepted_caption_statuses: ["released_reused", "released_revised"]
+verify_file_hashes: true
+
+caption_field: "auto"
+max_merged_seq_length: 2048
+
+# Require the model and dataset to agree on the emitted non-text modality.
+strict_modality_check: true

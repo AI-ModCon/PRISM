@@ -8,7 +8,6 @@ import time
 import warnings
 
 import datasets
-import h5py
 import numpy as np
 import requests
 import torch
@@ -2134,6 +2133,14 @@ class StreamingMultimodalDataset(IterableDataset):
 
         # 2. Define Generator (If Valid)
         def data_generator():
+            try:
+                import h5py
+            except ImportError as exc:
+                raise RuntimeError(
+                    "The Well HDF5 physics stream requires the optional h5py "
+                    "runtime and HDF5 shared libraries."
+                ) from exc
+
             while True:
                 try:
                     with h5py.File(file_path, "r") as f:

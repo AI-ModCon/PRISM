@@ -40,6 +40,9 @@ from .modalities import Modality
 
 logger = logging.getLogger(__name__)
 from .encoders import (
+    AIONImageEncoder,
+    AIONMultimodalEncoder,
+    AIONSpectrumEncoder,
     DNAEncoder,
     GeometryEncoder,
     GraphEncoder,
@@ -192,6 +195,12 @@ class UnifiedTransformer(nn.Module):
     def __init__(self, config: ModelConfig):
         super().__init__()
         self.config = config
+        self._joint_aion_enabled = bool(
+            Modality.IMAGE in config.modalities
+            and Modality.SPECTRUM in config.modalities
+            and config.image_encoder_type == "aion"
+            and config.spectrum_encoder_type == "aion"
+        )
         self.is_vla = config.is_vla
         self._backbone_load_error = None
 
@@ -450,6 +459,9 @@ class UnifiedTransformer(nn.Module):
         # --- Stage 1: Modality Encoders ---
         self.encoders = nn.ModuleDict()
         self.projectors = nn.ModuleDict()
+        # A modality normally owns an encoder with the same key. Joint AION
+        # maps image and spectrum to one registered owner instead.
+        self._encoder_key_by_modality: dict[str, str] = {}
 
         # Determine target dimension for projectors
         target_dim = self.backbone_dim
@@ -471,6 +483,39 @@ class UnifiedTransformer(nn.Module):
         # ModalityProjector instance).
         proj_hidden_mult = getattr(config, "projector_hidden_mult", 1)
         proj_num_layers = getattr(config, "projector_num_layers", 2)
+
+        projector_defaults = {
+            "norm_mode": proj_norm_mode,
+            "target_norm": proj_target_norm,
+            "modality_embed_pos": proj_embed_pos,
+            "modality_embed_scale": proj_embed_scale,
+            "text_norm_mean": proj_text_norm_mean,
+            "text_norm_std": proj_text_norm_std,
+            "text_elem_mean": proj_text_elem_mean,
+            "text_elem_std": proj_text_elem_std,
+            "norm_clip_min": proj_norm_clip_min,
+            "norm_clip_max": proj_norm_clip_max,
+            "hidden_mult": proj_hidden_mult,
+            "num_layers": proj_num_layers,
+        }
+
+        def projector_kwargs(modality: str) -> dict[str, object]:
+            """Resolve explicit modality settings over legacy global defaults."""
+
+            resolved = dict(projector_defaults)
+            if modality in {"image", "spectrum"}:
+                for field in (
+                    "norm_mode",
+                    "target_norm",
+                    "modality_embed_pos",
+                    "modality_embed_scale",
+                ):
+                    value = getattr(
+                        config, f"{modality}_projector_{field}", None
+                    )
+                    if value is not None:
+                        resolved[field] = value
+            return resolved
 
         logger.info(
             f"Projector config: norm_mode={proj_norm_mode}, target_norm={proj_target_norm}, embed_pos={proj_embed_pos}, embed_scale={proj_embed_scale}, hidden_mult={proj_hidden_mult}, num_layers={proj_num_layers}"
@@ -544,27 +589,90 @@ class UnifiedTransformer(nn.Module):
                 num_layers=proj_num_layers,
             )
 
+        # Joint AION owns the shared transformer exactly once. The standalone
+        # wrappers remain the unchanged path for single-modality models.
+        if self._joint_aion_enabled:
+            joint_aion_encoder = AIONMultimodalEncoder(
+                model_name_or_path=config.aion_model_name_or_path,
+                model_revision=config.aion_model_revision,
+                image_codec_revision=config.aion_codec_revision,
+                spectrum_codec_revision=config.aion_spectrum_codec_revision,
+                cache_dir=config.aion_cache_dir,
+                local_files_only=config.aion_local_files_only,
+                bands=config.aion_image_bands,
+                raw_image_size=config.aion_raw_image_size,
+                raw_spectrum_length=config.aion_raw_spectrum_length,
+            )
+            self.encoders["aion"] = joint_aion_encoder
+            self._encoder_key_by_modality.update(
+                {"image": "aion", "spectrum": "aion"}
+            )
+            image_tokens = joint_aion_encoder.tokens_per_instance("image")
+            spectrum_tokens = joint_aion_encoder.tokens_per_instance("spectrum")
+            if image_tokens != config.aion_num_image_tokens:
+                raise RuntimeError(
+                    "Configured AION image token count does not match the joint encoder: "
+                    f"config={config.aion_num_image_tokens}, encoder={image_tokens}."
+                )
+            if spectrum_tokens != config.aion_num_spectrum_tokens:
+                raise RuntimeError(
+                    "Configured AION spectrum token count does not match the joint encoder: "
+                    f"config={config.aion_num_spectrum_tokens}, encoder={spectrum_tokens}."
+                )
+
         # Image
         if Modality.IMAGE in config.modalities:
-            self.encoders["image"] = ImageEncoder(
-                d_img=config.d_img,
-                model_name=config.image_encoder_id,
-            )
+            if not self._joint_aion_enabled:
+                if config.image_encoder_type == "aion":
+                    self.encoders["image"] = AIONImageEncoder(
+                        model_name_or_path=config.aion_model_name_or_path,
+                        model_revision=config.aion_model_revision,
+                        codec_revision=config.aion_codec_revision,
+                        cache_dir=config.aion_cache_dir,
+                        local_files_only=config.aion_local_files_only,
+                        bands=config.aion_image_bands,
+                        raw_image_size=config.aion_raw_image_size,
+                    )
+                    emitted_tokens = self.encoders["image"].tokens_per_instance()
+                    if emitted_tokens != config.aion_num_image_tokens:
+                        raise RuntimeError(
+                            "Configured AION token count does not match the loaded encoder: "
+                            f"config={config.aion_num_image_tokens}, encoder={emitted_tokens}."
+                        )
+                else:
+                    self.encoders["image"] = ImageEncoder(
+                        d_img=config.d_img,
+                        model_name=config.image_encoder_id,
+                    )
+                self._encoder_key_by_modality["image"] = "image"
             self.projectors["image"] = ModalityProjector(
                 config.d_img,
                 target_dim,
-                norm_mode=proj_norm_mode,
-                target_norm=proj_target_norm,
-                modality_embed_pos=proj_embed_pos,
-                modality_embed_scale=proj_embed_scale,
-                text_norm_mean=proj_text_norm_mean,
-                text_norm_std=proj_text_norm_std,
-                text_elem_mean=proj_text_elem_mean,
-                text_elem_std=proj_text_elem_std,
-                norm_clip_min=proj_norm_clip_min,
-                norm_clip_max=proj_norm_clip_max,
-                hidden_mult=proj_hidden_mult,
-                num_layers=proj_num_layers,
+                **projector_kwargs("image"),
+            )
+
+        # Spectrum
+        if Modality.SPECTRUM in config.modalities:
+            if not self._joint_aion_enabled:
+                self.encoders["spectrum"] = AIONSpectrumEncoder(
+                    model_name_or_path=config.aion_model_name_or_path,
+                    model_revision=config.aion_model_revision,
+                    codec_revision=config.aion_spectrum_codec_revision,
+                    cache_dir=config.aion_cache_dir,
+                    local_files_only=config.aion_local_files_only,
+                    raw_spectrum_length=config.aion_raw_spectrum_length,
+                )
+                self._encoder_key_by_modality["spectrum"] = "spectrum"
+                emitted_tokens = self.encoders["spectrum"].tokens_per_instance()
+                if emitted_tokens != config.aion_num_spectrum_tokens:
+                    raise RuntimeError(
+                        "Configured AION spectrum token count does not match the loaded encoder: "
+                        f"config={config.aion_num_spectrum_tokens}, encoder={emitted_tokens}."
+                    )
+            self.projectors["spectrum"] = ModalityProjector(
+                config.d_spectrum,
+                target_dim,
+                **projector_kwargs("spectrum"),
             )
 
         # Geometry
@@ -722,18 +830,20 @@ class UnifiedTransformer(nn.Module):
             self.action_head = RegressionDecoder(target_dim, config.action_dim)
 
 
-        # Freeze Encoders if requested (Zone 1)
+        # Freeze encoders through capability-aware hooks. AION must keep its
+        # hard-quantized codec frozen even when its shared encoder is trainable;
+        # a blanket requires_grad mutation would be undone by its invariant
+        # enforcement on the next forward pass.
         if config.freeze_encoders:
             logger.info("Freezing Modality Encoders...")
-            for param in self.encoders.parameters():
-                param.requires_grad = False
-
-
-        # Cache frozen state for each encoder (avoids O(params) check in forward)
-        self._encoder_frozen_cache = {
-            modality: not any(p.requires_grad for p in encoder.parameters())
-            for modality, encoder in self.encoders.items()
-        }
+            self.set_encoders_trainable(False)
+        else:
+            # Most encoders are trainable when constructed. AION deliberately
+            # starts frozen, so explicitly opt its shared encoder into training.
+            for modality, encoder in self.encoders.items():
+                if callable(getattr(encoder, "set_shared_encoder_trainable", None)):
+                    self.set_encoder_trainable(modality, True)
+            self.refresh_encoder_frozen_cache()
 
         # --- Stage 3: Unified Transformer (Legacy / Custom) ---
         if self.backbone is None:
@@ -750,6 +860,99 @@ class UnifiedTransformer(nn.Module):
             # --- Stage 4: Output Head ---
             self.head = CausalLMHead(config.d_model, config.vocab_size)
 
+
+    # Sub-modalities that are encoded by their parent's encoder. DNA splits one
+    # "dna" entry into reference/variant spans that share a single DNAEncoder.
+    _PARENT_MODALITY_KEYS = {"dna_reference": "dna", "dna_variant": "dna"}
+
+    def _encoder_key_for_modality(self, modality: str | Modality) -> str:
+        modality_key = modality.value if isinstance(modality, Modality) else str(modality)
+        # getattr: models built via __new__ (routing unit tests) never ran
+        # __init__, so the ownership map can be absent. Same-name ownership is
+        # the correct default there.
+        owners = getattr(self, "_encoder_key_by_modality", None) or {}
+        if modality_key in owners:
+            return owners[modality_key]
+        return self._PARENT_MODALITY_KEYS.get(modality_key, modality_key)
+
+    def _tokens_per_instance_for_modality(self, modality: str | Modality) -> int:
+        """Resolve a modality token count through its registered encoder owner.
+
+        Standalone encoders expose ``tokens_per_instance()`` while a shared
+        multimodal owner needs the routed modality as
+        ``tokens_per_instance(modality)``. The ownership map is the source of
+        truth for selecting between those APIs, matching feature routing.
+        """
+
+        modality_key = modality.value if isinstance(modality, Modality) else str(modality)
+        encoder_key = self._encoder_key_for_modality(modality_key)
+        if encoder_key not in self.encoders:
+            raise KeyError(
+                f"Unknown encoder for modality {modality_key!r}; resolved owner "
+                f"{encoder_key!r}, available encoders: {list(self.encoders.keys())}"
+            )
+
+        tokens_per_instance = self.encoders[encoder_key].tokens_per_instance
+        if encoder_key == modality_key:
+            return int(tokens_per_instance())
+        return int(tokens_per_instance(modality_key))
+
+    def refresh_encoder_frozen_cache(self) -> dict[str, bool]:
+        """Refresh the per-modality cache while deduplicating shared owners."""
+
+        owner_frozen = {
+            encoder_key: not any(
+                parameter.requires_grad for parameter in encoder.parameters()
+            )
+            for encoder_key, encoder in self.encoders.items()
+        }
+        cache: dict[str, bool] = {}
+        for modality in self.config.modalities:
+            modality_key = str(modality)
+            encoder_key = self._encoder_key_for_modality(modality_key)
+            if encoder_key in owner_frozen:
+                cache[modality_key] = owner_frozen[encoder_key]
+        self._encoder_frozen_cache = cache
+        return dict(cache)
+
+    def set_encoder_trainable(self, modality: str | Modality, trainable: bool) -> int:
+        """Set one modality encoder (or shared owner) trainable safely.
+
+        Joint AION image and spectrum both resolve to the same registered
+        owner. Its capability hook toggles the shared transformer and both
+        modality embeddings together while keeping both codecs protected.
+        """
+
+        modality_key = modality.value if isinstance(modality, Modality) else str(modality)
+        encoder_key = self._encoder_key_for_modality(modality_key)
+        if encoder_key not in self.encoders:
+            raise KeyError(
+                f"Unknown encoder {modality_key!r}; available encoders: "
+                f"{list(self.encoders.keys())}"
+            )
+
+        encoder = self.encoders[encoder_key]
+        specialized_hook = getattr(encoder, "set_shared_encoder_trainable", None)
+        if callable(specialized_hook):
+            specialized_hook(bool(trainable))
+        else:
+            for parameter in encoder.parameters():
+                parameter.requires_grad_(bool(trainable))
+
+        self.refresh_encoder_frozen_cache()
+        return sum(
+            parameter.numel() for parameter in encoder.parameters() if parameter.requires_grad
+        )
+
+    def set_encoders_trainable(self, trainable: bool) -> dict[str, int]:
+        """Set each registered encoder owner once, including joint AION."""
+
+        trainable_counts = {
+            encoder_key: self.set_encoder_trainable(encoder_key, trainable)
+            for encoder_key in self.encoders
+        }
+        self.refresh_encoder_frozen_cache()
+        return trainable_counts
 
     def get_input_embeddings(self, inputs):
         """Helper to get embeddings from varied inputs."""
@@ -885,13 +1088,21 @@ class UnifiedTransformer(nn.Module):
                     # Padding must not affect projector batch statistics or
                     # consume encoder work, even before the sequence is merged.
                     encoder_input = encoder_input.flatten(0, 1)[reference_valid]
-                features = self.encoders[modality](encoder_input)
-                pad_mask = getattr(self.encoders[modality], "_last_pad_mask", None)
+                # Joint AION routes image/spectrum through one registered
+                # owner; every other encoder keeps its direct path.
+                modality_key = modality.value if isinstance(modality, Modality) else str(modality)
+                _encoder = self.encoders[self._encoder_key_for_modality(modality_key)]
+                _encode_modality = getattr(_encoder, "encode_modality", None)
+                if callable(_encode_modality):
+                    features = _encode_modality(modality_key, encoder_input)
+                else:
+                    features = _encoder(encoder_input)
+                pad_mask = getattr(_encoder, "_last_pad_mask", None)
 
-
-                # Detach if encoder is frozen (avoids backward through encoder)
-                # Use cached frozen state to avoid O(params) check every forward
-                if getattr(self, "_encoder_frozen_cache", {}).get(modality, False):
+                # Detach if encoder is frozen (avoids backward through encoder).
+                if getattr(self, "_encoder_frozen_cache", {}).get(
+                    modality_key, False
+                ):
                     features = features.detach()
 
 
@@ -1015,8 +1226,7 @@ class UnifiedTransformer(nn.Module):
         for i, modality in enumerate(modalities):
             start_mask = start_modality_idx == i
             if start_mask.any():
-                encoder_key = _PARENT_MODALITY.get(modality, modality)
-                tokens_per = int(self.encoders[encoder_key].tokens_per_instance())
+                tokens_per = self._tokens_per_instance_for_modality(modality)
                 slot_size[start_mask] = tokens_per
 
         # sanity checks
@@ -1083,9 +1293,7 @@ class UnifiedTransformer(nn.Module):
         final_attention_mask[batch_indices, text_positions] = 1
 
         tokens_per_instance = {
-            modality: int(
-                self.encoders[_PARENT_MODALITY.get(modality, modality)].tokens_per_instance()
-            )
+            modality: self._tokens_per_instance_for_modality(modality)
             for modality in modalities
         }
         expected_tokens = {
@@ -1633,13 +1841,9 @@ class UnifiedTransformer(nn.Module):
             if getattr(self.backbone.config, "_attn_implementation", "sdpa") == "eager":
                 # Pre-computed 4D causal mask: lower-triangular 0.0, upper -inf
                 # Shape: (1, 1, T, T) — broadcasts over batch and heads
-                causal_mask_fwd = torch.zeros(
-                    1, 1, T_fwd, T_fwd, device=x.device, dtype=x.dtype
-                )
+                causal_mask_fwd = torch.zeros(1, 1, T_fwd, T_fwd, device=x.device, dtype=x.dtype)
                 causal_mask_fwd.masked_fill_(
-                    ~torch.tril(
-                        torch.ones(T_fwd, T_fwd, device=x.device, dtype=torch.bool)
-                    ),
+                    ~torch.tril(torch.ones(T_fwd, T_fwd, device=x.device, dtype=torch.bool)),
                     torch.finfo(x.dtype).min,
                 )
                 if mask_padded:
@@ -1740,7 +1944,6 @@ class UnifiedTransformer(nn.Module):
             # ... (Original Logic) ...
             B, T_total, _ = x.shape
 
-
             # 1. Generate RoPE frequencies
             freqs_cis = self.rope(x, seq_len=T_total)
 
@@ -1777,10 +1980,8 @@ class UnifiedTransformer(nn.Module):
                 x, aux_loss = block(x, mask=mask, freqs_cis=freqs_cis)
                 total_aux_loss += aux_loss
 
-
             x = self.ln_f(x)
             logits = self.head(x)
-
 
             # Compute SFT loss manually if labels provided
             loss = total_aux_loss
@@ -1803,9 +2004,7 @@ class UnifiedTransformer(nn.Module):
                         # Same as Path A pad-mask (line 858).
                         pad_id_local = self._resolve_pad_id()
                         if pad_id_local is not None:
-                            assigned = assigned.masked_fill(
-                                assigned == pad_id_local, -100
-                            )
+                            assigned = assigned.masked_fill(assigned == pad_id_local, -100)
                         full_labels[:, -text_len:] = assigned
 
                 shift_labels = full_labels[..., 1:].contiguous()
@@ -1829,7 +2028,7 @@ class UnifiedTransformer(nn.Module):
                 but not the answer (which is what we want to generate).
         """
         is_interleaved_qa = bool(self.config.is_interleaved_qa)
-       
+
         if "table" in inputs:
             logger.warning("!!! DEBUG: Table Input Detected in Forward Pass !!!")
 
@@ -1853,14 +2052,8 @@ class UnifiedTransformer(nn.Module):
 
             # Get pad_token_id from tokenizer if available
             pad_token_id = kwargs.pop("pad_token_id", None)
-            if (
-                pad_token_id is None
-                and hasattr(self, "tokenizer")
-                and self.tokenizer is not None
-            ):
-                pad_token_id = (
-                    self.tokenizer.pad_token_id or self.tokenizer.eos_token_id
-                )
+            if pad_token_id is None and hasattr(self, "tokenizer") and self.tokenizer is not None:
+                pad_token_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id
 
             # Create attention mask, properly masking any pad tokens in the text.
             # The prefix (image/modality) tokens are always valid (no padding).
@@ -1947,7 +2140,6 @@ class UnifiedTransformer(nn.Module):
         if self.backbone:
             logger.info("Skipping load_pretrained_weights (Backbone already loaded).")
             return
-
 
         # ... (Previous Logic preserved if needed) ...
         pass

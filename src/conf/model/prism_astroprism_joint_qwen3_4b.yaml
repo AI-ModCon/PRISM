@@ -1,0 +1,55 @@
+# Joint AstroPRISM alignment: raw images and spectra -> shared AION -> Qwen3-4B.
+
+backbone_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+tokenizer_id: "${oc.env:ASTROPRISM_ROOT,_local/astroprism}/hf/models/qwen3-4b"
+freeze_backbone: true
+freeze_encoders: true
+
+d_text: 2560
+d_img: 768
+d_spectrum: 768
+
+# A single registered AION transformer serves both frozen raw-modality codecs.
+image_encoder_type: "aion"
+spectrum_encoder_type: "aion"
+image_encoder_id: null
+image_processor_id: null
+image_processor_strict: false
+image_size: 160
+aion_model_name_or_path: "polymathic-ai/aion-base"
+aion_model_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_codec_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+aion_spectrum_codec_revision: "40541618104bab0fa85c8af68daeb867a720bb8c"
+# huggingface_hub's cache_dir is the hub directory itself, unlike HF_HOME
+# which has hub/ appended. null uses the ambient cache, which is what the
+# released checkpoint's training_config.yaml records.
+aion_cache_dir: null
+aion_local_files_only: true
+aion_image_bands: ["DES-G", "DES-R", "DES-I", "DES-Z"]
+aion_num_image_tokens: 576
+aion_raw_image_size: [160, 160]
+aion_num_spectrum_tokens: 273
+aion_raw_spectrum_length: 7781
+
+attn_implementation: "sdpa"
+
+modalities:
+  - "text"
+  - "image"
+  - "spectrum"
+
+# Preserve the architectures used by the two independently trained adapters.
+projector_norm_mode: "none"
+projector_target_norm: 0.25
+projector_modality_embed_pos: "after_norm"
+projector_modality_embed_scale: 0.02
+image_projector_norm_mode: "none"
+image_projector_target_norm: 0.25
+image_projector_modality_embed_pos: "after_norm"
+image_projector_modality_embed_scale: 0.02
+spectrum_projector_norm_mode: "text_scaled_layernorm"
+spectrum_projector_target_norm: 1.04
+spectrum_projector_modality_embed_pos: "before_norm"
+spectrum_projector_modality_embed_scale: 0.02
+projector_hidden_mult: 1
+projector_num_layers: 2

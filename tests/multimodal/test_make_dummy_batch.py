@@ -10,6 +10,15 @@ def test_image_dummy_shape():
     assert t.shape == (3, 224, 224)
 
 
+def test_spectrum_dummy_has_raw_desi_fields():
+    spectrum = make_dummy_batch(Modality.SPECTRUM)
+    assert isinstance(spectrum, dict)
+    assert set(spectrum) == {"flux", "ivar", "mask", "wavelength"}
+    assert all(tensor.shape == (7781,) for tensor in spectrum.values())
+    assert spectrum["mask"].dtype == torch.bool
+    assert torch.all(torch.diff(spectrum["wavelength"]) > 0)
+
+
 def test_table_dummy_is_long():
     t = make_dummy_batch(Modality.TABLE)
     assert t.dtype == torch.long

@@ -415,3 +415,15 @@ def test_web_shared_venv_uses_environment_venv_path(tmp_path):
     )
     script_text = (tmp_path / generated_line.split(": ", 1)[1].strip()).read_text()
     assert 'source "/flare/ModCon/sww/prism-envs/qwen3-siglip-py3.12/bin/activate"' in script_text
+
+
+def test_skip_model_staging_rejects_remote_model_ids(tmp_path):
+    """Without absolute shared paths, skipping staging would leave nothing to load."""
+    result = _run_launcher(
+        tmp_path,
+        "vlm",
+        extra_args=("--skip-model-staging",),
+    )
+    assert result.returncode != 0
+    assert "--skip-model-staging requires absolute, existing shared paths" in result.stderr
+    assert "model.backbone_id" in result.stderr

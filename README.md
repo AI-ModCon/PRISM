@@ -176,6 +176,7 @@ Per-platform detail, including lockfile regeneration:
 | **Text** | [OLMo-1B / OLMo-3 7B](https://huggingface.co/allenai/OLMo-7B-0724-hf) | 2048 / 4096 |
 | **Image** | [SigLIP2](https://huggingface.co/google/siglip2-base-patch16-224) | 768 |
 | **Time series** | [Moirai 2.0](https://huggingface.co/Salesforce/moirai-2.0-R-small) / [Intern-S2 preview](https://huggingface.co/internlm/Intern-S2-Preview-397B) / [TimeOmni](https://arxiv.org/abs/2510.03255) | Variable by backend |
+| **Spectrum** | [AION-1 Base](https://huggingface.co/polymathic-ai/aion-base) | 768 |
 | **DNA** | [Nucleotide Transformer v2 500M](https://huggingface.co/InstaDeepAI/nucleotide-transformer-v2-500m-multi-species) | 1024 |
 | **Geometry** | [Walrus](https://huggingface.co/polymathic-ai/walrus) | 512 |
 | **Graph** | GraphMAE2 (PyG) | 768 |
@@ -193,10 +194,11 @@ actually exercised by shipped configs and CI, not what the architecture permits.
 
 | Modality | Status | Shipped model configs | Notes |
 |---|---|---|---|
-| **Text** | Supported | 26 of 26 | Every config enables it. With an HF backbone, the backbone's own embeddings are used and `TextEncoder` is bypassed. |
-| **Image** | Supported | 9 of 26 | Best-validated multimodal path; the basis of the scaling results below. |
-| **Time series** | Supported | 14 of 26 | Five encoder backends (`linear`, `moirai`, `intern_s2`, `intern_s2_397b`, `timeomni`). One of two modalities with a vLLM inference processor (the other is image). |
-| **DNA** | Supported | 2 of 26 | Nucleotide Transformer encoder (`src/encoders/dna.py`), used by the BioReason/KEGG path — see [docs/applications/bioreason_grpo.md](docs/applications/bioreason_grpo.md). Input-only. |
+| **Text** | Supported | 29 of 29 | Every config enables it. With an HF backbone, the backbone's own embeddings are used and `TextEncoder` is bypassed. |
+| **Image** | Supported | 11 of 29 | Best-validated multimodal path; the basis of the scaling results below. |
+| **Time series** | Supported | 14 of 29 | Five encoder backends (`linear`, `moirai`, `intern_s2`, `intern_s2_397b`, `timeomni`). One of two modalities with a vLLM inference processor (the other is image). |
+| **DNA** | Supported | 2 of 29 | Nucleotide Transformer encoder (`src/encoders/dna.py`), used by the BioReason/KEGG path — see [docs/applications/bioreason_grpo.md](docs/applications/bioreason_grpo.md). Input-only. |
+| **Spectrum** | Supported | 2 of 29 | AION-1 Base codec + shared encoder (`src/encoders/aion_spectrum.py`), used by the AstroPRISM path — see [docs/tutorials/astroprism/astroprism_tutorial.md](docs/tutorials/astroprism/astroprism_tutorial.md). Input-only. |
 | **Graph** | Experimental | 0 | Requires `torch_geometric`. Runs in the per-modality sweep (172.7 samp/s) but no shipped model config enables it, and the handler is labelled untested in its own smoke config. |
 | **Table** | Experimental | 0 | TAPAS-based; runs in the sweep (65.5 samp/s). Input-only — no output decoder. No shipped model config enables it. |
 | **Geometry** | Experimental | 0 | Requires `walrus` and `the_well`. Runs in the sweep (69.4 samp/s) **on synthetic data** — no real PDEBench corpus is staged, and `GeometryEncoder` hardcodes `input_dim=6`. A `WALRUS_FALLBACK=1` stub exists for smoke runs and produces meaningless features. |

@@ -149,6 +149,7 @@ jobs:
       - name: Launcher contracts
         run: |
           pytest -q \
+            tests/test_launch_aurora.py \
             tests/test_launch_aurora_web_vla.py \
             tests/platform/test_perlmutter_launch_contract.py \
             tests/platform/test_hpc_bridge_contract.py \

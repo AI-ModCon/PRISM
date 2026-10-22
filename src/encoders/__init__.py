@@ -9,6 +9,9 @@ contract. This module only re-exports the encoder classes.
 # GraphEncoder and GeometryEncoder both swallow their own optional-dep
 # ImportErrors at module level, so importing them here always succeeds. The
 # loud failure happens inside their __init__ via require_modality_deps().
+from .aion_image import AIONImageEncoder
+from .aion_multimodal import AIONMultimodalEncoder
+from .aion_spectrum import AIONSpectrumEncoder
 from .crystal_graph import CrystalGraphTokenEncoder
 from .dna import DNAEncoder
 from .geometry import GeometryEncoder
@@ -23,6 +26,9 @@ __all__ = [
     "TableEncoder",
     "TimeSeriesEncoder",
     "ImageEncoder",
+    "AIONImageEncoder",
+    "AIONMultimodalEncoder",
+    "AIONSpectrumEncoder",
     "GeometryEncoder",
     "GraphEncoder",
     "CrystalGraphTokenEncoder",

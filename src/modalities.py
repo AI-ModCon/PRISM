@@ -41,6 +41,7 @@ class Modality(str, Enum):
 
     TEXT = "text"
     IMAGE = "image"
+    SPECTRUM = "spectrum"
     TABLE = "table"
     TIME_SERIES = "time_series"
     GEOMETRY = "geometry"
@@ -85,6 +86,8 @@ def make_dummy_batch(
     - text: handled by tokenizer downstream (returns None here)
     - image: (3, 224, 224) — SigLIP2 input shape, matches `_process_image`
       `default_tensor` in src/data/multimodal.py
+    - spectrum: dict of flux/ivar/mask/wavelength tensors, each with shape
+      (7781,), matching the raw DESI input expected by AION's spectrum codec
     - table: (128,) int64 token ids — TAPAS input length, matches
       `default_ids` in `_process_table_*`
     - time_series: (64, 1) float — Moirai single-channel window (the
@@ -106,6 +109,13 @@ def make_dummy_batch(
         return None
     if m is Modality.IMAGE:
         return torch.zeros(3, 224, 224)
+    if m is Modality.SPECTRUM:
+        return {
+            "flux": torch.zeros(7781),
+            "ivar": torch.ones(7781),
+            "mask": torch.zeros(7781, dtype=torch.bool),
+            "wavelength": torch.linspace(3600.0, 9800.0, 7781),
+        }
     if m is Modality.TABLE:
         return torch.zeros(128, dtype=torch.long)
     if m is Modality.TIME_SERIES:

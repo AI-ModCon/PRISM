@@ -1,0 +1,43 @@
+# AstroPRISM Stage 1B spectrum-only reviewed-caption alignment.
+#
+# This run aligns raw DESI spectra to promoted, reviewed spectrum captions.
+# Only the immutable train split is enabled for gradients; validation and test
+# remain evaluation-only in the artifact and evaluation stays disabled here.
+# The launch command must supply shared paths through ASTROPRISM_ROOT.
+
+experiments:
+  - id: ASTROPRISM-STAGE1B-SPECTRUM
+    name: "AstroPRISM Stage 1B: frozen AION/Qwen reviewed spectrum captions"
+    resources:
+      ngpus: 12
+      topology: "12xpu_aurora"
+      walltime: "01:00:00"
+    common_overrides:
+      model: prism_astroprism_spectrum_qwen3_4b
+      training: astroprism_stage1b_spectrum
+      +data: astroprism_stage1b_spectrum
+
+      training.task: astroprism_stage1b_spectrum
+      training.device: xpu
+      training.batch_size: 2
+      training.gradient_accumulation_steps: 1
+      training.max_steps: 100
+      training.save_every_n_steps: 50
+      training.freeze_llm: true
+      training.freeze_vit: true
+
+      # No image tower is active; AION spectrum assets are resolved from the
+      # pinned offline cache configured by the model preset.
+      model.image_encoder_id: null
+      model.freeze_backbone: true
+      model.freeze_encoders: true
+      model.projector_norm_mode: text_scaled_layernorm
+      model.projector_target_norm: 1.04
+      model.projector_modality_embed_pos: before_norm
+
+      data.split: train
+      data.accepted_caption_statuses: [accepted]
+      data.verify_file_hashes: true
+
+      wandb.project: astroprism-stage1b-spectrum
+      wandb.mode: offline
