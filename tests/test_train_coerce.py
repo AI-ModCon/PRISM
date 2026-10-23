@@ -1,11 +1,15 @@
 """Unit tests for src/train.py helpers.
 
 Currently tests _coerce_str_or_none, the defensive coerce that prevents
-empty OmegaConf containers from polluting perf.jsonl with "sweep_id": "{}".
+empty OmegaConf containers from polluting perf.jsonl with "sweep_id": "{}",
+and _coerce_listconfig, which turns a Hydra ListConfig into a plain list so
+training_state.json records a list rather than its string form.
 """
 
+import json
+
 import pytest
-from src.train import _coerce_str_or_none
+from src.train import _coerce_listconfig, _coerce_str_or_none
 
 
 def test_none_passes_through():
@@ -50,6 +54,22 @@ def test_nonempty_dict_stringifies():
 
 def test_integer_stringifies():
     assert _coerce_str_or_none(42) == "42"
+
+
+def test_listconfig_becomes_plain_list():
+    """Left as a ListConfig, json.dump(..., default=str) records "['q_proj', 'v_proj']"."""
+    omegaconf = pytest.importorskip("omegaconf")
+    # A ListConfig, as cfg.training.get() returns it.
+    targets = omegaconf.OmegaConf.create({"t": ["q_proj", "v_proj"]}).t
+    out = _coerce_listconfig(targets)
+    assert type(out) is list
+    assert json.dumps(out) == '["q_proj", "v_proj"]'
+
+
+@pytest.mark.parametrize("value", [None, "q_proj", ["q_proj"]])
+def test_non_listconfig_passes_through(value):
+    """A bare string must reach apply_lora_torchtune intact, which rejects it."""
+    assert _coerce_listconfig(value) is value
 
 
 # === Hydra wire-through regression tests ===
@@ -169,4 +189,19 @@ def test_train_py_threads_seed_into_training_config():
     assert re.search(r"seed\s*=\s*seed\s*,", text), (
         "src/train.py missing `seed=seed,` in TrainingConfig(...) — perf.jsonl "
         "startup_param_count event won't carry the resolved seed"
+    )
+
+
+def test_train_py_coerces_lora_target_modules():
+    """`cfg.training.lora_target_modules` must pass through _coerce_listconfig,
+    so TrainingConfig holds a plain list rather than an OmegaConf ListConfig.
+    """
+    text = _train_py_text()
+    pattern = re.compile(
+        r"lora_target_modules\s*=\s*_coerce_listconfig\(\s*cfg\.training\.get\(\s*['\"]lora_target_modules['\"]",
+        re.MULTILINE,
+    )
+    assert pattern.search(text), (
+        "src/train.py missing `lora_target_modules=_coerce_listconfig(cfg.training.get('lora_target_modules', ...))` "
+        "— TrainingConfig would hold a ListConfig"
     )

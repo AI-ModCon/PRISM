@@ -25,14 +25,60 @@ def _load_adapter_meta(adapter_path: str) -> dict | None:
         return json.load(f)
 
 
+def _select_lora_targets(
+    backbone: nn.Module,
+    exclude: tuple[str, ...],
+    target_modules: list[str] | None,
+) -> list[tuple[str, nn.Linear]]:
+    """Return the (dotted name, nn.Linear) pairs that apply_lora_torchtune replaces.
+
+    Every nn.Linear whose leaf name is not in exclude, restricted to the leaf names
+    in target_modules when that is not None. Kept free of torchtune so the name
+    checks can be tested in CI, which does not install it.
+
+    Raises:
+        TypeError: If target_modules is a bare string rather than a list of names.
+        ValueError: If target_modules is empty, or names a module that matches no
+            non-excluded nn.Linear (a typo would otherwise train nothing there).
+    """
+    if isinstance(target_modules, str):
+        raise TypeError(
+            f"target_modules must be a list of leaf module names, got the string "
+            f"{target_modules!r}; write [{target_modules!r}]"
+        )
+    targets = None if target_modules is None else set(target_modules)
+    if targets is not None and not targets:
+        raise ValueError("target_modules is empty; use None to adapt every nn.Linear")
+
+    selected = []
+    for name, module in backbone.named_modules():
+        if isinstance(module, nn.Linear):
+            leaf = name.split(".")[-1]
+            if leaf not in exclude and (targets is None or leaf in targets):
+                selected.append((name, module))
+
+    if targets is not None:
+        unmatched = sorted(targets - {name.split(".")[-1] for name, _ in selected})
+        if unmatched:
+            raise ValueError(
+                f"target_modules {unmatched} matched no nn.Linear in the backbone "
+                f"(excluded: {list(exclude)})"
+            )
+    return selected
+
+
 def apply_lora_torchtune(
     backbone: nn.Module,
     rank: int = 32,
     alpha: float = 64.0,
     dropout: float = 0.05,
     exclude: tuple[str, ...] = ("lm_head",),
+    target_modules: list[str] | None = None,
 ) -> nn.Module:
-    """Replace every nn.Linear in backbone (except exclusions) with torchtune LoRALinear.
+    """Replace nn.Linear layers in backbone with torchtune LoRALinear.
+
+    By default every nn.Linear except the exclusions is replaced; target_modules
+    restricts replacement to the listed leaf names.
 
     Base weights are copied from the original layer, then frozen via set_trainable_params.
     Only lora_a.weight and lora_b.weight remain trainable.
@@ -43,9 +89,16 @@ def apply_lora_torchtune(
         alpha: LoRA alpha scaling factor.
         dropout: Dropout applied to the LoRA path.
         exclude: Leaf module names to skip (default: lm_head).
+        target_modules: Leaf module names to adapt, e.g. ["q_proj", "v_proj"].
+            None (default) adapts every nn.Linear not in exclude.
 
     Returns:
         The modified backbone with LoRA layers.
+
+    Raises:
+        TypeError: If target_modules is a bare string rather than a list of names.
+        ValueError: If target_modules is empty, or names a module that matches no
+            non-excluded nn.Linear (a typo would otherwise train nothing there).
     """
     from torchtune.modules.peft import LoRALinear, get_adapter_params, set_trainable_params
 
@@ -57,12 +110,7 @@ def apply_lora_torchtune(
         return parent, parts[-1]
 
     # Collect replacements first to avoid mutating the module tree mid-iteration.
-    to_replace = []
-    for name, module in backbone.named_modules():
-        if isinstance(module, nn.Linear):
-            leaf = name.split(".")[-1]
-            if leaf not in exclude:
-                to_replace.append((name, module))
+    to_replace = _select_lora_targets(backbone, exclude, target_modules)
 
     replaced = 0
     for name, module in to_replace:
@@ -123,7 +171,13 @@ def save_lora_adapter(
     logger.info(f"LoRA adapter saved to {path} ({len(adapter_state)} tensors, {n:,} params)")
 
     if rank is not None or alpha is not None or target_modules is not None:
-        meta = {"rank": rank, "alpha": alpha, "target_modules": target_modules}
+        # list(): Hydra hands target_modules over as an OmegaConf ListConfig,
+        # which json cannot serialize.
+        meta = {
+            "rank": rank,
+            "alpha": alpha,
+            "target_modules": None if target_modules is None else list(target_modules),
+        }
         meta_path = _meta_path(path)
         with open(meta_path, "w") as f:
             json.dump(meta, f)
