@@ -146,7 +146,9 @@ class TrainingConfig:
     lora_r: int = 32
     lora_alpha: int = 64
     lora_dropout: float = 0.05
-    lora_target_modules: list[str] | None = None  # Auto-detected if None
+    # Leaf module names to adapt, e.g. ["q_proj", "v_proj"]; None adapts every
+    # nn.Linear except lm_head.
+    lora_target_modules: list[str] | None = None
     # Alpha to use when merging a resumed SFT-stage LoRA adapter into the base
     # weights before creating fresh GRPO-rank LoRALinear layers (the two
     # stages' adapters aren't rank-compatible for direct loading). Defaults to
