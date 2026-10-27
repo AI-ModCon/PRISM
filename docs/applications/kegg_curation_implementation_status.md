@@ -10,8 +10,8 @@ ground truth for "what was planned and why."
 
 All code lives in `src/data/kegg_curation/`. All pipeline **output data**
 (checkpoints + downloaded genome) lives outside the repo, under
-`$KEGG_CURATION_DATA_ROOT` (env var, defaults to
-`/lus/eagle/projects/argonne_tpc/abalaji/modcon/dataset/kegg_curation`) —
+`$KEGG_CURATION_DATA_ROOT` (env var; the code default is a placeholder, so set it, e.g.
+`${PRISM_DATA_ROOT}/kegg_curation`) —
 never committed to git.
 
 **Update (2026-07-30)**: the full 10-stage pipeline now runs end-to-end
@@ -842,13 +842,13 @@ the deferred regex-vs-LLM comparison for stage 03's fallback path.
 ## Environment / How to Run the Full Pipeline
 
 ```bash
-export PATH=/lus/eagle/projects/argonne_tpc/abalaji/conda_env/prism/bin:$PATH
+export PATH=${PRISM_CONDA_ENV}/bin:$PATH
 export http_proxy=http://proxy.alcf.anl.gov:3128     # needed on ALCF compute nodes
 export https_proxy=http://proxy.alcf.anl.gov:3128
-export KEGG_CURATION_DATA_ROOT=/lus/eagle/projects/argonne_tpc/abalaji/modcon/dataset/kegg_curation
+export KEGG_CURATION_DATA_ROOT=${PRISM_DATA_ROOT}/kegg_curation
 export NCBI_ENTREZ_EMAIL=your-email@example.com      # required for stages 04, 07
 # export ANTHROPIC_API_KEY=...                        # only if reasoning_backend="claude"
-cd /home/abalaji/projects/modcon/genome/BaseMM_PRISM
+cd ${PRISM_REPO_ROOT}
 
 python -m src.data.kegg_curation.01_fetch_kegg_networks
 python -m src.data.kegg_curation.02_extract_variant_ids
@@ -863,7 +863,7 @@ python -m src.data.kegg_curation.10_assemble_dataset
 ```
 
 Dependencies (already installed in the `prism` conda env at
-`/lus/eagle/projects/argonne_tpc/abalaji/conda_env/prism`):
+`${PRISM_CONDA_ENV}`):
 `biopython`, `anthropic` (both added to `requirements.txt`; `kegg_pull`
 was added then removed once found to be broken — see stage 01/`kegg_rest.py`
 notes above).

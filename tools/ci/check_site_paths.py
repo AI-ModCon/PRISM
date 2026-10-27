@@ -50,7 +50,14 @@ SCANNED_PREFIXES = (
     "tests/",
     "examples/",
     "docs/",
+    "experiments/",
+    "scaling-study/",
+    "requirements/",
+    ".github/",
 )
+
+#: Tracked files at the repository root (``.env.template``, ``README.md``,
+#: ``CHANGELOG.md``, ``Makefile`` ...) are scanned too; see ``tracked_files``.
 
 #: Subtrees within a scanned prefix that are exempt, and why. These are not
 #: "not worth fixing" -- they are frozen artifacts where the path IS the
@@ -89,11 +96,46 @@ PLACEHOLDER = re.compile(r"<[^<>/\s]+>|\$\{|\$[A-Za-z_]|\.\.\.")
 #: (``/flare/ModCon``) is a project name that appears in prose and in the
 #: allocation settings, and is not by itself a user's private path.
 #:
+#: ``grand``/``gpfs``/``lustre`` are the ALCF (Polaris) and generic
+#: parallel-filesystem roots.
+#:
 #: ``pscratch`` is NERSC's: Perlmutter docs leaked ``/pscratch/sd/<i>/<user>``
 #: paths past this gate until it was added.
 SITE_PATH = re.compile(
-    r"/(?:lus|flare|eagle|global|home|raid|pscratch)(?:/[^\s\"'`,;:)\]}]+){2,}"
+    r"/(?:lus|flare|eagle|grand|gpfs|lustre|global|home|raid|pscratch)(?:/[^\s\"'`,;:)\]}]+){2,}"
 )
+
+
+#: Internal identities that give a path away -- or leak without one, in prose
+#: or behind a root SITE_PATH does not know. Counted like a path and ratcheted
+#: the same way. Occurrences already inside a matched site path are not counted
+#: twice. Names are matched case-sensitively as whole words.
+IDENTITY = re.compile(r"\b(?:ngetty|abalaji|smadireddy|BaseMM_PRISM)\b")
+
+#: Files exempt from the identity scan only (site paths there still count):
+#: contributor metadata and contact files that publish author emails on purpose, and this gate
+#: and its tests, which must spell the names out to detect them.
+IDENTITY_EXEMPT = (
+    ".mailmap",
+    "CITATION.cff",
+    "CODE_OF_CONDUCT.md",
+    "SECURITY.md",
+    "pyproject.toml",
+    "tools/ci/check_site_paths.py",
+    "tests/test_site_path_gate.py",
+)
+
+
+def identities(text: str) -> list[tuple[int, str]]:
+    """Return ``(line_number, name)`` for internal identities outside site paths."""
+    found = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        spans = [m.span() for m in SITE_PATH.finditer(line)]
+        for match in IDENTITY.finditer(line):
+            if any(a <= match.start() < b for a, b in spans):
+                continue
+            found.append((line_no, match.group(0)))
+    return found
 
 
 def occurrences(text: str) -> list[tuple[int, str]]:
@@ -111,7 +153,7 @@ def occurrences(text: str) -> list[tuple[int, str]]:
 def tracked_files() -> list[str]:
     """Every tracked path under a scanned prefix, from git rather than a walk."""
     listing = subprocess.run(
-        ["git", "ls-files", "-z", "--", *SCANNED_PREFIXES],
+        ["git", "ls-files", "-z", "--", ":(glob)*", *SCANNED_PREFIXES],
         cwd=_ROOT,
         capture_output=True,
         check=True,
@@ -140,6 +182,8 @@ def scan() -> tuple[dict[str, int], dict[str, list[tuple[int, str]]]]:
             # Binary fixtures and anything unreadable carry no reviewable path.
             continue
         found = occurrences(text)
+        if path not in IDENTITY_EXEMPT:
+            found = sorted(found + identities(text))
         if found:
             counts[path] = len(found)
             detail[path] = found

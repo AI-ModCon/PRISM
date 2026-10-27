@@ -20,9 +20,9 @@
 
 set -euo pipefail
 
-PROJ_DIR="/lus/flare/projects/ModCon/ngetty/BaseMM_PRISM"
-DAOS_MOUNT="/tmp/ngetty/AuroraGPT/prism_training_data"
-DAOS_MODELS_MOUNT="/tmp/ngetty/AuroraGPT/prism_models"
+PROJ_DIR="${PRISM_REPO_ROOT:?set PRISM_REPO_ROOT}"
+DAOS_MOUNT="/tmp/${USER}/AuroraGPT/prism_training_data"
+DAOS_MODELS_MOUNT="/tmp/${USER}/AuroraGPT/prism_models"
 HOSTNAME_HSN="$(hostname).hsn.cm.aurora.alcf.anl.gov"
 OUTPUT_DIR="${PROJ_DIR}/outputs/composite-interactive/$(date +%Y-%m-%d/%H-%M-%S)"
 
@@ -149,7 +149,7 @@ if [ ! -f "${LOCAL_ENV}/bin/activate" ]; then
     # --strip-components=1 removes the .venv-deepspeed/ prefix from the tarball
     tar --strip-components=1 -xzf "${ENV_TARBALL}" -C "${LOCAL_ENV}"
     # Fix VIRTUAL_ENV to point to /tmp (avoid Lustre metadata lookups at runtime)
-    sed -i 's|/lus/flare/projects/ModCon/ngetty/BaseMM_PRISM/.venv-deepspeed|/tmp/deepspeed_env|g' "${LOCAL_ENV}/bin/activate"
+    sed -i "s|${PROJ_DIR}/.venv-deepspeed|/tmp/deepspeed_env|g" "${LOCAL_ENV}/bin/activate"
     echo "Venv extraction complete"
 else
     echo "Venv already extracted at ${LOCAL_ENV}"

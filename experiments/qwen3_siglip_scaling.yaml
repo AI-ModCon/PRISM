@@ -1,3 +1,6 @@
+# TODO(release): study record, kept for now because docs/results/qwen3_siglip_scaling_experiments.md documents it. Decide before
+# v0.1.0: keep and scrub, or remove with the other scaling-study files.
+# Known leaks to resolve: the results docs it backs, which cite internal run paths (allowlisted).
 # Reproducible Qwen3 + SigLIP2 scaling designs.
 #
 # Launch with tools/launch_aurora_web.py in --dataset-groups mode using
