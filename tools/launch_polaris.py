@@ -154,7 +154,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Filesystem root the dataset YAML's relative paths are resolved against. "
         "Polaris equivalent of Aurora's DAOS_MOUNT. Used together with "
-        "--dataset-groups. Example: /eagle/ModCon/ngetty/datasets/",
+        "--dataset-groups. Example: ${PRISM_DATA_ROOT}/datasets/",
     )
     p.add_argument(
         "--dataset-config",

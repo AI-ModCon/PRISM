@@ -1,3 +1,6 @@
+# TODO(release): study record, kept for now because tools/qwen3_siglip_2node_search.py and its test default to it. Decide before
+# v0.1.0: keep and scrub, or remove with the other scaling-study files.
+# Known leaks to resolve: tools/qwen3_siglip_2node_search.py and tests/test_qwen3_siglip_2node_search.py carry allowlisted site paths.
 experiments:
   - id: PRISM-QWEN3-SIGLIP-2N-SEARCH
     name: "Two-node Qwen3/SigLIP throughput search"

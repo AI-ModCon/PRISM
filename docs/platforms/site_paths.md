@@ -29,6 +29,15 @@ documented in [`.env.template`](../../.env.template) but are **not** part of
 `SITE_VARIABLES`, so they get no `<unset:NAME>` placeholder and no
 `require_resolved()` error — an unset one fails wherever it is used.
 
+Two plain shell variables are read only by the bioreason and GRPO scripts
+(`applications/bioreason/scripts/`, `scripts/smoke_test_grpo.sh`):
+`PRISM_CONDA_ENV` (the conda environment to activate) and `PRISM_REPO_ROOT`
+(the checkout to `cd` into, smoke test only). They are documented in
+`.env.template`, are not resolved by `src/site_paths.py`, and the scripts exit
+with a `set <NAME>` message when one is unset. The same scripts take their
+checkpoint, output and Hugging Face cache locations from `PRISM_OUTPUT_ROOT`
+and `PRISM_HF_HUB`.
+
 ## Where the values come from
 
 Highest precedence first:

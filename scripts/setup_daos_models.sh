@@ -28,10 +28,10 @@ MOUNT_BASE="/tmp/${USER}/${DAOS_POOL}"
 MOUNT_PATH="${MOUNT_BASE}/${DAOS_CONT}"
 
 # Source location for models (HuggingFace Hub Cache)
-# Primary source - ngetty's hub
-MODEL_ROOT="${MODEL_ROOT:-/flare/ModCon/ngetty/huggingface/hub}"
-# Secondary source - sandeep's hub (has walrus)
-MODEL_ROOT_ALT="/flare/ModCon/sandeep/hub"
+# Primary source - defaults to the PRISM_HF_HUB hub cache
+MODEL_ROOT="${MODEL_ROOT:-${PRISM_HF_HUB:?set MODEL_ROOT or PRISM_HF_HUB}}"
+# Secondary source - optional second hub cache (e.g. one holding walrus)
+MODEL_ROOT_ALT="${MODEL_ROOT_ALT:-/nonexistent/alt-model-root}"
 
 # PRISM model registry: models required for training
 # Format: "model_id" (HuggingFace format, converted to models--org--name internally)

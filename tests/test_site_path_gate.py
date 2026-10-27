@@ -184,3 +184,23 @@ def test_gate_exits_zero_on_the_current_tree():
         [sys.executable, _GATE], cwd=_ROOT, capture_output=True, text=True, check=False
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_internal_identities_are_flagged_outside_paths():
+    text = "see " + _path("flare", "ModCon", "ngetty", "x") + " and ngetty plus BaseMM_PRISM"
+    assert [name for _, name in gate.identities(text)] == ["ngetty", "BaseMM_PRISM"]
+
+
+def test_identity_inside_a_site_path_is_not_double_counted():
+    assert gate.identities(_path("flare", "ModCon", "ngetty", "x")) == []
+
+
+def test_identity_scan_skips_contributor_metadata():
+    for path in ("CITATION.cff", "pyproject.toml", ".mailmap", "SECURITY.md"):
+        assert path in gate.IDENTITY_EXEMPT
+
+
+def test_experiments_and_root_files_are_scanned():
+    scanned = gate.tracked_files()
+    assert "experiments/prism_designs.yaml" in scanned
+    assert "README.md" in scanned
