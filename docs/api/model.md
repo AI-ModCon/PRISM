@@ -74,6 +74,53 @@ config = ModelConfig.from_preset("prism-olmo3-7b")
 model = UnifiedTransformer(config)
 ```
 
+## Backend metadata contract (version 1)
+
+`src.backends` provides metadata/discovery/resolution only. It imports only the
+standard library and never constructs a model, imports torch/transformers,
+fetches assets, or contacts a network. There is no automatic execution
+integration: callers explicitly pass the selectors to `resolve_backend`.
+
+```python
+from src.backends import describe_backend, list_backends, resolve_backend
+
+list_backends()  # ("local_ar", "hf_ar", "u2_reference", "u2_native")
+describe_backend("u2_native").status  # "planned" (discovery is allowed)
+resolve_backend(required_capabilities=("causal_forward",)).name  # "local_ar"
+resolve_backend(llm_backbone_id="allenai/Olmo-3-7B-Instruct").name  # "hf_ar"
+```
+
+`BackendDescriptor` is frozen, with `name`, `contract_version=1`, immutable
+`frozenset[str]` capabilities, and `status` (`"existing"` or `"planned"`).
+The builtin registry is immutable; `list_backends()` returns its names as a
+tuple in the order shown above. `describe_backend(name)` returns a descriptor.
+
+| Backend | Status | Capabilities |
+|---------|--------|--------------|
+| `local_ar` | existing | `causal_forward` |
+| `hf_ar` | existing | `causal_forward`, `autoregressive_generate` |
+| `u2_reference` | planned | none |
+| `u2_native` | planned | none |
+
+`resolve_backend(*, backend=None, llm_backbone_id=None, contract_version=1,
+required_capabilities=())` returns a descriptor. Default selection follows
+the current `llm_backbone_id` truthiness: `None` or `""` selects local; any
+nonempty string selects HF. It does not validate the model ID or availability.
+Legacy `hf_model_id` is a weight-initialization field, not a selector; presets
+that set only that field still resolve to local. Explicit `hf_ar` requires a
+nonempty backbone ID; explicit `local_ar` with a nonempty ID raises `ValueError`.
+Malformed/unknown selectors, versions other than integer 1 (including `True`),
+and unknown/unsupported capability requests also raise `ValueError`. Capabilities
+are an iterable of names, not a bare string or mapping. Planned U2 resolution
+raises `NotImplementedError` without fallback; malformed or unknown capability
+requests are rejected first.
+
+Local `UnifiedTransformer.generate()` currently returns `None`, so local
+generation is not advertised. This contract makes no modality, structured
+decoder, diffusion, training, quality, or accelerator/XPU validation claims,
+and provides no pretrained U2 functionality. Existing construction, Hydra keys,
+`ModelConfig`, checkpoint keys, and APIs are unchanged; no migration is required.
+
 ## Decoders
 
 `src/decoders/` — the output side, registered by name in `DECODERS`
