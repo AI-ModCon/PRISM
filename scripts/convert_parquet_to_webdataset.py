@@ -7,8 +7,8 @@ Creates TAR shards compatible with the existing WebDataset pipeline.
 
 Usage:
     python scripts/convert_parquet_to_webdataset.py \
-        --input-dir /flare/ModCon/ngetty/data/zone_a/CoSyn-point/data \
-        --output-dir /flare/ModCon/ngetty/data/zone_a/CoSyn-point_webdataset \
+        --input-dir ${PRISM_DATA_ROOT}/zone_a/CoSyn-point/data \
+        --output-dir ${PRISM_DATA_ROOT}/zone_a/CoSyn-point_webdataset \
         --dataset-name cosyn-point \
         --images-per-shard 1000 \
         --workers 8
@@ -558,20 +558,20 @@ def main():
 Examples:
   # Convert CoSyn-point
   python scripts/convert_parquet_to_webdataset.py \\
-      --input-dir /flare/ModCon/ngetty/data/zone_a/CoSyn-point/data \\
-      --output-dir /flare/ModCon/ngetty/data/zone_a/CoSyn-point_webdataset \\
+      --input-dir ${PRISM_DATA_ROOT}/zone_a/CoSyn-point/data \\
+      --output-dir ${PRISM_DATA_ROOT}/zone_a/CoSyn-point_webdataset \\
       --dataset-name cosyn-point
 
   # Convert pixmo-points
   python scripts/convert_parquet_to_webdataset.py \\
-      --input-dir /flare/ModCon/ngetty/data/zone_a/pixmo-points/data \\
-      --output-dir /flare/ModCon/ngetty/data/zone_a/pixmo-points_webdataset \\
+      --input-dir ${PRISM_DATA_ROOT}/zone_a/pixmo-points/data \\
+      --output-dir ${PRISM_DATA_ROOT}/zone_a/pixmo-points_webdataset \\
       --dataset-name pixmo-points
 
   # Convert pixmo-count
   python scripts/convert_parquet_to_webdataset.py \\
-      --input-dir /flare/ModCon/ngetty/data/zone_a/pixmo-count/data \\
-      --output-dir /flare/ModCon/ngetty/data/zone_a/pixmo-count_webdataset \\
+      --input-dir ${PRISM_DATA_ROOT}/zone_a/pixmo-count/data \\
+      --output-dir ${PRISM_DATA_ROOT}/zone_a/pixmo-count_webdataset \\
       --dataset-name pixmo-count
         """,
     )

@@ -37,7 +37,7 @@ def require_repo_checkout(subcommand: str) -> None:
         "This looks like a plain (non-editable) wheel install. The wheel ships "
         "the `src` package only -- not tools/ or scripts/, and not the heavyweight\n"
         "training dependencies these subcommands need. Use an editable checkout:\n"
-        "    git clone https://github.com/AI-ModCon/BaseMM_PRISM.git\n"
-        "    cd BaseMM_PRISM && pip install -e . --no-deps\n"
+        "    git clone https://github.com/AI-ModCon/PRISM.git\n"
+        "    cd PRISM && pip install -e . --no-deps\n"
         "See docs/getting-started.md for the per-platform dependency setup."
     )

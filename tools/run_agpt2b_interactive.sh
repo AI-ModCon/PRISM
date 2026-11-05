@@ -15,9 +15,9 @@
 
 set -euo pipefail
 
-PROJ_DIR="/lus/flare/projects/ModCon/ngetty/BaseMM_PRISM"
-DAOS_MOUNT="/tmp/ngetty/AuroraGPT/prism_training_data"
-DAOS_MODELS_MOUNT="/tmp/ngetty/AuroraGPT/prism_models"
+PROJ_DIR="${PRISM_REPO_ROOT:?set PRISM_REPO_ROOT}"
+DAOS_MOUNT="/tmp/${USER}/AuroraGPT/prism_training_data"
+DAOS_MODELS_MOUNT="/tmp/${USER}/AuroraGPT/prism_models"
 HOSTNAME_HSN="$(hostname).hsn.cm.aurora.alcf.anl.gov"
 OUTPUT_DIR="${PROJ_DIR}/outputs/agpt2b-interactive/$(date +%Y-%m-%d/%H-%M-%S)"
 
@@ -141,7 +141,7 @@ if [ ! -f "${LOCAL_ENV}/bin/activate" ]; then
     rm -rf "${LOCAL_ENV}"
     mkdir -p "${LOCAL_ENV}"
     tar --strip-components=1 -xzf "${ENV_TARBALL}" -C "${LOCAL_ENV}"
-    sed -i 's|/lus/flare/projects/ModCon/ngetty/BaseMM_PRISM/.venv-deepspeed|/tmp/deepspeed_env|g' "${LOCAL_ENV}/bin/activate"
+    sed -i "s|${PROJ_DIR}/.venv-deepspeed|/tmp/deepspeed_env|g" "${LOCAL_ENV}/bin/activate"
     echo "Venv extraction complete"
 else
     echo "Venv already extracted at ${LOCAL_ENV}"
@@ -156,7 +156,7 @@ if [ ! -d "${LOCAL_ENV}/lib/python3.10/site-packages/transformers-4.57.6.dist-in
 fi
 
 # --- Backbone path ---
-BACKBONE_PATH="/lus/flare/projects/AuroraGPT/evaluation/models/safetensors/AuroraGPT-2B-ws3072-ds-stage0-nl12-hs2048-mb1-seq8192-gb6144-sp1-pp1-tp1-bf16-optsophiag-lr2.17e-5-lwf0.05_ntok7064B_tokHF_tmgoogle_gemma-7b_flash/global_step140300"
+BACKBONE_PATH="${PRISM_AURORAGPT_2B_CHECKPOINT:?set PRISM_AURORAGPT_2B_CHECKPOINT}"
 
 LOG_FILE="${OUTPUT_DIR}/run.log"
 

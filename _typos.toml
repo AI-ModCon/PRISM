@@ -1,0 +1,9 @@
+[default.extend-identifiers]
+unparseable_response = "unparseable_response"
+nature_comunication = "nature_comunication"
+hsa_var = "hsa_var"
+ABL = "ABL"
+ABL1 = "ABL1"
+arange = "arange"
+HPE = "HPE"
+PNGs = "PNGs"

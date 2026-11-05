@@ -25,7 +25,7 @@ EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 # API key). Both come from CONFIG (env vars NCBI_ENTREZ_EMAIL/NCBI_API_KEY)
 # — never hardcode a placeholder email here: NCBI's usage policy requires a
 # real, identifying contact address on every request.
-_NCBI_TOOL = "BaseMM_PRISM-kegg_curation"
+_NCBI_TOOL = "PRISM-kegg_curation"
 _MIN_REQUEST_INTERVAL_NO_KEY = 0.35  # seconds, stays under the ~3req/s NCBI cap
 _MIN_REQUEST_INTERVAL_WITH_KEY = 0.11  # stays under the ~10req/s cap
 

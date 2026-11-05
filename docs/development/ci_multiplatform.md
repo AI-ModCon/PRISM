@@ -27,6 +27,29 @@ out through the UI. Change the matrix and this list together.
 - `launcher_contract`
 - `coverage_gate`
 
+## Documentation checks
+
+The `doc_links` job checks every tracked Markdown file for relative links,
+spelling (typos v1.52.0), and local links including heading anchors (lychee
+v0.24.2). `_typos.toml` allows specific technical identifiers without renaming
+APIs, configuration keys, or data paths.
+
+With those checker binaries on `PATH`, run from the repository root:
+
+```bash
+python tools/ci/check_doc_links.py
+git ls-files '*.md' | typos --file-list -
+git ls-files '*.md' | lychee --offline --include-fragments=anchor-only --no-progress --files-from -
+```
+
+External URLs are not checked on pushes or pull requests. To run an advisory
+check, select **Actions → CI → Run workflow** and enable **Check external
+documentation URLs**. This input defaults to off. The separate `external_urls`
+job is non-blocking, including checker or job failures, and must not be made a
+required branch-protection check. HTTP rate limits and access restrictions
+need human interpretation; a failed request does not necessarily mean a
+broken URL.
+
 ## Test marker taxonomy
 
 - `unit`: fast, local-only checks

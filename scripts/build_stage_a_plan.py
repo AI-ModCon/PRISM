@@ -24,6 +24,10 @@ Usage:
       --nodes-override 4
 """
 
+# TODO(release): generates the removed experiments/stage_a_round1_olmo3_1b.yaml;
+# the docstring example and --calibration-dir default name internal paths
+# (allowlisted). Decide: keep and scrub, or remove with the Stage A tooling.
+
 from __future__ import annotations
 
 import argparse

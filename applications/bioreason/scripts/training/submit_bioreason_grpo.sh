@@ -16,10 +16,10 @@ PROJ_DIR="${PROJ_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." 2>/dev/n
 if [ -n "${PBS_O_WORKDIR:-}" ] && [ ! -f "${PROJ_DIR}/src/train.py" ]; then
   PROJ_DIR="${PBS_O_WORKDIR}"
 fi
-OUTPUT_BASE="/lus/eagle/projects/argonne_tpc/abalaji/modcon/genome/output"
+OUTPUT_BASE="${PRISM_OUTPUT_ROOT:?set PRISM_OUTPUT_ROOT}"
 RUN_ID="GENOME-GRPO"
 RUN_VARIANT="1B"
-STAGE1_CKPT="/lus/eagle/projects/argonne_tpc/abalaji/modcon/genome/output/GENOME-SFT-1B/2026-06-29/07-41-10/checkpoints/step_8000"
+STAGE1_CKPT="${PRISM_OUTPUT_ROOT:?set PRISM_OUTPUT_ROOT}/GENOME-SFT-1B/<date>/<time>/checkpoints/step_8000"
 
 cd "${PROJ_DIR}"
 
@@ -27,7 +27,7 @@ cd "${PROJ_DIR}"
 ml use /soft/modulefiles
 ml --ignore_cache load cudatoolkit-standalone/12.6.1
 module --ignore_cache load conda
-conda activate /lus/eagle/projects/argonne_tpc/abalaji/conda_env/prism
+conda activate ${PRISM_CONDA_ENV:?set PRISM_CONDA_ENV}
 
 # --- Proxy ---
 export HTTP_PROXY="http://proxy.alcf.anl.gov:3128"
@@ -37,10 +37,10 @@ export https_proxy="http://proxy.alcf.anl.gov:3128"
 export no_proxy="127.0.0.1,admin,polaris-adminvm-01,localhost,*.cm.polaris.alcf.anl.gov,polaris-*,*.polaris.alcf.anl.gov,*.alcf.anl.gov"
 
 # --- HuggingFace cache ---
-export HF_HOME="/lus/eagle/projects/argonne_tpc/abalaji/model_weights"
-export HF_DATASETS_CACHE="/lus/eagle/projects/argonne_tpc/abalaji/model_weights"
-export TRANSFORMERS_CACHE="/lus/eagle/projects/argonne_tpc/abalaji/model_weights/hub"
-export HF_HUB_CACHE="/lus/eagle/projects/argonne_tpc/abalaji/model_weights/hub"
+export HF_HOME="$(dirname "${PRISM_HF_HUB:?set PRISM_HF_HUB}")"
+export HF_DATASETS_CACHE="$(dirname "${PRISM_HF_HUB:?set PRISM_HF_HUB}")"
+export TRANSFORMERS_CACHE="${PRISM_HF_HUB:?set PRISM_HF_HUB}"
+export HF_HUB_CACHE="${PRISM_HF_HUB:?set PRISM_HF_HUB}"
 
 # --- W&B ---
 # No WANDB_API_KEY here -- a plaintext key was committed here previously

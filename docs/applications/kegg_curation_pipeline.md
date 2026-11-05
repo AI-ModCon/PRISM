@@ -1,9 +1,9 @@
 # KEGG Dataset Curation Pipeline — Design Doc
 
-This document plans a from-scratch recreation, inside `BaseMM_PRISM`, of the
+This document plans a from-scratch recreation, inside `PRISM`, of the
 pipeline BioReason used to build the `wanglab/kegg` biological-reasoning
 dataset (1,159 train rows: `question`, `answer`, `reasoning`,
-`reference_sequence`, `variant_sequence`). `BaseMM_PRISM` currently only
+`reference_sequence`, `variant_sequence`). `PRISM` currently only
 *consumes* the published dataset (`src/data/multimodal.py`'s
 `_process_dna_bioreason`, mirroring `BioReason/bioreason/dataset/kegg.py`'s
 `_format_kegg`) — there is no curation/construction code anywhere in this
@@ -237,7 +237,7 @@ precedents to follow).
   chromosome subsetting purely in Python via `Bio.SeqIO` (slower for a
   ~3GB genome FASTA but no extra system dependency)?
 - **Target scale for a first run**: the original processed ~1,449 variants
-  end-to-end (Claude cost driver). Should the first `BaseMM_PRISM` run
+  end-to-end (Claude cost driver). Should the first `PRISM` run
   target a similar scale, or start with a small smoke-scale subset (e.g.
   20-50 variants) to validate the full pipeline mechanically before
   spending on a larger Claude batch run?

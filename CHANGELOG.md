@@ -37,6 +37,12 @@ will make up v0.1.0.
 
 ### Changed
 
+- Site-path gate now also flags internal identities (usernames, the old repo
+  name) and scans `experiments/`, `scaling-study/`,
+  `requirements/`, `.github/` and root-level files, and the `grand`, `gpfs`
+  and `lustre` roots; the bioreason/GRPO scripts and `experiments/prism_designs.yaml`
+  take locations from `PRISM_*` variables (`PRISM_CONDA_ENV` and `PRISM_REPO_ROOT`
+  are new, see `.env.template`)
 - Corrected the `src/libs/walrus` submodule URL to the upstream
   `PolymathicAI/walrus` organization (#186)
 - `requirements/base.txt` now installs `h5py`, which `src/data/multimodal.py`
@@ -51,6 +57,9 @@ will make up v0.1.0.
 
 ### Removed
 
+- `experiments/stage_a_round1_olmo3_1b.yaml`, `ablation_catalog.yaml` and
+  `qwen3_siglip_smokes.yaml` — study records tied to internal paths with no
+  code dependents. Remaining study files carry `TODO(release)` notes.
 - `docs/plans/` (9 files) and `docs/historical/` (5 files) — dated design plans
   and bring-up debug journals whose work has all landed. Plans are tracking
   artifacts and belong in the issue tracker rather than the source tree.

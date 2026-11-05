@@ -261,32 +261,3 @@ Example command to verify a checkpoint on the first 50 validation samples:
 ```
 export PYTHONNOUSERSITE=1 && unset PYTHONPATH && PRISM_VAL_SHARDS_DIR=/flare/ModCon/pemami/data/SciTS-processed/val_shards python tools/universal_evaluator.py --checkpoint outputs/PRISM-OLMO-1B-TIMEOMNI-TEST/2026-07-30/06-56-32/checkpoints/step_5000/model.safetensors --mode verify_timeseries_scits --validation --limit 50 --backbone allenai/OLMo-1B-0724-hf
 ```
-
-### Local TS_QA Data Analysis
-
-Use [scripts/perlmutter/analyze_ts_data.py](scripts/perlmutter/analyze_ts_data.py) to scan all JSONL files under a TS_QA root folder and report, per file:
-- Longest time series length observed.
-- Min/max number of `<ts></ts>` placeholders per sequence.
-
-Example:
-
-```bash
-python3 scripts/perlmutter/analyze_ts_data.py \
-	--root /flare/ModCon/ngetty/data/zone_a/ts_qa
-```
-
-Optional JSON output:
-
-```bash
-python3 scripts/perlmutter/analyze_ts_data.py \
-	--root /flare/ModCon/ngetty/data/zone_a/ts_qa \
-	--output-json outputs/ts_qa_stats.json
-```
-
-Output columns:
-- `file`: JSONL path
-- `records`: number of non-empty lines parsed as records
-- `bad_json`: malformed JSON lines
-- `max_ts_len`: longest per-series length found in that file
-- `min_ts_tags` / `max_ts_tags`: min/max `<ts></ts>` count per sequence in text fields
-

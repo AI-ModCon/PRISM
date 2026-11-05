@@ -24,7 +24,7 @@ installed **`multi-agent-git-hygiene`** skill; this is the PRISM-specific drill.
 - Call `EnterWorktree` at the start of any session that edits files or git state
   → creates `.claude/worktrees/<name>` on a fresh branch off `origin/main`.
 - Spawning editing subagents? Pass `isolation: "worktree"` to the `Agent` tool.
-- The bare clone (`/lus/flare/projects/ModCon/ngetty/BaseMM_PRISM`) is
+- The bare clone (`<path-to-your-clone>`) is
   **read-only** — never commit or branch-switch there.
 
 ## Mandatory: verify branch before you claim it

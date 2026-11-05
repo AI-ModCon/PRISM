@@ -30,7 +30,7 @@ LAUNCHER = REPO_ROOT / "tools" / "launch_aurora_daos.py"
 def _run(*args: str) -> subprocess.CompletedProcess:
     env = os.environ.copy()
     # Set USER so the launcher doesn't bail at the early `$USER` guard.
-    env.setdefault("USER", "ngetty")
+    env.setdefault("USER", "testuser")
     return subprocess.run(
         [sys.executable, str(LAUNCHER), "--id", "TEST-RUN", *args],
         capture_output=True,
@@ -272,7 +272,7 @@ def test_hf_token_not_materialized_in_daos_dry_run(monkeypatch):
 def test_use_shared_venv_accepts_exported_venv_path(monkeypatch):
     import re
 
-    venv_path = "/flare/ModCon/sww/prism-envs/qwen3-siglip-py3.12"
+    venv_path = "/opt/prism-envs/qwen3-siglip-py3.12"
     monkeypatch.setenv("VENV_PATH", venv_path)
 
     result = subprocess.run(

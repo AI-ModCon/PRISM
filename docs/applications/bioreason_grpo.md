@@ -706,4 +706,4 @@ particularly important for free-form pathway descriptions where lexical matching
 
 ---
 
-*Generated from codebase analysis of `BaseMM_PRISM` as of 2026-06-26.*
+*Generated from codebase analysis of `PRISM` as of 2026-06-26.*

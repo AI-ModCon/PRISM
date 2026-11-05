@@ -18,7 +18,7 @@ experiments:
       training.viz_every_n_steps: 500
       training.gradient_accumulation_steps: 4
       training.verbosity: "INFO"
-      training.resume_from_checkpoint: "/raid/smadireddy/PRISM/outputs/PRISM-ZONE-A-BASELINE/2026-01-05/11-35-16/checkpoints/step_700"
+      # To resume, pass: training.resume_from_checkpoint="<path-to-run>/checkpoints/step_700"
     
     variants:
       - id: PRISM-ZONE-A-01-DEFAULT
@@ -383,7 +383,7 @@ experiments:
       training.viz_every_n_steps: 1000
       training.verbosity: "INFO"
       training.data_num_workers: 2
-      training.calvin_root: "/flare/ModCon/sww/vla_training/calvin_dataset"
+      # calvin_root comes from PRISM_CALVIN_ROOT (see .env.template).
       training.calvin_split: "train"
       training.calvin_max_chunk: 20
       training.calvin_text_max_length: 64
@@ -1152,7 +1152,7 @@ experiments:
       # BS>=8 crashes with UR error even with affinity mask (kernel dispatch limit).
       # SDPA: 134 samp/s, 27GB peak. Eager: 62-121 samp/s, 32GB peak. Use SDPA.
       model: prism_auroragpt_2b
-      model.backbone_id: "/lus/flare/projects/AuroraGPT/evaluation/models/safetensors/AuroraGPT-2B-ws3072-ds-stage0-nl12-hs2048-mb1-seq8192-gb6144-sp1-pp1-tp1-bf16-optsophiag-lr2.17e-5-lwf0.05_ntok7064B_tokHF_tmgoogle_gemma-7b_flash/global_step140300"
+      # backbone_id comes from PRISM_AURORAGPT_2B_CHECKPOINT (see .env.template).
       model.d_img: 768
 
       # Projector-only training (frozen backbone + frozen encoders)

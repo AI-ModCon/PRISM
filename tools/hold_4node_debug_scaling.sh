@@ -1,4 +1,9 @@
 #!/bin/bash -l
+# TODO(release): Stage A round-1 study tooling. It depends on
+# experiments/stage_a_round1_olmo3_1b.yaml, which was removed from the public
+# mirror (internal calibration paths), and still carries internal site paths
+# counted on tools/ci/site_path_allowlist.json. Decide: keep and scrub, or
+# remove together with the rest of the Stage A round-1 scripts.
 #PBS -N hold-4n-stage-a
 #PBS -l select=4
 #PBS -l walltime=01:00:00

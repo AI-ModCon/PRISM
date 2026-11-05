@@ -1,4 +1,9 @@
 #!/bin/bash -l
+# TODO(release): Stage A round-1 study tooling. It depends on
+# experiments/stage_a_round1_olmo3_1b.yaml, which was removed from the public
+# mirror (internal calibration paths), and still carries internal site paths
+# counted on tools/ci/site_path_allowlist.json. Decide: keep and scrub, or
+# remove together with the rest of the Stage A round-1 scripts.
 #PBS -N stage-a-round1
 #PBS -l select=4
 #PBS -l walltime=12:00:00
@@ -13,7 +18,7 @@
 #
 # Prerequisites:
 #   - PR #100 (pre-A) on main: seed plumbing + --nodes-override + web cal handle
-#   - experiments/stage_a_round1_olmo3_1b.yaml committed with all 18 cells
+#   - experiments/stage_a_round1_olmo3_1b.yaml (removed from the public mirror; generate with scripts/build_stage_a_plan.py)
 #     (or symlinked into scaling-study/ on /flare for working state)
 #
 # Cell estimates from the actual calibration (cal_fps≈3.07e13 → runtime_fps≈5.9e15

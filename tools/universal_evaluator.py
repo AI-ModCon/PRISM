@@ -1311,7 +1311,7 @@ def verify_image_modality(
                 "use_validation=True requires PRISM_VAL_SHARDS_DIR to be set "
                 "to a directory containing *.tar WebDataset shards "
                 "(e.g. /flare/<project>/<user>/.../pixmo_cap_webdataset/val_shards). "
-                "Previously this defaulted to a hardcoded ngetty path; that "
+                "Previously this defaulted to a hardcoded personal path; that "
                 "fallback was removed because it silently failed for any other user."
             )
         # glob.glob() can hang on dfuse/DAOS mounts; os.listdir() + filter
@@ -1548,10 +1548,15 @@ def verify_timeseries_scits(
     # is UNSET — an explicitly-empty PRISM_VAL_SHARDS_DIR="" passes through,
     # and os.path.join("", "*.tar") silently globs the current working
     # directory instead of raising or falling back.
-    val_shards_dir = (
-        os.environ.get("PRISM_VAL_SHARDS_DIR")
-        or "/flare/ModCon/pemami/data/SciTS-processed/val_shards"
-    )
+    val_shards_dir = os.environ.get("PRISM_VAL_SHARDS_DIR")
+    if not val_shards_dir:
+        data_root = os.environ.get("PRISM_DATA_ROOT")
+        if not data_root:
+            raise ValueError(
+                "Set PRISM_VAL_SHARDS_DIR (or PRISM_DATA_ROOT) to the SciTS "
+                "validation shard directory."
+            )
+        val_shards_dir = os.path.join(data_root, "SciTS-processed", "val_shards")
     # glob.glob() can hang on dfuse/DAOS mounts; os.listdir() + filter
     # is the safe pattern for shard directories that may live on DAOS.
     tar_files = sorted(

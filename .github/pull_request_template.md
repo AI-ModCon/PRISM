@@ -64,8 +64,9 @@ See *Guidelines for AI/LLM-Assisted Contributions* in
 accountable for the review — a project norm, not yet enforced by branch
 protection.
 
-- [ ] AI/LLM tools were primarily used to generate code or artifacts in this PR
-- [ ] I have reviewed all such output line-by-line and understand it
+- **AI tools used:** None, or list the tools.
+- **Scope of assistance:** What was generated, edited, or reviewed?
+- **Human validation:** What did you review or test?
 
 ## Additional Context
 
