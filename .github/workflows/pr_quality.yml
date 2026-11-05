@@ -5,6 +5,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      check_external_urls:
+        description: Check external documentation URLs (advisory only)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -60,6 +66,37 @@ jobs:
           python-version: "3.10"
       - name: Check relative Markdown links
         run: python tools/ci/check_doc_links.py
+      - name: List tracked Markdown files
+        id: markdown
+        run: |
+          git ls-files '*.md' > "$RUNNER_TEMP/prism-markdown.txt"
+          echo "files=$(paste -sd ' ' "$RUNNER_TEMP/prism-markdown.txt")" >> "$GITHUB_OUTPUT"
+      - name: Check spelling
+        uses: crate-ci/typos@4c8b7f51ca60df14e3c5ca82770dfbbe6c3dae85 # v1.52.0
+        with:
+          files: ${{ steps.markdown.outputs.files }}
+      - name: Check local Markdown links and anchors
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+        with:
+          args: --offline --include-fragments=anchor-only --no-progress --files-from ${{ runner.temp }}/prism-markdown.txt
+
+  external_urls:
+    if: github.event_name == 'workflow_dispatch' && inputs.check_external_urls
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: List tracked Markdown files
+        run: git ls-files '*.md' > "$RUNNER_TEMP/prism-markdown.txt"
+      - name: Check external documentation URLs
+        continue-on-error: true
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+        with:
+          fail: false
+          args: --exclude-all-private --timeout 20 --max-retries 2 --no-progress --files-from ${{ runner.temp }}/prism-markdown.txt
 
   types:
     runs-on: ubuntu-latest
